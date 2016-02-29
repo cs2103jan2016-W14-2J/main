@@ -1,3 +1,11 @@
+package GUI;
+
+import Command.*;
+import Logic.*;
+import Parser.*;
+import Storage.*;
+import Task.*;
+
 import java.time.LocalDate;
 
 import com.sun.javafx.scene.control.skin.DatePickerSkin;

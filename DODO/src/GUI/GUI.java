@@ -1,3 +1,11 @@
+package GUI;
+
+import Command.*;
+import Logic.*;
+import Parser.*;
+import Storage.*;
+import Task.*;
+
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;

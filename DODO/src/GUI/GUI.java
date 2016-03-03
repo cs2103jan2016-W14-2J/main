@@ -36,6 +36,7 @@ public class GUI{
 	
 	public void start(Stage primaryStage) 
 	{		
+
 		CenterBox.logic=this.logic;
 		root.getChildren().add(leftBox.leftBox(primaryStage,centerBox));
 		root.getChildren().add(centerBox.centerBox(primaryStage,leftBox));

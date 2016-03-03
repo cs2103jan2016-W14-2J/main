@@ -38,38 +38,45 @@ import javafx.stage.WindowEvent;
 
 public class CenterBox {
 
-	
-	private final String onGoingTab = "On Going Tasks";
-	private final String completedTaskTab = "Completed Tasks";
-	private final String overDueTab = "Overdue Tasks";
-	private final String resultTab = "Result";
-	
 	private final double textfieldWidth = 100; //centerBox txtfield size
 	private final double textfieldHeight = 1500;
 	private final double tabPaneWidth = 1000; //centerBox tabPane size
 	private final double tabPaneHeight = 1000;
 	private final double titledPaneWidth = 1000; //centerBox titledPane size
 	private final double titledPaneHeight = 1000;
-	private final double dialogWidth = 500; //centerBox txtfield size
-	private final double dialogHeight = 500; //centerBox txtfield size
+	private final double dialogWidth = 500; 
+	private final double dialogHeight = 500;
 
-	private VBox centerBox = new VBox();;
-	private TitledPane titledPaneAllTask = new TitledPane();
-	private TitledPane titledPaneCompletedTask = new TitledPane();
-	private TitledPane titledPaneOverdueTask = new TitledPane();
-	//private Pane resultPane = new Pane();
+
+	private VBox centerVBox = new VBox();
+	
+
+
 	private TabPane tabPane = new TabPane();
 	private TextField mainTextField = new TextField();
 	public static Logic logic;
 	private LeftBox leftBox;
 	private Stage primaryStage;
 
+	private final String onGoingTab = "On Going Tasks";
+	private final String completedTab = "Completed Tasks";
+	private final String overDueTab = "Overdue Tasks";
+	private final String floatingTab = "Floating Tasks";
+	
+	private TitledPane titledPaneOnGoingTask= new TitledPane();
+	private TitledPane titledPaneCompletedTask = new TitledPane();
+	private TitledPane titledPaneOverdueTask = new TitledPane();
+	private TitledPane titledPaneFloatingTask = new TitledPane();
+	
 	private	ArrayList<Task> ongoingTasks = new ArrayList<Task>();
 	private ArrayList<Task> floatingTasks = new ArrayList<Task>();
 	private ArrayList<Task> completedTasks = new ArrayList<Task>();
 	private ArrayList<Task> overdueTasks = new ArrayList<Task>();
 
-	
+	public enum TASK_TYPE 
+	{
+		onGoingTask,floatingTask,completedTask,overdueTask;
+	}
 	
 	public VBox centerBox(Stage primaryStage, LeftBox leftBox)
 	{
@@ -77,163 +84,142 @@ public class CenterBox {
 		this.primaryStage = primaryStage;
 		addTabpane();
 		addMainTextfield();
-		return centerBox;	
+		return centerVBox;	
 	}
 	private void addTabpane() 
 	{
 		initTabPane();
-		addTab();
-		centerBox.getChildren().add(tabPane);	
+		addTabs();
+		updateTitledPane(); 
+		centerVBox.getChildren().add(tabPane);	
 
 	}
+
 	private void addMainTextfield() 
 	{
 		textFieldListener();
 		mainTextField.setPrefSize(textfieldHeight, textfieldWidth);
-		centerBox.getChildren().add(mainTextField);
+		centerVBox.getChildren().add(mainTextField);
 	}
-	/**
-	 * TAB IS FIXED
-	 * 
-	 */	
-	private void addTab()
+	private void addTabs()
 	{
+		floatingTab();
+		ongoingTab();
+		completedTab();
+		overdueTab();
+	}
+	private void overdueTab() {
+		Tab tab = new Tab(overDueTab);
+		tab.setContent(titledPaneOverdueTask);
+		tabPane.getTabs().add(tab);	
+	}
+	private void completedTab() {
+		Tab tab = new Tab(completedTab);
+		tab.setContent(titledPaneCompletedTask);
+		tabPane.getTabs().add(tab);	
+	}
+	private void ongoingTab() {
 		Tab tab = new Tab(onGoingTab);
-		tab.setContent(titledPaneAllTask);
-		addListToTitledPane(titledPaneAllTask,ongoingTasks);
-		tabPane.getTabs().add(tab);
-		
-		/*Tab tab1 = new Tab(completedTaskTab);
-		tab1.setContent(titledPaneCompletedTask);
-		addListToTitledPane(titledPaneCompletedTask);
-		tabPane.getTabs().add(tab1);
-	
-		
-		Tab tab3 = new Tab(overDueTab);
-		tab3.setContent(titledPaneOverdueTask);
-		addListToTitledPane(titledPaneOverdueTask);
-		tabPane.getTabs().add(tab3);*/
-	
-	/*	Tab tab4 = new Tab(resultTab);
-		tab4.setContent(resultPane);
-		tabPane.getTabs().add(tab4);*/
-	
-	
+		tab.setContent(titledPaneOnGoingTask);
+		tabPane.getTabs().add(tab);			
 	}
-	private void addListToTitledPane(TitledPane titledPane,ArrayList<Task> listTask) 
+	private void floatingTab() 
 	{
-		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
+		Tab tab = new Tab(floatingTab);
+		tab.setContent(titledPaneFloatingTask);
+		tabPane.getTabs().add(tab);		
+	}
+	private void addListToTitledPane(TitledPane titledPane,ArrayList<Task> listTask, TASK_TYPE typeOfTask) 
+	{
 		ListView<HBox> list = new ListView<>(); 
-		addContent(list);
+		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
+		addContent(list,listTask,typeOfTask);
 		list.setOnKeyPressed(new EventHandler<KeyEvent>() 
 		{
 	        public void handle(KeyEvent ke) {
 	        	if (ke.getCode().equals(KeyCode.ENTER))
 	            {
+	        		/*System.out.println("list component selected is as follows: "  + list.getSelectionModel().getSelectedItem().getChildren().get(0));
+	        		System.out.println("list component selected is as follows: "  + list.getSelectionModel().getSelectedItem().getChildren().get(1));*/
 		            createDisappearPane(list.getSelectionModel().getSelectedItem());
-		           
-		            centerBox.setEffect(new BoxBlur());
-		            leftBox.leftBox.setEffect(new BoxBlur());
+		            centerVBox.setEffect(new BoxBlur());
+		            leftBox.leftVBox.setEffect(new BoxBlur());
 	            }
 	        }
 	    });
-		
 		titledPane.setContent(list);
 	}
 
 	@SuppressWarnings("null")
-	private void addContent(ListView<HBox> list) 
+	private void addContent(ListView<HBox> list, ArrayList<Task> listTask, TASK_TYPE typeOfTask) 
 	{
-		ObservableList<HBox> arrayImgView = FXCollections.observableArrayList();
-		
-		
-		//for(int x=0;x<logic.getOngoingTasks().size();x++)
-		/*for(int x=0;x<10000;x++)
+		ObservableList<HBox> listOfSmallTasks = FXCollections.observableArrayList();
+		new Thread(new Runnable() 
 		{
-			HBox vb = new HBox();
-			vb.setPrefSize(50,100);
-			Label lbl = new Label("task a");
-			Label lbl1 = new Label("date");
-			Label lbl2 = new Label("time");
-			lbl.setPrefWidth(100);
-			lbl1.setPrefWidth(250);
-			lbl2.setPrefWidth(500);
-
-			//lbl.setText(logic.getOngoingTasks().get(0).getTaskDescription());
-			vb.getChildren().addAll(lbl,lbl1,lbl2);
-			arrayImgView.add(vb);
-		}*/
-		new Thread(new Runnable() {
-		    @Override public void run() {
-		        Platform.runLater(new Runnable() {
-		            @Override public void run() {
-		        		
-		            		if(logic.getOngoingTasks()!=null)
-		            		{
-		            			for(int x=0;x<logic.getFloatingTasks().size();x++)
-		            			{
-		            				HBox vb = new HBox();
-		            				vb.setPrefSize(50,100);
-		            				
-		            				System.out.println("[DEBUG/CentreBox] task: " + logic.getFloatingTasks().get(x));
-		            				Label lbl1 = new Label(logic.getFloatingTasks().get(x).getName());
-		            				Label lbl2 = new Label(logic.getFloatingTasks().get(x).getName());
-		            				lbl1.setPrefWidth(100);
-		            				lbl2.setPrefWidth(250);
-		            				vb.getChildren().addAll(lbl1,lbl2);
-		            				arrayImgView.add(vb);
-		            			}
-		            		}
-		            }
-		        });
+		    @Override public void run() 
+		    {
+		    	if(logic.getFloatingTasks()!=null &&typeOfTask.equals(TASK_TYPE.floatingTask))
+        		{
+        			for(int x=0;x<logic.getFloatingTasks().size();x++)
+        			{
+        				HBox vb = new HBox();
+        				vb.setPrefSize(50,100);
+        				Label lbl1 = new Label(logic.getFloatingTasks().get(x).getName());
+        				Label lbl2 = new Label(logic.getFloatingTasks().get(x).getDescription());
+        				lbl1.setPrefWidth(100);
+        				lbl2.setPrefWidth(250);
+        				vb.getChildren().addAll(lbl1,lbl2);
+        				listOfSmallTasks.add(vb);
+        			}
+        		}
+        		if(logic.getOngoingTasks()!=null &&typeOfTask.equals(TASK_TYPE.onGoingTask))
+        		{
+        			for(int x=0;x<logic.getOngoingTasks().size();x++)
+        			{
+        				HBox vb = new HBox();
+        				vb.setPrefSize(50,100);
+        				Label lbl1 = new Label(logic.getOngoingTasks().get(x).getName());
+        				Label lbl2 = new Label(logic.getOngoingTasks().get(x).getDescription());
+        				lbl1.setPrefWidth(100);
+        				lbl2.setPrefWidth(250);
+        				vb.getChildren().addAll(lbl1,lbl2);
+        				listOfSmallTasks.add(vb);
+        			}
+        		}
+        		if(logic.getCompletedTasks()!=null &&typeOfTask.equals(TASK_TYPE.completedTask))
+        		{
+        			for(int x=0;x<logic.getCompletedTasks().size();x++)
+        			{
+        				HBox vb = new HBox();
+        				vb.setPrefSize(50,100);
+        				Label lbl1 = new Label(logic.getCompletedTasks().get(x).getName());
+        				Label lbl2 = new Label(logic.getCompletedTasks().get(x).getDescription());
+        				lbl1.setPrefWidth(100);
+        				lbl2.setPrefWidth(250);
+        				vb.getChildren().addAll(lbl1,lbl2);
+        				listOfSmallTasks.add(vb);
+        			}
+        		}
+        		if(logic.getOverdueTasks()!=null &&typeOfTask.equals(TASK_TYPE.overdueTask))
+        		{
+        			for(int x=0;x<logic.getOverdueTasks().size();x++)
+        			{
+        				HBox vb = new HBox();
+        				vb.setPrefSize(50,100);
+        				Label lbl1 = new Label(logic.getOverdueTasks().get(x).getName());
+        				Label lbl2 = new Label(logic.getOverdueTasks().get(x).getDescription());
+        				lbl1.setPrefWidth(100);
+        				lbl2.setPrefWidth(250);
+        				vb.getChildren().addAll(lbl1,lbl2);
+        				listOfSmallTasks.add(vb);
+        			}
+        		}
+        		
 		    }
 		}).start();
-		/*new Thread(new Runnable() {
-		    @Override public void run() {
-		        Platform.runLater(new Runnable() {
-		            @Override public void run() {
-		            	for(int x=0;x<5000;x++)
-		        		{
-		        			HBox vb = new HBox();
-		        			vb.setPrefSize(50,100);
-		        			Label lbl = new Label("task a");
-		        			Label lbl1 = new Label("date");
-		        			Label lbl2 = new Label("time");
-		        			lbl.setPrefWidth(100);
-		        			lbl1.setPrefWidth(250);
-		        			lbl2.setPrefWidth(500);
+		list.setItems(listOfSmallTasks);
+	}
 
-		        			//lbl.setText(logic.getOngoingTasks().get(0).getTaskDescription());
-		        			vb.getChildren().addAll(lbl,lbl1,lbl2);
-		        			arrayImgView.add(vb);
-		        			
-		        		}
-		            }
-		        });
-		    }
-		}).start();*/
-		//arrayImgView = FXCollections.observableArrayList(new VBox(),new VBox(),new VBox());
-		//ObservableList<String> arrayImgView = FXCollections.observableArrayList(new String("test"),new String("test1"),new String("test2"));	
-		list.setItems(arrayImgView);
-	}
-	private void addListToTitledPane1(TitledPane titledPane) 
-	{
-		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
-		ListView<HBox> list = new ListView<>(); 
-		addContent(list);
-		list.setOnKeyPressed(new EventHandler<KeyEvent>() 
-		{
-	        public void handle(KeyEvent ke) {
-	        	if (ke.getCode().equals(KeyCode.ENTER))
-	            {
-		            createDisappearPane(list.getSelectionModel().getSelectedItem());
-		            centerBox.setEffect(new BoxBlur());
-		            leftBox.leftBox.setEffect(new BoxBlur());
-	            }
-	        }
-	    });
-		titledPane.setContent(list);
-	}
 
 	private void initTabPane() {
 		tabPane.setPrefSize(tabPaneHeight,tabPaneWidth);
@@ -244,12 +230,8 @@ public class CenterBox {
 	    {
 	        public void handle(KeyEvent ke)
 	        {
-	        	//get frm ly
-            	//get will return string
 	            if (ke.getCode().equals(KeyCode.ENTER))
 	            {
-	            	//logic.run(mainTextField.getText());
-	            	//updateTabs();
 	            	logic.run(mainTextField.getText());
 	            	System.out.println("GUIIIIIIIIIIIIII "+ mainTextField.getText());
 	            	updateNewListItems();
@@ -260,15 +242,18 @@ public class CenterBox {
 			private void updateNewListItems() 
 			{
 				ongoingTasks.addAll(logic.getOngoingTasks());
-            	System.out.println("247 " + floatingTasks.size());
 				floatingTasks.addAll(logic.getFloatingTasks());
 				completedTasks.addAll(logic.getCompletedTasks());
 				overdueTasks.addAll(logic.getOverdueTasks());
-				addListToTitledPane(titledPaneAllTask,floatingTasks);
-
-			
+				updateTitledPane();
 			}
 	    });	
+	}
+	protected void updateTitledPane() {
+		addListToTitledPane(titledPaneFloatingTask,floatingTasks,TASK_TYPE.floatingTask);
+		addListToTitledPane(titledPaneOnGoingTask,ongoingTasks,TASK_TYPE.onGoingTask);
+		addListToTitledPane(titledPaneCompletedTask,completedTasks,TASK_TYPE.completedTask);
+		addListToTitledPane(titledPaneOverdueTask,overdueTasks,TASK_TYPE.overdueTask);		
 	}
 	public TextField getTextField()
 	{
@@ -279,17 +264,19 @@ public class CenterBox {
 	{
 	    Stage dialog = new Stage();
 	    VBox dialogVBox = new VBox();
-
 		dialog.initModality(Modality.APPLICATION_MODAL);
 	    dialog.initOwner(primaryStage);
 	    dialogVBox.getChildren().add(new Text("This is a Dialog"));
 	    Scene dialogScene = new Scene(dialogVBox, dialogWidth, dialogHeight);
 	    dialog.setScene(dialogScene);
 	    dialog.show();
-	    dialog.setOnCloseRequest(new EventHandler<WindowEvent>() {
-	        public void handle(WindowEvent we) {
-	        	centerBox.setEffect(null);
-	            leftBox.leftBox.setEffect(null);
+	    dialog.setOnCloseRequest(new EventHandler<WindowEvent>() 
+	    {
+	        public void handle(WindowEvent we) 
+	        {
+	        	centerVBox.setEffect(null);
+	            leftBox.leftVBox.setEffect(null);
+	            
 	        }
 	    });  
 	}

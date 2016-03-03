@@ -28,24 +28,32 @@ import javafx.stage.Stage;
  */
 public class LeftBox {
 
+	public VBox leftVBox = new VBox();
 	private Stage primaryStage;
-	CenterBox centerBox;
-	public VBox leftBox = new VBox();
-	DatePicker  checkInDatePicker = new DatePicker();
-	Label checkInlabel = new Label("Check-In Date:");
-    DatePickerSkin datePickerSkin = new DatePickerSkin(new DatePicker(LocalDate.now()));
-    ListView<String> list = new ListView<>(); 
-	TitledPane titledPane = new TitledPane();
+	private CenterBox centerBox;
+	private DatePicker  checkInDatePicker = new DatePicker();
+	private Label checkInlabel = new Label("Check-In Date:");
+	private DatePickerSkin datePickerSkin = new DatePickerSkin(new DatePicker(LocalDate.now()));
+	private ListView<String> list = new ListView<>(); 
+	private TitledPane titledPane = new TitledPane();
 	
-	ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList( new PieChart.Data("Completed", 13), new PieChart.Data("Incomplete", 25));	
-	ObservableList<String> arrayImgView = FXCollections.observableArrayList(new String("test"),new String("test1"),new String("test2"));
+	private ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList( new PieChart.Data("Completed", 13), new PieChart.Data("Incomplete", 25));	
+	private ObservableList<String> arrayImgView = FXCollections.observableArrayList(new String("test"),new String("test1"),new String("test2"));
     
 	final PieChart chart = new PieChart(pieChartData);
 
-	public void blurEffect()
+	public VBox leftBox(Stage primaryStage, CenterBox cb) 
+	{
+		this.centerBox = centerBox;
+		addGraph();
+		addTagCategories();
+		addCalendar();
+		return leftVBox;	
+	}
+	private void blurEffect()
 	{
 		System.out.println("blur at leftbox");
-		leftBox.setEffect(new BoxBlur());
+		leftVBox.setEffect(new BoxBlur());
 		titledPane.setEffect(new BoxBlur());
 		chart.setEffect(new BoxBlur());
 		checkInlabel.setEffect(new BoxBlur());
@@ -54,7 +62,7 @@ public class LeftBox {
 	private void addGraph() 
 	{
         chart.setTitle("Completed Task Statistic");
-        leftBox.getChildren().add(chart);
+        leftVBox.getChildren().add(chart);
 	}
 	private void addTagCategories() 
 	{
@@ -64,20 +72,14 @@ public class LeftBox {
 	private void addCalendar() 
 	{
 		Node popupContent = datePickerSkin.getPopupContent();
-        leftBox.getChildren().add(popupContent);
+		leftVBox.getChildren().add(popupContent);
 	}
 	private void addTagList(TitledPane titledPane)
 	{
 		list.setItems(arrayImgView);
 		titledPane.setContent(list);
-		leftBox.getChildren().add(list);
+		leftVBox.getChildren().add(list);
 	}
-	public VBox leftBox(Stage primaryStage, CenterBox cb) 
-	{
-		this.centerBox = centerBox;
-		addGraph();
-		addTagCategories();
-		addCalendar();
-		return leftBox;	
-	}
+
+
 }

@@ -1,6 +1,10 @@
 package GUI;
 
 import Logic.*;
+import Command.*;
+import Parser.*;
+import Storage.*;
+import Task.*;
 
 import java.io.BufferedReader;
 import java.io.File;

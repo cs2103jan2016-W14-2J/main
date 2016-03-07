@@ -14,9 +14,11 @@ import Parser.AddParser;
  * 
  * Timed Task:
  * 1. add revise on CS2103T at 1930hrs
- * 2. add finish CS2103T by 2359hrs
+ * 2. add finish CS2103T by this thursday
  * 3. add meeting with boss on 21.07.2016
  * 4. add cs2010 lab5 due on 01/03
+ * 5. add submit assignment 1 before monday
+ * 6. add start building sandcastle by the next 2 days.
  * 
  * Floating Task:
  * 1. add buy beer from 7-11
@@ -26,10 +28,9 @@ import Parser.AddParser;
  * 5. add travel from 7/11 to yishun
  * 
  * Event Task:
- * 1. add study CS2103T from 1800hrs to 2000hrs
- * 2. add code from 1130pm to 1030am
+ * Currently still fixing some bugs.
  * 
- * 
+ * @author Pay Hao Jie
  */
 
 public class Parser {

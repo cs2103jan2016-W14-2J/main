@@ -1,12 +1,8 @@
 package Parser;
 
-import Command.*;
-import Task.*;
-
 import java.util.Date;
 import java.util.HashMap;
 
-import Parser.AddParser;
 
 
 /*
@@ -19,16 +15,19 @@ import Parser.AddParser;
  * 4. add cs2010 lab5 due on 01/03
  * 5. add submit assignment 1 before monday
  * 6. add start building sandcastle by the next 2 days.
+ * 7. add paint my toe nails by friday 2359hrs
  * 
  * Floating Task:
  * 1. add buy beer from 7-11
  * 2. add study CS2103T on the floor
  * 3. add revise CS2103T by the beach
- * 4. add visit ramen store @ nus
- * 5. add travel from 7/11 to yishun
+ * 4. add visit ramen store at nus
+ * 5. add travel from yishun to nus
  * 
  * Event Task:
- * Currently still fixing some bugs.
+ * 1. add study cs2103t from 20/3/2016 to 23/04/2016.
+ * 2. add nus soc sports camp from 20 feb 2017 to 20 feb 2018
+ * 3. add babysit baby claudia from today to tomorrow
  * 
  * @author Pay Hao Jie
  */

@@ -1,9 +1,5 @@
 package Parser;
 
-
-import Command.*;
-import Task.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -67,7 +63,7 @@ public class AddParser {
 	}
 	
 	private void executeAddParser() {
-		String[] str = userTask.split("\\s+");
+		String[] str = userTask.toLowerCase().split("\\s+");
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
 		taskType = determineTaskType(taskItems);
@@ -118,11 +114,38 @@ public class AddParser {
 		
 		// add study from <startDate> to <endDate>
 		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO) {
-			return true;
+			if (checkForDateAndTime(taskItems, LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
+				return true;
+			}
+			else {
+				setTaskType(TASK_TYPE.FLOATING);
+				return false;
+			}
 		}
 		else {
 			return false;
 		}
+	}
+
+	private boolean checkForDateAndTime(ArrayList<String> taskItems, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {
+		System.out.println("Debug checkForDateAndTime @line132");
+		
+		DateAndTimeParser parser = new DateAndTimeParser();
+		ArrayList<String> temp = new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM + 1, LAST_POSITION_OF_TO));
+		
+		if (parser.isNumericalDateType(taskItems.get(LAST_POSITION_OF_FROM + 1)) || 
+			parser.isTimeType(taskItems.get(LAST_POSITION_OF_FROM + 1)) ||
+			parser.isTodayType(temp) || parser.isTomorrowType(temp)) {
+			return true;
+		}
+		else if (parser.isEnglishDateType(temp)) {
+			return true;
+		}
+		else {
+			System.out.println("Debug checkForDateAndTime @line144");
+			return false;
+		}
+		
 	}
 
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems) {
@@ -196,6 +219,7 @@ public class AddParser {
 			//debug
 			System.out.println("Debug: Test contentToAnalyse @parseEvent2: " + contentToAnalyse);
 			taskItems.add("-1");
+			
 			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size() - 1));
 			startTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
 			setStartTime(startTime);

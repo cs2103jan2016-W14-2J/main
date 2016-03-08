@@ -21,7 +21,7 @@ public class DateAndTimeParser {
 	private List<String> tomorrowTypes = new ArrayList<>(Arrays.asList("tomorrow","tmr", "tml", "tmrw", "2moro"));
 	
 	private List<String> monthTypes = new ArrayList<>(Arrays.asList("jan", "january", "feb", "february", "mar",
-			"march", "apr", "april", "may","may", "june","june", "jul", "july", "aug", "august", "sept", "september", "oct",
+			"march", "apr", "april", "may", "may", "june","june", "jul", "july", "aug", "august", "sept", "september", "oct",
 			"october", "nov", "november", "dec", "december"));
 	
 	private final String KEYWORD_AM = "am";
@@ -74,6 +74,7 @@ public class DateAndTimeParser {
 				break;
 				
 			case TYPE_TIME:
+				System.out.println("Debug: Test TYPE_TIME");
 				dateTimeElements = getTime(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
@@ -109,6 +110,7 @@ public class DateAndTimeParser {
 				break;
 	*/				
 			case TYPE_NEXT_WEEKDAY:
+				System.out.println("Debug: Test TYPE_NEXT_WEEKDAY @line 112.");
 				dateTimeElements = getNextWeekday(currentWord, contentToAnalyse, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
@@ -120,6 +122,7 @@ public class DateAndTimeParser {
 		}
 		
 		System.out.println("Debug: @DateAndTimeParser line 117.");
+		
 		return processDateAndTime(combined);
 	}
 	
@@ -206,7 +209,7 @@ public class DateAndTimeParser {
 	}
 
 
-	private DATE_TYPES determineDateTypes(String currentWord, ArrayList<String> contentToAnalyse) {
+	public DATE_TYPES determineDateTypes(String currentWord, ArrayList<String> contentToAnalyse) {
 		
 		System.out.println("Debug: Test currentWord @determineDateType line 184. " + contentToAnalyse.size());
 		
@@ -252,7 +255,7 @@ public class DateAndTimeParser {
 		else {
 			return null;
 		}
-
+		
 	}
 	
 	//**********************************************    get date type    **********************************************//
@@ -261,7 +264,9 @@ public class DateAndTimeParser {
 	private int[] getNextWeekday(String currentWord, ArrayList<String> contentToAnalyse, int[] dateTimeElements, int i) {
 		String dayOfWeek = "";
 		
-		if ( i + 1 <= contentToAnalyse.size()) {
+		System.out.println("Debug: Test getNextWeekday @line 265." + contentToAnalyse.size());
+		
+		if ( i + 1 < contentToAnalyse.size()) {
 			dayOfWeek = contentToAnalyse.get(i+1);
 		}
 		
@@ -269,7 +274,7 @@ public class DateAndTimeParser {
 			int daysToAdd = checkWeekday(dayOfWeek);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, daysToAdd);
-			dateTimeElements = getCalendar(cal, dateTimeElements);
+			dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		}
 		
 		return dateTimeElements;
@@ -286,7 +291,7 @@ public class DateAndTimeParser {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, numOfDays);
-		dateTimeElements = getCalendar(cal, dateTimeElements);
+		dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		
 		return dateTimeElements;
 	}
@@ -294,7 +299,7 @@ public class DateAndTimeParser {
 	private int[] getTheDayAfterTomorrow(String currentWord, int[] dateTimeElements, int i) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 2);
-		dateTimeElements = getCalendar(cal, dateTimeElements);
+		dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		return dateTimeElements;
 	}
 
@@ -316,7 +321,7 @@ public class DateAndTimeParser {
 		System.out.println("Debug: Test checkWeekday @line 292. " + daysToAdd);
 		
 		cal.add(Calendar.DATE, daysToAdd);
-		dateTimeElements = getCalendar(cal, dateTimeElements);
+		dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		
 		return dateTimeElements;
 	}
@@ -370,7 +375,7 @@ public class DateAndTimeParser {
 	private int[] getTomorrow(String currentWord, int[] dateTimeElements, int i) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
-		dateTimeElements = getCalendar(cal, dateTimeElements);
+		dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		return dateTimeElements;
 		
 	}
@@ -378,7 +383,7 @@ public class DateAndTimeParser {
 	private int[] getToday(String currentWord, int[] dateTimeElements, int i) {
 		
 		Calendar cal = Calendar.getInstance();
-		dateTimeElements = getCalendar(cal, dateTimeElements);
+		dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		return dateTimeElements;
 	}
 	
@@ -552,7 +557,7 @@ public class DateAndTimeParser {
 			int daysToAdd = checkWeekday(currentWord);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, daysToAdd);
-			dateTimeElements = getCalendar(cal, dateTimeElements);
+			dateTimeElements = getCalendarWithNoTime(cal, dateTimeElements, 0);
 		}
 		
 		return dateTimeElements;
@@ -707,14 +712,14 @@ public class DateAndTimeParser {
 
 
 
-	private int[] getCalendar(Calendar cal, int[] dateTimeElements) {
+	private int[] getCalendarWithNoTime(Calendar cal, int[] dateTimeElements, int defaultTime) {
 		dateTimeElements[0] = cal.get(Calendar.DAY_OF_WEEK);
 		dateTimeElements[3] = cal.get(Calendar.DAY_OF_MONTH);
 		dateTimeElements[4] = cal.get(Calendar.MONTH) + 1;
 		dateTimeElements[5] = cal.get(Calendar.YEAR);
 		
-		dateTimeElements[1] = cal.get(Calendar.HOUR_OF_DAY);
-		dateTimeElements[2] = cal.get(Calendar.MINUTE);
+		dateTimeElements[1] = defaultTime;
+		dateTimeElements[2] = defaultTime;
 		
 		return dateTimeElements;
 	}
@@ -722,11 +727,12 @@ public class DateAndTimeParser {
 	//********************************************** determine date type **********************************************//
 	private boolean isNextWeekday(ArrayList<String> contentToAnalyse) {
 		
-		System.out.println("Debug: Test isNextWeekday @line 686." + contentToAnalyse.size());
+		System.out.println("Debug: Test isNextWeekday @line 725." + contentToAnalyse.size());
 		
 		if (contentToAnalyse.contains("next") && contentToAnalyse.indexOf("next") + 1 < contentToAnalyse.size()) {
 			
-			if (dayTypes.contains((contentToAnalyse.indexOf("next") + 1))) {
+			if (dayTypes.contains((contentToAnalyse.get(contentToAnalyse.indexOf("next") + 1)))) {
+				
 				return true;
 			}
 			else {
@@ -734,7 +740,7 @@ public class DateAndTimeParser {
 			}
 		}
 		else {
-			System.out.println("Debug: Test isNextWeekday @line 698." + contentToAnalyse.size());
+			System.out.println("Debug: Test isNextWeekday @line 738." + contentToAnalyse.size());
 			return false;
 		}
 	}
@@ -754,7 +760,7 @@ public class DateAndTimeParser {
 */
 	private boolean isNextFewDays(ArrayList<String> contentToAnalyse) {
 		
-		System.out.println("Debug: Test isNextFewDays @line 714.");
+		System.out.println("Debug: Test isNextFewDays @line 758.");
 		
 		if (contentToAnalyse.contains("next") && (contentToAnalyse.contains("day") || contentToAnalyse.contains("days"))) {
 			return true;
@@ -809,7 +815,7 @@ public class DateAndTimeParser {
 		
 	}
 
-	private boolean isTomorrowType(ArrayList<String> contentToAnalyse) {
+	protected boolean isTomorrowType(ArrayList<String> contentToAnalyse) {
 		
 		System.out.println("Debug: Test isTomorrowType @line 762.");
 		
@@ -826,7 +832,7 @@ public class DateAndTimeParser {
 		}
 	}
 
-	private boolean isTodayType(ArrayList<String> contentToAnalyse) {
+	protected boolean isTodayType(ArrayList<String> contentToAnalyse) {
 		System.out.println("Debug: Test isTodayType @line 777.");
 		if (contentToAnalyse.size() == 1) {
 			if (contentToAnalyse.get(0).contains("today") || contentToAnalyse.get(0).contains("tdy")) {
@@ -841,7 +847,7 @@ public class DateAndTimeParser {
 		}
 	}
 	
-	private boolean isEnglishDateType(ArrayList<String> contentToAnalyse) {
+	protected boolean isEnglishDateType(ArrayList<String> contentToAnalyse) {
 		System.out.println("Debug: Test isEnglishDateType  @line 792." + contentToAnalyse.size());
 		String month = "";
 		String day = "";
@@ -859,6 +865,12 @@ public class DateAndTimeParser {
 			System.out.println("Debug: Test isEnglishDateType  @line 824." + day);
 		}
 		
+		// Example: add buy grocery by monday 1000hrs
+		else if (contentToAnalyse.size() == 2 && dayTypes.contains(contentToAnalyse.get(0)) 
+				&& isTimeType(contentToAnalyse.get(1))) {
+			day = contentToAnalyse.get(0);
+		}
+		
 		// if the word next to the current contains month type like feb, march
 		// Example: 20 feb 2017
 		
@@ -874,7 +886,7 @@ public class DateAndTimeParser {
 	}
 	
 	// maybe redundant.
-	private boolean isNumericalDateType(String currentWord) {
+	protected boolean isNumericalDateType(String currentWord) {
 		
 		System.out.println("Debug: Test isNumericalDateType @line 845.");
 		
@@ -891,7 +903,7 @@ public class DateAndTimeParser {
 	}
 	
 	
-	private boolean isTimeType(String currentWord) {
+	protected boolean isTimeType(String currentWord) {
 		
 		System.out.println("Debug: Test isTimeType @line 845.");
 		

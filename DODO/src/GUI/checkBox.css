@@ -1,0 +1,22 @@
+.check-box>.box {
+  -fx-background-insets: 0;
+  -fx-background-radius: 0;
+  -fx-background-color: transparent;
+  
+}
+
+.check-box>.box>.mark {
+  -fx-background-image: url("1.png");
+  -fx-padding: 30px;
+  -fx-height:45px;
+  -fx-background-position: top;
+  -fx-background-repeat: stretch;
+  -fx-shape: none;
+}
+
+.check-box:selected>.box>.mark{
+  -fx-background-color: transparent;
+  -fx-padding: 30px;
+  -fx-height:45px;
+  -fx-background-image: url("2.png");
+}

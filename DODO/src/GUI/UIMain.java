@@ -15,52 +15,57 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /*
  *@author Chiang Jia Feng
  *@Description: GUI (intialize the root(VBox))
  */
-public class GUI{
+public class UIMain  {
 	
-	private final double sceneWidth = 1640;  //primaryStage scene size
-	private final double sceneHeight = 750; 
-	private Stage primaryStage;
 	private HBox root = new HBox(); //main root
-	private LeftBox leftBox = new LeftBox(); 
-	private CenterBox centerBox = new CenterBox();
+	private UILeftBox leftBox; 
+	private UIRightBox rightBox;
+	private Logic logic;
+	private Stage primaryStage;
+	private final double sceneWidth = 1800;  //primaryStage scene size
+	private final double sceneHeight = 750; 
 	private Scene scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);	
-	public static Logic logic;
-	public String strDBdir = "";
-	public String strDBname = "";
-	
+	private String strDBdir = "";
+	private String strDBname = "";
+	public UIMain(Logic logic)
+	{
+		this.logic=logic;
+		leftBox = new UILeftBox(logic);
+		rightBox = new UIRightBox(logic);
+	}
 	public void start(Stage primaryStage) 
 	{		
-
-		CenterBox.logic=this.logic;
-		root.getChildren().add(leftBox.leftBox(primaryStage,centerBox));
-		root.getChildren().add(centerBox.centerBox(primaryStage,leftBox));
-		EscCloseForm(primaryStage);
-		initRoot(primaryStage);
-	}
-	public void initRoot(Stage primaryStage) 
-	{
 		this.primaryStage = primaryStage;
+		addLeftAndRightBox();
+		setEscCloseForm();
+		show();
+	}
+	private void addLeftAndRightBox() 
+	{
+		root.getChildren().addAll(leftBox.UIleftBox(rightBox),rightBox.UIRightBox(leftBox));
+	}
+	public void show() 
+	{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	private void EscCloseForm(Stage primaryStage) 
+	private void setEscCloseForm() 
 	{
-		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-		        @Override
-		        public void handle(KeyEvent t) {
-		          if(t.getCode()==KeyCode.ESCAPE)
-		          {
-		        	  primaryStage.close();
-		          }
-		        }
-		    });		
-		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		saveBeforeClose(primaryStage);
+		escListener(primaryStage);
+		primaryStage.close();
+	}
+	private void saveBeforeClose(Stage primaryStage) 
+	{
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+		{
 	          public void handle(WindowEvent we) 
 	          {
 	        	  Task<Void> task = new Task<Void>() {
@@ -69,19 +74,33 @@ public class GUI{
 						return null;
 	     	         }
 	     	     };
-	     	    Thread th = new Thread(task);
-	     	    th.setDaemon(true);
-	     	    th.start();
+	     	    startThread(task);
 	            System.out.println("Stage is closing");
 	          }
-	      });        
-		primaryStage.close();
-	}
 
+			private void startThread(Task<Void> task) {
+				Thread th = new Thread(task);
+	     	    th.setDaemon(true);
+	     	    th.start();				
+			}
+	      });    		
+	}
+	private void escListener(Stage primaryStage) 
+	{
+		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
+		{
+		        @Override
+		        public void handle(KeyEvent t) {
+		          if(t.getCode()==KeyCode.ESCAPE)
+		          {
+		        	  primaryStage.close();
+		          }
+		        }
+		    });			
+	}
 	public void setDBname(String strDBname) {
 		this.strDBname = strDBname;
 	}
-
 	public void setDBdir(String strDBdir) {
 		this.strDBdir = strDBdir;
 		

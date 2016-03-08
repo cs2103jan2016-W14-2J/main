@@ -1,0 +1,2 @@
+DBDIR = C:\Users\CHIANG-DELL\AppData\Roaming\Microsoft\Windows\Network Shortcuts\DODODB.txt
+FILENAME = DODODB.txt

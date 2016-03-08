@@ -5,6 +5,7 @@ import Logic.*;
 import Parser.*;
 import Storage.*;
 import Task.*;
+import dodo.Parser;
 
 public abstract class Command {
 	protected COMMAND_TYPE command_type;

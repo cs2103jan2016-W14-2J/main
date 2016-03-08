@@ -58,9 +58,8 @@ public class AddParser {
 	private ArrayList<String> stringToAnalyse;
 	private ArrayList<String> taskNameArrayList;
 	
-	public AddParser(COMMAND_TYPE commandType, String userTask) {
+	public AddParser(String userTask) {
 		this.userTask = userTask;
-		this.commandType = commandType;
 		executeAddParser();
 	}
 	

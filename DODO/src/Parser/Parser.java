@@ -32,6 +32,13 @@ import Task.*;
  * 2. add nus soc sports camp from 20 feb 2017 to 20 feb 2018
  * 3. add babysit baby claudia from today to tomorrow
  * 
+ * Delete:
+ * Single delete: delete 1
+ * Multiple delete: delete 1, 3, 5, 7
+ * Range delete: delete 1 to 4 / delete 1-9
+ * All delete: delete all
+ * 
+ * 
  * @author Pay Hao Jie
  */
 
@@ -81,7 +88,7 @@ public class Parser {
 		switch (commandType) {
 			
 			case ADD:
-				AddParser addParser = new AddParser(commandType, userTask);
+				AddParser addParser = new AddParser(userTask);
 				setAddAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;
 			case DELETE:

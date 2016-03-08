@@ -1,10 +1,6 @@
 package Parser;
 
 import Command.*;
-import Storage.*;
-import Task.*;
-import GUI.*;
-import Logic.*;
 
 import java.util.HashMap;
 
@@ -21,8 +17,8 @@ public class FlexiCommand {
 	public FlexiCommand() {
 		possibleCommands = new HashMap<String, COMMAND_TYPE>();
 		possibleCommands = initiateFlexiAddCommand();
-		/*possibleCommands = initiateFlexiDeleteCommand();
-		possibleCommands = initiateFlexiEditCommand();
+		possibleCommands = initiateFlexiDeleteCommand();
+/*		possibleCommands = initiateFlexiEditCommand();
 		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiTagCommand();

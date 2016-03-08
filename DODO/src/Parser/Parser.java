@@ -8,7 +8,7 @@ import GUI.*;
 import Logic.*;
 import Task.*;
 /*
- * V 0.1: At this moment, this CommandParser function is only able to handle the following input format.
+ * V 0.1: At this moment, this Parser function is only able to handle the following input format.
  * 
  * Timed Task:
  * 1. add revise on CS2103T at 1930hrs
@@ -81,7 +81,7 @@ public class Parser {
 				setTaskAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;
 			case DELETE:
-				DeleteParser addParser = new DeleteParser(commandType, userTask);
+				DeleteParser addParser = new DeleteParser(userTask);
 				break;
 /*			case EDIT:
 				break;

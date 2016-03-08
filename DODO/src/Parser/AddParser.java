@@ -91,6 +91,7 @@ public class AddParser {
 	}
 
 	public TASK_TYPE determineTaskType(ArrayList<String> taskItems) {
+		
 		if (checkIfFloatingTask(taskItems)) {
 			setTaskType(TASK_TYPE.FLOATING);
 			return TASK_TYPE.FLOATING;

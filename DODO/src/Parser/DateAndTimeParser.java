@@ -17,9 +17,11 @@ public class DateAndTimeParser {
 	
 	private List<String> dayTypes = new ArrayList<>(Arrays.asList("null", "mon", "monday", "tue", "tuesday", "wed", "wednesday",
 			"thurs", "thursday", "fri", "friday", "sat", "saturday", "sun", "sunday"));
+	
 	private List<String> tomorrowTypes = new ArrayList<>(Arrays.asList("tomorrow","tmr", "tml", "tmrw", "2moro"));
+	
 	private List<String> monthTypes = new ArrayList<>(Arrays.asList("jan", "january", "feb", "february", "mar",
-			"march", "apr","april", "may","may", "june","june", "jul", "july", "aug", "august", "sept", "september", "oct",
+			"march", "apr", "april", "may","may", "june","june", "jul", "july", "aug", "august", "sept", "september", "oct",
 			"october", "nov", "november", "dec", "december"));
 	
 	private final String KEYWORD_AM = "am";
@@ -185,7 +187,7 @@ public class DateAndTimeParser {
 		String time = "";
 		String date = "";
 		
-		time = temp[1] + ":" + temp[1];
+		time = temp[1] + ":" + temp[2];
 		date = temp[3] + "/" + temp[4] + "/" + temp[5];
 		
 		String combined = date + " " + time;
@@ -907,7 +909,7 @@ public class DateAndTimeParser {
 			return true;
 		}
 		// check if string contains HRs and check if it is indeed a time.
-		else if (containsHRS(lastThreeChars)) {
+		else if (containsHRS(lastThreeChars) || containsHRS(lastTwoChars)) {
 			return true;
 		}
 		// need to check if string contains 0700

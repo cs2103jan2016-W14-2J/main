@@ -1,25 +1,43 @@
 [
   {
     "type": "FLOATING",
-    "name": "test ",
+    "name": "task2",
+    "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
     "type": "FLOATING",
-    "name": "another test ",
+    "name": "task3",
+    "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
     "type": "FLOATING",
-    "name": "new stuff ",
+    "name": "task4",
+    "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
     "type": "FLOATING",
-    "name": "another piece of shit ",
+    "name": "task5",
+    "tag": "TAG",
+    "flag": false,
+    "isComplete": false
+  },
+  {
+    "type": "FLOATING",
+    "name": "task6",
+    "tag": "TAG",
+    "flag": false,
+    "isComplete": false
+  },
+  {
+    "type": "FLOATING",
+    "name": "task7",
+    "tag": "TAG",
     "flag": false,
     "isComplete": false
   }

@@ -13,14 +13,24 @@ public class DeadlinedTask extends Task {
 	public DeadlinedTask(TASK_TYPE type, String name, String tag, Date endDateTime) {
 		super(type, name, tag);
 		this.endDateTime = endDateTime;
-		// TODO
+		isOverdue = checkOverdue();
 	}
 	
-	private void checkOverdue() {
-		// TODO
+	private boolean checkOverdue() {
+		Date current = new Date();
+		if  (endDateTime.after(current)) {
+			return true;
+		}
+		else return false;
 	}
+	
+	/*************************************ACCESSORS*********************************/
 	
 	public boolean getIsOverdue() {
 		return this.isOverdue;
+	}
+	
+	public Date getEndDateTime() {
+		return this.endDateTime;
 	}
 }

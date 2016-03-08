@@ -35,7 +35,7 @@ public class Add extends Command {
 	
 	private String addFloatingTasks() {
 		String name = parser.getName(); // cannot be null
-		String tag = parser.getTag(); // may be null
+		String tag = parser.getTag(); // NULL got noe
 		
 		Task task = new Task(TASK_TYPE.FLOATING, name, tag);
 		ArrayList<Task> floatingTasks = logic.getFloatingTasks();
@@ -47,7 +47,7 @@ public class Add extends Command {
 	private String addDeadlinedTasks() {
 		String name = parser.getName(); // cannot be null
 		String tag = parser.getTag(); // may be null
-		Date endDateTime = null; // cannot be null
+		Date endDateTime = parser.getEndTime(); // cannot be null
 		
 		DeadlinedTask task = new DeadlinedTask(TASK_TYPE.DEADLINED, name, tag, endDateTime);
 		
@@ -68,8 +68,8 @@ public class Add extends Command {
 	private String addEvent() {
 		String name = parser.getName(); // cannot be null
 		String tag = parser.getTag(); // may be null
-		Date startDateTime = null;
-		Date endDateTime = null;
+		Date startDateTime = parser.getStartTime();
+		Date endDateTime = parser.getEndTime();
 		
 		Event task = new Event(TASK_TYPE.EVENT, name, tag, startDateTime, endDateTime);
 		

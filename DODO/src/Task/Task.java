@@ -24,13 +24,32 @@ public class Task {
 	}
 	
 	/**************************************ACCESSORS**************************/
+	// unusable
 	public boolean getFlag() {
 		return this.flag;
 	}
 	
-	protected void setFlag(boolean flag) {
-		this.flag = flag;
+	// usable
+	public String getName() {
+		return this.name;
 	}
+	
+	// unusable
+	public boolean getIsComplete() {
+		return this.isComplete;
+	}
+	
+	//unusable
+	public String getDescription() {
+		return this.description;
+	}
+	
+	//unusable
+	public String tag() {
+		return this.tag;
+	}
+	
+	/***********************************MUTATORS*****************************/
 	
 	public String getTag() {
 		return this.tag;
@@ -40,26 +59,18 @@ public class Task {
 		this.tag = tag;
 	}
 	
-	public String getDescription() {
-		return this.description;
+	protected void setFlag(boolean flag) {
+		this.flag = flag;
 	}
 	
 	protected void setDescription(String description) {
 		this.description = description;
 	}
 	
-	public boolean getIsComplete() {
-		return this.isComplete;
-	}
-	
 	protected void setIsComplete(boolean isComplete) {
 		this.isComplete = isComplete;
 	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
+		
 	@Override
 	public String toString() {
 		return this.name;

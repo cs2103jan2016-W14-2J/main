@@ -42,6 +42,8 @@ public class Logic {
 		switch (command) {
 		case ADD:
 			return add(parser);
+		case DELETE:
+			return delete(parser);
 		case UNDO:
 			return undo();
 		}
@@ -51,6 +53,11 @@ public class Logic {
 	public String add(Parser parser) {
 		Add add = new Add(parser, this, COMMAND_TYPE.ADD);
 		return add.execute();
+	}
+	
+	public String delete(Parser parser) {
+		Delete delete = new Delete(parser, this, COMMAND_TYPE.DELETE);
+		return delete.execute();
 	}
 	
 	public String undo() {

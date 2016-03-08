@@ -159,12 +159,21 @@ public class Parser {
 		return this.endTime;
 	}
 	
-	public String getTaskName() {
+	public String getName() {
 		return this.taskName;
 	}
 	
-	public TASK_TYPE getTaskType() {
+	public TASK_TYPE getType() {
 		return this.taskType;
+	}
+	
+	public COMMAND_TYPE getCommandType() {
+		return this.command;
+	}
+	
+	// STUB
+	public String getTag() {
+		return "TAG";
 	}
 	
 	//***********************************Accessors for DeleteParser************************************//

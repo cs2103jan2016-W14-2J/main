@@ -80,9 +80,10 @@ public class Parser {
 				AddParser addParser = new AddParser(commandType, userTask);
 				setTaskAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;
-/*			case "EDIT":
+			case DELETE:
+				DeleteParser addParser = new DeleteParser(commandType, userTask);
 				break;
-			case "DELETE":
+/*			case EDIT:
 				break;
 			case "DISPLAY":
 				break;

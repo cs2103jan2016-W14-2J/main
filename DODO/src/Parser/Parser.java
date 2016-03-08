@@ -1,5 +1,6 @@
 package Parser;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -47,6 +48,9 @@ public class Parser {
 	private Date startTime;
 	private Date endTime;
 	
+	private DELETE_TYPE deleteType;
+	private ArrayList<Integer> taskToDelete;
+	
 	// update
 	public Parser (String userInput) {
 		System.out.println("Test Parser");
@@ -78,10 +82,11 @@ public class Parser {
 			
 			case ADD:
 				AddParser addParser = new AddParser(commandType, userTask);
-				setTaskAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
+				setAddAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;
 			case DELETE:
-				DeleteParser addParser = new DeleteParser(userTask);
+				DeleteParser deleteParser = new DeleteParser(userTask);
+				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTaskToDelete());
 				break;
 /*			case EDIT:
 				break;
@@ -93,7 +98,8 @@ public class Parser {
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
 		}
 	}
-	
+
+
 	private void checkIfValidUserInput(String userInput) {
 		if (userInput.equals("")) {
 			System.out.println(MESSAGE_INPUT_ERROR);
@@ -130,7 +136,8 @@ public class Parser {
 		return temp[1];
 	}
 	
-	private void setTaskAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
+	//***********************************Accessors for AddParser************************************//
+	private void setAddAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.taskName = taskName;
@@ -152,6 +159,20 @@ public class Parser {
 	public TASK_TYPE getTaskType() {
 		return this.taskType;
 	}
-
+	
+	//***********************************Accessors for DeleteParser************************************//
+	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<Integer> taskToDelete) {
+		this.taskToDelete = new ArrayList<Integer>();
+		this.taskToDelete = taskToDelete;
+		this.deleteType = deleteType;
+	}
+	
+	public DELETE_TYPE getDeleteType() {
+		return this.deleteType;
+	}
+	
+	public ArrayList<Integer> getTaskToDelete() {
+		return this.taskToDelete;
+	}
 }
 

@@ -1,4 +1,5 @@
 package GUI;
+import javafx.scene.text.Font;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -8,6 +9,9 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class UICellComponents{
 	
@@ -23,10 +27,12 @@ public class UICellComponents{
 	private final double labelHeightName = 1000;
 	public final double cellWidth = 100;
 	public final double cellHeight = 35;
+	public final double labelIndexXproperty = 50;
    
 
 	public UICellComponents(String strIndex, String strName, String strDescription)
 	{
+
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
 		lblName = new Label(strName);
@@ -49,23 +55,32 @@ public class UICellComponents{
 	}
 	private void setCellCosmetic()
 	{
+		setLabelCosmetics();
 		setCellRootCosmetics();
+	}
+	private void setLabelCosmetics() {
+		lblIndex.setTextFill(Color.BLACK);
+		lblName.setTextFill(Color.BLACK);
 	}
 	private void setCellRootCosmetics() 
 	{
 		cellRoot.setStyle
-		("-fx-padding:5;" 
-		+ "-fx-border-style:solid;"
-				+"fx-border-width:2;"
-		+"fx-border-inserts:5;"
-				+"fx-border-radius:5;"
-		+"fx-border-color:blue;"
-		+"fx-border-radius: 10 10 0 0;"
-		 +"fx-background-radius: 10 10 0 0;");
+		("-fx-padding:3;" + "-fx-border-style:solid;"+"-fx-border-width:2;"
+		+"-fx-border-inserts:5;"+"-fx-border-color: #090a0c,linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),linear-gradient(#20262b, #191d22), radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));"
+		+"-fx-border-radius: 10 10 10 10;"+"-fx-background-radius: 10 1 0 0; "
+		+"-fx-background-radius: 5;");
+
+/*		cellRoot.setStyle("-fx-background-color: #090a0c,"
+				+ "linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),"
+				+ "linear-gradient(#20262b, #191d22),"
+				+ "radial-gradient(center 50% 0%, radius 100%, "
+				+ "rgba(114,131,148,0.9), rgba(255,255,255,0));");*/
+		
+
 	}
 	private void setComponentsSetting() 
 	{
-		setLblIndexSetting();
+		setLblSetting();
 		setCellRootSetting();
 		setChkBoxSetting();
 	}
@@ -79,8 +94,9 @@ public class UICellComponents{
 		cellRoot.setPrefSize(cellWidth,cellHeight);
 		
 	}
-	private void setLblIndexSetting() 
+	private void setLblSetting() 
 	{
+		lblIndex.translateXProperty().set(labelIndexXproperty);
 		lblIndex.setPrefSize(labelWidthIndex, labelHeightIndex);
 		lblName.setPrefSize(labelWidthName, labelHeightName);	
 		//lblDescription.setPrefSize(labelHeightIndex, labelHeight);

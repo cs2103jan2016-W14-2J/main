@@ -36,13 +36,8 @@ import javafx.util.Callback;
  */
 
 public class UIRightBox{
-
-
-
 	private VBox rightBox = new VBox(); //current box
 	private UILeftBox leftBox;
-
-	
 	private final double textfieldWidth = 55; //centerBox txtfield size
 	private final double textfieldHeight = 1233;
 	private final double tabPaneWidth = 1000; //centerBox tabPane size
@@ -51,7 +46,6 @@ public class UIRightBox{
 	private final double titledPaneHeight = 1450;
 	private final double dialogWidth = 500; 
 	private final double dialogHeight = 500;
-
 
 	private TabPane tabPane = new TabPane();
 	private TextField mainTextField = new TextField();
@@ -89,7 +83,6 @@ public class UIRightBox{
 		addMainTextfield();
     	updateNewListItems();
 		updateTitledPane(); 
-		rightBox.styleProperty().set("-fx-border-color: black;");
 		
 		return rightBox;	
 	}
@@ -133,18 +126,21 @@ public class UIRightBox{
 	private void ongoingTab() {
 		Tab tab = new Tab(onGoingTab);
 		tab.setContent(titledPaneOnGoingTask);
-		tabPane.getTabs().add(tab);			
+		tabPane.getTabs().add(tab);		
 	}
 	private void floatingTab() 
 	{
 		Tab tab = new Tab(floatingTab);
 		tab.setContent(titledPaneFloatingTask);
 		tabPane.getTabs().add(tab);		
+		
+
 	}
 	private void addListToTitledPane(TitledPane titledPane,ObservableList<Task>listTask, TASK_TYPE typeOfTask) 
 	{		
 		initTitledPane(titledPane);
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
+		
 		new Thread(new Runnable() 
 		{
 		    @Override public void run() 
@@ -154,7 +150,7 @@ public class UIRightBox{
 		          public ListCell<Task> call(ListView<Task> param) 
 		          {
 		            ListCell<Task> cell = new ListCell<Task>() 
-		            {		            	
+		            {		            
 		              @Override
 		              public void updateItem(Task item, boolean empty) 
 		              {
@@ -167,6 +163,8 @@ public class UIRightBox{
 		                }
 		              }
 		            };
+            		//cell.setStyle("-fx-control-background: Transparent");
+		            
 		            return cell;
 		          }
 		        });

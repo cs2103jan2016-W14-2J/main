@@ -1,19 +1,25 @@
 [
   {
     "type": "FLOATING",
-    "name": "new test ",
+    "name": "test ",
     "flag": false,
     "isComplete": false
   },
   {
     "type": "FLOATING",
-    "name": "second test ",
+    "name": "another test ",
     "flag": false,
     "isComplete": false
   },
   {
     "type": "FLOATING",
-    "name": "making love ",
+    "name": "new stuff ",
+    "flag": false,
+    "isComplete": false
+  },
+  {
+    "type": "FLOATING",
+    "name": "another piece of shit ",
     "flag": false,
     "isComplete": false
   }

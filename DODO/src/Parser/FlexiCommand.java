@@ -1,10 +1,6 @@
 package Parser;
 
 import Command.*;
-import Storage.*;
-import Task.*;
-import GUI.*;
-import Logic.*;
 
 import java.util.HashMap;
 
@@ -21,8 +17,8 @@ public class FlexiCommand {
 	public FlexiCommand() {
 		possibleCommands = new HashMap<String, COMMAND_TYPE>();
 		possibleCommands = initiateFlexiAddCommand();
-		/*possibleCommands = initiateFlexiDeleteCommand();
-		possibleCommands = initiateFlexiEditCommand();
+		possibleCommands = initiateFlexiDeleteCommand();
+/*		possibleCommands = initiateFlexiEditCommand();
 		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiTagCommand();
@@ -56,19 +52,19 @@ public class FlexiCommand {
 		return possibleCommands;
 	}
 	
-	/*private HashMap<String, COMMAND_TYPE> initiateFlexiDeleteCommand() {
-		possibleCommands.put("d", DELETE);
-		possibleCommands.put("delete", DELETE);
-		possibleCommands.put("dlt", DELETE);
-		possibleCommands.put("del", DELETE);
-		possibleCommands.put("deletes", DELETE);
-		possibleCommands.put("remove", DELETE);
-		possibleCommands.put("rm", DELETE);
-		possibleCommands.put("r", DELETE);
+	private HashMap<String, COMMAND_TYPE> initiateFlexiDeleteCommand() {
+		possibleCommands.put("d", COMMAND_TYPE.DELETE);
+		possibleCommands.put("delete", COMMAND_TYPE.DELETE);
+		possibleCommands.put("dlt", COMMAND_TYPE.DELETE);
+		possibleCommands.put("del", COMMAND_TYPE.DELETE);
+		possibleCommands.put("deletes", COMMAND_TYPE.DELETE);
+		possibleCommands.put("remove", COMMAND_TYPE.DELETE);
+		possibleCommands.put("rm", COMMAND_TYPE.DELETE);
+		possibleCommands.put("r", COMMAND_TYPE.DELETE);
 		return possibleCommands;
 		
 	}
-	
+/*	
 	private HashMap<String, COMMAND_TYPE> initiateFlexiEditCommand() {
 		possibleCommands.put("ed", EDIT);
 		possibleCommands.put("edit", EDIT);

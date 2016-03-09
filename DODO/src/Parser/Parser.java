@@ -1,34 +1,45 @@
 package Parser;
 
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 import Command.*;
+import GUI.*;
+import Logic.*;
 import Task.*;
-
-
 /*
- * V 0.1: At this moment, this CommandParser function is only able to handle the following input format.
+ * V 0.1: At this moment, this Parser function is only able to handle the following input format.
  * 
  * Timed Task:
  * 1. add revise on CS2103T at 1930hrs
- * 2. add finish CS2103T by 2359hrs
+ * 2. add finish CS2103T by this thursday
  * 3. add meeting with boss on 21.07.2016
  * 4. add cs2010 lab5 due on 01/03
+ * 5. add submit assignment 1 before monday
+ * 6. add start building sandcastle by the next 2 days.
+ * 7. add paint my toe nails by friday 2359hrs
  * 
  * Floating Task:
  * 1. add buy beer from 7-11
  * 2. add study CS2103T on the floor
  * 3. add revise CS2103T by the beach
- * 4. add visit ramen store @ nus
- * 5. add travel from 7/11 to yishun
+ * 4. add visit ramen store at nus
+ * 5. add travel from yishun to nus
  * 
  * Event Task:
- * 1. add study CS2103T from 1800hrs to 2000hrs
- * 2. add code from 1130pm to 1030am
+ * 1. add study cs2103t from 20/3/2016 to 23/04/2016.
+ * 2. add nus soc sports camp from 20 feb 2017 to 20 feb 2018
+ * 3. add babysit baby claudia from today to tomorrow
+ * 
+ * Delete:
+ * Single delete: delete 1
+ * Multiple delete: delete 1, 3, 5, 7
+ * Range delete: delete 1 to 4 / delete 1-9
+ * All delete: delete all
  * 
  * 
+ * @author Pay Hao Jie
  */
 
 public class Parser {
@@ -44,9 +55,14 @@ public class Parser {
 	private Date startTime;
 	private Date endTime;
 	
+	private DELETE_TYPE deleteType;
+	private ArrayList<Integer> taskToDelete;
+	
 	// update
 	public Parser (String userInput) {
+		System.out.println("Test Parser");
 		executeCommand(userInput);
+		
 	}
 	
 	/*
@@ -56,22 +72,30 @@ public class Parser {
 	 */
 	
 	protected void executeCommand(String userInput) {
+		System.out.println("Debug: Test execute command");
 		userInput = userInput.trim();
 		checkIfValidUserInput(userInput);
 	
 		String command = getUserCommand(userInput);
+		System.out.println("Debug: Test command: " + command);
+		
 		COMMAND_TYPE commandType = determineCommandType(command);
+		System.out.println("Debug: Test commandType: " + commandType);
+		
 		String userTask = getUserInputContent(userInput);
+		System.out.println("Debug: Test useTask: " + userTask);
 		
 		switch (commandType) {
 			
 			case ADD:
-				AddParser addParser = new AddParser(commandType, userTask);
-				setTaskAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
+				AddParser addParser = new AddParser(userTask);
+				setAddAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;
-/*			case "EDIT":
+			case DELETE:
+				DeleteParser deleteParser = new DeleteParser(userTask);
+				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTaskToDelete());
 				break;
-			case "DELETE":
+/*			case EDIT:
 				break;
 			case "DISPLAY":
 				break;
@@ -81,11 +105,13 @@ public class Parser {
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
 		}
 	}
-	
+
+
 	private void checkIfValidUserInput(String userInput) {
 		if (userInput.equals("")) {
 			System.out.println(MESSAGE_INPUT_ERROR);
 		}
+		System.out.println("Debug: Test checkIfValidUserInput");
 	}
 
 	public COMMAND_TYPE determineCommandType(String commandType) {
@@ -117,7 +143,8 @@ public class Parser {
 		return temp[1];
 	}
 	
-	private void setTaskAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
+	//***********************************Accessors for AddParser************************************//
+	private void setAddAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.taskName = taskName;
@@ -132,13 +159,36 @@ public class Parser {
 		return this.endTime;
 	}
 	
-	public String getTaskName() {
+	public String getName() {
 		return this.taskName;
 	}
 	
-	public TASK_TYPE getTaskType() {
+	public TASK_TYPE getType() {
 		return this.taskType;
 	}
-
+	
+	public COMMAND_TYPE getCommandType() {
+		return this.command;
+	}
+	
+	// STUB
+	public String getTag() {
+		return "TAG";
+	}
+	
+	//***********************************Accessors for DeleteParser************************************//
+	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<Integer> taskToDelete) {
+		this.taskToDelete = new ArrayList<Integer>();
+		this.taskToDelete = taskToDelete;
+		this.deleteType = deleteType;
+	}
+	
+	public DELETE_TYPE getDeleteType() {
+		return this.deleteType;
+	}
+	
+	public ArrayList<Integer> getTaskToDelete() {
+		return this.taskToDelete;
+	}
 }
 

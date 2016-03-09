@@ -49,7 +49,7 @@ public class UIRightBox{
 	private final double dialogWidth = 500; 
 	private final double dialogHeight = 500;
 
-	private TabPane tabPane = new TabPane();
+	private static TabPane tabPane = new TabPane();
 	private TextField mainTextField = new TextField();
 	private Logic logic;
 	private Stage primaryStage;
@@ -88,10 +88,11 @@ public class UIRightBox{
 	Tab tabOverdue = new Tab(overDueTab);
 	VBox overdueVB = new VBox();
 	
-	public enum TASK_TYPE 
+	public static TASK_STATUS getCurrentTab()
 	{
-		onGoingTask,floatingTask,completedTask,overdueTask;
-	}	
+		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
+	}
+	
 	public UIRightBox(Logic logic) 
 	{
 		this.logic = logic;
@@ -179,7 +180,7 @@ public class UIRightBox{
 
 	}
 
-	private void addListToTitledPane(TitledPane titledPane,ObservableList<Task>listTask, TASK_TYPE typeOfTask) 
+	private void addListToTitledPane(TitledPane titledPane,ObservableList<Task>listTask, TASK_STATUS typeOfTask) 
 	{		
 		initTitledPane(titledPane);
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
@@ -294,10 +295,10 @@ public class UIRightBox{
 
 		}*/
 		
-		addListToTitledPane(titledPaneFloatingTask,FXCollections.observableArrayList(floatingTasks),TASK_TYPE.floatingTask);
-		addListToTitledPane(titledPaneOnGoingTask,FXCollections.observableArrayList(ongoingTasks),TASK_TYPE.onGoingTask);
-		addListToTitledPane(titledPaneCompletedTask,FXCollections.observableArrayList(completedTasks),TASK_TYPE.completedTask);
-		addListToTitledPane(titledPaneOverdueTask,FXCollections.observableArrayList(overdueTasks),TASK_TYPE.overdueTask);		
+		addListToTitledPane(titledPaneFloatingTask,FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
+		addListToTitledPane(titledPaneOnGoingTask,FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
+		addListToTitledPane(titledPaneCompletedTask,FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
+		addListToTitledPane(titledPaneOverdueTask,FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);		
 	}
 	public TextField getTextField()
 	{

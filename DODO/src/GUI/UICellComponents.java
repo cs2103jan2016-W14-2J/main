@@ -1,5 +1,9 @@
 package GUI;
 import javafx.scene.text.Font;
+
+import java.util.Date;
+
+import Task.DeadlinedTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -18,17 +22,17 @@ public class UICellComponents{
 	private Label lblIndex;
 	private Label lblName;
 	private Label lblDescription;
+	private Label lblEndDateTime;
     private CheckBox chkBox;
 	private Tooltip toolTip;
 	private HBox cellRoot;
 	private final double labelWidthIndex = 250; //centerBox titledPane size
 	private final double labelHeightIndex = 100;
-	private final double labelWidthName = 1250; //centerBox titledPane size
+	private final double labelWidthName = 1000; //centerBox titledPane size
 	private final double labelHeightName = 1000;
 	public final double cellWidth = 100;
 	public final double cellHeight = 35;
 	public final double labelIndexXproperty = 50;
-   
 
 	public UICellComponents(String strIndex, String strName, String strDescription)
 	{
@@ -37,6 +41,7 @@ public class UICellComponents{
 		lblIndex = new Label(strIndex);
 		lblName = new Label(strName);
 		lblDescription = new Label(strDescription);
+		lblEndDateTime = new Label("");
 		chkBox = new CheckBox();
 		toolTip = new Tooltip();
 		toolTip.setText(strName);
@@ -44,10 +49,25 @@ public class UICellComponents{
 		setComponentsCSS();
 		addAllComponents();
 	}
+	public UICellComponents(String strIndex, String strName, String strDescription, Date endDateTime) 
+	{
+		cellRoot = new HBox();
+		lblIndex = new Label(strIndex);
+		lblName = new Label(strName);
+		lblDescription = new Label(strDescription);
+		lblEndDateTime = new Label(endDateTime.toString());
+		
+		chkBox = new CheckBox();
+		toolTip = new Tooltip();
+		toolTip.setText(strName);
+		setComponentsSetting();
+		setComponentsCSS();
+		addAllComponents();
+		
+	}
 	private void addAllComponents() 
 	{
-		cellRoot.getChildren().addAll(lblIndex,lblName,lblDescription,chkBox);	
-		
+		cellRoot.getChildren().addAll(lblIndex,lblName,lblDescription,lblEndDateTime,chkBox);	
 	}
 	private void setComponentsCSS() 
 	{
@@ -113,6 +133,12 @@ public class UICellComponents{
 	public HBox getCellRoot()
 	{
 		return cellRoot;
+	}
+
+	public void setDateComponent(Date endDateTime) 
+	{
+		lblEndDateTime  = new Label(endDateTime.toString());
+		cellRoot.getChildren().set(3, lblEndDateTime);
 	}
 
 	

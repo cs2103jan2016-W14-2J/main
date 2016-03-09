@@ -37,7 +37,7 @@ public class UILeftBox {
 	private VBox leftBox = new VBox(); //current box
 	private UIRightBox rightBox;
 	private Logic logic;
-	Node popupContent;
+	private Node popupContent;
 	private DatePicker  checkInDatePicker = new DatePicker();
 	private Label checkInlabel = new Label("Check-In Date:");
 	private DatePickerSkin datePickerSkin = new DatePickerSkin(new DatePicker(LocalDate.now()));
@@ -70,7 +70,8 @@ public class UILeftBox {
 	private void setPopupContentCosmetic() 
 	{
 		popupContent.styleProperty().set("-fx-border-color: black;");
-	}	private void setInternalVBoxCosmetic() 
+	}	
+	private void setInternalVBoxCosmetic() 
 	{
 		internalVBox.styleProperty().set("-fx-border-color: black;");
 	}

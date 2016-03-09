@@ -1,6 +1,8 @@
 package GUI;
 
 
+import java.util.ArrayList;
+
 import Command.*;
 import Logic.*;
 import Parser.*;
@@ -47,7 +49,7 @@ public class UIRightBox{
 	private final double dialogWidth = 500; 
 	private final double dialogHeight = 500;
 
-	private TabPane tabPane = new TabPane();
+	private static TabPane tabPane = new TabPane();
 	private TextField mainTextField = new TextField();
 	private Logic logic;
 	private Stage primaryStage;
@@ -62,14 +64,35 @@ public class UIRightBox{
 	private TitledPane titledPaneOverdueTask = new TitledPane();
 	private TitledPane titledPaneFloatingTask = new TitledPane();
 	
-	private ObservableList<Task> ongoingTasks =  FXCollections.observableArrayList();
+	/*private ObservableList<Task> ongoingTasks =  FXCollections.observableArrayList();
 	private ObservableList<Task> floatingTasks=  FXCollections.observableArrayList();
 	private ObservableList<Task> completedTasks=  FXCollections.observableArrayList();
-	private ObservableList<Task> overdueTasks=  FXCollections.observableArrayList();
-	public enum TASK_TYPE 
+	private ObservableList<Task> overdueTasks=  FXCollections.observableArrayList();*/
+	private ArrayList<Task> ongoingTasks =  new ArrayList<Task>();
+	private ArrayList<Task> floatingTasks=  new ArrayList<Task>();
+	private ArrayList<Task> completedTasks=  new ArrayList<Task>();
+	private ArrayList<Task> overdueTasks=  new ArrayList<Task>();
+	
+	private UIFadeFeedBack fb = new UIFadeFeedBack();
+	
+	
+	Tab tabFloating = new Tab(floatingTab);
+	VBox floatingVB =new VBox();
+	
+	Tab tabOngoing = new Tab(onGoingTab);
+	VBox ongoingVB = new VBox();
+	
+	Tab tabCompleted = new Tab(completedTab);
+	VBox completedVB = new VBox();
+	
+	Tab tabOverdue = new Tab(overDueTab);
+	VBox overdueVB = new VBox();
+	
+	public static TASK_STATUS getCurrentTab()
 	{
-		onGoingTask,floatingTask,completedTask,overdueTask;
-	}	
+		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
+	}
+	
 	public UIRightBox(Logic logic) 
 	{
 		this.logic = logic;
@@ -92,6 +115,9 @@ public class UIRightBox{
 		this.leftBox = leftBox;		
 	}
 
+	
+	
+	
 	private void addTabPane() 
 	{
 		initTabPane();
@@ -113,30 +139,48 @@ public class UIRightBox{
 		completedTab();
 		overdueTab();
 	}
-	private void overdueTab() {
-		Tab tab = new Tab(overDueTab);
-		tab.setContent(titledPaneOverdueTask);
-		tabPane.getTabs().add(tab);	
+	
+
+	private void overdueTab() 
+	{
+		overdueVB.getChildren().add(titledPaneOverdueTask);
+		tabOverdue.setContent(overdueVB);
+		tabPane.getTabs().add(tabOverdue);	
+		tabOverdue.setUserData(TASK_STATUS.OVERDUE);
 	}
-	private void completedTab() {
-		Tab tab = new Tab(completedTab);
-		tab.setContent(titledPaneCompletedTask);
-		tabPane.getTabs().add(tab);	
+	private void completedTab() 
+	{
+		completedVB.getChildren().add(titledPaneCompletedTask);
+		tabCompleted.setContent(completedVB);
+		tabPane.getTabs().add(tabCompleted);	
+		tabCompleted.setUserData(TASK_STATUS.COMPLETED);
 	}
-	private void ongoingTab() {
-		Tab tab = new Tab(onGoingTab);
-		tab.setContent(titledPaneOnGoingTask);
-		tabPane.getTabs().add(tab);		
+	private void ongoingTab()
+	{
+		ongoingVB.getChildren().add(titledPaneOnGoingTask);
+		tabOngoing.setContent(ongoingVB);
+		tabPane.getTabs().add(tabOngoing);		
+		tabOngoing.setUserData(TASK_STATUS.ONGOING);
+
 	}
 	private void floatingTab() 
 	{
-		Tab tab = new Tab(floatingTab);
+		TitledPane tp = new TitledPane();
+		floatingVB.getChildren().add(tp);
+		tabFloating.setContent(titledPaneFloatingTask);
+		tabPane.getTabs().add(tabFloating);		
+		tabFloating.setUserData(TASK_STATUS.FLOATING);
+		/*Tab tab = new Tab(floatingTab);
+		VBox vb = new VBox();
+		tab.setContent(vb);
 		tab.setContent(titledPaneFloatingTask);
 		tabPane.getTabs().add(tab);		
-		
+		tab.setUserData(TASK_STATUS.FLOATING);
+		*/
 
 	}
-	private void addListToTitledPane(TitledPane titledPane,ObservableList<Task>listTask, TASK_TYPE typeOfTask) 
+
+	private void addListToTitledPane(TitledPane titledPane,ObservableList<Task>listTask, TASK_STATUS typeOfTask) 
 	{		
 		initTitledPane(titledPane);
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
@@ -158,6 +202,12 @@ public class UIRightBox{
 		                if (item != null) 
 		                {
 		                    UICellComponents lsg = new UICellComponents(Integer.toString(this.getIndex()+1),item.getName(),item.getDescription());
+		                    System.out.println("here");
+		                    if (item instanceof DeadlinedTask)
+		                    {
+			                    lsg.setDateComponent(((DeadlinedTask)item).getEndDateTime());
+		                    }
+		                    
 		                	setTooltip(lsg.getToolTip());
 		                    setGraphic(lsg.getCellRoot());
 		                }
@@ -190,14 +240,10 @@ public class UIRightBox{
 			
 			    }
 		}).start();
-		
-		
 		titledPane.setContent(listViewLabel);
-		
-		
 	}
-
-	private void initTitledPane(TitledPane titledPane) {
+	private void initTitledPane(TitledPane titledPane)
+	{
 		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
 	}
 	private void initTabPane() {
@@ -211,10 +257,12 @@ public class UIRightBox{
 	        {
 	            if (ke.getCode().equals(KeyCode.ENTER))
 	            {
-	            	logic.run(mainTextField.getText());
+	            	fb.run(logic.run(mainTextField.getText()));
 	            	System.out.println("GUIIIIIIIIIIIIII "+ mainTextField.getText());
 	            	updateNewListItems();
 	            	mainTextField.setText("");
+	            	//System.out.println("tab enter " + tabPane.getSelectionModel().getSelectedItem().getUserData());
+	            	
 	            }
 	        }
 	    });	
@@ -225,7 +273,6 @@ public class UIRightBox{
 		floatingTasks.clear();
 		completedTasks.clear();
 		overdueTasks.clear();
-
 		
 		ongoingTasks.addAll(logic.getOngoingTasks());
 		floatingTasks.addAll(logic.getFloatingTasks());
@@ -235,10 +282,23 @@ public class UIRightBox{
 		updateTitledPane();
 	}
 	protected void updateTitledPane() {
-		addListToTitledPane(titledPaneFloatingTask,floatingTasks,TASK_TYPE.floatingTask);
-		addListToTitledPane(titledPaneOnGoingTask,ongoingTasks,TASK_TYPE.onGoingTask);
-		addListToTitledPane(titledPaneCompletedTask,completedTasks,TASK_TYPE.completedTask);
-		addListToTitledPane(titledPaneOverdueTask,overdueTasks,TASK_TYPE.overdueTask);		
+		//having an array to store all arrays.
+		//each array are sorted according to date
+		/*tabFloating.setContent(floatingVB);
+		tabFloating.setUserData(TASK_STATUS.FLOATING);
+		floatingVB.getChildren().clear();
+		for(int x=0;x<10;x++)
+		{
+			TitledPane tp = new TitledPane();
+			floatingVB.getChildren().add(tp);
+			addListToTitledPane(tp,FXCollections.observableArrayList(floatingTasks),TASK_TYPE.floatingTask);
+
+		}*/
+		
+		addListToTitledPane(titledPaneFloatingTask,FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
+		addListToTitledPane(titledPaneOnGoingTask,FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
+		addListToTitledPane(titledPaneCompletedTask,FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
+		addListToTitledPane(titledPaneOverdueTask,FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);		
 	}
 	public TextField getTextField()
 	{

@@ -69,9 +69,10 @@ public class UIMain  {
 	          public void handle(WindowEvent we) 
 	          {
 	        	  Task<Void> task = new Task<Void>() {
-	     	         @Override protected Void call() throws Exception {
+	     	         @Override protected Void call() throws Exception 
+	     	         {
 	     	        	 logic.save();
-						return null;
+	     	        	 return null;
 	     	         }
 	     	     };
 	     	    startThread(task);
@@ -93,6 +94,7 @@ public class UIMain  {
 		        public void handle(KeyEvent t) {
 		          if(t.getCode()==KeyCode.ESCAPE)
 		          {
+	     	          logic.save();
 		        	  primaryStage.close();
 		          }
 		        }

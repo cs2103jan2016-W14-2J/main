@@ -20,7 +20,8 @@ public class Event extends Task {
 	
 	private boolean checkOverdue() {
 		Date current = new Date();
-		if  (endDateTime.after(current)) {
+		System.out.println("[DEBUG] current: " + current);
+		if  (current.after(endDateTime)) {
 			return true;
 		}
 		else return false;

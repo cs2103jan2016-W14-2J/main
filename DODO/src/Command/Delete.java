@@ -5,6 +5,7 @@ import Logic.*;
 import Parser.*;
 import Command.*;
 import Task.*;
+import GUI.*;
 
 public class Delete extends Command{
 	
@@ -28,19 +29,59 @@ public class Delete extends Command{
 	}
 	
 	private String deleteAll() {
-		//STUB
 		logic.setFloatingTasks(new ArrayList<Task>());
 		return "All deleted";
 	}
 	
 	private String delete(ArrayList<Integer> indexes) {
-		ArrayList<Task> tasks = logic.getFloatingTasks();
+		TASK_STATUS status = UIRightBox.getCurrentTab();
+		ArrayList<Task> tasks = getTasks(status);
+		
+		System.out.println("[DEBUG] status: " + status);
+		System.out.println("[DEBUG] task: " + tasks);
 		System.out.println("[DEBUG] indexes: " + indexes);
-		for (int i=0; i<indexes.size(); i++) {
-			System.out.println("[DEBUG/Delete]" + tasks.remove(indexes.get(i)-1));
+		
+		if (tasks.size()==0) {
+			return "Empty task list in " + status;
 		}
-		logic.setFloatingTasks(tasks);
+		
+		for (int i=0; i<indexes.size(); i++) {
+			System.out.println("[DEBUG/Delete]" + tasks.remove(indexes.get(i)-1-i));
+		}
+		setTasks(status, tasks);
 		return "Deletion completed.";
+	}
+	
+	private ArrayList<Task> getTasks(TASK_STATUS status) {
+		switch (status) {
+		case ONGOING:
+			return logic.getOngoingTasks();
+		case FLOATING:
+			return logic.getFloatingTasks();
+		case COMPLETED:
+			return logic.getCompletedTasks();
+		case OVERDUE:
+			return logic.getOverdueTasks();
+		default:
+			return null;
+		}
+	}
+	
+	private void setTasks(TASK_STATUS status, ArrayList<Task> list) {
+		switch(status) {
+		case ONGOING:
+			logic.setOngoingTasks(list);
+			break;
+		case FLOATING:
+			logic.setFloatingTasks(list);
+			break;
+		case COMPLETED:
+			logic.setCompletedTasks(list);
+			break;
+		case OVERDUE:
+			logic.setOverdueTasks(list);
+			break;
+		}
 	}
 	
 	public String undo() {

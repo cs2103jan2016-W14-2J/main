@@ -204,15 +204,28 @@ public class UIRightBox{
 		                	UICellComponents lsg=null;
 		                    if ((item instanceof DeadlinedTask) == true)
 		                    {
+		                    	System.out.println("DeadlinedTask");
+		                    	
 		                    	 lsg = new UICellComponents(
 			                    		Integer.toString(this.getIndex()+1),
 			                    		item.getName(),
 			                    		item.getDescription(),
 			                    		((DeadlinedTask)item).getEndDateTime());
-		                    	}
-		                    else if ((item instanceof DeadlinedTask) == false)
+		                    }
+		                    else if ((item instanceof Event) == true)
 		                    {
-		                    	
+		                    	System.out.println("in event");
+		                    	lsg = new UICellComponents(
+			                    		Integer.toString(this.getIndex()+1),
+			                    		item.getName(),
+			                    		item.getDescription(),
+			                    		((Event)item).getStartDateTime(),
+			                    		((Event)item).getEndDateTime());
+		                    }
+		                    else if ((item instanceof Task) == true)
+		                    {
+		                    	System.out.println("in Task");
+
 		                    	lsg = new UICellComponents(
 			                    		Integer.toString(this.getIndex()+1),
 			                    		item.getName(),

@@ -1,51 +1,38 @@
 [
   {
-    "type": "DEADLINED",
-    "name": "task ",
+    "type": "EVENT",
+    "name": "event ",
     "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
-    "type": "DEADLINED",
-    "name": "another task ",
+    "type": "EVENT",
+    "name": "event task ",
     "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
-    "type": "DEADLINED",
-    "name": "fk off ",
+    "type": "EVENT",
+    "name": "event task ",
     "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
-    "type": "DEADLINED",
-    "name": "new ongoing task ",
+    "type": "EVENT",
+    "name": "event task ",
     "tag": "TAG",
     "flag": false,
     "isComplete": false
   },
   {
-    "type": "DEADLINED",
-    "name": "buy another shit ",
-    "tag": "TAG",
-    "flag": false,
-    "isComplete": false
-  },
-  {
-    "type": "DEADLINED",
-    "name": "anothe task ",
-    "tag": "TAG",
-    "flag": false,
-    "isComplete": false
-  },
-  {
-    "endDateTime": "Mar 14, 2016 11:59:00 PM",
+    "startDateTime": "Mar 11, 2016 11:59:00 PM",
+    "endDateTime": "Mar 12, 2016 11:59:00 PM",
     "isOverdue": false,
-    "type": "DEADLINED",
-    "name": "asdf ",
+    "type": "EVENT",
+    "name": "event task ",
     "tag": "TAG",
     "flag": false,
     "isComplete": false

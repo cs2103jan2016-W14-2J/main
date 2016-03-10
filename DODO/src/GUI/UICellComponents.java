@@ -1,18 +1,22 @@
 package GUI;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import Task.DeadlinedTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -22,10 +26,12 @@ public class UICellComponents{
 	private Label lblIndex;
 	private Label lblName;
 	private Label lblDescription;
+	private Label lblStartDateTime;
 	private Label lblEndDateTime;
     private CheckBox chkBox;
 	private Tooltip toolTip;
 	private HBox cellRoot;
+	private VBox vbStartAndEnd;
 	public final double cellWidth = 100;
 	public final double cellHeight = 35;
 	private final double labelWidthIndex = 100; //centerBox titledPane size
@@ -49,7 +55,9 @@ public class UICellComponents{
 		toolTip.setText(strName);
 		setComponentsSetting();
 		setComponentsCSS();
-		addAllComponents();
+		ObservableList<Object> objList = FXCollections.observableArrayList();
+		objList.addAll(lblIndex,lblName,lblDescription,chkBox);
+		addAllComponents(objList);
 	}
 	public UICellComponents(String strIndex, String strName, String strDescription, Date endDateTime) {
 		cellRoot = new HBox();
@@ -62,12 +70,37 @@ public class UICellComponents{
 		toolTip.setText(strName);
 		setComponentsSetting();
 		setComponentsCSS();
-		addAllComponents();
+		ObservableList<Object> objList = FXCollections.observableArrayList();
+		objList.addAll(lblIndex,lblName,lblDescription,lblEndDateTime,chkBox);
+		addAllComponents(objList);
+	}
+	public UICellComponents(String strIndex, String strName, String strDescription, Date startDateTime , Date endDateTime) {
+		cellRoot = new HBox();
+		vbStartAndEnd = new VBox();
+		lblIndex = new Label(strIndex);
+		lblName = new Label(strName);
+		lblDescription = new Label(strDescription);
+		lblEndDateTime = new Label(endDateTime.toString());
+		lblStartDateTime = new Label(startDateTime.toString());
+		vbStartAndEnd.getChildren().addAll(lblStartDateTime,lblEndDateTime);
+		chkBox = new CheckBox();
+		toolTip = new Tooltip();
+		toolTip.setText(strName);
+		setComponentsSetting();
+		setComponentsCSS();
+		ObservableList<Object> objList = FXCollections.observableArrayList();
+		objList.addAll(lblIndex,lblName,lblDescription,vbStartAndEnd,chkBox);
+		addAllComponents(objList);
+		
+		
 	
 	}
-	private void addAllComponents() 
+	private void addAllComponents(ObservableList<Object> objList) 
 	{
-		cellRoot.getChildren().addAll(lblIndex,lblName,lblDescription,lblEndDateTime,chkBox);	
+		for(int x=0;x<objList.size();x++)
+		{
+			cellRoot.getChildren().add((Node) objList.get(x));	
+		}
 	}
 	private void setComponentsCSS() 
 	{
@@ -108,7 +141,7 @@ public class UICellComponents{
 	private void setEndDateTimeSetting() 
 	{
 
-		lblEndDateTime.setPrefSize(labelWidthEndDT,labelHeightEndDT);
+		//lblEndDateTime.setPrefSize(labelWidthEndDT,labelHeightEndDT);
 
 	}
 	private void setChkBoxSetting() {
@@ -120,7 +153,6 @@ public class UICellComponents{
 	private void setCellRootSetting() 
 	{
 		cellRoot.setPrefSize(cellWidth,cellHeight);
-		
 	}
 	private void setLblSetting() 
 	{
@@ -142,17 +174,6 @@ public class UICellComponents{
 	public HBox getCellRoot()
 	{
 		return cellRoot;
-	}
-
-	public void setDateComponent(Date endDateTime) 
-	{
-		removeChkBox();
-		lblEndDateTime  = new Label(endDateTime.toString());
-		cellRoot.getChildren().addAll(lblEndDateTime,chkBox);
-	}
-	private void removeChkBox() 
-	{
-		cellRoot.getChildren().remove(cellRoot.getChildren().size()-1);
 	}
 
 	

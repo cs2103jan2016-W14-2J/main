@@ -73,7 +73,6 @@ public class UIConfiguration extends Application
 				createConfigFile();
 				createDbFile();
 				updateConfig();
-				
 			}
 		} 
 		catch(Exception e) 

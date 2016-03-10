@@ -26,12 +26,14 @@ public class UICellComponents{
     private CheckBox chkBox;
 	private Tooltip toolTip;
 	private HBox cellRoot;
-	private final double labelWidthIndex = 250; //centerBox titledPane size
-	private final double labelHeightIndex = 100;
-	private final double labelWidthName = 1000; //centerBox titledPane size
-	private final double labelHeightName = 1000;
 	public final double cellWidth = 100;
 	public final double cellHeight = 35;
+	private final double labelWidthIndex = 100; //centerBox titledPane size
+	private final double labelHeightIndex = 1000;
+	private final double labelWidthName = 600; //centerBox titledPane size
+	private final double labelHeightName = 1000;
+	public final double labelWidthEndDT = 250;
+	public final double labelHeightEndDT = 1000;
 	public final double labelIndexXproperty = 50;
 
 	public UICellComponents(String strIndex, String strName, String strDescription)
@@ -49,21 +51,19 @@ public class UICellComponents{
 		setComponentsCSS();
 		addAllComponents();
 	}
-	public UICellComponents(String strIndex, String strName, String strDescription, Date endDateTime) 
-	{
+	public UICellComponents(String strIndex, String strName, String strDescription, Date endDateTime) {
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
 		lblName = new Label(strName);
 		lblDescription = new Label(strDescription);
 		lblEndDateTime = new Label(endDateTime.toString());
-		
 		chkBox = new CheckBox();
 		toolTip = new Tooltip();
 		toolTip.setText(strName);
 		setComponentsSetting();
 		setComponentsCSS();
 		addAllComponents();
-		
+	
 	}
 	private void addAllComponents() 
 	{
@@ -100,11 +100,19 @@ public class UICellComponents{
 	}
 	private void setComponentsSetting() 
 	{
+		setEndDateTimeSetting();
 		setLblSetting();
 		setCellRootSetting();
 		setChkBoxSetting();
 	}
+	private void setEndDateTimeSetting() 
+	{
+
+		lblEndDateTime.setPrefSize(labelWidthEndDT,labelHeightEndDT);
+
+	}
 	private void setChkBoxSetting() {
+		chkBox.translateXProperty().set(300);
 		chkBox.getStylesheets().add(this.getClass().getResource("checkBox.css").toExternalForm());
     	chkBox.setAlignment(Pos.CENTER_RIGHT);
         chkBox.setFocusTraversable(false);		
@@ -116,6 +124,7 @@ public class UICellComponents{
 	}
 	private void setLblSetting() 
 	{
+
 		lblIndex.translateXProperty().set(labelIndexXproperty);
 		lblIndex.setPrefSize(labelWidthIndex, labelHeightIndex);
 		lblName.setPrefSize(labelWidthName, labelHeightName);	
@@ -137,8 +146,13 @@ public class UICellComponents{
 
 	public void setDateComponent(Date endDateTime) 
 	{
+		removeChkBox();
 		lblEndDateTime  = new Label(endDateTime.toString());
-		cellRoot.getChildren().set(3, lblEndDateTime);
+		cellRoot.getChildren().addAll(lblEndDateTime,chkBox);
+	}
+	private void removeChkBox() 
+	{
+		cellRoot.getChildren().remove(cellRoot.getChildren().size()-1);
 	}
 
 	

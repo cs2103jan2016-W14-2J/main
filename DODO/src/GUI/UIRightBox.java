@@ -201,13 +201,23 @@ public class UIRightBox{
 		            	super.updateItem(item, empty);
 		                if (item != null) 
 		                {
-		                    UICellComponents lsg = new UICellComponents(Integer.toString(this.getIndex()+1),item.getName(),item.getDescription());
-		                    System.out.println("here");
-		                    if (item instanceof DeadlinedTask)
+		                	UICellComponents lsg=null;
+		                    if ((item instanceof DeadlinedTask) == true)
 		                    {
-			                    lsg.setDateComponent(((DeadlinedTask)item).getEndDateTime());
+		                    	 lsg = new UICellComponents(
+			                    		Integer.toString(this.getIndex()+1),
+			                    		item.getName(),
+			                    		item.getDescription(),
+			                    		((DeadlinedTask)item).getEndDateTime());
+		                    	}
+		                    else if ((item instanceof DeadlinedTask) == false)
+		                    {
+		                    	
+		                    	lsg = new UICellComponents(
+			                    		Integer.toString(this.getIndex()+1),
+			                    		item.getName(),
+			                    		item.getDescription());
 		                    }
-		                    
 		                	setTooltip(lsg.getToolTip());
 		                    setGraphic(lsg.getCellRoot());
 		                }

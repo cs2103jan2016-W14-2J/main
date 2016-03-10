@@ -56,8 +56,7 @@ public class UICellComponents{
 		setComponentsSetting();
 		setComponentsCSS();
 		ObservableList<Object> objList = FXCollections.observableArrayList();
-		objList.addAll(lblIndex,lblName,lblDescription,chkBox);
-		addAllComponents(objList);
+		cellRoot.getChildren().addAll(lblIndex,lblName,lblDescription,chkBox);
 	}
 	public UICellComponents(String strIndex, String strName, String strDescription, Date endDateTime) {
 		cellRoot = new HBox();
@@ -71,12 +70,12 @@ public class UICellComponents{
 		setComponentsSetting();
 		setComponentsCSS();
 		ObservableList<Object> objList = FXCollections.observableArrayList();
-		objList.addAll(lblIndex,lblName,lblDescription,lblEndDateTime,chkBox);
-		addAllComponents(objList);
+		cellRoot.getChildren().addAll(lblIndex,lblName,lblDescription,lblEndDateTime,chkBox);
 	}
 	public UICellComponents(String strIndex, String strName, String strDescription, Date startDateTime , Date endDateTime) {
 		cellRoot = new HBox();
 		vbStartAndEnd = new VBox();
+		vbStartAndEnd.setPrefSize(labelWidthEndDT, labelHeightEndDT);
 		lblIndex = new Label(strIndex);
 		lblName = new Label(strName);
 		lblDescription = new Label(strDescription);
@@ -88,20 +87,12 @@ public class UICellComponents{
 		toolTip.setText(strName);
 		setComponentsSetting();
 		setComponentsCSS();
-		ObservableList<Object> objList = FXCollections.observableArrayList();
-		objList.addAll(lblIndex,lblName,lblDescription,vbStartAndEnd,chkBox);
-		addAllComponents(objList);
+		cellRoot.getChildren().addAll(lblIndex,lblName,lblDescription,vbStartAndEnd,chkBox);
 		
 		
 	
 	}
-	private void addAllComponents(ObservableList<Object> objList) 
-	{
-		for(int x=0;x<objList.size();x++)
-		{
-			cellRoot.getChildren().add((Node) objList.get(x));	
-		}
-	}
+
 	private void setComponentsCSS() 
 	{
 		setCellCosmetic();

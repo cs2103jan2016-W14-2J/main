@@ -205,31 +205,32 @@ public class UIRightBox{
 		                    if ((item instanceof DeadlinedTask) == true)
 		                    {
 		                    	System.out.println("DeadlinedTask");
-		                    	
-		                    	 lsg = new UICellComponents(
+		                    	lsg = new UICellComponents(
 			                    		Integer.toString(this.getIndex()+1),
-			                    		item.getName(),
-			                    		item.getDescription(),
-			                    		((DeadlinedTask)item).getEndDateTime());
+			                    		"tagging",item.getName(),
+			                    		null,
+			                    		((DeadlinedTask)item).getEndDateTime(),
+			                    		"flag");
 		                    }
 		                    else if ((item instanceof Event) == true)
 		                    {
 		                    	System.out.println("in event");
 		                    	lsg = new UICellComponents(
 			                    		Integer.toString(this.getIndex()+1),
-			                    		item.getName(),
-			                    		item.getDescription(),
+			                    		"tagging",item.getName(),
 			                    		((Event)item).getStartDateTime(),
-			                    		((Event)item).getEndDateTime());
+			                    		((Event)item).getEndDateTime(),
+			                    		"flag");
 		                    }
 		                    else if ((item instanceof Task) == true)
 		                    {
 		                    	System.out.println("in Task");
-
 		                    	lsg = new UICellComponents(
 			                    		Integer.toString(this.getIndex()+1),
-			                    		item.getName(),
-			                    		item.getDescription());
+			                    		"tagging",item.getName(),
+			                    		null,
+			                    		null,
+			                    		"flag");
 		                    }
 		                	setTooltip(lsg.getToolTip());
 		                    setGraphic(lsg.getCellRoot());

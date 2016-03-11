@@ -63,12 +63,14 @@ public class UIConfiguration extends Application
 				updateParaFromList();
 				checkConfigsContent();
 				System.out.println("yohoooooooooooooooooooooooooooooooooooo" + strDBdir.replace(strDBname, ""));
-				logic = new Logic(strDBdir.replace(strDBname, ""));
+				String directory = strDBdir.replace(strDBname, "");
+				logic = Logic.getInstance(directory);
 
 			}
 			else if(checkConfigFileExist()==false)
 			{
-				logic = new Logic(strDBdir.replace(strDBname, ""));
+				String directory = strDBdir.replace(strDBname, "");
+				logic = Logic.getInstance(directory);
 				System.out.println("config file and db file dont exist creating one NOW!");
 				createConfigFile();
 				createDbFile();

@@ -1,6 +1,10 @@
 package GUI;
 
 import Logic.*;
+import Command.*;
+import Parser.*;
+import Storage.*;
+import Task.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,7 +24,7 @@ import javafx.stage.Stage;
  *@author Chiang Jia Feng
  *@Description: Configuration (detect first entry and )
  */
-public class Configuration extends Application 
+public class UIConfiguration extends Application 
 {
 	private static final String CONFIG_FIRSTLINE_DIRECTORY_UNKNOWN = "DBDIR = EMPTY";
 	private static final String CONFIG_FIRSTLINE_DIRECTORY_KNOWN = "DBDIR = %1$s";
@@ -33,7 +37,7 @@ public class Configuration extends Application
 	private static final int PARAM_FOR_NAME = 11; //include space
 	
 	final static public String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
-	final static public String PARAM_DB_DEFAULT_FILENAME = "DODODB";
+	final static public String PARAM_DB_DEFAULT_FILENAME = "DODOdatabase";
 	
 	final static public File configFile = new File(PARAM_CONFIG_DEFAULT_FILENAME);
 	final static public FileChooser fileChooser = new FileChooser();
@@ -76,12 +80,9 @@ public class Configuration extends Application
 		{
 			System.out.println(e);
 		}
-		GUI gui = new GUI();
-		gui.logic = this.logic;
-		System.out.println("config : " + strDBdir + " " + strDBname);
+		UIMain gui = new UIMain(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
-		System.out.println("proceed to gui");
 		gui.start(primaryStage);
 	}
 
@@ -169,7 +170,7 @@ public class Configuration extends Application
         } 
         catch (IOException ex)
         {
-            Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIConfiguration.class.getName()).log(Level.SEVERE, null, ex);
         }    
 	}
 	private void createConfigFile() throws IOException 
@@ -200,7 +201,6 @@ public class Configuration extends Application
 			System.out.println(e);
 		}
 	}
-
 	/**
 	 * Accessor
 	 */	
@@ -212,18 +212,6 @@ public class Configuration extends Application
 	{
 		return strDBname;
 	}
-	/**
-	 * Mutators
-	 */	
-	public String setDbDir()
-	{
-		return strDBdir;
-	}
-	public String setDbName()
-	{
-		return strDBname;
-	}
-	
 	public static void main(String[] args) {
 		launch(args);
 	}

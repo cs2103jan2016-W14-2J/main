@@ -9,21 +9,36 @@ import java.util.Date;
 public class Event extends Task {
 	private Date startDateTime;
 	private Date endDateTime;
-	boolean isOverdue;
+	private boolean isOverdue;
 	
 	public Event(TASK_TYPE type, String name, String tag, Date startDateTime, Date endDateTime) {
 		super(type, name, tag);
 		this.startDateTime = startDateTime;
 		this.endDateTime = endDateTime;
-		// TODO
+		isOverdue = checkOverdue();
 	}
 	
-	private void checkIsOverdue() {
-		// TODO
+	private boolean checkOverdue() {
+		Date current = new Date();
+		System.out.println("[DEBUG] current: " + current);
+		if  (current.after(endDateTime)) {
+			return true;
+		}
+		else return false;
 	}
 	
+	/*******************************ACCESSORS********************************/
 	public boolean getIsOverdue() {
 		return this.isOverdue;
 	}
+	
+	public Date getStartDateTime() {
+		return this.startDateTime;
+	}
+	
+	public Date getEndDateTime() {
+		return this.endDateTime;
+	}
+	
 	
 }

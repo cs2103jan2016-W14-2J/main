@@ -74,7 +74,7 @@ public class DeleteParser {
 	}
 
 	private DELETE_TYPE detemineDeleteType(String userTask) {
-		System.out.print("DEBUG @line 34: " + userTask.length());
+		System.out.println("DEBUG @line 34: " + userTask.length());
 		
 		if (checkIfDeleteSingle(userTask)) {
 			setDeleteType(DELETE_TYPE.SINGLE);

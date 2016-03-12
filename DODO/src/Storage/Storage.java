@@ -31,14 +31,14 @@ public class Storage {
 	public Storage(String directory) {
 		// it cannot create a file in a specific directory for now
 		// it only creates a file in the same directory as the programme
-		ongoingDirectory = directory + "/" + FILENAME_ONGOING_TASKS;
-		completedDirectory = directory + "/" + FILENAME_COMPLETED_TASKS;
-		floatingDirectory = directory + "/" + FILENAME_FLOATING_TASKS;
-		overdueDirectory = directory + "/" + FILENAME_OVERDUE_TASKS;
-		if (!fileExists(ongoingDirectory)) initialiseFile(FILENAME_ONGOING_TASKS);
-		if (!fileExists(completedDirectory)) initialiseFile(FILENAME_COMPLETED_TASKS);
-		if (!fileExists(floatingDirectory)) initialiseFile(FILENAME_FLOATING_TASKS);
-		if (!fileExists(overdueDirectory)) initialiseFile(FILENAME_OVERDUE_TASKS);
+		ongoingDirectory = directory  + FILENAME_ONGOING_TASKS;
+		completedDirectory = directory + FILENAME_COMPLETED_TASKS;
+		floatingDirectory = directory + FILENAME_FLOATING_TASKS;
+		overdueDirectory = directory + FILENAME_OVERDUE_TASKS;
+		if (!fileExists(ongoingDirectory)) initialiseFile(ongoingDirectory);
+		if (!fileExists(completedDirectory)) initialiseFile(completedDirectory);
+		if (!fileExists(floatingDirectory)) initialiseFile(floatingDirectory);
+		if (!fileExists(overdueDirectory)) initialiseFile(overdueDirectory);
 	}
 	
 	private boolean fileExists(String directory) {
@@ -94,6 +94,7 @@ public class Storage {
 	}
 
 	private ArrayList<Task> readFromFile(String filename) {
+		System.out.println("[DEBUG] directory :" + filename);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
 			br = new BufferedReader(new FileReader(filename));

@@ -69,12 +69,13 @@ public class UIConfiguration extends Application
 			}
 			else if(checkConfigFileExist()==false)
 			{
-				String directory = strDBdir.replace(strDBname, "");
-				logic = Logic.getInstance(directory);
 				System.out.println("config file and db file dont exist creating one NOW!");
 				createConfigFile();
 				createDbFile();
 				updateConfig();
+				String directory = strDBdir.replace(strDBname, "");
+				System.out.println("[GUI/Configuration] directory: " + directory);
+				logic = Logic.getInstance(directory);
 			}
 		} 
 		catch(Exception e) 

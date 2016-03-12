@@ -14,6 +14,7 @@ import java.util.*;
  */
 
 public class Logic {
+	private static Logic theOne; //singleton
 	private Storage storage;
 	private ArrayList<Task> ongoingTasks;
 	private ArrayList<Task> completedTasks;
@@ -21,13 +22,19 @@ public class Logic {
 	private ArrayList<Task> floatingTasks;
 	private ArrayList<Task> results;
 	
-	// UI: you will call this when user starts the programme
-	public Logic(String directory) {
+	private Logic(String directory) {
 		storage = new Storage(directory);
 		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
+	}
+	
+	public static Logic getInstance(String directory) {
+		if (theOne==null) {
+			theOne = new Logic(directory);
+		}
+		return theOne;
 	}
 	
 	// UI: you will call this to run logic

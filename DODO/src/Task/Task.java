@@ -24,6 +24,7 @@ public class Task {
 	}
 	
 	/**************************************ACCESSORS**************************/
+
 	// unusable
 	public boolean getFlag() {
 		return this.flag;

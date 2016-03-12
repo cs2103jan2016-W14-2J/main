@@ -6,10 +6,12 @@
 }
 
 .check-box>.box>.mark {
-  -fx-background-image: url("1.png");
+  -fx-background-image: url("star1.png");
   -fx-padding: 30px;
-  -fx-height:45px;
-  -fx-background-position: top;
+  -fx-height: 40px;
+  -fx-width: 40px;
+  
+  -fx-background-position: center;
   -fx-background-repeat: stretch;
   -fx-shape: none;
 }
@@ -17,6 +19,8 @@
 .check-box:selected>.box>.mark{
   -fx-background-color: transparent;
   -fx-padding: 30px;
-  -fx-height:45px;
-  -fx-background-image: url("2.png");
+  -fx-height:40px;
+    -fx-width: 40px;
+  
+  -fx-background-image: url("star2.png");
 }

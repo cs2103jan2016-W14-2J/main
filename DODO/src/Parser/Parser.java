@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import Command.*;
-import GUI.*;
-import Logic.*;
-import Task.*;
+import dodo.COMMAND_TYPE;
+import dodo.DELETE_TYPE;
+import dodo.DeleteParser;
+import dodo.TASK_TYPE;
+
 /*
  * V 0.1: At this moment, this Parser function is only able to handle the following input format.
  * 
@@ -54,6 +55,7 @@ public class Parser {
 	private String taskName;
 	private Date startTime;
 	private Date endTime;
+	private int taskID;
 	
 	private DELETE_TYPE deleteType;
 	private ArrayList<Integer> taskToDelete;
@@ -95,9 +97,13 @@ public class Parser {
 				DeleteParser deleteParser = new DeleteParser(userTask);
 				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTaskToDelete());
 				break;
-/*			case EDIT:
+			case EDIT:
+				System.out.println("Debug @Parser - executeCommand: EXIT ");
+				EditParser editParser = new EditParser(userTask);
+				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),
+								  editParser.getNewTaskName());
 				break;
-			case "DISPLAY":
+/*			case "DISPLAY":
 				break;
 			case "EXIT":
 				break;
@@ -190,5 +196,18 @@ public class Parser {
 	public ArrayList<Integer> getTaskToDelete() {
 		return this.taskToDelete;
 	}
+	
+	//***********************************Accessors for EditParser************************************//
+	private void setEditAttributes(int taskID, Date endTime, Date startTime, String taskName) {
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.taskName = taskName;
+		this.taskID = taskID;
+	}
+	
+	public int getTaskID() {
+		return this.taskID;
+	}
+
 }
 

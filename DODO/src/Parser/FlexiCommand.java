@@ -1,8 +1,8 @@
 package Parser;
 
-import Command.*;
-
 import java.util.HashMap;
+
+import dodo.COMMAND_TYPE;
 
 /*
  *@author Pay Hao Jie
@@ -18,8 +18,8 @@ public class FlexiCommand {
 		possibleCommands = new HashMap<String, COMMAND_TYPE>();
 		possibleCommands = initiateFlexiAddCommand();
 		possibleCommands = initiateFlexiDeleteCommand();
-/*		possibleCommands = initiateFlexiEditCommand();
-		possibleCommands = initiateFlexiHelpCommand();
+		possibleCommands = initiateFlexiEditCommand();
+/*		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiTagCommand();
 		possibleCommands = initiateFlexiUntagCommand();
@@ -64,19 +64,19 @@ public class FlexiCommand {
 		return possibleCommands;
 		
 	}
-/*	
+	
 	private HashMap<String, COMMAND_TYPE> initiateFlexiEditCommand() {
-		possibleCommands.put("ed", EDIT);
-		possibleCommands.put("edit", EDIT);
-		possibleCommands.put("edits", EDIT);
-		possibleCommands.put("update", EDIT);
-		possibleCommands.put("updates", EDIT);
-		possibleCommands.put("change", EDIT);
-		possibleCommands.put("changes", EDIT);
-		possibleCommands.put("correct", EDIT);
+		possibleCommands.put("ed", COMMAND_TYPE.EDIT);
+		possibleCommands.put("edit", COMMAND_TYPE.EDIT);
+		possibleCommands.put("edits", COMMAND_TYPE.EDIT);
+		possibleCommands.put("update", COMMAND_TYPE.EDIT);
+		possibleCommands.put("updates", COMMAND_TYPE.EDIT);
+		possibleCommands.put("change", COMMAND_TYPE.EDIT);
+		possibleCommands.put("changes", COMMAND_TYPE.EDIT);
+		possibleCommands.put("correct", COMMAND_TYPE.EDIT);
 		return possibleCommands;
 	}
-	
+	/*
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
 		possibleCommands.put("help", HELP);
 		possibleCommands.put("helps", HELP);

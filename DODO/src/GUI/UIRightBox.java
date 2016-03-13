@@ -341,11 +341,9 @@ public class UIRightBox {
 		addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),
 				TASK_STATUS.OVERDUE);
 	}
-
 	public TextField getTextField() {
 		return mainTextField;
 	}
-
 	private void createDisappearPane() {
 		Stage dialog = new Stage();
 		VBox dialogVBox = new VBox();

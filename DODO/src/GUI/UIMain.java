@@ -76,6 +76,7 @@ public class UIMain  {
 	     	         }
 	     	     };
 	     	    startThread(task);
+	     	    logic.save();
 	            System.out.println("Stage is closing");
 	          }
 

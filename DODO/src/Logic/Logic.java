@@ -23,6 +23,7 @@ public class Logic {
 	private ArrayList<Task> results;
 	
 	private Logic(String directory) {
+		System.out.println("[Logic/init] directory: " + directory);
 		storage = new Storage(directory);
 		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
@@ -73,7 +74,8 @@ public class Logic {
 	
 	// UI: you will call this when user is quiting the programme
 	public String save() {
-		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
+		String test = storage.save(TASK_STATUS.ONGOING, ongoingTasks);
+		System.out.println("[DEBUG/Logic/save] save: " + test);
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
 		storage.save(TASK_STATUS.FLOATING, floatingTasks);
 		storage.save(TASK_STATUS.OVERDUE, overdueTasks);

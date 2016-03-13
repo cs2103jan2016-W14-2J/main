@@ -23,26 +23,40 @@ public class Storage {
 
 	PrintWriter pw;
 	BufferedReader br;
+	String ongoingDirectory;
+	String completedDirectory;
+	String floatingDirectory;
+	String overdueDirectory;
 
 	public Storage(String directory) {
 		// it cannot create a file in a specific directory for now
 		// it only creates a file in the same directory as the programme
-		initialiseFile(FILENAME_ONGOING_TASKS);
-		initialiseFile(FILENAME_COMPLETED_TASKS);
-		initialiseFile(FILENAME_FLOATING_TASKS);
-		initialiseFile(FILENAME_OVERDUE_TASKS);
+		ongoingDirectory = directory  + FILENAME_ONGOING_TASKS;
+		completedDirectory = directory + FILENAME_COMPLETED_TASKS;
+		floatingDirectory = directory + FILENAME_FLOATING_TASKS;
+		overdueDirectory = directory + FILENAME_OVERDUE_TASKS;
+		if (!fileExists(ongoingDirectory)) initialiseFile(ongoingDirectory);
+		if (!fileExists(completedDirectory)) initialiseFile(completedDirectory);
+		if (!fileExists(floatingDirectory)) initialiseFile(floatingDirectory);
+		if (!fileExists(overdueDirectory)) initialiseFile(overdueDirectory);
+	}
+	
+	private boolean fileExists(String directory) {
+		File file = new File(directory);
+		if (file.exists()) return true;
+		else return false; 
 	}
 
 	public ArrayList<Task> read(TASK_STATUS task_status) {
 		switch (task_status) {
 		case ONGOING:
-			return readFromFile(FILENAME_ONGOING_TASKS);
+			return readFromFile(ongoingDirectory);
 		case COMPLETED:
-			return readFromFile(FILENAME_COMPLETED_TASKS);
+			return readFromFile(completedDirectory);
 		case FLOATING:
-			return readFromFile(FILENAME_FLOATING_TASKS);
+			return readFromFile(floatingDirectory);
 		case OVERDUE:
-			return readFromFile(FILENAME_OVERDUE_TASKS);
+			return readFromFile(overdueDirectory);
 		default:
 			return null;
 		}
@@ -51,13 +65,13 @@ public class Storage {
 	public String save(TASK_STATUS task_status, ArrayList<Task> tasks) {
 		switch (task_status) {
 		case ONGOING:
-			return printToFile(FILENAME_ONGOING_TASKS, tasks);
+			return printToFile(ongoingDirectory, tasks);
 		case COMPLETED:
-			return printToFile(FILENAME_COMPLETED_TASKS, tasks);
+			return printToFile(completedDirectory, tasks);
 		case FLOATING:
-			return printToFile(FILENAME_FLOATING_TASKS, tasks);
+			return printToFile(floatingDirectory, tasks);
 		case OVERDUE:
-			return printToFile(FILENAME_OVERDUE_TASKS, tasks);
+			return printToFile(overdueDirectory, tasks);
 		default:
 			return "Invalid type of tasks.";
 		}
@@ -80,6 +94,7 @@ public class Storage {
 	}
 
 	private ArrayList<Task> readFromFile(String filename) {
+		System.out.println("[DEBUG] directory :" + filename);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
 			br = new BufferedReader(new FileReader(filename));

@@ -1,9 +1,8 @@
 package Parser;
 
 import java.util.HashMap;
-
-import dodo.COMMAND_TYPE;
-
+import Command.*;
+import Task.*;
 /*
  *@author Pay Hao Jie
  *@Description: This class consolidates the possible inputs for a specific command 

@@ -3,11 +3,10 @@ package Parser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Arrays;
 
-import dodo.COMMAND_TYPE;
-import dodo.DELETE_TYPE;
-import dodo.DeleteParser;
-import dodo.TASK_TYPE;
+import Command.*;
+import Task.*;
 
 /*
  * V 0.1: At this moment, this Parser function is only able to handle the following input format.
@@ -56,12 +55,18 @@ public class Parser {
 	private Date startTime;
 	private Date endTime;
 	private int taskID;
+	private String userInput;
+	private String tag;
+	private boolean isImportant;
 	
 	private DELETE_TYPE deleteType;
 	private ArrayList<Integer> taskToDelete;
+	ArrayList<String> taskItems;
+
 	
 	// update
 	public Parser (String userInput) {
+		this.userInput = userInput;
 		System.out.println("Test Parser");
 		executeCommand(userInput);
 		
@@ -84,9 +89,15 @@ public class Parser {
 		COMMAND_TYPE commandType = determineCommandType(command);
 		System.out.println("Debug: Test commandType: " + commandType);
 		
-		String userTask = getUserInputContent(userInput);
-		System.out.println("Debug: Test useTask: " + userTask);
+		// concatenate add command in front for processing
+		if (commandType == COMMAND_TYPE.ADD && !userInput.contains("add")) {
+			userInput = "add " + userInput;
+		}
 		
+		String userTask = getUserInputContent(userInput);
+		taskItems = checkTaskImportance(userTask);
+		userTask = extractTag(taskItems);
+		System.out.println("Debug: Test useTask: " + userTask);
 		switch (commandType) {
 			
 			case ADD:
@@ -103,7 +114,7 @@ public class Parser {
 				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),
 								  editParser.getNewTaskName());
 				break;
-/*			case "DISPLAY":
+			case "DISPLAY":
 				break;
 			case "EXIT":
 				break;
@@ -129,7 +140,7 @@ public class Parser {
 			return command;
 		}
 		else {
-			this.command = COMMAND_TYPE.ERROR;
+			this.command = COMMAND_TYPE.ADD;
 			return command;
 		}
 	}
@@ -139,14 +150,49 @@ public class Parser {
 	 * @param userInput
 	 * @return command type of the string
 	 */
-	protected String getUserCommand(String userInput) {
+	private String getUserCommand(String userInput) {
 		String[] temp = userInput.split("\\s+", 2);
 		return temp[0];
 	}
 	
-	protected String getUserInputContent(String userInput) {
+	private String getUserInputContent(String userInput) {
 		String[] temp = userInput.split("\\s+", 2);
 		return temp[1];
+	}
+	
+	private ArrayList<String> checkTaskImportance(String userInput) {
+		String[] str = userInput.split("\\s+");
+		taskItems = new ArrayList<String>(Arrays.asList(str));
+		
+		int importanceType = taskItems.size() - 1;
+		String importance = taskItems.get(importanceType);
+		
+		if (importance.equals("!")) {
+			taskItems.remove(importanceType);
+			setTaskImportance(true);
+		}
+		else {
+			setTaskImportance(false);
+		}
+		return taskItems;
+	}
+	
+	private String extractTag(ArrayList<String> taskItems) {
+		StringBuilder str = new StringBuilder();
+		
+		for (int i = 0; i < taskItems.size(); i++) {
+			if (taskItems.get(i).endsWith(">") && taskItems.get(i).startsWith("<")) {
+				setTaskTag(taskItems.get(i));
+				taskItems.remove(i);
+			}
+		}
+		
+		for (String s: taskItems) {
+			str.append(s);
+			str.append(" ");
+			System.out.println("Debug: Test checkIfValidUserInput" + str.toString());
+		}
+		return str.toString();
 	}
 	
 	//***********************************Accessors for AddParser************************************//
@@ -176,10 +222,19 @@ public class Parser {
 	public COMMAND_TYPE getCommandType() {
 		return this.command;
 	}
+	private void setTaskImportance(boolean isImportant) {
+		this.isImportant = isImportant;
+	}
 	
+	public boolean getImportance() {
+		return this.isImportant;
+	}
+	private void setTaskTag(String tag) {
+		this.tag = tag.substring(1, tag.length());
+	}
 	// STUB
 	public String getTag() {
-		return "TAG";
+		return this.tag;
 	}
 	
 	//***********************************Accessors for DeleteParser************************************//

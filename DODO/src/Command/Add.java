@@ -5,10 +5,6 @@ import Logic.*;
 import Parser.*;
 import Storage.*;
 import Task.*;
-<<<<<<< HEAD
-import dodo.Parser;
-=======
->>>>>>> refs/heads/master
 
 import java.util.ArrayList;
 import java.util.Date;

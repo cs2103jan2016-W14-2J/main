@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import dodo.COMMAND_TYPE;
-import dodo.DateAndTimeParser;
-import dodo.TASK_TYPE;
-
+import Command.*;
+import Task.*;
 
 /*
  * V 0.1: At this moment, this CommandParser function is only able to handle the following input format.

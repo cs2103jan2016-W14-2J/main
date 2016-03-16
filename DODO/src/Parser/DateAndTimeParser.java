@@ -410,12 +410,12 @@ public class DateAndTimeParser {
 		boolean isAM = false;
 		String time = "";
 		
-		if (currentWord.contains("am")) {
-			currentWord = currentWord.replace("am", "");
+		if (currentWord.contains(KEYWORD_AM)) {
+			currentWord = currentWord.replace(KEYWORD_AM, "");
 			isAM = true;
 		}
 		else {
-			currentWord = currentWord.replace("pm", "");
+			currentWord = currentWord.replace(KEYWORD_PM, "");
 		}
 		String[] _24hours = currentWord.split("[.:]");
 		

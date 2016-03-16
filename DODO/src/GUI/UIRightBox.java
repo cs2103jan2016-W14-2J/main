@@ -1,6 +1,10 @@
 package GUI;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import Command.*;
 import Logic.*;
@@ -38,6 +42,8 @@ import javafx.util.Callback;
  */
 
 public class UIRightBox {
+	 Logger logger = Logger.getLogger("MyLog");  
+
 	private VBox rightBox = new VBox(); // current box
 	private UILeftBox leftBox;
 	private final double textfieldWidth = 55; // centerBox txtfield size
@@ -189,18 +195,21 @@ public class UIRightBox {
 										System.out.println("DeadlinedTask");
 										lsg = new UICellComponents(Integer.toString(this.getIndex() + 1), "tagging",
 												item.getName(), null, ((DeadlinedTask) item).getEndDateTime(), "flag");
+										logger.info("DeadlinedTask");  
 									} else if ((item instanceof Event) == true) {
 
 										System.out.println("in event");
 										lsg = new UICellComponents(Integer.toString(this.getIndex() + 1), "tagging",
 												item.getName(), ((Event) item).getStartDateTime(),
 												((Event) item).getEndDateTime(), "flag");
+										logger.info("Event");  
 
 									} else if ((item instanceof Task) == true) {
 
 										System.out.println("in Task");
 										lsg = new UICellComponents(Integer.toString(this.getIndex() + 1), "tagging",
 												item.getName(), null, null, "flag");
+										logger.info("Task");  
 
 									}
 									setTooltip(lsg.getToolTip());
@@ -234,6 +243,30 @@ public class UIRightBox {
 		}).start();
 		titledPane.setContent(listViewLabel);
 	}
+	private void createLog()
+	{
+		    FileHandler fh;  
+
+		    try {  
+
+		        // This block configure the logger with handler and formatter  
+		        fh = new FileHandler("MyLogFile.log");  
+		        logger.addHandler(fh);
+		        SimpleFormatter formatter = new SimpleFormatter();  
+		        fh.setFormatter(formatter);  
+
+		        // the following statement is used to log any messages  
+		        logger.info("My first log");  
+
+		    } catch (SecurityException e) {  
+		        e.printStackTrace();  
+		    } catch (IOException e) {  
+		        e.printStackTrace();  
+		    }  
+
+		    logger.info("test1");  
+	}
+	
 
 	private void initTitledPane(TitledPane titledPane) {
 		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);

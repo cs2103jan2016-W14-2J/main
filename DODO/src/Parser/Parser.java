@@ -114,11 +114,11 @@ public class Parser {
 				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),
 								  editParser.getNewTaskName());
 				break;
-			case "DISPLAY":
+			/*case "DISPLAY":
 				break;
 			case "EXIT":
-				break;
-*/			default:
+				break;*/
+			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
 		}
 	}

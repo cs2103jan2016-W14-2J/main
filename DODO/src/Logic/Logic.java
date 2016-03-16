@@ -67,11 +67,9 @@ public class Logic {
 		Delete delete = new Delete(parser, this, COMMAND_TYPE.DELETE);
 		return delete.execute();
 	}
-	
 	public String undo() {
 		return "Undo successful";
 	}
-	
 	// UI: you will call this when user is quiting the programme
 	public String save() {
 		String test = storage.save(TASK_STATUS.ONGOING, ongoingTasks);

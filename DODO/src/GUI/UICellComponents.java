@@ -50,12 +50,12 @@ public class UICellComponents{
 		
 		cellRoot = new HBox();
 		cellRoot.setPrefSize(100, 55);
-		cellRoot.setStyle
+		/*cellRoot.setStyle
 		("-fx-padding:3;" + "-fx-border-style:solid;"+"-fx-border-width:2;"
 		+"-fx-border-inserts:5;"
 		+"-fx-border-color: #090a0c,linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),linear-gradient(#20262b, #191d22), radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));"
 		+"-fx-border-radius: 10 10 10 10;"+"-fx-background-radius: 10 1 0 0; "
-		+"-fx-background-radius: 5;");
+		+"-fx-background-radius: 5;");*/
 		
 		StackPane paneIndex = new StackPane();
 		paneIndex.setPrefSize(100, 1000);

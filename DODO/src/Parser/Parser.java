@@ -100,7 +100,7 @@ public class Parser {
 				break;
 			case DELETE:
 				userInput = getUserInputContent(userInput);
-				DeleteParser deleteParser = new DeleteParser(userInput);
+				DeleteAndCompleteParser deleteParser = new DeleteAndCompleteParser(userInput);
 				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTaskToDelete());
 				break;
 			case EDIT:
@@ -111,7 +111,7 @@ public class Parser {
 				break;
 			case COMPLETE:
 				userInput = getUserInputContent(userInput);
-				DeleteParser completeParser = new DeleteParser(userInput);
+				DeleteAndCompleteParser completeParser = new DeleteAndCompleteParser(userInput);
 				setDeleteAttributes(completeParser.getDeleteType(), completeParser.getTaskToDelete());
 				break;
 			case UNDO:

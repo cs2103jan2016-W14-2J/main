@@ -3,7 +3,7 @@ package Parser;
 import java.util.ArrayList;
 import Command.*;
 
-public class DeleteParser {
+public class DeleteAndCompleteParser {
 	private String userTask;
 	private DELETE_TYPE deleteType;
 	private ArrayList<Integer> taskToDelete; 
@@ -11,7 +11,7 @@ public class DeleteParser {
 	private static String MESSAGE_WRONG_DELETE_COMMAND = "Oops. Please enter a valid range.";
 	
 	
-	public DeleteParser(String userTask) {
+	public DeleteAndCompleteParser(String userTask) {
 		this.userTask = userTask;
 		this.taskToDelete = new ArrayList<Integer>();
 		executeDeleteParser();

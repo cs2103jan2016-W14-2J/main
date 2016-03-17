@@ -75,6 +75,35 @@ public class FlexiCommand {
 		possibleCommands.put("correct", COMMAND_TYPE.EDIT);
 		return possibleCommands;
 	}
+	
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiUndoCommand() {
+		possibleCommands.put("undo", COMMAND_TYPE.UNDO);
+		possibleCommands.put("back", COMMAND_TYPE.UNDO);
+		possibleCommands.put("previous", COMMAND_TYPE.UNDO);
+		possibleCommands.put("revert", COMMAND_TYPE.UNDO);
+		possibleCommands.put("b", COMMAND_TYPE.UNDO);
+		possibleCommands.put("goback", COMMAND_TYPE.UNDO);
+		return possibleCommands;
+	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiCompleteCommand() {
+		possibleCommands.put("complete", COMMAND_TYPE.COMPLETE);
+		possibleCommands.put("completes", COMMAND_TYPE.COMPLETE);
+		possibleCommands.put("done", COMMAND_TYPE.COMPLETE);
+		possibleCommands.put("finish", COMMAND_TYPE.COMPLETE);
+		possibleCommands.put("fin", COMMAND_TYPE.COMPLETE);
+		possibleCommands.put("end", COMMAND_TYPE.COMPLETE);
+		return possibleCommands;
+	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiRedoCommand() {
+		possibleCommands.put("redo", COMMAND_TYPE.REDO);
+		possibleCommands.put("redos", COMMAND_TYPE.REDO);
+		return possibleCommands;
+		
+	}
+	
 	/*
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
 		possibleCommands.put("help", HELP);
@@ -108,23 +137,8 @@ public class FlexiCommand {
 		possibleCommands.put("untags", UNTAG);
 		return possibleCommands;
 	}
-	
-	private HashMap<String, CommandType> initiateFlexiUndoCommand() {
-		possibleCommands.put("undo", UNDO);
-		possibleCommands.put("back", UNDO);
-		possibleCommands.put("previous", UNDO);
-		possibleCommands.put("revert", UNDO);
-		possibleCommands.put("b", UNDO);
-		possibleCommands.put("goback", UNDO);
-		return possibleCommands;
-	}
-	
-	private HashMap<String, CommandType> initiateFlexiRedoCommand() {
-		possibleCommands.put("redo", REDO);
-		possibleCommands.put("redos", REDO);
-		return possibleCommands;
-		
-	}
+
+
 	
 	private HashMap<String, CommandType> initiateFlexiFlagCommand() {
 		possibleCommands.put("flag", FLAG);
@@ -173,15 +187,6 @@ public class FlexiCommand {
 		return possibleCommands;
 	}
 	
-	private HashMap<String, CommandType> initiateFlexiCompleteCommand() {
-		possibleCommands.put("complete", COMPLETE);
-		possibleCommands.put("completes", COMPLETE);
-		possibleCommands.put("done", COMPLETE);
-		possibleCommands.put("finish", COMPLETE);
-		possibleCommands.put("fin", COMPLETE);
-		possibleCommands.put("end", COMPLETE);
-		return possibleCommands;
-	}
 	
 	private HashMap<String, CommandType> initiateFlexiClearCommand() {
 		possibleCommands.put("clear", CLEAR);

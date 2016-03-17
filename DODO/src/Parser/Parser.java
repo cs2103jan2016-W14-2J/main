@@ -61,15 +61,15 @@ public class Parser {
 	
 	private DELETE_TYPE deleteType;
 	private ArrayList<Integer> taskToDelete;
-	ArrayList<String> taskItems;
+	private ArrayList<String> taskItems;
+	private String _commandAdd = "add";
 
 	
 	// update
 	public Parser (String userInput) {
+		assert userInput.length() > 0;
 		this.userInput = userInput;
-		System.out.println("Test Parser");
 		executeCommand(userInput);
-		
 	}
 	
 	/*
@@ -79,58 +79,63 @@ public class Parser {
 	 */
 	
 	protected void executeCommand(String userInput) {
-		System.out.println("Debug: Test execute command");
+	
 		userInput = userInput.trim();
 		checkIfValidUserInput(userInput);
 	
 		String command = getUserCommand(userInput);
-		System.out.println("Debug: Test command: " + command);
-		
 		COMMAND_TYPE commandType = determineCommandType(command);
-		System.out.println("Debug: Test commandType: " + commandType);
 		
 		// concatenate add command in front for processing
-		if (commandType == COMMAND_TYPE.ADD && !userInput.contains("add")) {
-			userInput = "add " + userInput;
+		if (commandType == COMMAND_TYPE.ADD && !userInput.contains(_commandAdd)) {
+			userInput = _commandAdd + " " + userInput;
 		}
 		
-		String userTask = getUserInputContent(userInput);
-		taskItems = checkTaskImportance(userTask);
-		userTask = extractTag(taskItems);
-		System.out.println("Debug: Test useTask: " + userTask);
 		switch (commandType) {
 			
 			case ADD:
-				AddParser addParser = new AddParser(userTask);
+				userInput = processUserInput(userInput);
+				AddParser addParser = new AddParser(userInput);
 				setAddAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;
 			case DELETE:
-				DeleteParser deleteParser = new DeleteParser(userTask);
+				userInput = getUserInputContent(userInput);
+				DeleteParser deleteParser = new DeleteParser(userInput);
 				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTaskToDelete());
 				break;
 			case EDIT:
-				System.out.println("Debug @Parser - executeCommand: EXIT ");
-				EditParser editParser = new EditParser(userTask);
+				userInput = processUserInput(userInput);
+				EditParser editParser = new EditParser(userInput);
 				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),
 								  editParser.getNewTaskName());
 				break;
 			case COMPLETE:
-				DeleteParser completeParser = new DeleteParser(userTask);
+				userInput = getUserInputContent(userInput);
+				DeleteParser completeParser = new DeleteParser(userInput);
 				setDeleteAttributes(completeParser.getDeleteType(), completeParser.getTaskToDelete());
 				break;
-			/*case "EXIT":
-				break;*/
+			case UNDO:
+				setCommandType(COMMAND_TYPE.UNDO);
+				break;
+			case REDO:
+				setCommandType(COMMAND_TYPE.REDO);
+				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
 		}
 	}
-
+	
+	private String processUserInput(String userInput) {
+		String userTask = getUserInputContent(userInput);
+		taskItems = checkTaskImportance(userTask);
+		userTask = extractTag(taskItems);	
+		return userTask;
+	}
 
 	private void checkIfValidUserInput(String userInput) {
 		if (userInput.equals("")) {
 			System.out.println(MESSAGE_INPUT_ERROR);
 		}
-		System.out.println("Debug: Test checkIfValidUserInput");
 	}
 
 	public COMMAND_TYPE determineCommandType(String commandType) {
@@ -196,7 +201,10 @@ public class Parser {
 		}
 		return str.toString();
 	}
-	
+	//******************************************* Mutators *****************************************//
+	private void setCommandType(COMMAND_TYPE command) {
+		this.command = command;
+	}
 	//***********************************Accessors for AddParser************************************//
 	private void setAddAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
 		this.startTime = startTime;

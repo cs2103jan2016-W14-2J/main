@@ -12,7 +12,7 @@ public class DateAndTimeParser {
 	
 	public enum DATE_TYPES {
 		TYPE_THIS_COMING_WEEKDAY, TYPE_NEXT_WEEK, TYPE_NEXT_WEEKDAY, TYPE_TOMORROW, TYPE_TODAY, TYPE_THE_DAY_AFTER_TOMORROW,
-		TYPE_NEXT_FEW_DAYS, TYPE_DATE, TYPE_TIME
+		TYPE_NEXT_FEW_DAYS, TYPE_DATE, TYPE_TIME, TYPE_NULL
 	};
 	
 	private List<String> dayTypes = new ArrayList<>(Arrays.asList("null", "mon", "monday", "tue", "tuesday", "wed", "wednesday",
@@ -27,7 +27,6 @@ public class DateAndTimeParser {
 	private final String KEYWORD_AM = "am";
 	private final String KEYWORD_PM = "pm";
 	private final String KEYWORD_HRS = "hrs";
-	private final String KEYWORD_HR = "hr";
 	
 	private final int MAX_YEAR_PROPER = 2020;
 	private final int MAX_YEAR_INPROPER = 20;
@@ -62,45 +61,50 @@ public class DateAndTimeParser {
 		
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			String currentWord = contentToAnalyse.get(i);
-			System.out.println("Debug currentWord @line 63: " + currentWord);
+			
+			System.out.println("Debug analysePossibleDateElements @line 63: " + currentWord);
 		
 			switch (determineDateTypes(currentWord, contentToAnalyse)) {
 		
 		
 			case TYPE_DATE:
-				System.out.println("Debug: Test TYPE_DATE  @line 69.");
+				System.out.println("Debug: Test TYPE_DATE  @line 72.");
 				dateTimeElements = getDate(currentWord, contentToAnalyse, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
 				
 			case TYPE_TIME:
-				System.out.println("Debug: Test TYPE_TIME");
+				System.out.println("Debug: Test TYPE_TIME @line 78");
 				dateTimeElements = getTime(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
 					
 			case TYPE_TODAY:
+				System.out.println("Debug: Test TYPE_TODAY @line 84");
 				dateTimeElements = getToday(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);			
 				break;
 				
 			case TYPE_TOMORROW:
+				System.out.println("Debug: Test TYPE_TOMORROW @line 90");
 				dateTimeElements = getTomorrow(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
 					
 			case TYPE_THIS_COMING_WEEKDAY:
-				System.out.println("Debug currentWord @line 89: " + currentWord);
+				System.out.println("Debug THIS_COMING_WEEKDAY @line 96: " + currentWord);
 				dateTimeElements = getThisComingWeekday(currentWord, dateTimeElements, contentToAnalyse, i);
 				combined.add(dateTimeElements);
 				break;
 				
 			case TYPE_THE_DAY_AFTER_TOMORROW:
+				System.out.println("Debug DAY_AFTER_TOMORROW @line 96: " + currentWord);
 				dateTimeElements = getTheDayAfterTomorrow(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
 					
 			case TYPE_NEXT_FEW_DAYS:
+				System.out.println("Debug NEXT_FEW_DAYS @line 96: " + currentWord);
 				dateTimeElements = getNextFewDays(currentWord, contentToAnalyse, dateTimeElements);
 				combined.add(dateTimeElements);
 				break;
@@ -114,7 +118,9 @@ public class DateAndTimeParser {
 				dateTimeElements = getNextWeekday(currentWord, contentToAnalyse, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				break;
-	
+			case TYPE_NULL:
+				System.out.println("ERROR");
+				break;
 			default:
 				continue;
 				
@@ -138,15 +144,13 @@ public class DateAndTimeParser {
 		
 		String timeString = "";
 		Date newDate = new Date();
-		
-		int[] getDateTimeElements = new int[6];
+
 		int[] temp = new int[6];		
 		
 		for (int i = 0; i < combined.size(); i++) {
-			getDateTimeElements = combined.get(i);
-			temp = compareAndExtractDetails(getDateTimeElements, temp);
+			temp = compareAndExtractDetails(combined.get(i), temp);
 		}
-		
+
 		temp = setDefaultDeadline(temp);
 		
 		timeString = convertToTimeString(temp);
@@ -173,14 +177,14 @@ public class DateAndTimeParser {
 	 */
 	private int[] setDefaultDeadline(int[] temp) {
 		//[currentDayOfTheWeek, Hour, minute, day, month, year]
-		if (temp[1] == 0 && temp[2] == 0) {
+		if (temp[1] == 0 && temp[2] == 0 && temp[3] !=0 && temp[4] !=0 && temp[5] !=0)  {
 			temp[1] = 23;
 			temp[2] = 59;
 		}
-		else if (temp[3] == 0 && temp[4] == 0 && temp[5] == 0) {
+		else if (temp[3] == 0 && temp[4] == 0 && temp[5] == 0 && temp[0] !=0 && temp[1] != 0) {
 			Calendar cal = Calendar.getInstance();
 			temp[3] = cal.get(Calendar.DAY_OF_MONTH);
-			temp[4] = cal.get(Calendar.MONTH);
+			temp[4] = cal.get((Calendar.MONTH)) + 1;
 			temp[5] = cal.get(Calendar.YEAR);
 		}
 		return temp;
@@ -212,6 +216,7 @@ public class DateAndTimeParser {
 	public DATE_TYPES determineDateTypes(String currentWord, ArrayList<String> contentToAnalyse) {
 		
 		System.out.println("Debug: Test currentWord @determineDateType line 184. " + contentToAnalyse.size());
+		System.out.println("Debug: Test currentWord @determineDateType line 215. " + currentWord);
 		
 		if (isNumericalDateType(currentWord)) {
 			System.out.println("Debug: Test isnumericaldateType @line 187.");
@@ -253,7 +258,7 @@ public class DateAndTimeParser {
 			return DATE_TYPES.TYPE_NEXT_WEEKDAY;
 		}
 		else {
-			return null;
+			return DATE_TYPES.TYPE_NULL;
 		}
 		
 	}
@@ -391,6 +396,7 @@ public class DateAndTimeParser {
 	private int[] getTime(String currentWord, int[] dateTimeElements, int i) {
 		
 		if (currentWord.contains("am") || currentWord.contains("pm")) {
+			System.out.println("Debug getTime @line 402");
 			dateTimeElements = processAMPM(currentWord, dateTimeElements);
 		}
 		else if (currentWord.contains("hrs") || currentWord.contains("hr")) {
@@ -417,10 +423,11 @@ public class DateAndTimeParser {
 		else {
 			currentWord = currentWord.replace(KEYWORD_PM, "");
 		}
+		
 		String[] _24hours = currentWord.split("[.:]");
 		
 		if (_24hours.length == 1) {
-			time = currentWord;
+			time = currentWord + "00";
 		}
 		else if (_24hours.length == 2) {
 			time = _24hours[0] + _24hours[1];
@@ -592,7 +599,6 @@ public class DateAndTimeParser {
 		return (int) ans;
 		
 	}
-
 
 	//
 	private int[] anaylsePossibleDateElements(String currentWord, int[] dateTimeElements) {
@@ -833,7 +839,7 @@ public class DateAndTimeParser {
 	}
 
 	protected boolean isTodayType(ArrayList<String> contentToAnalyse) {
-		System.out.println("Debug: Test isTodayType @line 777.");
+		System.out.println("Debug: Test isTodayType @line 843.");
 		if (contentToAnalyse.size() == 1) {
 			if (contentToAnalyse.get(0).contains("today") || contentToAnalyse.get(0).contains("tdy")) {
 				return true;
@@ -848,7 +854,8 @@ public class DateAndTimeParser {
 	}
 	
 	protected boolean isEnglishDateType(ArrayList<String> contentToAnalyse) {
-		System.out.println("Debug: Test isEnglishDateType  @line 792." + contentToAnalyse.size());
+		System.out.println("Debug: Test isEnglishDateType  @line 858." + contentToAnalyse.size());
+
 		String month = "";
 		String day = "";
 		
@@ -856,6 +863,7 @@ public class DateAndTimeParser {
 		// Example: add buy grocery by 20 feb 2016 / 20 feb
 		if (contentToAnalyse.size() == 3 || contentToAnalyse.size() == 2) {
 			if (monthTypes.contains(contentToAnalyse.get(1))) {
+				
 				month = contentToAnalyse.get(1);
 			}
 		}
@@ -879,7 +887,7 @@ public class DateAndTimeParser {
 			return true;
 		}
 		else {
-//			System.out.println("Debug: Test currentWord @isDateType line 777: " + contentToAnalyse.get(0));
+			System.out.println("Debug: Test currentWord @isDateType line 890: " + contentToAnalyse.get(0));
 //			setTempTaskName(contentToAnalyse.get(i));
 			return false;
 		}
@@ -888,7 +896,7 @@ public class DateAndTimeParser {
 	// maybe redundant.
 	protected boolean isNumericalDateType(String currentWord) {
 		
-		System.out.println("Debug: Test isNumericalDateType @line 845.");
+		System.out.println("Debug: Test isNumericalDateType @line 899.");
 		
 		String[] dateElements = currentWord.split("[/.-]");
 		
@@ -904,24 +912,16 @@ public class DateAndTimeParser {
 	
 	
 	protected boolean isTimeType(String currentWord) {
-		
-		System.out.println("Debug: Test isTimeType @line 845.");
-		
+	
 		if (currentWord.length() < 3) {
 			return false;
 		}
 		
 		String lastTwoChars = currentWord.substring(currentWord.length() - LENGTH_OF_AM_PM_STRING);
 		String lastThreeChars = currentWord.substring(currentWord.length() - LENGTH_OF_HRS_STRING);
-		
-		System.out.println("Debug: Test isTimeType @line 858.");
-		
+
 		// check if string contains AM or PM and check if it is indeed a time.
-		if (containsAMPM(lastTwoChars)) {
-			return true;
-		}
-		// check if string contains HRs and check if it is indeed a time.
-		else if (containsHRS(lastThreeChars) || containsHRS(lastTwoChars)) {
+		if (containsAMPM(lastTwoChars) || containsHRS(lastThreeChars)) {
 			return true;
 		}
 		// need to check if string contains 0700
@@ -946,10 +946,7 @@ public class DateAndTimeParser {
 	// redundant
 	private boolean containsAMPM(String lastTwoChar) {
 		lastTwoChar = lastTwoChar.toLowerCase();
-		if (lastTwoChar.contains(KEYWORD_AM)) {
-			return true;
-		}
-		else if (lastTwoChar.contains(KEYWORD_PM)) {
+		if (lastTwoChar.contains(KEYWORD_AM) || lastTwoChar.contains(KEYWORD_PM)) {
 			return true;
 		}
 		else {

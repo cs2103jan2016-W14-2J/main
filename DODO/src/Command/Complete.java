@@ -35,6 +35,8 @@ public class Complete extends Command {
 			return "Task " + index + " has been completed before.";
 		}
 		task.complete(true);
+		tasks.remove(index);
+		completedTasks.add(task);
 		return "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.";
 		}
 		catch (IndexOutOfBoundsException e) {

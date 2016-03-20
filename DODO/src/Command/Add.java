@@ -13,8 +13,8 @@ import java.util.Date;
 public class Add extends Command {
 	
 	// for use in logic class
-	public Add(Parser parser, Logic logic, COMMAND_TYPE command_type) {
-		super(parser, logic, command_type);
+	public Add(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
+		super(parser, data, command_type);
 	}
 
 	@Override
@@ -39,29 +39,23 @@ public class Add extends Command {
 		String tag = parser.getTag(); // may be null
 		
 		Task task = new Task(TASK_TYPE.FLOATING, name, tag);
-		ArrayList<Task> floatingTasks = logic.getFloatingTasks();
 		floatingTasks.add(task);
-		logic.setFloatingTasks(floatingTasks);
 		return "Floating task \"" + name + "\" added to floatingTasks.";
 	}
 	
 	private String addDeadlinedTasks() {
 		String name = parser.getName(); // cannot be null
 		String tag = parser.getTag(); // may be null
-		Date endDateTime = null; // cannot be null
+		Date endDateTime = parser.getEndTime(); // cannot be null
 		
 		DeadlinedTask task = new DeadlinedTask(TASK_TYPE.DEADLINED, name, tag, endDateTime);
 		
 		if (task.getIsOverdue()){
-			ArrayList<Task> overdueTasks = logic.getOverdueTasks();
 			overdueTasks.add(task);
-			logic.setOverdueTasks(overdueTasks);
-			return "Deadlined task \"" + name + "\"} added to overdueTasks.";
+			return "Deadlined task \"" + name + "\" added to overdueTasks.";
 		}
 		else {
-			ArrayList<Task> ongoingTasks = logic.getOngoingTasks();
 			ongoingTasks.add(task);
-			logic.setOngoingTasks(ongoingTasks);
 			return "Deadlined task \"" + name + "\" added to ongoingTasks.";
 		}
 	}
@@ -69,21 +63,17 @@ public class Add extends Command {
 	private String addEvent() {
 		String name = parser.getName(); // cannot be null
 		String tag = parser.getTag(); // may be null
-		Date startDateTime = null;
-		Date endDateTime = null;
+		Date startDateTime = parser.getStartTime();
+		Date endDateTime = parser.getEndTime();
 		
 		Event task = new Event(TASK_TYPE.EVENT, name, tag, startDateTime, endDateTime);
 		
 		if (task.getIsOverdue()) {
-			ArrayList<Task> overdueTasks = logic.getOverdueTasks();
 			overdueTasks.add(task);
-			logic.setOverdueTasks(overdueTasks);
 			return "Event \"" + name + "\" added to overdueTasks.";
 		}
 		else {
-			ArrayList<Task> ongoingTasks = logic.getOngoingTasks();
 			ongoingTasks.add(task);
-			logic.setOngoingTasks(ongoingTasks);
 			return "Event \"" + name + "\" added to ongoingTasks.";
 		}
 	}

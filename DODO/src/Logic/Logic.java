@@ -22,55 +22,18 @@ public class Logic {
 	private ArrayList<Task> floatingTasks;
 	private ArrayList<Task> results;
 	
-	private Logic(String directory) {
-		System.out.println("[Logic/init] directory: " + directory);
-		storage = new Storage(directory);
-		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
-		completedTasks = storage.read(TASK_STATUS.COMPLETED);
-		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
-		floatingTasks = storage.read(TASK_STATUS.FLOATING);
-	}
-	
+	/*************************************CONSTRUCTOR******************************************/
 	public static Logic getInstance(String directory) {
 		if (theOne==null) {
 			theOne = new Logic(directory);
 		}
 		return theOne;
 	}
-	
-	// UI: you will call this to run logic
+
 	public String run(String input) {
 		return processCommand(input);
 	}
-	
-	public String processCommand(String input) {
-		Parser parser = new Parser(input);
-		COMMAND_TYPE command = parser.getCommandType();
-		
-		switch (command) {
-		case ADD:
-			return add(parser);
-		case DELETE:
-			return delete(parser);
-		case UNDO:
-			return undo();
-		}
-		return "Invalid COMMAND_TYPE.";
-	}
-	
-	public String add(Parser parser) {
-		Add add = new Add(parser, this, COMMAND_TYPE.ADD);
-		return add.execute();
-	}
-	
-	public String delete(Parser parser) {
-		Delete delete = new Delete(parser, this, COMMAND_TYPE.DELETE);
-		return delete.execute();
-	}
-	public String undo() {
-		return "Undo successful";
-	}
-	// UI: you will call this when user is quiting the programme
+
 	public String save() {
 		String test = storage.save(TASK_STATUS.ONGOING, ongoingTasks);
 		System.out.println("[DEBUG/Logic/save] save: " + test);
@@ -80,37 +43,84 @@ public class Logic {
 		return "Saved successfully";
 	}
 	
-	/***********************************MUTATORS***********************************************/
-	public void setOngoingTasks(ArrayList<Task> tasks) {
-		this.ongoingTasks = tasks;
-	}
-	
-	public void setFloatingTasks(ArrayList<Task> tasks) {
-		this.floatingTasks = tasks;
-	}
-	
-	public void setCompletedTasks(ArrayList<Task> tasks) {
-		this.completedTasks = tasks;
-	}
-	
-	public void setOverdueTasks(ArrayList<Task> tasks) {
-		this.overdueTasks = tasks;
-	}
-	
 	/***********************************ACCESSORS***********************************************/
 	public ArrayList<Task> getOngoingTasks() {
 		return this.ongoingTasks;
 	}
-	
+
 	public ArrayList<Task> getFloatingTasks() {
 		return this.floatingTasks;
 	}
-	
+
 	public ArrayList<Task> getCompletedTasks() {
 		return this.completedTasks;
 	}
-	
+
 	public ArrayList<Task> getOverdueTasks() {
 		return this.overdueTasks;
+	}
+	
+	
+	/***********************************PRIVATE METHODS***********************************************/
+	private Logic(String directory) {
+		System.out.println("[Logic/init] directory: " + directory);
+		storage = new Storage(directory);
+		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
+		completedTasks = storage.read(TASK_STATUS.COMPLETED);
+		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
+		floatingTasks = storage.read(TASK_STATUS.FLOATING);
+	}
+
+	private String processCommand(String input) {
+		Parser parser = new Parser(input);
+		COMMAND_TYPE command = parser.getCommandType();
+		ArrayList<ArrayList<Task>> data = compress();
+
+		switch (command) {
+		case ADD:
+			return add(parser, data);
+		case DELETE:
+			return delete(parser, data);
+		case UNDO:
+			return undo();
+		}
+		return "Invalid COMMAND_TYPE.";
+	}
+
+	private String add(Parser parser, ArrayList<ArrayList<Task>> data) {
+		Add add = new Add(parser, data, COMMAND_TYPE.ADD);
+		String status = add.execute();
+		data = add.getData();
+		update(data);
+		return status;
+	}
+	
+	private String delete(Parser parser, ArrayList<ArrayList<Task>> data) {
+		Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE);
+		String status = delete.execute();
+		data = delete.getData();
+		update(data);
+		return status;
+	}
+
+	private String undo() {
+		return "Undo successful";
+	}
+
+	private ArrayList<ArrayList<Task>> compress() {
+		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
+		tasks.add(floatingTasks);
+		tasks.add(ongoingTasks);
+		tasks.add(completedTasks);
+		tasks.add(overdueTasks);
+		return tasks;
+	}
+	
+	private String update(ArrayList<ArrayList<Task>> data) {
+		this.floatingTasks = data.get(0);
+		this.ongoingTasks = data.get(1);
+		this.completedTasks = data.get(2);
+		this.overdueTasks = data.get(3);
+		return "Data updated.";
 	}
 }

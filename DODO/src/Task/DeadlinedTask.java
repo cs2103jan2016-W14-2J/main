@@ -17,9 +17,12 @@ public class DeadlinedTask extends Task {
 	}
 	
 	private boolean checkOverdue() {
+		System.out.println("deadlinedTask/checkoverdue: checkpoint1");
 		Date current = new Date();
+		System.out.println("deadlinedTask/checkoverdue: checkpoint2");
 		System.out.println("[DEBUG] current: " + current);
 		if  (current.after(endDateTime)) {
+			System.out.println("deadlinedTask/checkoverdue: checkpoint3");
 			return true;
 		}
 		else return false;

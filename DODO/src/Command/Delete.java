@@ -9,8 +9,8 @@ import GUI.*;
 
 public class Delete extends Command{
 	
-	public Delete(Parser parser, Logic logic, COMMAND_TYPE command_type) {
-		super(parser, logic, command_type);
+	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
+		super(parser, data, command_type);
 	}
 	
 	public String execute() {
@@ -28,40 +28,37 @@ public class Delete extends Command{
 		}
 	}
 	
+	public String undo() {
+		return "Undone";
+	}
+	
 	private String deleteAll() {
-		logic.setFloatingTasks(new ArrayList<Task>());
-		return "All deleted";
+		setTasks(this.UIStatus, new ArrayList<Task>());
+		return "All tasks in " + this.UIStatus + "are deleted.";
 	}
 	
 	private String delete(ArrayList<Integer> indexes) {
-		TASK_STATUS status = UIRightBox.getCurrentTab();
-		ArrayList<Task> tasks = getTasks(status);
-		
-		System.out.println("[DEBUG] status: " + status);
-		System.out.println("[DEBUG] task: " + tasks);
-		System.out.println("[DEBUG] indexes: " + indexes);
-		
+		ArrayList<Task> tasks = getTasks(this.UIStatus);
 		if (tasks.size()==0) {
-			return "Empty task list in " + status;
+			return this.UIStatus + " is empty. There is nothing to delete.";
 		}
-		
 		for (int i=0; i<indexes.size(); i++) {
-			System.out.println("[DEBUG/Delete]" + tasks.remove(indexes.get(i)-1-i));
+			tasks.remove(indexes.get(i)-1-i);
 		}
-		setTasks(status, tasks);
+		setTasks(this.UIStatus, tasks);
 		return "Deletion completed.";
 	}
 	
 	private ArrayList<Task> getTasks(TASK_STATUS status) {
 		switch (status) {
 		case ONGOING:
-			return logic.getOngoingTasks();
+			return this.ongoingTasks;
 		case FLOATING:
-			return logic.getFloatingTasks();
+			return this.floatingTasks;
 		case COMPLETED:
-			return logic.getCompletedTasks();
+			return this.completedTasks;
 		case OVERDUE:
-			return logic.getOverdueTasks();
+			return this.overdueTasks;
 		default:
 			return null;
 		}
@@ -70,21 +67,17 @@ public class Delete extends Command{
 	private void setTasks(TASK_STATUS status, ArrayList<Task> list) {
 		switch(status) {
 		case ONGOING:
-			logic.setOngoingTasks(list);
+			this.ongoingTasks = list;
 			break;
 		case FLOATING:
-			logic.setFloatingTasks(list);
+			this.floatingTasks = list;
 			break;
 		case COMPLETED:
-			logic.setCompletedTasks(list);
+			this.completedTasks = list;
 			break;
 		case OVERDUE:
-			logic.setOverdueTasks(list);
+			this.overdueTasks = list;
 			break;
 		}
-	}
-	
-	public String undo() {
-		return "Undone";
 	}
 }

@@ -1,2 +1,0 @@
-DBDIR = /Users/luyang/Desktop/DODOdatabase.txt
-FILENAME = DODOdatabase.txt

@@ -119,6 +119,11 @@ public class Parser {
 				DeleteFlagCompleteParser completeParser = new DeleteFlagCompleteParser(userInput);
 				setDeleteAttributes(completeParser.getDeleteType(), completeParser.getTaskToDelete());
 				break;
+			case FLAG:
+				userInput = getUserInputContent(userInput);
+				DeleteFlagCompleteParser flagParser = new DeleteFlagCompleteParser(userInput);
+				setDeleteAttributes(flagParser.getDeleteType(), flagParser.getTaskToDelete());
+				break;
 			case UNDO:
 				setCommandType(COMMAND_TYPE.UNDO);
 				break;

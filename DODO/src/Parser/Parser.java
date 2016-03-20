@@ -60,7 +60,7 @@ public class Parser {
 	private boolean isImportant;
 	
 	private DELETE_TYPE deleteType;
-	private ArrayList<Integer> taskToDelete;
+	private ArrayList<String> taskToDelete;
 	private ArrayList<String> taskItems;
 	private String _commandAdd = "add";
 	private EDIT_TYPE editType;
@@ -288,8 +288,8 @@ public class Parser {
 		return this.taskType;
 	}
 */	//**************************Accessors for Flag/Unflag/Complete/DeleteParser*********************//
-	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<Integer> taskToDelete) {
-		this.taskToDelete = new ArrayList<Integer>();
+	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<String> taskToDelete) {
+		this.taskToDelete = new ArrayList<String>();
 		this.taskToDelete = taskToDelete;
 		this.deleteType = deleteType;
 	}
@@ -298,7 +298,7 @@ public class Parser {
 		return this.deleteType;
 	}
 	
-	public ArrayList<Integer> getTaskToDelete() {
+	public ArrayList<String> getTaskToDelete() {
 		return this.taskToDelete;
 	}
 	

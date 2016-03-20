@@ -6,14 +6,14 @@ import Command.*;
 public class DeleteFlagCompleteParser {
 	private String userTask;
 	private DELETE_TYPE deleteType;
-	private ArrayList<Integer> taskToDelete; 
+	private ArrayList<String> taskToDelete; 
 	
 	private static String MESSAGE_WRONG_DELETE_COMMAND = "Oops. Please enter a valid range.";
 	
 	
 	public DeleteFlagCompleteParser(String userTask) {
 		this.userTask = userTask;
-		this.taskToDelete = new ArrayList<Integer>();
+		this.taskToDelete = new ArrayList<String>();
 		executeDeleteParser();
 	}
 
@@ -48,13 +48,13 @@ public class DeleteFlagCompleteParser {
 		// Example: user enters "delete 1 - 5"
 		if (str.length == 2) {
 			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[1]) + 1; i++) {
-				taskToDelete.add(i);
+				taskToDelete.add(String.valueOf(i));
 			}
 		}
 		// Example: user enters "delete 1 to 5"
 		else if (str.length == 3) {
 			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
-				taskToDelete.add(i);
+				taskToDelete.add(str[i]);
 			}
 		}
 		
@@ -63,13 +63,13 @@ public class DeleteFlagCompleteParser {
 
 	private void parseMultipleDelete(String[] str) {
 		for (int i = 0; i < str.length; i++) {
-			taskToDelete.add(Integer.parseInt(str[i]));
+			taskToDelete.add(str[i]);
 		}
 		setTaskToDelete(taskToDelete);
 	}
 
 	private void parseSingleDelete(String[] str) {
-		taskToDelete.add(Integer.parseInt(str[0]));
+		taskToDelete.add(str[0]);
 		setTaskToDelete(taskToDelete);
 	}
 
@@ -150,11 +150,11 @@ public class DeleteFlagCompleteParser {
 		return this.deleteType;
 	}
 	
-	private void setTaskToDelete(ArrayList<Integer> taskToDelete) {
+	private void setTaskToDelete(ArrayList<String> taskToDelete) {
 		this.taskToDelete = taskToDelete;
 	}
 	
-	public ArrayList<Integer> getTaskToDelete() {
+	public ArrayList<String> getTaskToDelete() {
 		return this.taskToDelete;
 	}
 }

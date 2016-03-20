@@ -63,8 +63,11 @@ public class Parser {
 	private ArrayList<Integer> taskToDelete;
 	private ArrayList<String> taskItems;
 	private String _commandAdd = "add";
-
+	private EDIT_TYPE editType;
 	
+	public Parser() {
+		
+	}
 	// update
 	public Parser (String userInput) {
 		assert userInput.length() > 0;
@@ -91,6 +94,8 @@ public class Parser {
 			userInput = _commandAdd + " " + userInput;
 		}
 		
+		System.out.println("ADD " + taskType);
+		
 		switch (commandType) {
 			
 			case ADD:
@@ -107,7 +112,7 @@ public class Parser {
 				userInput = processUserInput(userInput);
 				EditParser editParser = new EditParser(userInput);
 				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),
-								  editParser.getNewTaskName());
+								  editParser.getNewTaskName(), editParser.getEditType());
 				break;
 			case COMPLETE:
 				userInput = getUserInputContent(userInput);
@@ -144,10 +149,12 @@ public class Parser {
 		
 		if(possibleCommandErrors.containsKey(commandType)) {
 			this.command = possibleCommandErrors.get(commandType);
+			setCommandType(this.command);
 			return command;
 		}
 		else {
 			this.command = COMMAND_TYPE.ADD;
+			setCommandType(this.command);
 			return command;
 		}
 	}
@@ -202,8 +209,27 @@ public class Parser {
 		return str.toString();
 	}
 	//******************************************* Mutators *****************************************//
-	private void setCommandType(COMMAND_TYPE command) {
+	protected void setCommandType(COMMAND_TYPE command) {
 		this.command = command;
+	}
+	protected void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	
+	protected void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	protected void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+	
+	protected void setTaskType(TASK_TYPE taskType) {
+		this.taskType = taskType;
+	}
+	
+	protected void setTaskTag(String tag) {
+		this.tag = tag.substring(1, tag.length());
 	}
 	//***********************************Accessors for AddParser************************************//
 	private void setAddAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
@@ -239,15 +265,20 @@ public class Parser {
 	public boolean getImportance() {
 		return this.isImportant;
 	}
-	private void setTaskTag(String tag) {
-		this.tag = tag.substring(1, tag.length());
-	}
+
 	// STUB
 	public String getTag() {
 		return this.tag;
 	}
 	
-	//***********************************Accessors for DeleteParser************************************//
+	public String getTaskName() {
+		return this.taskName;
+	}
+	
+/*	public TASK_TYPE getTaskType() {
+		return this.taskType;
+	}
+*/	//***********************************Accessors for DeleteParser************************************//
 	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<Integer> taskToDelete) {
 		this.taskToDelete = new ArrayList<Integer>();
 		this.taskToDelete = taskToDelete;
@@ -263,16 +294,20 @@ public class Parser {
 	}
 	
 	//***********************************Accessors for EditParser************************************//
-	private void setEditAttributes(int taskID, Date endTime, Date startTime, String taskName) {
+	private void setEditAttributes(int taskID, Date endTime, Date startTime, String taskName, EDIT_TYPE editType) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.taskName = taskName;
 		this.taskID = taskID;
+		this.editType = editType;
 	}
 	
 	public int getTaskID() {
 		return this.taskID;
 	}
+	
+	public EDIT_TYPE getEditType() {
+		return this.editType;
+	}
 
 }
-

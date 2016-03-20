@@ -60,15 +60,15 @@ public class AddParser {
 	
 	public AddParser(String userTask) {
 		this.userTask = userTask;
-		executeAddParser();
+		executeAddParser(userTask);
 	}
 	
-	private void executeAddParser() {
+	private void executeAddParser(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
 		taskType = determineTaskType(taskItems);
-		System.out.println("Debug AddParser: Test executeAddParser @line64: " + taskType);
+		System.out.println("Debug AddParser: Test executeAddParser @line71: " + taskType);
 		
 		// initiate categorisation of a task.
 		switch(taskType) {
@@ -76,7 +76,7 @@ public class AddParser {
 				parseDEADLINED();
 				break;
 			case FLOATING:
-				parseFloating();
+				parseFloating(taskItems, userTask);
 				break;
 			case EVENT:
 				parseEVENT();
@@ -108,7 +108,7 @@ public class AddParser {
 
 	private boolean checkIfEventTask(ArrayList<String> taskItems) {
 		
-		System.out.println("Debug AddParser: Test checkIfEventTask @line108");
+		System.out.println("Debug AddParser: Test checkIfEventTask @line112");
 		
 		LAST_POSITION_OF_FROM = taskItems.lastIndexOf(KEYWORD_FROM);
 		LAST_POSITION_OF_TO = taskItems.lastIndexOf(KEYWORD_TO);
@@ -174,14 +174,11 @@ public class AddParser {
 		LAST_POSITION_OF_ON = taskItems.lastIndexOf(KEYWORD_ON);
 		LAST_POSITION_OF_BEFORE = taskItems.lastIndexOf(KEYWORD_BEFORE);
 		LAST_POSITION_OF_BY = taskItems.lastIndexOf(KEYWORD_BY);
-		System.out.println("Debug AddParser: Test lastIndexOfBefore @line128: " + LAST_POSITION_OF_BEFORE);
+		System.out.println("Debug AddParser: Test lastIndexOfBefore @line178: " + LAST_POSITION_OF_BEFORE);
 		
 	}
 
 	private boolean checkIfFloatingTask(ArrayList<String> taskItems) {
-		
-		System.out.println("Debug AddParser: Test checkIfEventTask @line108");
-		
 		if (!checkIfEventTask(taskItems) && !checkIfDeadlinedTask(taskItems)) {
 			return true;
 		}
@@ -313,8 +310,22 @@ public class AddParser {
 			
 	}
 
-	private void parseFloating() {
-		this.taskName = toStringTaskElements(taskItems).trim();
+	private void parseFloating(ArrayList<String> taskItems, String userTask) {
+		DateAndTimeParser parser = new DateAndTimeParser();
+		Date date = new Date();
+		date = parser.analysePossibleDateElements(taskItems);
+		
+		if (userTask.length() == parser.getTempTaskName().trim().length()) {
+			this.taskName = toStringTaskElements(taskItems).trim();
+			setTaskName(taskName);
+			setTaskType(TASK_TYPE.FLOATING);
+		}
+		else {
+			this.taskName = parser.getTempTaskName().trim();
+			setTaskName(taskName);
+			setTaskType(TASK_TYPE.DEADLINED);
+			setEndTime(date);
+		}
 	}
 	
 	/*
@@ -330,24 +341,28 @@ public class AddParser {
 		return taskName;
 	}
 
-	private void setStartTime(Date startTime) {
+	protected void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 	
-	public Date getStartTime() {
-		return startTime;
+	protected void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	protected void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 	
-	private void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	protected void setTaskType(TASK_TYPE taskType) {
+		this.taskType = taskType;
+	}
+
+	public Date getStartTime() {
+		return this.startTime;
 	}
 	
 	public Date getEndTime() {
-		return endTime;
-	}
-	
-	private void setTaskName(String taskName) {
-		this.taskName = taskName;
+		return this.endTime;
 	}
 	
 	public String getTaskName() {
@@ -358,11 +373,4 @@ public class AddParser {
 		return this.taskType;
 	}
 	
-	private void setTaskType(TASK_TYPE taskType) {
-		this.taskType = taskType;
-	}
-	
-	public COMMAND_TYPE getCommandType() {
-		return commandType;
-	}
 }

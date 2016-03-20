@@ -27,6 +27,7 @@ public class EditParser {
 	
 	private int taskID;
 	private Date newDate;
+	private EDIT_TYPE editType;
 	private String MESSAGE_EDIT_INPUT_ERROR = "You have entered an invalid command.";
 	private ArrayList<String> editTaskElements;
 	private ArrayList<String> contentToAnalyse;
@@ -52,24 +53,29 @@ public class EditParser {
 		
 		case TASK_NAME:
 			System.out.println("Debug at TASK_NAME " + userInput);
+			setEditType(EDIT_TYPE.TASK_NAME);
 			parseEditTaskName(editTaskElements);
 			break;
 		case EVENT_TIME:
 			System.out.println("Debug at EVENT_TIME " + userInput);
+			setEditType(EDIT_TYPE.EVENT_TIME);
 			parseEditEventTime(userInput, editTaskElements);
 			break;
 		case START_TIME:
 			System.out.println("Debug at START_TIME " + userInput);
+			setEditType(EDIT_TYPE.START_TIME);
 			parseEditStartTime(editTaskElements);
 			break;
 		case DEADLINED:
 			parseEditDeadLined(editTaskElements);
+			setEditType(EDIT_TYPE.DEADLINED);
 			break;
 		case END_TIME:
 			parseEditEndTime(editTaskElements);
-			break;
+			setEditType(EDIT_TYPE.END_TIME);
 		case INVALID:
 			System.out.println(MESSAGE_EDIT_INPUT_ERROR);
+			setEditType(EDIT_TYPE.INVALID);
 		}
 		
 	}
@@ -279,5 +285,13 @@ public class EditParser {
 	
 	public int getTaskID() {
 		return this.taskID;
+	}
+	
+	private void setEditType(EDIT_TYPE editType) {
+		this.editType = editType;
+	}
+	
+	public EDIT_TYPE getEditType() {
+		return this.editType;
 	}
 }

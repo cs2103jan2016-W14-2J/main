@@ -65,6 +65,10 @@ public class Task {
 		this.flag = flag;
 	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}

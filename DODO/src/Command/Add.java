@@ -11,8 +11,7 @@ import java.util.Date;
 
 
 public class Add extends Command {
-	
-	// for use in logic class
+
 	public Add(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
 		super(parser, data, command_type);
 	}

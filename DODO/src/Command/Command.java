@@ -10,6 +10,8 @@ import Task.*;
 
 
 public abstract class Command {
+	protected static final int INDEX_ADJUSTMENT = 1;
+	
 	protected COMMAND_TYPE command_type;
 	protected Parser parser;
 	protected ArrayList<Task> ongoingTasks;

@@ -36,7 +36,7 @@ public class Task {
 	}
 	
 	// unusable
-	public boolean getIsComplete() {
+	public boolean getComplete() {
 		return this.isComplete;
 	}
 	
@@ -56,19 +56,19 @@ public class Task {
 		return this.tag;
 	}
 	
-	protected void setTag(String tag) {
+	public void setTag(String tag) {
 		this.tag = tag;
 	}
 	
-	protected void setFlag(boolean flag) {
+	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
 	
-	protected void setDescription(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 	
-	protected void setIsComplete(boolean isComplete) {
+	public void complete(boolean isComplete) {
 		this.isComplete = isComplete;
 	}
 		

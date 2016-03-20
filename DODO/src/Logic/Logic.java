@@ -81,6 +81,10 @@ public class Logic {
 			return add(parser, data);
 		case DELETE:
 			return delete(parser, data);
+		case EDIT:
+			return edit(parser, data);
+		case COMPLETE:
+			return complete(parser, data);
 		case UNDO:
 			return undo();
 		}
@@ -99,6 +103,22 @@ public class Logic {
 		Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE);
 		String status = delete.execute();
 		data = delete.getData();
+		update(data);
+		return status;
+	}
+	
+	private String edit(Parser parser, ArrayList<ArrayList<Task>> data)  {
+		Edit edit = new Edit(parser, data, COMMAND_TYPE.EDIT);
+		String status = edit.execute();
+		data = edit.getData();
+		update(data);
+		return status;
+	}
+	
+	private String complete(Parser parser, ArrayList<ArrayList<Task>> data) {
+		Complete complete = new Complete(parser, data, COMMAND_TYPE.COMPLETE);
+		String status = complete.execute();
+		data = complete.getData();
 		update(data);
 		return status;
 	}

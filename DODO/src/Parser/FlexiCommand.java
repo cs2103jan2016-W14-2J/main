@@ -21,12 +21,12 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiCompleteCommand();
 		possibleCommands = initiateFlexiUndoCommand();
 		possibleCommands = initiateFlexiRedoCommand();
+		possibleCommands = initiateFlexiFlagCommand();
+		possibleCommands = initiateFlexiUnflagCommand();
 /*		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiTagCommand();
 		possibleCommands = initiateFlexiUntagCommand();
-		possibleCommands = initiateFlexiFlagCommand();
-		possibleCommands = initiateFlexiUnflagCommand();
 		possibleCommands = initiateFlexiExitCommand();
 		possibleCommands = initiateFlexiSearchCommand();
 		possibleCommands = initiateFlexiSortCommand();
@@ -104,6 +104,26 @@ public class FlexiCommand {
 		
 	}
 	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiFlagCommand() {
+		possibleCommands.put("flag", COMMAND_TYPE.FLAG);
+		possibleCommands.put("flags", COMMAND_TYPE.FLAG);
+		possibleCommands.put("important", COMMAND_TYPE.FLAG);
+		possibleCommands.put("impt", COMMAND_TYPE.FLAG);
+		possibleCommands.put("starred", COMMAND_TYPE.FLAG);
+		possibleCommands.put("star", COMMAND_TYPE.FLAG);
+		return possibleCommands;
+		
+	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiUnflagCommand() {
+		possibleCommands.put("unflag", COMMAND_TYPE.UNFLAG);
+		possibleCommands.put("unflags", COMMAND_TYPE.UNFLAG);
+		possibleCommands.put("unimportant", COMMAND_TYPE.UNFLAG);
+		possibleCommands.put("unimpt", COMMAND_TYPE.UNFLAG);
+		possibleCommands.put("unstarred", COMMAND_TYPE.UNFLAG);
+		possibleCommands.put("unstar", COMMAND_TYPE.UNFLAG);
+		return possibleCommands;
+	}
 	/*
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
 		possibleCommands.put("help", HELP);
@@ -135,29 +155,6 @@ public class FlexiCommand {
 	private HashMap<String, CommandType> initiateFlexiUntagCommand() {
 		possibleCommands.put("untag", UNTAG);
 		possibleCommands.put("untags", UNTAG);
-		return possibleCommands;
-	}
-
-
-	
-	private HashMap<String, CommandType> initiateFlexiFlagCommand() {
-		possibleCommands.put("flag", FLAG);
-		possibleCommands.put("flags", FLAG);
-		possibleCommands.put("important", FLAG);
-		possibleCommands.put("impt", FLAG);
-		possibleCommands.put("starred", FLAG);
-		possibleCommands.put("star", FLAG);
-		return possibleCommands;
-		
-	}
-	
-	private HashMap<String, CommandType> initiateFlexiUnflagCommand() {
-		possibleCommands.put("unflag", UNFLAG);
-		possibleCommands.put("unflags", UNFLAG);
-		possibleCommands.put("unimportant", UNFLAG);
-		possibleCommands.put("unimpt", UNFLAG);
-		possibleCommands.put("unstarred", UNFLAG);
-		possibleCommands.put("unstar", UNFLAG);
 		return possibleCommands;
 	}
 	

@@ -255,6 +255,8 @@ public class AddParser {
 			taskItems.add("-1");
 			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size()-1));
 			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
+			
+			
 			setEndTime(endTime);
 		
 		}

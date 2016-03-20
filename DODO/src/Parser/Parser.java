@@ -94,7 +94,7 @@ public class Parser {
 			userInput = _commandAdd + " " + userInput;
 		}
 		
-		System.out.println("ADD " + taskType);
+		System.out.println("DEBUG executeCommand @line97" + commandType);
 		
 		switch (commandType) {
 			
@@ -150,6 +150,7 @@ public class Parser {
 		if(possibleCommandErrors.containsKey(commandType)) {
 			this.command = possibleCommandErrors.get(commandType);
 			setCommandType(this.command);
+			System.out.println("COMPLETE");
 			return command;
 		}
 		else {
@@ -266,7 +267,6 @@ public class Parser {
 		return this.isImportant;
 	}
 
-	// STUB
 	public String getTag() {
 		return this.tag;
 	}

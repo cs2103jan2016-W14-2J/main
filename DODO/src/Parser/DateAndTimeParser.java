@@ -79,6 +79,7 @@ public class DateAndTimeParser {
 				dateTimeElements = getTime(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 					
 			case TYPE_TODAY:
@@ -86,6 +87,7 @@ public class DateAndTimeParser {
 				dateTimeElements = getToday(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);			
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 				
 			case TYPE_TOMORROW:
@@ -93,6 +95,7 @@ public class DateAndTimeParser {
 				dateTimeElements = getTomorrow(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 					
 			case TYPE_THIS_COMING_WEEKDAY:
@@ -100,6 +103,7 @@ public class DateAndTimeParser {
 				dateTimeElements = getThisComingWeekday(currentWord, dateTimeElements, contentToAnalyse, i);
 				combined.add(dateTimeElements);
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 				
 			case TYPE_THE_DAY_AFTER_TOMORROW:
@@ -107,6 +111,7 @@ public class DateAndTimeParser {
 				dateTimeElements = getTheDayAfterTomorrow(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 					
 			case TYPE_NEXT_FEW_DAYS:
@@ -114,6 +119,7 @@ public class DateAndTimeParser {
 				dateTimeElements = getNextFewDays(currentWord, contentToAnalyse, dateTimeElements);
 				combined.add(dateTimeElements);
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 					
 	/*		case TYPE_NEXT_WEEK:
@@ -125,12 +131,13 @@ public class DateAndTimeParser {
 				dateTimeElements = getNextWeekday(currentWord, contentToAnalyse, dateTimeElements, i);
 				combined.add(dateTimeElements);
 				contentToAnalyse.remove(i);
+				i = i-1;
 				break;
 			case TYPE_NULL:
-			/*	System.out.println("test TYPE_NULL");
+				System.out.println("test TYPE_NULL");
 				setTempTaskName(currentWord);
 				contentToAnalyse.remove(i);
-			*/	break;
+				break;
 			default:
 				continue;
 				

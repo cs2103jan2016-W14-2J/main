@@ -18,18 +18,18 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiAddCommand();
 		possibleCommands = initiateFlexiDeleteCommand();
 		possibleCommands = initiateFlexiEditCommand();
+		possibleCommands = initiateFlexiCompleteCommand();
+		possibleCommands = initiateFlexiUndoCommand();
+		possibleCommands = initiateFlexiRedoCommand();
 /*		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiTagCommand();
 		possibleCommands = initiateFlexiUntagCommand();
-		possibleCommands = initiateFlexiUndoCommand();
-		possibleCommands = initiateFlexiRedoCommand();
 		possibleCommands = initiateFlexiFlagCommand();
 		possibleCommands = initiateFlexiUnflagCommand();
 		possibleCommands = initiateFlexiExitCommand();
 		possibleCommands = initiateFlexiSearchCommand();
 		possibleCommands = initiateFlexiSortCommand();
-		possibleCommands = initiateFlexiCompleteCommand();
 		possibleCommands = initiateFlexiClearCommand();*/
 		
 	}

@@ -63,7 +63,7 @@ public class DeleteFlagCompleteParser {
 
 	private void parseMultipleDelete(String[] str) {
 		for (int i = 0; i < str.length; i++) {
-			taskToDelete.add(i);
+			taskToDelete.add(Integer.parseInt(str[i]));
 		}
 		setTaskToDelete(taskToDelete);
 	}

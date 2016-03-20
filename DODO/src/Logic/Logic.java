@@ -20,7 +20,7 @@ public class Logic {
 	private ArrayList<Task> completedTasks;
 	private ArrayList<Task> overdueTasks;
 	private ArrayList<Task> floatingTasks;
-	private ArrayList<Category> categories;
+	private TreeMap<String, Category> categories;
 	private ArrayList<Task> results;
 
 	/*************************************CONSTRUCTOR******************************************/
@@ -91,8 +91,10 @@ public class Logic {
 			Complete complete = new Complete(parser, data, COMMAND_TYPE.COMPLETE);
 			return execute(complete);
 		case TAG:
-			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG);
-			return execute(tag);
+			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
+			String status = execute(tag);
+			categories = tag.getCategories();
+			return status;
 		default:
 			return "Invalid COMMAND_TYPE.";
 		}

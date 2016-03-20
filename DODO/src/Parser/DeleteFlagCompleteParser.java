@@ -37,6 +37,8 @@ public class DeleteFlagCompleteParser {
 				break;
 			case ALL:
 				break;
+			case ALL_TAG:
+				break;
 			default:
 				System.out.println(MESSAGE_WRONG_DELETE_COMMAND);
 				break;
@@ -95,14 +97,27 @@ public class DeleteFlagCompleteParser {
 			setDeleteType(DELETE_TYPE.ALL);
 			return DELETE_TYPE.ALL;
 		}
+		else if (checkIfDeleteAllTag(userTask)) {
+			setDeleteType(DELETE_TYPE.ALL_TAG);
+			return DELETE_TYPE.ALL_TAG;
+		}
 		else {
 			System.out.print("DEBUG @line 55: wrong input");
 			return null;
 		}
 	}
 
+	private boolean checkIfDeleteAllTag(String userTask) {
+		if (userTask.contains("all") && (userTask.contains("tag") || userTask.contains("category"))) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
 	private boolean checkIfDeleteAll(String userTask) {
-		if (userTask.contains("all")) {
+		if (userTask.contains("all") && (!userTask.contains("tag") || !userTask.contains("category"))) {
 			return true;
 		}
 		else {

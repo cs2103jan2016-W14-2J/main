@@ -23,7 +23,7 @@ public class Logic {
 	private TreeMap<String, Category> categories;
 	private ArrayList<Task> results;
 
-	/*************************************CONSTRUCTOR******************************************/
+	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance(String directory) {
 		if (theOne==null) {
 			theOne = new Logic(directory);
@@ -60,7 +60,10 @@ public class Logic {
 	public ArrayList<Task> getOverdueTasks() {
 		return this.overdueTasks;
 	}
-
+	
+	public TreeMap<String, Category> getCategories() {
+		return this.categories;
+	}
 
 	/***********************************PRIVATE METHODS***********************************************/
 	private Logic(String directory) {
@@ -95,6 +98,9 @@ public class Logic {
 			String status = execute(tag);
 			categories = tag.getCategories();
 			return status;
+		case FLAG:
+			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG);
+			return flag.execute();
 		default:
 			return "Invalid COMMAND_TYPE.";
 		}

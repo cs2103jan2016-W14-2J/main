@@ -2,8 +2,8 @@ package Command;
 
 import java.util.ArrayList;
 
-import Parser.Parser;
-import Task.Task;
+import Parser.*;
+import Task.*;
 
 public class Complete extends Command {
 
@@ -16,30 +16,31 @@ public class Complete extends Command {
 		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
 		switch (this.UIStatus) {
 		case FLOATING:
-			return completeTask(index, this.floatingTasks);
+			return complete(this.UIStatus, index);
 		case ONGOING:
-			return completeTask(index, this.ongoingTasks);
+			return complete(this.UIStatus, index);
 		case COMPLETED:
 			return "Your task have been completed.";
 		case OVERDUE:
-			return completeTask(index, this.overdueTasks);
+			return complete(this.UIStatus, index);
 		default:
 			return "Invalid command.";
-		} 
+		}
 	}
 
-	private String completeTask(int index, ArrayList<Task> tasks) {
+	private String complete(TASK_STATUS status, int index) {
+		ArrayList<Task> tasks = getTasks(status);
 		try {
-		Task task = tasks.get(index);
-		if (task.getComplete()) {
-			return "Task " + index + " has been completed before.";
-		}
-		task.complete(true);
-		tasks.remove(index);
-		completedTasks.add(task);
-		return "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.";
-		}
-		catch (IndexOutOfBoundsException e) {
+			Task task = tasks.get(index);
+			if (task.getComplete()) {
+				return "Task " + index + " has been completed before.";
+			}
+			task.complete(true);
+			tasks.remove(index);
+			completedTasks.add(task);
+			setTasks(status, tasks);
+			return "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.";
+		} catch (IndexOutOfBoundsException e) {
 			return "Task " + (index+INDEX_ADJUSTMENT) + " is absent.";
 		}
 	}
@@ -49,5 +50,7 @@ public class Complete extends Command {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

@@ -1,11 +1,8 @@
 package Command;
 
 import java.util.ArrayList;
-import Logic.*;
 import Parser.*;
-import Command.*;
 import Task.*;
-import GUI.*;
 
 public class Delete extends Command{
 	
@@ -15,7 +12,7 @@ public class Delete extends Command{
 	
 	public String execute() {
 		DELETE_TYPE type = parser.getDeleteType();
-		ArrayList<Integer> indexes = parser.getTaskToDelete();
+		ArrayList<Integer> indexes = null;
 		switch (type) {
 		case ALL:
 			return deleteAll();
@@ -47,37 +44,5 @@ public class Delete extends Command{
 		}
 		setTasks(this.UIStatus, tasks);
 		return "Deletion completed.";
-	}
-	
-	private ArrayList<Task> getTasks(TASK_STATUS status) {
-		switch (status) {
-		case ONGOING:
-			return this.ongoingTasks;
-		case FLOATING:
-			return this.floatingTasks;
-		case COMPLETED:
-			return this.completedTasks;
-		case OVERDUE:
-			return this.overdueTasks;
-		default:
-			return null;
-		}
-	}
-	
-	private void setTasks(TASK_STATUS status, ArrayList<Task> list) {
-		switch(status) {
-		case ONGOING:
-			this.ongoingTasks = list;
-			break;
-		case FLOATING:
-			this.floatingTasks = list;
-			break;
-		case COMPLETED:
-			this.completedTasks = list;
-			break;
-		case OVERDUE:
-			this.overdueTasks = list;
-			break;
-		}
 	}
 }

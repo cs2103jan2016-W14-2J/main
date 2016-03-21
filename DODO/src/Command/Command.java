@@ -3,9 +3,7 @@ package Command;
 import java.util.ArrayList;
 
 import GUI.*;
-import Logic.*;
 import Parser.*;
-import Storage.*;
 import Task.*;
 
 
@@ -49,5 +47,37 @@ public abstract class Command {
 		tasks.add(completedTasks);
 		tasks.add(overdueTasks);
 		return tasks;
+	}
+	
+	protected ArrayList<Task> getTasks(TASK_STATUS status) {
+		switch (status) {
+		case ONGOING:
+			return this.ongoingTasks;
+		case FLOATING:
+			return this.floatingTasks;
+		case COMPLETED:
+			return this.completedTasks;
+		case OVERDUE:
+			return this.overdueTasks;
+		default:
+			return null;
+		}
+	}
+
+	protected void setTasks(TASK_STATUS status, ArrayList<Task> list) {
+		switch(status) {
+		case ONGOING:
+			this.ongoingTasks = list;
+			break;
+		case FLOATING:
+			this.floatingTasks = list;
+			break;
+		case COMPLETED:
+			this.completedTasks = list;
+			break;
+		case OVERDUE:
+			this.overdueTasks = list;
+			break;
+		}
 	}
 }

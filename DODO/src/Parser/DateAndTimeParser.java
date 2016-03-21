@@ -136,11 +136,11 @@ public class DateAndTimeParser {
 				i = i-1;
 				break;
 			case TYPE_NULL:
-	/*			System.out.println("test TYPE_NULL");
+				System.out.println("test TYPE_NULL");
 				setTempTaskName(currentWord);
 				contentToAnalyse.remove(i);
 				break;
-	*/		default:
+			default:
 				continue;
 				
 			}

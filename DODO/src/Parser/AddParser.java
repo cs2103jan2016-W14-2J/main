@@ -47,6 +47,7 @@ public class AddParser {
 	
 	private String userTask = "";
 	private String taskName = "";
+	private String tempTaskName = "";
 	private String contentToAnalyse;
 	private COMMAND_TYPE commandType;
 	private TASK_TYPE taskType;
@@ -199,7 +200,6 @@ public class AddParser {
 		
 		// Parse string with "from" ... "to".
 		if (userTask.lastIndexOf(KEYWORD_TO) > userTask.lastIndexOf(KEYWORD_FROM)) {
-			
 			taskItems.add("-1");
 			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO));
 			startTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
@@ -243,6 +243,7 @@ public class AddParser {
 			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size()-1));
 			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
 			setEndTime(endTime);
+	
 		}
 	
 		else if (LAST_POSITION_OF_ON != -1) {
@@ -308,7 +309,8 @@ public class AddParser {
 			
 		}
 		
-		System.out.println("Debug: End of parseDeadLined.");
+		setTempTaskName(taskName + " " + dateTimeParser.getTempTaskName());
+		System.out.println("Debug: End of parseDeadLined. " + taskName);
 			
 	}
 
@@ -376,6 +378,10 @@ public class AddParser {
 	
 	public TASK_TYPE getTaskType() {
 		return this.taskType;
+	}
+	
+	private void setTempTaskName(String tempTaskName) {
+		this.tempTaskName = tempTaskName;
 	}
 	
 }

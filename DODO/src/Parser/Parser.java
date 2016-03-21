@@ -129,6 +129,13 @@ public class Parser {
 				DeleteFlagCompleteParser unflagParser = new DeleteFlagCompleteParser(userInput);
 				setDeleteAttributes(unflagParser.getDeleteType(), unflagParser.getTaskToDelete());
 				break;
+			case TAG:
+				userInput = getUserInputContent(userInput);
+				setTaskIndex(userInput);
+				break;
+			case UNTAG:
+				setTaskIndex(userInput);
+				break;
 			case UNDO:
 				setCommandType(COMMAND_TYPE.UNDO);
 				break;
@@ -206,7 +213,7 @@ public class Parser {
 		
 		for (int i = 0; i < taskItems.size(); i++) {
 			if (taskItems.get(i).endsWith(">") && taskItems.get(i).startsWith("<")) {
-				setTaskTag(taskItems.get(i));
+				setTaskTag(taskItems.get(i).substring(1, taskItems.get(i).length()));
 				taskItems.remove(i);
 			}
 		}
@@ -240,6 +247,10 @@ public class Parser {
 	
 	protected void setTaskTag(String tag) {
 		this.tag = tag.substring(1, tag.length());
+	}
+	
+	protected void setTaskIndex(String index) {
+		this.taskID = Integer.parseInt(index);
 	}
 	//***********************************Accessors for AddParser************************************//
 	private void setAddAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {

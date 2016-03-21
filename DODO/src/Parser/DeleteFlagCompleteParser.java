@@ -30,6 +30,7 @@ public class DeleteFlagCompleteParser {
 				parseSingleDelete(str);
 				break;
 			case MULTIPLE:
+				System.out.print("DEBUG @line 33: MULTIPLE");
 				parseMultipleDelete(str);
 				break;
 			case RANGE:
@@ -64,6 +65,7 @@ public class DeleteFlagCompleteParser {
 	}
 
 	private void parseMultipleDelete(String[] str) {
+	
 		for (int i = 0; i < str.length; i++) {
 			taskToDelete.add(str[i]);
 		}
@@ -136,7 +138,7 @@ public class DeleteFlagCompleteParser {
 	}
 
 	private boolean checkIfDeleteMultiple(String userTask) {
-		
+		System.out.print("DEBUG @line 139: checkIfDeleteMultiple");
 		String[] str = userTask.toLowerCase().split("\\s+");
 		
 		if (str.length > 1 && !checkIfDeleteRange(userTask)) {

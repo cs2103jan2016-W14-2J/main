@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
 import java.util.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
+
 
 public class DateAndTimeParser {
 	
@@ -571,13 +573,13 @@ public class DateAndTimeParser {
 	}
 
 	private int[] getDate(String currentWord, ArrayList<String> contentToAnalyse, int[] dateTimeElements, int i) {
-		
+
 		// check if input is in 27/05/2015, 27-05-2015, 27.05.2015 format
-		if (isNumericalDateType(currentWord) == true) {
+		if (isNumericalDateType(currentWord)) {
 			dateTimeElements = anaylsePossibleDateElements(currentWord, dateTimeElements);
 		}
 		// check if input is in 27 may 2015 format
-		else if (checkIfStringDate(currentWord, contentToAnalyse, dateTimeElements, i) == true) {
+		else if (checkIfStringDate(currentWord, contentToAnalyse, dateTimeElements, i)) {
 			int monthInInteger = convertStringToInt(contentToAnalyse.get(i+1));
 			
 			if (i+2 <= contentToAnalyse.size() && (Integer.parseInt(contentToAnalyse.get(i+2))) <= MAX_YEAR_PROPER 
@@ -600,7 +602,7 @@ public class DateAndTimeParser {
 		
 		return dateTimeElements;
 	}
-	
+
 	private boolean checkIfStringDate(String currentWord, ArrayList<String> contentToAnalyse, int[] dateTimeElements, int i) {
 		
 		if (i + 2 < contentToAnalyse.size()) {
@@ -642,7 +644,9 @@ public class DateAndTimeParser {
 		
 		// Example: 27/05/16 (27 May 2016)
 		else if (dateComponents.length == NUM_CONTENT_OF_DATE_PROPER) {
-			
+			if (Integer.parseInt(dateComponents[2]) <= MAX_YEAR_INPROPER) {
+				dateComponents[2] = 20 + dateComponents[2];
+			}
 			dateTimeElements = checkProperDate(dateComponents, dateTimeElements);
 		}
 		return dateTimeElements;

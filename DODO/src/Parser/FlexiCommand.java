@@ -23,10 +23,10 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiRedoCommand();
 		possibleCommands = initiateFlexiFlagCommand();
 		possibleCommands = initiateFlexiUnflagCommand();
-/*		possibleCommands = initiateFlexiHelpCommand();
-		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiTagCommand();
 		possibleCommands = initiateFlexiUntagCommand();
+/*		possibleCommands = initiateFlexiHelpCommand();
+		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiExitCommand();
 		possibleCommands = initiateFlexiSearchCommand();
 		possibleCommands = initiateFlexiSortCommand();
@@ -124,6 +124,21 @@ public class FlexiCommand {
 		possibleCommands.put("unstar", COMMAND_TYPE.UNFLAG);
 		return possibleCommands;
 	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiTagCommand() {
+		possibleCommands.put("tag", COMMAND_TYPE.TAG);
+		possibleCommands.put("cat", COMMAND_TYPE.TAG);
+		possibleCommands.put("tags", COMMAND_TYPE.TAG);
+		possibleCommands.put("category", COMMAND_TYPE.TAG);
+		return possibleCommands;
+		
+	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiUntagCommand() {
+		possibleCommands.put("untag", COMMAND_TYPE.UNTAG);
+		possibleCommands.put("untags", COMMAND_TYPE.UNTAG);
+		return possibleCommands;
+	}
 	/*
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
 		possibleCommands.put("help", HELP);
@@ -140,21 +155,6 @@ public class FlexiCommand {
 		possibleCommands.put("view", DISPLAY);
 		possibleCommands.put("v", DISPLAY);
 		possibleCommands.put("see", DISPLAY);
-		return possibleCommands;
-	}
-	
-	private HashMap<String, CommandType> initiateFlexiTagCommand() {
-		possibleCommands.put("tag", TAG);
-		possibleCommands.put("cat", TAG);
-		possibleCommands.put("tags", TAG);
-		possibleCommands.put("category", TAG);
-		return possibleCommands;
-		
-	}
-	
-	private HashMap<String, CommandType> initiateFlexiUntagCommand() {
-		possibleCommands.put("untag", UNTAG);
-		possibleCommands.put("untags", UNTAG);
 		return possibleCommands;
 	}
 	

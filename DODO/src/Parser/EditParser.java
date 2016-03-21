@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 import Command.*;
-import Task.*;
 
 public class EditParser {
 	
@@ -83,7 +82,7 @@ public class EditParser {
 
 	private void parseEditEndTime(ArrayList<String> editTaskElements) {
 		DateAndTimeParser parser = new DateAndTimeParser();
-		INDEX_OF_LAST_TO = editTaskElements.lastIndexOf("to");
+		INDEX_OF_LAST_TO = editTaskElements.lastIndexOf(KEYWORD_TO);
 	
 		contentToAnalyse = new ArrayList<String>(editTaskElements.subList(INDEX_OF_LAST_TO, editTaskElements.size()));
 		newDate = parser.analysePossibleDateElements(contentToAnalyse);	
@@ -96,7 +95,7 @@ public class EditParser {
 		
 		System.out.println("Debug at parseEditStartTime ");
 		
-		INDEX_OF_LAST_FROM = editTaskElements.lastIndexOf("from");
+		INDEX_OF_LAST_FROM = editTaskElements.lastIndexOf(KEYWORD_FROM);
 		
 		System.out.println("Debug at parseEditStartTime2 " + INDEX_OF_LAST_FROM);
 		contentToAnalyse = new ArrayList<String>(editTaskElements.subList(INDEX_OF_LAST_FROM, editTaskElements.size()));
@@ -122,8 +121,8 @@ public class EditParser {
 	private void parseEditEventTime(String userInput, ArrayList<String> editTasksElements) {
 		
 		System.out.println("Debug at parseEditEventTime " + editTasksElements.get(0));
-		INDEX_OF_LAST_FROM = editTasksElements.indexOf("from");
-		INDEX_OF_LAST_TO = editTasksElements.indexOf("to");
+		INDEX_OF_LAST_FROM = editTasksElements.indexOf(KEYWORD_FROM);
+		INDEX_OF_LAST_TO = editTasksElements.indexOf(KEYWORD_TO);
 		
 		System.out.println("Debug at INDEX_OF_LAST_FROM " + INDEX_OF_LAST_FROM);
 		

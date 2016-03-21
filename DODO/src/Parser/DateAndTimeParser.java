@@ -417,12 +417,12 @@ public class DateAndTimeParser {
 
 	private int[] getTime(String currentWord, int[] dateTimeElements, int i) {
 		System.out.println("Debug getTime @line 402");
-		if (currentWord.contains("am") || currentWord.contains("pm")) {
+		if (currentWord.contains(KEYWORD_AM) || currentWord.contains(KEYWORD_PM)) {
 			System.out.println("Debug getTime @line 402");
 			dateTimeElements = processAMPM(currentWord, dateTimeElements);
 		}
-		else if (currentWord.contains("hrs")) {
-			currentWord = currentWord.replace("hrs", "");
+		else if (currentWord.contains(KEYWORD_HRS)) {
+			currentWord = currentWord.replace(KEYWORD_HRS, "");
 			dateTimeElements = processHRS(currentWord, dateTimeElements);
 		}
 		return dateTimeElements;
@@ -438,12 +438,12 @@ public class DateAndTimeParser {
 		boolean isAM = false;
 		String time = "";
 	
-		if (currentWord.contains("am")) {
-			currentWord = currentWord.replace("am", "");
+		if (currentWord.contains(KEYWORD_AM)) {
+			currentWord = currentWord.replace(KEYWORD_AM, "");
 			isAM = true;
 		}
 		else {
-			currentWord = currentWord.replace("pm", "");
+			currentWord = currentWord.replace(KEYWORD_PM, "");
 		}
 		
 		String[] _24hours = currentWord.split("[.:]");

@@ -213,7 +213,6 @@ public class Parser {
 		
 		for (int i = 0; i < taskItems.size(); i++) {
 			if (taskItems.get(i).endsWith(">") && taskItems.get(i).startsWith("<")) {
-				
 				setTaskTag(taskItems.get(i).substring(1, taskItems.get(i).length() - 1));
 				taskItems.remove(i);
 			}

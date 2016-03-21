@@ -313,7 +313,8 @@ public class AddParser {
 	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
-		DateAndTimeParser parser = new DateAndTimeParser();
+		this.taskName = toStringTaskElements(taskItems).trim();
+		/*	DateAndTimeParser parser = new DateAndTimeParser();
 		Date date = new Date();
 		date = parser.analysePossibleDateElements(taskItems);
 		
@@ -328,6 +329,8 @@ public class AddParser {
 			setTaskType(TASK_TYPE.DEADLINED);
 			setEndTime(date);
 		}
+*/
+		
 	}
 	
 	/*

@@ -896,7 +896,7 @@ public class DateAndTimeParser {
 			month = contentToAnalyse.get(1);
 		}
 		// Example: add buy grocery by monday.
-		else if (contentToAnalyse.size() == 1 && dayTypes.contains(contentToAnalyse.get(0))) {
+		else if (dayTypes.contains(contentToAnalyse.get(0))) {
 			day = contentToAnalyse.get(0);
 			System.out.println("Debug: Test isEnglishDateType  @line 873." + day);
 		}

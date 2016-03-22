@@ -15,7 +15,7 @@ public class Complete extends Command {
 
 	@Override
 	public String execute() {
-		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
+		int index = parser.getTaskID();
 		switch (this.UIStatus) {
 		case FLOATING:
 			return complete(this.UIStatus, index);
@@ -31,7 +31,7 @@ public class Complete extends Command {
 	}
 
 	private String complete(TASK_STATUS status, int index) {
-		System.out.println(status);
+		System.out.println(status + ", " + index);
 		ArrayList<Task> tasks = getTasks(status);
 		try {
 			Task task = tasks.get(index);

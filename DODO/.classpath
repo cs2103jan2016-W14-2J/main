@@ -12,5 +12,9 @@
 	<classpathentry kind="lib" path="src/GUI/controlsfx-samples-8.40.10.jar"/>
 	<classpathentry kind="lib" path="src/GUI/fxsampler-1.0.9.jar"/>
 	<classpathentry kind="lib" path="src/GUI/controlsfx-8.40.10.jar"/>
+	<classpathentry kind="lib" path="src/GUI/guava-18.0.jar"/>
+	<classpathentry kind="lib" path="src/GUI/hamcrest-all-1.3.jar"/>
+	<classpathentry kind="lib" path="src/GUI/testfx-core-4.0.1-alpha.jar"/>
+	<classpathentry kind="lib" path="src/GUI/testfx-junit-4.0.1-alpha.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

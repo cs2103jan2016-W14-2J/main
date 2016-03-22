@@ -94,20 +94,44 @@ public class TestParser {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
 		Parser parser = new Parser("drive by tomorrow");
-		String startDate = "Wed Mar 23 23:59:00 SGT 2016";
-		Date expectedStart = dateFormat.parse(startDate);
+		String endDate = "Wed Mar 23 23:59:00 SGT 2016";
+		Date expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
 		
 		parser = new Parser("submit assignment 1 by thursday");
-		startDate = "Thu Mar 24 23:59:00 SGT 2016";
-		expectedStart = dateFormat.parse(startDate);
+		endDate = "Thu Mar 24 23:59:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
 		
 		parser = new Parser("meeting with boss on 27 feb 2016 at 2pm");
-		startDate = "Tue Mar 22 14:00:00 SGT 2016";
-		expectedStart = dateFormat.parse(startDate);
+		endDate = "Tue Mar 22 14:00:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
-
+		
+		parser = new Parser("fetch mum from airport on this coming friday");
+		endDate = "Fri Mar 25 23:59:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+	
+		parser = new Parser("collect graduation certification on the day after tml");
+		endDate = "Thu Mar 24 23:59:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+		
+		parser = new Parser("meet girlfriend on 29/03/16");
+		endDate = "Tue Mar 29 23:59:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+		
+		parser = new Parser("tuition at 2:35pm");
+		endDate = "Tue Mar 22 14:35:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+		
+		parser = new Parser("tuition at 2:35pm");
+		endDate = "Tue Mar 22 14:35:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
 	}
 
 }

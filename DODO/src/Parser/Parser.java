@@ -9,36 +9,6 @@ import Command.*;
 import Task.*;
 
 /*
- * V 0.1: At this moment, this Parser function is only able to handle the following input format.
- * 
- * Timed Task:
- * 1. add revise on CS2103T at 1930hrs
- * 2. add finish CS2103T by this thursday
- * 3. add meeting with boss on 21.07.2016
- * 4. add cs2010 lab5 due on 01/03
- * 5. add submit assignment 1 before monday
- * 6. add start building sandcastle by the next 2 days.
- * 7. add paint my toe nails by friday 2359hrs
- * 
- * Floating Task:
- * 1. add buy beer from 7-11
- * 2. add study CS2103T on the floor
- * 3. add revise CS2103T by the beach
- * 4. add visit ramen store at nus
- * 5. add travel from yishun to nus
- * 
- * Event Task:
- * 1. add study cs2103t from 20/3/2016 to 23/04/2016.
- * 2. add nus soc sports camp from 20 feb 2017 to 20 feb 2018
- * 3. add babysit baby claudia from today to tomorrow
- * 
- * Delete:
- * Single delete: delete 1
- * Multiple delete: delete 1, 3, 5, 7
- * Range delete: delete 1 to 4 / delete 1-9
- * All delete: delete all
- * 
- * 
  * @author Pay Hao Jie
  */
 
@@ -55,13 +25,17 @@ public class Parser {
 	private Date startTime;
 	private Date endTime;
 	private int taskID;
-	private String userInput;
 	private String tag;
 	private boolean isImportant;
 	
 	private DELETE_TYPE deleteType;
 	private ArrayList<String> taskToDelete;
+	private ArrayList<Integer> indexToDelete;
 	private ArrayList<String> taskItems;
+	
+	private ArrayList<Integer> indexOfFlagAndMark;
+	private FLAGANDCOMPLETE_TYPE flagAndCompleteType;
+	
 	private String _commandAdd = "add";
 	private EDIT_TYPE editType;
 	
@@ -71,7 +45,6 @@ public class Parser {
 	// update
 	public Parser (String userInput) {
 		assert userInput.length() > 0;
-		this.userInput = userInput;
 		executeCommand(userInput);
 	}
 	
@@ -105,8 +78,8 @@ public class Parser {
 				break;
 			case DELETE:
 				userInput = getUserInputContent(userInput);
-				DeleteFlagCompleteParser deleteParser = new DeleteFlagCompleteParser(userInput);
-				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTaskToDelete());
+				DeleteParser deleteParser = new DeleteParser(userInput);
+				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTagToDelete(), deleteParser.getIndexToDelete());
 				break;
 			case EDIT:
 				userInput = processUserInput(userInput);
@@ -116,18 +89,18 @@ public class Parser {
 				break;
 			case COMPLETE:
 				userInput = getUserInputContent(userInput);
-				DeleteFlagCompleteParser completeParser = new DeleteFlagCompleteParser(userInput);
-				setDeleteAttributes(completeParser.getDeleteType(), completeParser.getTaskToDelete());
+				FlagAndCompleteParser completeParser = new FlagAndCompleteParser(userInput);
+				setFlagAndCompleteAttributes(completeParser.getFlagCompleteType(), completeParser.getTaskIndex());
 				break;
 			case FLAG:
 				userInput = getUserInputContent(userInput);
-				DeleteFlagCompleteParser flagParser = new DeleteFlagCompleteParser(userInput);
-				setDeleteAttributes(flagParser.getDeleteType(), flagParser.getTaskToDelete());
+				FlagAndCompleteParser flagParser = new FlagAndCompleteParser(userInput);
+				setFlagAndCompleteAttributes(flagParser.getFlagCompleteType(), flagParser.getTaskIndex());
 				break;
 			case UNFLAG:
 				userInput = getUserInputContent(userInput);
-				DeleteFlagCompleteParser unflagParser = new DeleteFlagCompleteParser(userInput);
-				setDeleteAttributes(unflagParser.getDeleteType(), unflagParser.getTaskToDelete());
+				FlagAndCompleteParser unflagParser = new FlagAndCompleteParser(userInput);
+				setFlagAndCompleteAttributes(unflagParser.getFlagCompleteType(), unflagParser.getTaskIndex());
 				break;
 			case TAG:
 				userInput = getUserInputContent(userInput);
@@ -298,9 +271,12 @@ public class Parser {
 /*	public TASK_TYPE getTaskType() {
 		return this.taskType;
 	}
-*/	//**************************Accessors for Flag/Unflag/Complete/DeleteParser*********************//
-	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<String> taskToDelete) {
+*/	//*********************************** Accessors for DeleteParser ********************************//
+	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<String> taskToDelete, ArrayList<Integer> indexToDelete) {
 		this.taskToDelete = new ArrayList<String>();
+		this.indexToDelete = new ArrayList<Integer>();
+		
+		this.indexToDelete = indexToDelete;
 		this.taskToDelete = taskToDelete;
 		this.deleteType = deleteType;
 	}
@@ -311,6 +287,10 @@ public class Parser {
 	
 	public ArrayList<String> getTaskToDelete() {
 		return this.taskToDelete;
+	}
+	
+	public ArrayList<Integer> getIndexToDelete() {
+		return this.indexToDelete;
 	}
 	
 	//***********************************Accessors for EditParser************************************//
@@ -329,5 +309,20 @@ public class Parser {
 	public EDIT_TYPE getEditType() {
 		return this.editType;
 	}
+	
+	//**************************Accessors for Flag/Unflag/CompleteParser*********************//
+		private void setFlagAndCompleteAttributes(FLAGANDCOMPLETE_TYPE flagAndCompleteType, ArrayList<Integer> indexOfFlagAndMark) {
+			this.indexOfFlagAndMark = new ArrayList<Integer>();
+			this.indexOfFlagAndMark = indexOfFlagAndMark;
+			this.flagAndCompleteType = flagAndCompleteType;
+		}
+		
+		public FLAGANDCOMPLETE_TYPE getFlagAndCompleteType() {
+			return this.flagAndCompleteType;
+		}
+		
+		public ArrayList<Integer> getTaskToFlagAndMark() {
+			return this.indexOfFlagAndMark;
+		}
 
 }

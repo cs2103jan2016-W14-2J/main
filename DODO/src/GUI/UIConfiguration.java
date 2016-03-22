@@ -26,22 +26,22 @@ import javafx.stage.Stage;
  */
 public class UIConfiguration extends Application 
 {
-	private static final String CONFIG_FIRSTLINE_DIRECTORY_UNKNOWN = "DBDIR = EMPTY";
-	private static final String CONFIG_FIRSTLINE_DIRECTORY_KNOWN = "DBDIR = %1$s";
-	private static final String CONFIG_SECONDLINE_FILENAME_UNKNOWN = "FILENAME = EMPTY";
-	private static final String CONFIG_SECONDLINE_FILENAME_KNOWN = "FILENAME = %1$s";
-	private static final String CONFIG_SEPARATOR = System.getProperty("line.separator");
-	private static final String DIALOG_TITLE = "SAVE DATABASE"; 
+	private final String CONFIG_FIRSTLINE_DIRECTORY_UNKNOWN = "DBDIR = EMPTY";
+	private final String CONFIG_FIRSTLINE_DIRECTORY_KNOWN = "DBDIR = %1$s";
+	private final String CONFIG_SECONDLINE_FILENAME_UNKNOWN = "FILENAME = EMPTY";
+	private final String CONFIG_SECONDLINE_FILENAME_KNOWN = "FILENAME = %1$s";
+	private final String CONFIG_SEPARATOR = System.getProperty("line.separator");
+	private final String DIALOG_TITLE = "SAVE DATABASE"; 
 	
-	private static final int PARAM_FOR_DIR = 8;	//include space
-	private static final int PARAM_FOR_NAME = 11; //include space
+	private final int PARAM_FOR_DIR = 8;	//include space
+	private final int PARAM_FOR_NAME = 11; //include space
 	
-	final static public String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
-	final static public String PARAM_DB_DEFAULT_FILENAME = "DODOdatabase";
+	final public String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
+	final public String PARAM_DB_DEFAULT_FILENAME = "DODOdatabase";
 	
-	final static public File configFile = new File(PARAM_CONFIG_DEFAULT_FILENAME);
-	final static public FileChooser fileChooser = new FileChooser();
-	public static ArrayList<String> listOfConfigs = new ArrayList<String>();
+	final public File configFile = new File(PARAM_CONFIG_DEFAULT_FILENAME);
+	final public FileChooser fileChooser = new FileChooser();
+	public ArrayList<String> listOfConfigs = new ArrayList<String>();
 	public File dbFile=null;
 	public FileOutputStream outputStream;
 	public Stage primaryStage;
@@ -64,6 +64,7 @@ public class UIConfiguration extends Application
 				checkConfigsContent();
 				System.out.println("yohoooooooooooooooooooooooooooooooooooo" + strDBdir.replace(strDBname, ""));
 				String directory = strDBdir.replace(strDBname, "");
+				System.out.println("directory is here " + directory );
 				logic = Logic.getInstance(directory);
 
 			}
@@ -87,7 +88,7 @@ public class UIConfiguration extends Application
 		gui.setDBname(strDBname);
 		gui.start(primaryStage);
 	}
-
+	
 	private void checkConfigsContent() throws IOException 
 	{
 		File testFile = new File(strDBdir);
@@ -217,7 +218,8 @@ public class UIConfiguration extends Application
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
+
 	
 	
 }

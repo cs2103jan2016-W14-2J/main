@@ -1,11 +1,17 @@
 package GUI;
 
+import org.controlsfx.control.PopOver;
+
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -18,6 +24,17 @@ public class UIFadeFeedBack {
 	public void run(String string)
 	{
 		
+		/*PopOver po = new PopOver();
+		VBox vbPop = new VBox();
+		vbPop.getChildren().add(new Button());
+		vbPop.setPrefSize(500, 500);
+		po.arrowSizeProperty().set(0);
+	    po.setContentNode(vbPop);
+	    po.show(vbPop);*/
+
+	    
+	    
+	   /* 
 		Stage fadingStage = new Stage();
 	    HBox dialogVBox = new HBox();
 	    Label labelFeedBack = new Label(string);
@@ -41,7 +58,7 @@ public class UIFadeFeedBack {
 	    fadingStage.setX(20);
 	    fadingStage.setY(888);
 	    fadingStage.show();
-	    
+	    */
 	    
 	}
 	

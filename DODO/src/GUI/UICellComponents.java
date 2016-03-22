@@ -7,6 +7,7 @@ import java.util.Date;
 import Task.DeadlinedTask;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
@@ -15,6 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -43,7 +46,7 @@ public class UICellComponents{
 	public final double labelHeightEndDT = 1000;
 	public final double labelIndexXproperty = 50;
 
-	public UICellComponents(String strIndex,String strTagging, String strName, Date StartDateTime,Date EndDateTime,String Flag)
+	public UICellComponents(String strIndex,String strTagging, String strName, Date StartDateTime,Date EndDateTime,boolean Flag)
 	{
 		chkBox = new CheckBox();
 		chkBox.getStylesheets().add(this.getClass().getResource("checkBox.css").toExternalForm());
@@ -58,25 +61,25 @@ public class UICellComponents{
 		+"-fx-background-radius: 5;");*/
 		
 		StackPane paneIndex = new StackPane();
-		paneIndex.setPrefSize(100, 1000);
-		//paneIndex.styleProperty().set("-fx-border-color: black;");
+		paneIndex.setPrefSize(100, 50);
+		paneIndex.styleProperty().set("-fx-border-color: black;");
 		paneIndex.getChildren().add(new Label(strIndex));
 		
 		StackPane paneTag = new StackPane();
-		paneTag.setPrefSize(125, 1000);
-		//paneTag.styleProperty().set("-fx-border-color: black;");
-		paneTag.getChildren().add(new Label("tagging"));
+		paneTag.setPrefSize(125, 500);
+		paneTag.styleProperty().set("-fx-border-color: black;");
+		paneTag.getChildren().add(new Label(strTagging));
 		
 		StackPane paneName = new StackPane();
 		paneName.setPrefSize(800, 1000);
-		//paneName.styleProperty().set("-fx-border-color: black;");
+		paneName.styleProperty().set("-fx-border-color: black;");
 		paneName.setAlignment(Pos.CENTER_LEFT);
 		Label lblName = new Label(strName);
 		paneName.getChildren().add(lblName);
 
 		VBox vbTime = new VBox();
 		vbTime.setPrefSize(400, 1000);
-		//vbTime.styleProperty().set("-fx-border-color: black;");
+		vbTime.styleProperty().set("-fx-border-color: black;");
 		vbTime.setAlignment(Pos.CENTER);
 		if(StartDateTime!=null)
 		{
@@ -84,13 +87,20 @@ public class UICellComponents{
 			Label lblEndateTime = new Label(EndDateTime.toString());
 			vbTime.getChildren().addAll(lblStartDateTime,lblEndateTime);
 		}
-		else if(EndDateTime!=null)
+		if(EndDateTime!=null)
 		{
 			Label lblEndateTime = new Label(EndDateTime.toString());
 			vbTime.getChildren().addAll(lblEndateTime);
 		}
 		
-		
+		if(Flag)
+		{
+			chkBox.setSelected(true);
+		}
+		else
+		{
+			chkBox.setSelected(false);
+		}
 		
 		
 		StackPane paneFlag = new StackPane();
@@ -101,8 +111,13 @@ public class UICellComponents{
 
 		cellRoot.getChildren().addAll(paneIndex,paneTag,paneName,vbTime,paneFlag);
 		
+		toolTip = new Tooltip(strName);
+		
+		
+
 		
 	}
+	
 	/*public UICellComponents(String strIndex, String strName, String strDescription)
 	{
 		cellRoot = new HBox();
@@ -203,7 +218,8 @@ public class UICellComponents{
 		//lblEndDateTime.setPrefSize(labelWidthEndDT,labelHeightEndDT);
 
 	}
-	private void setChkBoxSetting() {
+	private void setChkBoxSetting() 
+	{
 		chkBox.translateXProperty().set(300);
 		chkBox.translateYProperty().set(5);
 		chkBox.setPrefHeight(100);

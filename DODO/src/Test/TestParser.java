@@ -48,6 +48,11 @@ public class TestParser {
 		
 		parser = new Parser("cycle with jun lem from sengkang to nus");
 		assertEquals("cycle with jun lem from sengkang to nus", parser.getTaskName());
+		
+		parser = new Parser("buy slurpee from 7/11");
+		assertEquals("buy slurpee from 7/11", parser.getTaskName());
+		
+		
 	}
 
 }

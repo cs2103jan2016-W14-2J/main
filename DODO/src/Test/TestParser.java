@@ -127,13 +127,42 @@ public class TestParser {
 		endDate = "Tue Mar 22 14:35:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
-	/*	
+	/*
 		parser = new Parser("watch movie tomorrow at 5pm");
 		endDate = "Tue Mar 22 14:35:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
-	
 	*/
+	
+	}
+	
+	public void testEvent() throws ParseException {
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
+		Parser parser = new Parser("study cs2103t from 2pm to 9pm");
+		String endDate = "Tue Mar 22 21:00:00 SGT 2016";
+		String startDate = "Tue Mar 22 14:00:00 SGT 2016";
+		Date expectedStart = dateFormat.parse(endDate);
+		Date expectedEnd = dateFormat.parse(startDate);
+		assertEquals(expectedStart, parser.getStartTime());
+		assertEquals(expectedEnd, parser.getEndTime());
+		
+		parser = new Parser("soc sports camp from 20 march 2016 to 22 march 2016");
+		endDate = "Tue Mar 22 21:00:00 SGT 2016";
+		startDate = "Tue Mar 22 14:00:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		expectedEnd = dateFormat.parse(startDate);
+		assertEquals(expectedStart, parser.getStartTime());
+		assertEquals(expectedEnd, parser.getEndTime());
+		
+		parser = new Parser("attend photoshop refresher course from tomorrow to saturday");
+		endDate = "Sat Mar 26 23:59:00 SGT 2016";
+		startDate = "Wed Mar 23 23:59:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		expectedEnd = dateFormat.parse(startDate);
+		assertEquals(expectedStart, parser.getStartTime());
+		assertEquals(expectedEnd, parser.getEndTime());
+	
 	}
 
 }

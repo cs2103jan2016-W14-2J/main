@@ -309,11 +309,11 @@ public class AddParser {
 			
 		}
 		
-		verifyIfDeadLineTask(dateTimeParser.getTempTaskName());
+		verifyIfDeadLineTask(dateTimeParser.getTempTaskName(), taskName);
 			
 	}
 
-	private void verifyIfDeadLineTask(String tempTaskName) {
+	private void verifyIfDeadLineTask(String tempTaskName, String taskName) {
 		String temp = taskName.trim() + " " + tempTaskName.trim();
 		System.out.println("Debug: verifyIfDeadLineTask. " + temp.trim().length());
 		System.out.println("Debug: verifyIfDeadLineTask. " + userTask.trim().length());
@@ -327,11 +327,12 @@ public class AddParser {
 	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
+		this.taskName = toStringTaskElements(taskItems).trim();
 		DateAndTimeParser parser = new DateAndTimeParser();
 		Date endTime = parser.analysePossibleDateElements(taskItems);
 		setEndTime(endTime);
-		verifyIfDeadLineTask(parser.getTempTaskName());
-	//	this.taskName = toStringTaskElements(taskItems).trim();
+		verifyIfDeadLineTask(parser.getTempTaskName(), taskName);
+		
 		
 	}
 	

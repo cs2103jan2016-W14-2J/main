@@ -229,7 +229,7 @@ public class Parser {
 	private void setAddAttributes(Date startTime, Date endTime, String taskName, TASK_TYPE taskType)  {
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.taskName = taskName;
+		this.taskName = taskName.trim();
 		this.taskType = taskType;
 	}
 	

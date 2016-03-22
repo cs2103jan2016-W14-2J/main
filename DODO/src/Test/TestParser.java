@@ -28,9 +28,29 @@ public class TestParser {
 		Parser parser = new Parser("drive by the beach");
 		assertEquals(TASK_TYPE.FLOATING, parser.getType());
 		
+		parser = new Parser("submit assignment 1 by tomorrow");
+		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		
 		parser = new Parser("fetch my brother at 2pm");
 		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
 		
+		parser = new Parser("attend soc camp from 27/6/2016 to 28/6/2016");
+		assertEquals(TASK_TYPE.EVENT, parser.getType());
+		
+		parser = new Parser("jog from school to home");
+		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		
+		parser = new Parser("bake matcha cheesecake at home");
+		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		
+		parser = new Parser("piano tuning on sunday");
+		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		
+		parser = new Parser("build sandcastle on the road");
+		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		
+		parser = new Parser("dancing on the dancefloor at zouk");
+		assertEquals(TASK_TYPE.FLOATING, parser.getType());
 		
 	}
 	
@@ -63,6 +83,9 @@ public class TestParser {
 		
 		parser = new Parser("buy slurpee from 7/11");
 		assertEquals("buy slurpee from 7/11", parser.getTaskName());
+		
+		parser = new Parser("dance on the dancefloor at zouk");
+		assertEquals("dance on the dancefloor at zouk", parser.getTaskName());
 		
 		
 	}

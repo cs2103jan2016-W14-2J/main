@@ -18,7 +18,7 @@ public class FlagAndCompleteParser {
 	}
 
 	private void executeDeleteParser() {
-		String[] str = usertaskIndex.replaceAll("[:.-]", "").toLowerCase().split("\\s+");
+		String[] str = usertaskIndex.replaceAll("[:.,]", "").toLowerCase().split("\\s+");
 		
 		for (int i = 0; i < str.length; i++) {
 			System.out.println(str[i]);
@@ -46,17 +46,10 @@ public class FlagAndCompleteParser {
 	}
 
 	private void parseRange(String[] str) {
-		
-		// Example: user enters "delete 1 - 5"
-		if (str.length == 2) {
-			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[1]) + 1; i++) {
-				taskIndex.add(i);
-			}
-		}
-		// Example: user enters "delete 1 to 5"
-		else if (str.length == 3) {
+		System.out.println("DEBUG :" + str[2]);
+		if (str.length == 3) {
 			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
-				taskIndex.add(Integer.parseInt(str[i]));
+				taskIndex.add(i);
 			}
 		}
 		
@@ -77,7 +70,7 @@ public class FlagAndCompleteParser {
 	}
 
 	private FLAGANDCOMPLETE_TYPE detemineDeleteType(String usertaskIndex) {
-		System.out.println("DEBUG @line 34: " + usertaskIndex.length());
+//		System.out.println("DEBUG @line 34: " + usertaskIndex.length());
 		
 		if (checkIfSingle(usertaskIndex)) {
 			setFlagCompleteType(FLAGANDCOMPLETE_TYPE.SINGLE);

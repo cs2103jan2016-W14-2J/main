@@ -21,7 +21,7 @@ public class DateAndTimeParser {
 	
 	private List<String> tomorrowTypes = new ArrayList<>(Arrays.asList("tomorrow","tmr", "tml", "tmrw", "2moro"));
 	
-	private List<String> monthTypes = new ArrayList<>(Arrays.asList("jan", "january", "feb", "february", "mar",
+	private List<String> monthTypes = new ArrayList<>(Arrays.asList("null", "jan", "january", "feb", "february", "mar",
 			"march", "apr", "april", "may", "may", "june","june", "jul", "july", "aug", "august", "sept", "september", "oct",
 			"october", "nov", "november", "dec", "december"));
 	
@@ -69,11 +69,12 @@ public class DateAndTimeParser {
 		
 		
 			case TYPE_DATE:
-				System.out.println("Debug: Test TYPE_DATE  @line 72.");
 				dateTimeElements = getDate(currentWord, contentToAnalyse, dateTimeElements, i);
 				combined.add(dateTimeElements);
+				System.out.println("Debug: Test TYPE_DATE  @line 72.");
+			//	contentToAnalyse.clear();
 				contentToAnalyse.remove(i);
-				i--;;
+				i--;
 				break;
 			case TYPE_TIME:
 				System.out.println("Debug: Test TYPE_TIME @line 78");
@@ -145,7 +146,7 @@ public class DateAndTimeParser {
 			}
 			
 		}
-		
+		System.out.println("LAST line before exit :" + combined.size());
 		return processDateAndTime(combined);
 	}
 	
@@ -175,8 +176,15 @@ public class DateAndTimeParser {
 		System.out.println("Debug: @DateAndTimeParser line 149. " + timeString);
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Calendar cal = Calendar.getInstance(); 
+	
 		try {
 			newDate = simpleDateFormat.parse(timeString);
+			if (newDate.before(cal.getTime())) {
+				cal.setTime(newDate);
+				cal.add(Calendar.YEAR, 1);
+				newDate = cal.getTime();
+			}
 			System.out.println(newDate);
 			
 		}
@@ -572,7 +580,7 @@ public class DateAndTimeParser {
 	}
 
 	private int[] getDate(String currentWord, ArrayList<String> contentToAnalyse, int[] dateTimeElements, int i) {
-
+		
 		// check if input is in 27/05/2015, 27-05-2015, 27.05.2015 format
 		if (isNumericalDateType(currentWord)) {
 			dateTimeElements = anaylsePossibleDateElements(currentWord, dateTimeElements);
@@ -580,17 +588,20 @@ public class DateAndTimeParser {
 		// check if input is in 27 may 2015 format
 		else if (checkIfStringDate(currentWord, contentToAnalyse, dateTimeElements, i)) {
 			int monthInInteger = convertStringToInt(contentToAnalyse.get(i+1));
+			System.out.println("DEBUG getDate :" + contentToAnalyse.get(i+1));
 			
-			if (i+2 <= contentToAnalyse.size() && (Integer.parseInt(contentToAnalyse.get(i+2))) <= MAX_YEAR_PROPER 
-				|| Integer.parseInt(contentToAnalyse.get(i+2)) <= MAX_YEAR_INPROPER)  { 
-				
-				String numericalDate = currentWord + "/" + monthInInteger + contentToAnalyse.get(i+2);
-				dateTimeElements = anaylsePossibleDateElements(numericalDate, dateTimeElements);
-			}
-			else {
+			if (i < 2) {
 				String numericalDate = currentWord + "/" + monthInInteger;
 				dateTimeElements = anaylsePossibleDateElements(numericalDate, dateTimeElements);
 			}
+			else if (i+2 < contentToAnalyse.size() && (Integer.parseInt(contentToAnalyse.get(i+2))) <= MAX_YEAR_PROPER 
+				|| Integer.parseInt(contentToAnalyse.get(i+2)) <= MAX_YEAR_INPROPER)  { 
+				System.out.println("DEBUG GETDATE");
+				String numericalDate = currentWord + "/" + monthInInteger + "/" + contentToAnalyse.get(i+2);
+				System.out.println(numericalDate);
+				dateTimeElements = anaylsePossibleDateElements(numericalDate, dateTimeElements);
+			}
+			
 		}
 		else if (dayTypes.contains(currentWord)) {
 			int daysToAdd = checkWeekday(currentWord);
@@ -603,10 +614,11 @@ public class DateAndTimeParser {
 	}
 
 	private boolean checkIfStringDate(String currentWord, ArrayList<String> contentToAnalyse, int[] dateTimeElements, int i) {
-		
-		if (i + 2 < contentToAnalyse.size()) {
+		System.out.println("DEBUG checkIfStringDate :" + contentToAnalyse.size());
+		if (i + 1 < contentToAnalyse.size()) {
 			// check if string contains feb or february
 			if (monthTypes.contains(contentToAnalyse.get(i+1))) {
+				System.out.println("DEBUG checkIfStringDate : TRUE");
 				return true;
 			}
 			else {
@@ -620,22 +632,24 @@ public class DateAndTimeParser {
 
 
 	private int convertStringToInt(String string) {
+		System.out.println("DEBUG convertStringToInt :" + string);
 		double ans = 0;
 		for (int i = 0; i < monthTypes.size(); i++) {
-			if (monthTypes.equals(string)) {
-				ans = (double) i;
+			if (monthTypes.contains(string)) {
+				ans = (double) monthTypes.indexOf(string);
+				System.out.println("DEBUG convertStringToInt :" + (int) ((ans / 2)));
 				break;
 			}
 		}
 		
-		return (int) ans;
+		return (int) Math.ceil(ans / 2);
 		
 	}
 
 	//
 	private int[] anaylsePossibleDateElements(String currentWord, int[] dateTimeElements) {
 		String[] dateComponents = currentWord.split("[/.-]");
-		
+		System.out.println("DEBUG @line 643 : HELLO HELLO" );
 		// Example: 27.05 (27th May) or 16/12 (16 Dec)
 		if (dateComponents.length == NUM_CONTENT_OF_DATE_INPROPER) {
 			dateTimeElements = checkInproperDate(dateComponents, dateTimeElements);
@@ -910,7 +924,10 @@ public class DateAndTimeParser {
 			System.out.println("Debug: Test currentWord @isTimeType line 879:");
 			day = contentToAnalyse.get(0);
 		}
-		
+		else if (contentToAnalyse.size() > 3 && monthTypes.contains(contentToAnalyse.get(1))) {
+			month = contentToAnalyse.get(1);
+		}
+
 		// if the word next to the current contains month type like feb, march
 		// Example: 20 feb 2017
 		if (monthTypes.contains(month) || dayTypes.contains(day)) {
@@ -918,6 +935,7 @@ public class DateAndTimeParser {
 			return true;
 		}
 		else {
+
 			return false;
 		}
 	}

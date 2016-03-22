@@ -194,7 +194,6 @@ public class Parser {
 		for (String s: taskItems) {
 			str.append(s);
 			str.append(" ");
-			System.out.println("Debug: Test checkIfValidUserInput" + str.toString());
 		}
 		return str.toString();
 	}

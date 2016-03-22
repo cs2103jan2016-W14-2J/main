@@ -1,40 +1,68 @@
 package Command;
 
-import java.util.ArrayList;
+import java.util.*;
 import Parser.*;
 import Task.*;
 
 public class Delete extends Command{
-	
-	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
+	private TreeMap<String, Category> categories;
+
+	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type, TreeMap<String, Category> categories) {
 		super(parser, data, command_type);
+		this.categories = categories;
 	}
-	
+
 	public String execute() {
 		DELETE_TYPE type = parser.getDeleteType();
-		ArrayList<Integer> indexes = null;
+		ArrayList<String> tags = parser.getTagToDelete();
+		ArrayList<Integer> indexes = parser.getIndexToDelete();
+
+		// SINGLE_INDEX, SINGLE_TAG, MULTIPLE_INDEXES, MULTIPLE_TAGS, RANGE_INDEXES, ALL_INDEXES, ALL_TAGS;
+
 		switch (type) {
-		case ALL:
-			return deleteAll();
-		case MULTIPLE:
-		case RANGE:
-		case SINGLE:
-			return delete(indexes);
+		case SINGLE_INDEX:
+		case MULTIPLE_INDEXES:
+			return deleteTask(indexes);
+		case ALL_INDEXES:
+			return deleteAllTasks();
+		case SINGLE_TAG:
+		case MULTIPLE_TAGS:
+			return deleteTags(tags);
+		case ALL_TAGS:
+			return deleteAllTags();
 		default:
-			return "Invalid Delete Type.";
+			return "INVALID";
 		}
 	}
-	
+
+	private String deleteAllTags() {
+		this.categories = new TreeMap<String, Category>();
+		return "All tags deleted";
+	}
+
+	private String deleteTags(ArrayList<String> tags) {
+		String status = "";;
+		for (int i=0; i<tags.size(); i++) {
+			String element = tags.get(0);
+			if (!categories.containsKey(element)) {
+				status += "Tag " + element + " is not found.\n";
+			}
+			categories.remove(element);
+			status += "Tag " + element + " is deleted.\n";
+		}
+		return status;
+	}
+
 	public String undo() {
 		return "Undone";
 	}
-	
-	private String deleteAll() {
+
+	private String deleteAllTasks() {
 		setTasks(this.UIStatus, new ArrayList<Task>());
 		return "All tasks in " + this.UIStatus + "are deleted.";
 	}
-	
-	private String delete(ArrayList<Integer> indexes) {
+
+	private String deleteTask(ArrayList<Integer> indexes) {
 		ArrayList<Task> tasks = getTasks(this.UIStatus);
 		if (tasks.size()==0) {
 			return this.UIStatus + " is empty. There is nothing to delete.";
@@ -45,4 +73,9 @@ public class Delete extends Command{
 		setTasks(this.UIStatus, tasks);
 		return "Deletion completed.";
 	}
+
+	public TreeMap<String, Category> getCategories() {
+		return this.categories;
+	}
+
 }

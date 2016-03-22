@@ -4,8 +4,6 @@ import Command.*;
 import Parser.*;
 import Storage.*;
 import Task.*;
-import GUI.*;
-
 import java.util.*;
 
 /*
@@ -85,8 +83,10 @@ public class Logic {
 			Add add = new Add(parser, data, COMMAND_TYPE.ADD);
 			return execute(add);
 		case DELETE:
-			Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE);
-			return execute(delete);
+			Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE, categories);
+			String status = execute(delete);
+			categories = delete.getCategories();
+			return status;
 		case EDIT:
 			Edit edit = new Edit(parser, data, COMMAND_TYPE.EDIT);
 			return execute(edit);
@@ -95,7 +95,7 @@ public class Logic {
 			return execute(complete);
 		case TAG:
 			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
-			String status = execute(tag);
+			status = execute(tag);
 			categories = tag.getCategories();
 			return status;
 		case FLAG:

@@ -8,7 +8,9 @@ import Task.*;
 public class Complete extends Command {
 
 	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		super(parser, data, command_type);
+		super(parser, data, command_type
+		
+		);
 	}
 
 	@Override
@@ -29,6 +31,7 @@ public class Complete extends Command {
 	}
 
 	private String complete(TASK_STATUS status, int index) {
+		System.out.println(status);
 		ArrayList<Task> tasks = getTasks(status);
 		try {
 			Task task = tasks.get(index);

@@ -12,7 +12,7 @@ public class Edit extends Command {
 	@Override
 	public String execute() {
 		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
-		EDIT_TYPE edit_type = EDIT_TYPE.TASK_NAME; // parser.getEditType();
+		EDIT_TYPE edit_type = parser.getEditType(); // parser.getEditType();
 		
 		return edit(index, this.UIStatus, edit_type);
 	}

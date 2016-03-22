@@ -1,7 +1,5 @@
 package Task;
 
-import java.util.*;
-
 	/*
 	 *@author Pay Hao Jie
 	 *@Description: This class sets and returns the attributes of a task. 
@@ -30,12 +28,10 @@ public class Task {
 		return this.flag;
 	}
 	
-	// usable
 	public String getName() {
 		return this.name;
 	}
 	
-	// unusable
 	public boolean getComplete() {
 		return this.isComplete;
 	}
@@ -74,6 +70,7 @@ public class Task {
 	}
 	
 	public void complete(boolean isComplete) {
+		status = TASK_STATUS.COMPLETED;
 		this.isComplete = isComplete;
 	}
 		

@@ -23,6 +23,18 @@ import Parser.*;
 public class TestParser {
 
 	@Test
+	public void testTaskType() {
+		
+		Parser parser = new Parser("drive by the beach");
+		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		
+		parser = new Parser("fetch my brother at 2pm");
+		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		
+		
+	}
+	
+	@Test
 	public void testFloating() {
 		
 		Parser parser = new Parser("drive by the beach");

@@ -315,8 +315,10 @@ public class AddParser {
 
 	private void verifyIfDeadLineTask(String tempTaskName) {
 		String temp = taskName.trim() + " " + tempTaskName.trim();
-	
-		if (userTask.contains(temp)) {
+		System.out.println("Debug: verifyIfDeadLineTask. " + temp.trim().length());
+		System.out.println("Debug: verifyIfDeadLineTask. " + userTask.trim().length());
+		
+		if (userTask.trim().length() == temp.trim().length()) {
 			System.out.println("Debug: verifyIfDeadLineTask. " + temp);
 			setTaskName(temp);
 			setTaskType(TASK_TYPE.FLOATING);

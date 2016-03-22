@@ -7,6 +7,7 @@
 			<accessrule kind="accessible" pattern="com/sun/javafx/**"/>
 		</accessrules>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="src/Storage/gson-2.2.jar"/>
 	<classpathentry kind="lib" path="src/GUI/controlsfx-samples-8.40.10.jar"/>
 	<classpathentry kind="lib" path="src/GUI/fxsampler-1.0.9.jar"/>

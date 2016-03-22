@@ -308,30 +308,23 @@ public class AddParser {
 			setEndTime(endTime);
 			
 		}
-		
-		setTempTaskName(taskName + " " + dateTimeParser.getTempTaskName());
-		System.out.println("Debug: End of parseDeadLined. " + taskName);
+		verifyIfDeadLineTask(dateTimeParser.getTempTaskName());
 			
+	}
+
+	private void verifyIfDeadLineTask(String tempTaskName) {
+		String temp = taskName.trim() + " " + tempTaskName.trim();
+	
+		if (userTask.contains(temp)) {
+			System.out.println("Debug: verifyIfDeadLineTask. " + temp);
+			setTaskName(temp);
+			setTaskType(TASK_TYPE.FLOATING);
+		}
+		
 	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
 		this.taskName = toStringTaskElements(taskItems).trim();
-		/*	DateAndTimeParser parser = new DateAndTimeParser();
-		Date date = new Date();
-		date = parser.analysePossibleDateElements(taskItems);
-		
-		if (userTask.length() == parser.getTempTaskName().trim().length()) {
-			this.taskName = toStringTaskElements(taskItems).trim();
-			setTaskName(taskName);
-			setTaskType(TASK_TYPE.FLOATING);
-		}
-		else {
-			this.taskName = parser.getTempTaskName().trim();
-			setTaskName(taskName);
-			setTaskType(TASK_TYPE.DEADLINED);
-			setEndTime(date);
-		}
-*/
 		
 	}
 	
@@ -378,10 +371,6 @@ public class AddParser {
 	
 	public TASK_TYPE getTaskType() {
 		return this.taskType;
-	}
-	
-	private void setTempTaskName(String tempTaskName) {
-		this.tempTaskName = tempTaskName;
 	}
 	
 }

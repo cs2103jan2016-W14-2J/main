@@ -308,6 +308,7 @@ public class AddParser {
 			setEndTime(endTime);
 			
 		}
+		
 		verifyIfDeadLineTask(dateTimeParser.getTempTaskName());
 			
 	}

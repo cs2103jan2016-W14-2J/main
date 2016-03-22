@@ -111,8 +111,7 @@ public class DateAndTimeParser {
 				System.out.println("Debug DAY_AFTER_TOMORROW @line 96: " + currentWord);
 				dateTimeElements = getTheDayAfterTomorrow(currentWord, dateTimeElements, i);
 				combined.add(dateTimeElements);
-				contentToAnalyse.remove(i);
-				i--;
+				contentToAnalyse.clear();
 				break;
 					
 			case TYPE_NEXT_FEW_DAYS:

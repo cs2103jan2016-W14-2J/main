@@ -264,9 +264,6 @@ public class Parser {
 		return this.tag;
 	}
 	
-	public String getTaskName() {
-		return this.taskName;
-	}
 	
 /*	public TASK_TYPE getTaskType() {
 		return this.taskType;

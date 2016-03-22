@@ -29,7 +29,7 @@ public class Parser {
 	private boolean isImportant;
 	
 	private DELETE_TYPE deleteType;
-	private ArrayList<String> taskToDelete;
+	private ArrayList<String> tagToDelete;
 	private ArrayList<Integer> indexToDelete;
 	private ArrayList<String> taskItems;
 	
@@ -272,12 +272,12 @@ public class Parser {
 		return this.taskType;
 	}
 */	//*********************************** Accessors for DeleteParser ********************************//
-	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<String> taskToDelete, ArrayList<Integer> indexToDelete) {
-		this.taskToDelete = new ArrayList<String>();
+	private void setDeleteAttributes(DELETE_TYPE deleteType, ArrayList<String> tagToDelete, ArrayList<Integer> indexToDelete) {
+		this.tagToDelete = new ArrayList<String>();
 		this.indexToDelete = new ArrayList<Integer>();
 		
 		this.indexToDelete = indexToDelete;
-		this.taskToDelete = taskToDelete;
+		this.tagToDelete = tagToDelete;
 		this.deleteType = deleteType;
 	}
 	
@@ -285,8 +285,8 @@ public class Parser {
 		return this.deleteType;
 	}
 	
-	public ArrayList<String> getTaskToDelete() {
-		return this.taskToDelete;
+	public ArrayList<String> getTagToDelete() {
+		return this.tagToDelete;
 	}
 	
 	public ArrayList<Integer> getIndexToDelete() {

@@ -21,6 +21,7 @@ public class Delete extends Command{
 
 		switch (type) {
 		case SINGLE_INDEX:
+		case RANGE_INDEXES:
 		case MULTIPLE_INDEXES:
 			return deleteTask(indexes);
 		case ALL_INDEXES:
@@ -63,6 +64,7 @@ public class Delete extends Command{
 	}
 
 	private String deleteTask(ArrayList<Integer> indexes) {
+		System.out.println(indexes);
 		ArrayList<Task> tasks = getTasks(this.UIStatus);
 		if (tasks.size()==0) {
 			return this.UIStatus + " is empty. There is nothing to delete.";

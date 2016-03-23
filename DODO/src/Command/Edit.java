@@ -13,24 +13,27 @@ public class Edit extends Command {
 	public String execute() {
 		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
 		EDIT_TYPE edit_type = parser.getEditType(); // parser.getEditType();
-		
+
 		return edit(index, this.UIStatus, edit_type);
 	}
 
 	private String edit(int index, TASK_STATUS status, EDIT_TYPE edit_type) {
-		ArrayList<Task> tasks = getTasks(status);
-		Task task = tasks.get(index);
-		switch (edit_type) {
-		case TASK_NAME:
-			task = editName(index, task);
-			setTasks(status, tasks);
-			return "Task " + index + " has been renamed as " + "\"" + task.getName() + "\"";
-		default:
-			return "ERROR";
+		try {
+			ArrayList<Task> tasks = getTasks(status);
+			Task task = tasks.get(index);
+			switch (edit_type) {
+			case TASK_NAME:
+				task = editName(index, task);
+				setTasks(status, tasks);
+				return "Task " + index + " has been renamed as " + "\"" + task.getName() + "\"";
+			default:
+				return "ERROR";
+			}
+		} catch (IndexOutOfBoundsException e) {
+			return "Your index is out of bound.";
 		}
-		
 	}
-	
+
 	private Task editName(int index, Task task) {
 		String newName = parser.getName();
 		task.setName(newName);

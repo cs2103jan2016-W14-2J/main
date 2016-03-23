@@ -9,43 +9,59 @@ public class Complete extends Command {
 
 	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
 		super(parser, data, command_type
-		
-		);
+
+				);
 	}
 
 	@Override
 	public String execute() {
-		int index = parser.getTaskID();
-		switch (this.UIStatus) {
-		case FLOATING:
-			return complete(this.UIStatus, index);
-		case ONGOING:
-			return complete(this.UIStatus, index);
-		case COMPLETED:
-			return "Your task have been completed.";
-		case OVERDUE:
-			return complete(this.UIStatus, index);
+		ArrayList<Integer> indexes= parser.getTaskToFlagAndMark();
+		FLAGANDCOMPLETE_TYPE type = parser.getFlagAndCompleteType();
+		switch (type) {
+		case SINGLE:
+		case RANGE:
+		case MULTIPLE:
+			return complete(indexes);
+		case ALL:
+			return completeAll();
 		default:
 			return "Invalid command.";
 		}
 	}
 
-	private String complete(TASK_STATUS status, int index) {
-		System.out.println(status + ", " + index);
-		ArrayList<Task> tasks = getTasks(status);
-		try {
-			Task task = tasks.get(index);
-			if (task.getComplete()) {
-				return "Task " + index + " has been completed before.";
-			}
-			task.complete(true);
-			tasks.remove(index);
-			completedTasks.add(task);
-			setTasks(status, tasks);
-			return "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.";
-		} catch (IndexOutOfBoundsException e) {
-			return "Task " + (index+INDEX_ADJUSTMENT) + " is absent.";
+	private String completeAll() {
+		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
+		
+		for (int i=0; i<tasks.size(); i++) {
+			indexes.add(i);
 		}
+		return complete(indexes);
+	}
+
+	private String complete(ArrayList<Integer> indexes) {
+		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		String status = "";
+		int index = 0;
+		for (int i=indexes.size()-1; i>=0; i--) {
+			try {
+				index = indexes.get(i)-1;
+				Task task = tasks.get(index);
+				if (task.getComplete()) {
+					status += "Task " + (index + INDEX_ADJUSTMENT) + " has been completed before.\n";
+				}
+				else {
+					task.complete(true);
+					tasks.remove(index);
+					completedTasks.add(task);
+					setTasks(this.UIStatus, tasks);
+					status += "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.\n";
+				}
+			} catch (IndexOutOfBoundsException e) {
+				status += "Task " + (index+INDEX_ADJUSTMENT) + " is absent.\n";
+			}
+		}
+		return status;
 	}
 
 	@Override
@@ -54,6 +70,6 @@ public class Complete extends Command {
 		return null;
 	}
 
-	
+
 
 }

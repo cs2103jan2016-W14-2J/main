@@ -13,19 +13,52 @@ public class Flag extends Command {
 
 	@Override
 	public String execute() {
-		int index = parser.getTaskID() - INDEX_ADJUSTMENT;
-		switch (this.UIStatus) {
-		case FLOATING:
-			return flag(index, this.floatingTasks);
-		case ONGOING:
-			return flag(index, this.ongoingTasks);
-		case COMPLETED:
-			return flag(index, this.completedTasks);
-		case OVERDUE:
-			return flag(index, this.overdueTasks);
+		ArrayList<Integer> indexes = parser.getTaskToFlagAndMark();
+		FLAGANDCOMPLETE_TYPE type = parser.getFlagAndCompleteType();
+		switch (type) {
+		case SINGLE:
+		case RANGE:
+		case MULTIPLE:
+			return flag(indexes);
+		case ALL:
+			return flagAll();
 		default:
-			return "ERROR";
+			return "Invalid command.";
 		}
+	}
+
+	private String flagAll() {
+		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
+		
+		for (int i=1; i<=tasks.size(); i++) {
+			indexes.add(i);
+		}
+		return flag(indexes);
+	}
+
+	private String flag(ArrayList<Integer> indexes) {
+		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		String status = "";
+		int index = 0;
+		for (int i=indexes.size()-1; i>=0; i--) {
+			try {
+				index = indexes.get(i)-1;
+				Task task = tasks.get(index);
+				if (task.getFlag()) {
+					status += "Task " + (index + INDEX_ADJUSTMENT) + " has been flagged before.\n";
+				}
+				else {
+					task.setFlag(true);
+					setTasks(this.UIStatus, tasks);
+					status += "Task " + (index + INDEX_ADJUSTMENT) + " is flagged.\n";
+				}
+			} catch (IndexOutOfBoundsException e) {
+				status += "Task " + (index + INDEX_ADJUSTMENT) + " is absent.\n";
+			}
+		}
+		
+		return status;
 	}
 
 	private String flag(int index, ArrayList<Task> tasks) {

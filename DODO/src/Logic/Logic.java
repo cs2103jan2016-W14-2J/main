@@ -20,6 +20,7 @@ public class Logic {
 	private ArrayList<Task> floatingTasks;
 	private TreeMap<String, Category> categories;
 	private ArrayList<Task> results;
+	private History history;
 
 	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance(String directory) {
@@ -58,58 +59,84 @@ public class Logic {
 	public ArrayList<Task> getOverdueTasks() {
 		return this.overdueTasks;
 	}
-	
+
 	public TreeMap<String, Category> getCategories() {
 		return this.categories;
 	}
 
 	/***********************************PRIVATE METHODS***********************************************/
 	private Logic(String directory) {
-		System.out.println("[Logic/init] directory: " + directory);
 		storage = new Storage(directory);
 		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
+		history = new History();
 	}
 
 	private String processCommand(String input) {
+		String status = "";
 		Parser parser = new Parser(input);
 		COMMAND_TYPE command = parser.getCommandType();
 		ArrayList<ArrayList<Task>> data = compress();
+		
+		
 
 		switch (command) {
 		case ADD:
 			Add add = new Add(parser, data, COMMAND_TYPE.ADD);
-			return execute(add);
+			status = execute(add, data);
+			break;
 		case DELETE:
 			Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE, categories);
-			String status = execute(delete);
+			status = execute(delete, data);
 			categories = delete.getCategories();
-			return status;
+			break;
 		case EDIT:
 			Edit edit = new Edit(parser, data, COMMAND_TYPE.EDIT);
-			return execute(edit);
+			status = execute(edit, data);
+			break;
 		case COMPLETE:
 			Complete complete = new Complete(parser, data, COMMAND_TYPE.COMPLETE);
-			return execute(complete);
+			status = execute(complete, data);
+			break;
 		case TAG:
 			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
-			status = execute(tag);
+			status = execute(tag, data);
 			categories = tag.getCategories();
-			return status;
+			break;
 		case FLAG:
 			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG);
-			return flag.execute();
+			status = execute(flag, data);
+			break;
+		case UNDO:
+			try {
+				data = history.undo(data);
+				update(data);
+				status = "Undone successfully.";
+			} catch (EmptyStackException e) {
+				status = "There is nothing to be undone.";
+			}
+			break;
+		case REDO:
+			try {
+				data = history.redo();
+				update(data);
+				status = "Redone successfully.";
+			} catch (EmptyStackException e) {
+				status = "There is nothing to be redone.";
+			}
+			break;
 		default:
-			return "Invalid COMMAND_TYPE.";
+			status = "Invalid Command.";
 		}
+		return status;
 	}
-	
-	private String execute(Command command) {
+
+	private String execute(Command command, ArrayList<ArrayList<Task>> data) {
+		history.save(cloneData(data));
 		String status = command.execute();
-		ArrayList<ArrayList<Task>> data = command.getData();
-		update(data);
+		this.update(command.getData());
 		return status;
 	}
 
@@ -120,6 +147,24 @@ public class Logic {
 		tasks.add(completedTasks);
 		tasks.add(overdueTasks);
 		return tasks;
+	}
+
+	private ArrayList<Task> cloneList(ArrayList<Task> original) {
+		ArrayList<Task> newList = new ArrayList<Task>();
+		for (int i=0; i<original.size(); i++) {
+			Task task = new Task(original.get(i));
+			newList.add(task);
+		}
+		return newList;
+	}
+
+	private ArrayList<ArrayList<Task>> cloneData(ArrayList<ArrayList<Task>> data) {
+		ArrayList<ArrayList<Task>> newData = new ArrayList<ArrayList<Task>>();
+		for (int i=0; i<data.size(); i++) {
+			ArrayList<Task> copy = cloneList(data.get(i));
+			newData.add(copy);
+		}
+		return newData;
 	}
 
 	private String update(ArrayList<ArrayList<Task>> data) {

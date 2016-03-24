@@ -18,7 +18,6 @@ public class Delete extends Command{
 		ArrayList<Integer> indexes = parser.getIndexToDelete();
 
 		// SINGLE_INDEX, SINGLE_TAG, MULTIPLE_INDEXES, MULTIPLE_TAGS, RANGE_INDEXES, ALL_INDEXES, ALL_TAGS;
-
 		switch (type) {
 		case SINGLE_INDEX:
 		case RANGE_INDEXES:
@@ -60,20 +59,28 @@ public class Delete extends Command{
 
 	private String deleteAllTasks() {
 		setTasks(this.UIStatus, new ArrayList<Task>());
-		return "All tasks in " + this.UIStatus + "are deleted.";
+		return "All tasks in " + this.UIStatus + " are deleted.";
 	}
 
 	private String deleteTask(ArrayList<Integer> indexes) {
-		System.out.println(indexes);
 		ArrayList<Task> tasks = getTasks(this.UIStatus);
 		if (tasks.size()==0) {
 			return this.UIStatus + " is empty. There is nothing to delete.";
 		}
-		for (int i=0; i<indexes.size(); i++) {
-			tasks.remove(indexes.get(i)-1-i);
+		
+		String status = "Task ";
+		try {
+			for (int i=0; i<indexes.size(); i++) {
+				tasks.remove(indexes.get(i)-1-i);
+				status += indexes.get(i) + ", ";
+			}
+			status = status.substring(0, status.length()-2);
+			status += " completed.";
+			setTasks(this.UIStatus, tasks);
+		} catch (IndexOutOfBoundsException e) {
+			status = "Your index is out of bound.";
 		}
-		setTasks(this.UIStatus, tasks);
-		return "Deletion completed.";
+		return status;
 	}
 
 	public TreeMap<String, Category> getCategories() {

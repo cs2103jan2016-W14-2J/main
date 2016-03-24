@@ -40,7 +40,7 @@ public abstract class Command {
 	
 	public abstract String undo();
 	
-	private ArrayList<ArrayList<Task>> compress() {
+	protected ArrayList<ArrayList<Task>> compress() {
 		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
 		tasks.add(floatingTasks);
 		tasks.add(ongoingTasks);

@@ -160,7 +160,7 @@ public class AddParser {
 		
 		// Parse string with "from" ... "to".
 		if (userTask.lastIndexOf(KEYWORD_TO) > userTask.lastIndexOf(KEYWORD_FROM)) {
-			str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+			str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size() - 1)));
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			
 			if (dates.size() == 2) {
@@ -185,11 +185,15 @@ public class AddParser {
 
 	
 	private void parseDEADLINED() {
-
-		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
-			taskName = userTask.substring(0, LAST_POSITION_OF_BY);
+		getKeywordPosition(taskItems);
+		System.out.println("DEBUG :" + LAST_POSITION_OF_BEFORE);
+		
+		if (taskItems.lastIndexOf(KEYWORD_BY) != -1 && taskItems.lastIndexOf(KEYWORD_AT) == -1) {
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
+			System.out.println("DEBUG @line 193:" + taskName);
 			setTaskName(taskName);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_BY , userTask.length() - 1);
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
+			System.out.println("DEBUG2 :" + contentToAnalyse);
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: submit assignment 1 by tomorrow
@@ -204,10 +208,12 @@ public class AddParser {
 	
 		}
 		
-		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT == -1) {
-			taskName = userTask.substring(0, LAST_POSITION_OF_ON);
+		else if (taskItems.lastIndexOf(KEYWORD_ON) != -1 && taskItems.lastIndexOf(KEYWORD_AT) == -1) {
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
+			System.out.println("DEBUG @line213:" + taskName);
 			setTaskName(taskName);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_ON , userTask.length() - 1);
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
+			System.out.println("DEBUG :" + contentToAnalyse);
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: revise on cs2130t chapter 1 on sunday
@@ -221,29 +227,30 @@ public class AddParser {
 			}
 		
 		}
-		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1) {
-			taskName = userTask.substring(0, LAST_POSITION_OF_ON);
+		else if (taskItems.lastIndexOf(KEYWORD_ON) != -1 && taskItems.lastIndexOf(KEYWORD_AT) != -1) {
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
+			System.out.println("DEBUG @232:" + taskName);
 			setTaskName(taskName);
-			String str = userTask.substring(LAST_POSITION_OF_ON , LAST_POSITION_OF_AT);
-		
+			
+			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, LAST_POSITION_OF_AT)));
 			List<Date> date1 = new PrettyTimeParser().parse(str);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_AT , userTask.length() - 1);
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: revise on cs2130t at 2pm
 			if (date1.size() == 0 && date2.size() != 0) {
-				setTaskName(userTask.substring(0, LAST_POSITION_OF_AT));
+				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT))));
 				setEndTime(date2.get(0));
 			}
 			// Example: meet hannah on 4 april, 2016 at suntec city
 			else if (date1.size() != 0 && date2.size() == 0){
-				setTaskName(userTask + " " + userTask.substring(LAST_POSITION_OF_AT , userTask.length() - 1));
+				setTaskName(taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size()))));
 				setEndTime(date1.get(0));
 			}
 			// Example: meet hannah on 4th of April 2016 at 2pm
 			else if (date1.size() != 0 && date2.size() != 0) {
-				setTaskName(userTask.substring(0, LAST_POSITION_OF_ON));
-				contentToAnalyse = userTask.substring(LAST_POSITION_OF_ON , userTask.length() - 1);
+				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
+				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
 				setEndTime(date3.get(0));
 			}
@@ -254,10 +261,12 @@ public class AddParser {
 			}
 		
 		}
-		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
-			taskName = userTask.substring(0, LAST_POSITION_OF_AT);
+		else if (taskItems.lastIndexOf(KEYWORD_AT) != -1 && taskItems.lastIndexOf(KEYWORD_ON) == -1) {
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+			System.out.println("DEBUG @266:" + taskName);
 			setTaskName(taskName);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_AT , userTask.length() - 1);
+			
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: submit assignment 1 at 2359hrs
@@ -271,13 +280,14 @@ public class AddParser {
 			}
 		}
 			
-		else if (LAST_POSITION_OF_BEFORE != -1) {
-			taskName = userTask.substring(0, LAST_POSITION_OF_BEFORE);
+		else if (taskItems.lastIndexOf(KEYWORD_BEFORE) != -1) {
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BEFORE)));
 			setTaskName(taskName);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_BEFORE , userTask.length() - 1);
+			System.out.println("DEBUG BEFORE:" + taskName);
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BEFORE, taskItems.size())));
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
-			// Example: submit assignment 1 before 2359hrs
+			// Example: submit assignment 1 before monday 2359hrs
 			if (dates.size() != 0) {
 				setEndTime(dates.get(0));
 			}
@@ -313,11 +323,20 @@ public class AddParser {
 */	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
-	//	this.taskName = toStringTaskElements(taskItems).trim();
+	/*	this.taskName = toStringTaskElements(taskItems).trim();
 		DateAndTimeParser parser = new DateAndTimeParser();
 		Date endTime = parser.analysePossibleDateElements(taskItems);
 		setEndTime(endTime);
 		verifyIfDeadLineTask(parser.getTempTaskName());
+	*/
+		List<Date> date = new PrettyTimeParser().parse(userTask);
+		if (date.size() == 0) {
+			setTaskName(userTask);
+		}
+		else {
+			
+		}
+	
 	}
 	
 	/*
@@ -326,11 +345,11 @@ public class AddParser {
 	 * @return: a string of task name.
 	 */
 	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
-		
+		String name = "";
 		for (int i = 0; i < taskNameArrayList.size(); i++) {
-			taskName += taskNameArrayList.get(i) + " "; 
+			name += taskNameArrayList.get(i) + " "; 
 		}
-		return taskName;
+		return name.trim();
 	}
 
 	protected void setStartTime(Date startTime) {

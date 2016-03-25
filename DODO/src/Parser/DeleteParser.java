@@ -57,12 +57,7 @@ public class DeleteParser {
 
 
 	private boolean isTaskIndex(String[] str) {
-		if (str[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES)) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		return (str[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES)) ? false : true;
 	}
 
 	private void parseRangeDelete(String[] str) {
@@ -75,14 +70,12 @@ public class DeleteParser {
 	}
 
 	private void parseMultipleDeleteIndexes(String[] str) {
-	
 		for (int i = 0; i < str.length; i++) {
 			indexToDelete.add(Integer.parseInt(str[i]));
 		}
 	}
 	
 	private void parseMutipleDeleteTags(String[] str) {
-		
 		for (int i = 0; i < str.length; i++) {
 			tagToDelete.add(str[i].substring(1, str[0].length() - 1));
 		}
@@ -133,65 +126,33 @@ public class DeleteParser {
 	}
 
 	private boolean checkIfDeleteAllTag(String userTask) {
-		if (userTask.contains(STRING_CHECKER_ALL) && (userTask.contains(STRING_CHECKER_TAG) 
-			|| userTask.contains(STRING_CHECKER_CATEGORY))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (userTask.contains(STRING_CHECKER_ALL) && (userTask.contains(STRING_CHECKER_TAG) 
+				|| userTask.contains(STRING_CHECKER_CATEGORY))) ? true : false;
 	}
 
 	private boolean checkIfDeleteAll(String userTask) {
-		if (userTask.contains(STRING_CHECKER_ALL) && !(userTask.contains(STRING_CHECKER_TAG) 
-			|| userTask.contains(STRING_CHECKER_CATEGORY))) {
-			
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (userTask.contains(STRING_CHECKER_ALL) && !(userTask.contains(STRING_CHECKER_TAG) 
+				|| userTask.contains(STRING_CHECKER_CATEGORY))) ? true : false;
 	}
 
 	private boolean checkIfDeleteRange(String userTask) {
-		if (userTask.contains(STRING_CHECKER_HYPHEN) || (userTask.contains(STRING_CHECKER_TO))) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (userTask.contains(STRING_CHECKER_HYPHEN) || (userTask.contains(STRING_CHECKER_TO))) 
+				? true : false;
 	}
 
 	private boolean checkIfDeleteMultiple(String userTask) {
-		String[] str = userTask.toLowerCase().split("\\s+");
-		
-		if (str.length > 1 && !checkIfDeleteRange(userTask)) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		String[] str = userTask.toLowerCase().split("\\s+");	
+		return (str.length > 1 && !checkIfDeleteRange(userTask)) ? true : false;
 	}
 
 	private boolean checkIfDeleteSingleIndex(String userTask) {
-		
-		if (userTask.length() == 1 && !userTask.contains(STRING_CHECKER_ALL)) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (userTask.length() == 1 && !userTask.contains(STRING_CHECKER_ALL)) ? true : false;
 	}
 	
-private boolean checkIfDeleteSingleTag(String userTask) {
+	private boolean checkIfDeleteSingleTag(String userTask) {
 		String[] temp = userTask.split(" ");
-		
-		if (temp.length == 1 && temp[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES) && temp[0].endsWith(STRING_CHECKER_CLOSE_PARENTHESES)) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (temp.length == 1 && temp[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES) 
+				&& temp[0].endsWith(STRING_CHECKER_CLOSE_PARENTHESES)) ? true : false;
 	}
 	
 	private void setDeleteType(DELETE_TYPE deleteType) {

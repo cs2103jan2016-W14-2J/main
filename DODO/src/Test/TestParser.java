@@ -99,8 +99,23 @@ public class TestParser {
 		Date expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
 		
+		parser = new Parser("watch movie at 2400hrs");
+		endDate = "Thu Mar 24 00:00:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+		
+		parser = new Parser("watch movie on 0 feb 2017");
+		endDate = "Tue Jan 31 23:59:00 SGT 2017";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+		
 		parser = new Parser("submit assignment 1 by thursday");
 		endDate = "Thu Mar 24 23:59:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, parser.getEndTime());
+		
+		parser = new Parser("submit assignment 1 by 27.5 feb 2017");
+		endDate = "Fri May 27 23:59:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
 		

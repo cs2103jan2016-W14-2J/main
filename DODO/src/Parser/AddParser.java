@@ -327,11 +327,11 @@ public class AddParser {
 			setTaskName(userTask);
 			setTaskType(TASK_TYPE.DEADLINED);
 		}
-		else {
+/*		else {
 			setTaskName(temp);
 			setTaskType(TASK_TYPE.DEADLINED);
 		}
-	}
+*/	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
 	//	this.taskName = toStringTaskElements(taskItems).trim();

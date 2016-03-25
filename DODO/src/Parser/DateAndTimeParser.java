@@ -873,7 +873,7 @@ public class DateAndTimeParser {
 		
 		System.out.println("Debug: Test isTomorrowType @line 762.");
 		
-		if (contentToAnalyse.size() == 1) {
+		if (contentToAnalyse.size() == 1 ) {
 			if (tomorrowTypes.contains(contentToAnalyse.get(0))) {
 				return true;
 			}

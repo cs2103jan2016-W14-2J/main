@@ -5,7 +5,7 @@ public class Test {
 
 		public static void main (String[] args) {
 			
-			Parser parser = new Parser("watch movie on thursday 2pm");
+			Parser parser = new Parser("revise on cs2130t chapter 1 on sunday");
 			System.out.println(parser.getName());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());

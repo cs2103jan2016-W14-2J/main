@@ -3,6 +3,8 @@ package Parser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -40,12 +42,12 @@ public class AddParser {
 	private final String KEYWORD_AT = "at";
 	private final String KEYWORD_BEFORE = "before";
 	
-	private int LAST_POSITION_OF_FROM = 0;
-	private int LAST_POSITION_OF_TO = 0;
-	private int LAST_POSITION_OF_ON = 0;
-	private int LAST_POSITION_OF_AT = 0;
-	private int LAST_POSITION_OF_BEFORE = 0;
-	private int LAST_POSITION_OF_BY = 0;
+	private int LAST_POSITION_OF_FROM = -1;
+	private int LAST_POSITION_OF_TO = -1;
+	private int LAST_POSITION_OF_ON = -1;
+	private int LAST_POSITION_OF_AT = -1;
+	private int LAST_POSITION_OF_BEFORE = -1;
+	private int LAST_POSITION_OF_BY = -1;
 	
 	private String userTask = "";
 	private String taskName = "";
@@ -111,14 +113,12 @@ public class AddParser {
 
 	private boolean checkIfEventTask(ArrayList<String> taskItems) {
 		
-		System.out.println("Debug AddParser: Test checkIfEventTask @line112");
-		
 		LAST_POSITION_OF_FROM = taskItems.lastIndexOf(KEYWORD_FROM);
 		LAST_POSITION_OF_TO = taskItems.lastIndexOf(KEYWORD_TO);
 		
 		// add study from <startDate> to <endDate>
 		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO) {
-			if (checkForDateAndTime(taskItems, LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
+			if (checkForDateAndTime(LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
 				return true;
 			}
 			else {
@@ -131,45 +131,16 @@ public class AddParser {
 		}
 	}
 
-	private boolean checkForDateAndTime(ArrayList<String> taskItems, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {
-		System.out.println("Debug checkForDateAndTime @line132");
-		
-		DateAndTimeParser parser = new DateAndTimeParser();
-		ArrayList<String> temp = new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM + 1, LAST_POSITION_OF_TO));
-		
-		if (parser.isNumericalDateType(taskItems.get(LAST_POSITION_OF_FROM + 1)) || 
-			parser.isTimeType(taskItems.get(LAST_POSITION_OF_FROM + 1)) ||
-			parser.isTodayType(temp) || parser.isTomorrowType(temp)) {
-			return true;
-		}
-		else if (parser.isEnglishDateType(temp)) {
-			return true;
-		}
-		else {
-			System.out.println("Debug checkForDateAndTime @line144");
-			return false;
-		}
-		
+	private boolean checkForDateAndTime(int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
+		String str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+		List<Date> dates = new PrettyTimeParser().parse(str);
+		return (dates.size() == 0) ? false : true; 
 	}
 
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems) {
 		getKeywordPosition(taskItems);
-	
-		if (LAST_POSITION_OF_AT != -1) {
-			return true;
-		}
-		else if (LAST_POSITION_OF_ON != -1) {
-			return true;
-		}
-		else if (LAST_POSITION_OF_BEFORE != -1) {
-			return true;
-		}
-		else if (LAST_POSITION_OF_BY != -1) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return (LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
+			LAST_POSITION_OF_BEFORE != -1 || LAST_POSITION_OF_BY != -1) ? true : false;
 	}
 
 	private void getKeywordPosition(ArrayList<String> taskItems) {
@@ -177,141 +148,147 @@ public class AddParser {
 		LAST_POSITION_OF_ON = taskItems.lastIndexOf(KEYWORD_ON);
 		LAST_POSITION_OF_BEFORE = taskItems.lastIndexOf(KEYWORD_BEFORE);
 		LAST_POSITION_OF_BY = taskItems.lastIndexOf(KEYWORD_BY);
-		System.out.println("Debug AddParser: Test lastIndexOfBefore @line178: " + LAST_POSITION_OF_BEFORE);
-		
 	}
 
 	private boolean checkIfFloatingTask(ArrayList<String> taskItems) {
-		if (!checkIfEventTask(taskItems) && !checkIfDeadlinedTask(taskItems)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-		
+		return (!checkIfEventTask(taskItems) && !checkIfDeadlinedTask(taskItems)) ? true : false;
 	}
 	
 
 	private void parseEVENT() {
-		System.out.println("Debug: Test parseEvent");
-		DateAndTimeParser dateTimeParser = new DateAndTimeParser();
-		
-		taskNameArrayList = new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_FROM));
-		setTaskName(toStringTaskElements(taskNameArrayList));
-		
+		String str = "";
 		
 		// Parse string with "from" ... "to".
 		if (userTask.lastIndexOf(KEYWORD_TO) > userTask.lastIndexOf(KEYWORD_FROM)) {
-			taskItems.add("-1");
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO));
-			startTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			setStartTime(startTime);
+			str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+			List<Date> dates = new PrettyTimeParser().parse(str);
 			
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_TO, taskItems.size() - 1));
-			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			setEndTime(endTime);
+			if (dates.size() == 2) {
+				setStartTime(dates.get(0));
+				setEndTime(dates.get(1));
+			}
 			
-			//debug
-			System.out.println("Debug: Test contentToAnalyse @parseEvent1: " + contentToAnalyse);
+			else if (dates.size() == 1) {
+				setStartTime(dates.get(0));
+			}
+			
 		}
 		else if (userTask.lastIndexOf(KEYWORD_TO) < userTask.lastIndexOf(KEYWORD_FROM)) {
-		
-			//debug
-			System.out.println("Debug: Test contentToAnalyse @parseEvent2: " + contentToAnalyse);
-			taskItems.add("-1");
+			str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+			List<Date> dates = new PrettyTimeParser().parse(str);
 			
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size() - 1));
-			startTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			setStartTime(startTime);
-			
+			if (dates.size() == 1) {
+				setStartTime(dates.get(0));
+			}
 		}
-	
 	}
 
 	
 	private void parseDEADLINED() {
-		
-		System.out.println("Debug: Test parseDEADLINED @line 205");
-		
-		DateAndTimeParser dateTimeParser = new DateAndTimeParser();
-		
-		if (LAST_POSITION_OF_BY != -1) {
-			// dummy
-			
-			taskNameArrayList = new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY));
-			setTaskName(toStringTaskElements(taskNameArrayList));
-			
-			taskItems.add("-1");
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size()-1));
-			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			setEndTime(endTime);
-	
-		}
-	
-		else if (LAST_POSITION_OF_ON != -1) {
-			
-			System.out.println("Debug: Test line 223");
-			
-			taskNameArrayList = new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON));
-			setTaskName(toStringTaskElements(taskNameArrayList));
-			
-			taskItems.add("-1");
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size()-1));
-			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			
-			
-			setEndTime(endTime);
-		
-		}
-		else if (LAST_POSITION_OF_AT != -1) {
-			
-			System.out.println("Debug: Test line 209");
-			
-			taskNameArrayList = new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT));
-			setTaskName(toStringTaskElements(taskNameArrayList));
-			
-			taskItems.add("-1");
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size() - 1));
-			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			setEndTime(endTime);
-			
-		}
-/*		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
-			taskName = userTask.substring(0, LAST_POSITION_OF_AT);
-			
-			System.out.println("Debug: Test line 217");
-			
+
+		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
+			taskName = userTask.substring(0, LAST_POSITION_OF_BY);
 			setTaskName(taskName);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_AT).replace(KEYWORD_AT, "").trim();
-			endTime = dateTimeParser.analysePossibleDateElements(contentToAnalyse);
-			setEndTime(endTime);
+			contentToAnalyse = userTask.substring(LAST_POSITION_OF_BY , userTask.length() - 1);
+			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
+			
+			// Example: submit assignment 1 by tomorrow
+			if (dates.size() != 0) {
+				setEndTime(dates.get(0));
+			}
+			// Example: take a walk by the beach
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
+	
 		}
-		else if ((LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_BEFORE != -1) && 
-				  LAST_POSITION_OF_ON < LAST_POSITION_OF_BEFORE) {
-			
-			System.out.println("Debug: Test line 224");
-			
+		
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT == -1) {
 			taskName = userTask.substring(0, LAST_POSITION_OF_ON);
 			setTaskName(taskName);
-			contentToAnalyse = userTask.substring(LAST_POSITION_OF_ON).replace(KEYWORD_ON, "").trim();
-			endTime = dateTimeParser.analysePossibleDateElements(contentToAnalyse);
-			setEndTime(endTime);
+			contentToAnalyse = userTask.substring(LAST_POSITION_OF_ON , userTask.length() - 1);
+			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
+			
+			// Example: revise on cs2130t chapter 1 on sunday
+			if (dates.size() != 0) {
+				setEndTime(dates.get(0));
+			}
+			// Example: take a walk by the beach
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
+		
 		}
-*/		else if (LAST_POSITION_OF_BEFORE != -1) {
-	
-			System.out.println("Debug: Test line 270");
-	
-			taskNameArrayList = new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BEFORE));
-			setTaskName(toStringTaskElements(taskNameArrayList));
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1) {
+			taskName = userTask.substring(0, LAST_POSITION_OF_ON);
+			setTaskName(taskName);
+			String str = userTask.substring(LAST_POSITION_OF_ON , LAST_POSITION_OF_AT);
+		
+			List<Date> date1 = new PrettyTimeParser().parse(str);
+			contentToAnalyse = userTask.substring(LAST_POSITION_OF_AT , userTask.length() - 1);
+			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
 			
-			taskItems.add("-1");
-			stringToAnalyse =  new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BEFORE, taskItems.size() - 1));
-			endTime = dateTimeParser.analysePossibleDateElements(stringToAnalyse);
-			setEndTime(endTime);
+			// Example: revise on cs2130t at 2pm
+			if (date1.size() == 0 && date2.size() != 0) {
+				setTaskName(userTask.substring(0, LAST_POSITION_OF_AT));
+				setEndTime(date2.get(0));
+			}
+			// Example: meet hannah on 4 april, 2016 at suntec city
+			else if (date1.size() != 0 && date2.size() == 0){
+				setTaskName(userTask + " " + userTask.substring(LAST_POSITION_OF_AT , userTask.length() - 1));
+				setEndTime(date1.get(0));
+			}
+			// Example: meet hannah on 4th of April 2016 at 2pm
+			else if (date1.size() != 0 && date2.size() != 0) {
+				setTaskName(userTask.substring(0, LAST_POSITION_OF_ON));
+				contentToAnalyse = userTask.substring(LAST_POSITION_OF_ON , userTask.length() - 1);
+				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
+				setEndTime(date3.get(0));
+			}
+			// Example: sleep on the study bench at the void deck
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
+		
+		}
+		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
+			taskName = userTask.substring(0, LAST_POSITION_OF_AT);
+			setTaskName(taskName);
+			contentToAnalyse = userTask.substring(LAST_POSITION_OF_AT , userTask.length() - 1);
+			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
+			// Example: submit assignment 1 at 2359hrs
+			if (dates.size() != 0) {
+				setEndTime(dates.get(0));
+			}
+			// Example: take a walk by the beach
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
+		}
+			
+		else if (LAST_POSITION_OF_BEFORE != -1) {
+			taskName = userTask.substring(0, LAST_POSITION_OF_BEFORE);
+			setTaskName(taskName);
+			contentToAnalyse = userTask.substring(LAST_POSITION_OF_BEFORE , userTask.length() - 1);
+			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
+			
+			// Example: submit assignment 1 before 2359hrs
+			if (dates.size() != 0) {
+				setEndTime(dates.get(0));
+			}
+			// Example: let the kids eat before us.
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
 		}
 		
-		verifyIfDeadLineTask(dateTimeParser.getTempTaskName());
+	//	verifyIfDeadLineTask(dateTimeParser.getTempTaskName());
 			
 	}
 

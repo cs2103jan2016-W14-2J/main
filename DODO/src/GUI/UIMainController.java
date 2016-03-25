@@ -5,13 +5,15 @@ import Logic.*;
 import Parser.*;
 import Storage.*;
 import Task.*;
-
+import Test.TestGui;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -22,21 +24,21 @@ import javafx.scene.paint.Color;
  *@author Chiang Jia Feng
  *@Description: GUI (intialize the root(VBox))
  */
-public class UIMain  {
+public class UIMainController {
 	
 	private HBox root = new HBox(); //main root
 	private UILeftBox leftBox; 
-	//private UIRightBox rightBox;
-	public static UIRightBox rightBox;
+	private UIRightBox rightBox;
 	private Logic logic;
 	private Stage primaryStage;
-	private final double sceneWidth = 1800;  //primaryStage scene size
+	private final double sceneWidth = 1800;  
 	private final double sceneHeight = 750; 
 	private Scene scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);	
 	private String strDBdir = "";
 	private String strDBname = "";
 	
-	public UIMain(Logic logic)
+
+	public UIMainController(Logic logic)
 	{
 		this.logic=logic;
 		leftBox = new UILeftBox(logic);
@@ -44,14 +46,22 @@ public class UIMain  {
 	}
 	public void start(Stage primaryStage) 
 	{		
+		leftBox = new UILeftBox();
+		//rightBox = new UIRightBox();
+
 		this.primaryStage = primaryStage;
 		addLeftAndRightBox();
 		setEscCloseForm();
 		show();
+		System.out.println(root.getChildren().size());
 	}
-	private void addLeftAndRightBox() 
+	public void addLeftAndRightBox() 
 	{
-		root.getChildren().addAll(leftBox.UIleftBox(rightBox),rightBox.UIRightBox(leftBox));
+		root.getChildren().addAll(leftBox.UILeftBox(rightBox),rightBox.UIRightBox(leftBox));
+	}
+	public Scene getScene()
+	{
+		return scene;
 	}
 	public void show() 
 	{
@@ -73,7 +83,8 @@ public class UIMain  {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	private void setEscCloseForm() 
+
+	public void setEscCloseForm() 
 	{
 		saveBeforeClose(primaryStage);
 		escListener(primaryStage);
@@ -88,7 +99,7 @@ public class UIMain  {
 	        	  Task<Void> task = new Task<Void>() {
 	     	         @Override protected Void call() throws Exception 
 	     	         {
-	     	        	 assert(logic.save()!=null); ////////////////////////////////////////assert
+	     	        	 assert(logic.save()!=null); 
 	     	        	 logic.save();
 	     	        	 return null;
 	     	         }
@@ -147,5 +158,16 @@ public class UIMain  {
 	{
 		return strDBname;
 	}
-
+	public HBox getRoot() 
+	{
+		return root;
+	}
+	public UIRightBox getRight()
+	{
+		return rightBox;
+	}
+	public UILeftBox getLeft()
+	{
+		return leftBox;
+	}
 }

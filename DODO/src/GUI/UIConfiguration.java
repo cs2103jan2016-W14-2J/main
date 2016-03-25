@@ -32,22 +32,21 @@ public class UIConfiguration extends Application
 	private final String CONFIG_SECONDLINE_FILENAME_KNOWN = "FILENAME = %1$s";
 	private final String CONFIG_SEPARATOR = System.getProperty("line.separator");
 	private final String DIALOG_TITLE = "SAVE DATABASE"; 
-	
 	private final int PARAM_FOR_DIR = 8;	//include space
 	private final int PARAM_FOR_NAME = 11; //include space
-	
-	final public String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
-	final public String PARAM_DB_DEFAULT_FILENAME = "DODOdatabase";
-	
-	final public File configFile = new File(PARAM_CONFIG_DEFAULT_FILENAME);
-	final public FileChooser fileChooser = new FileChooser();
-	public ArrayList<String> listOfConfigs = new ArrayList<String>();
-	public File dbFile=null;
-	public FileOutputStream outputStream;
-	public Stage primaryStage;
-	public String strDBdir = "";
-	public String strDBname = "";
-	public Logic logic;
+	private String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
+	private String PARAM_DB_DEFAULT_FILENAME = "DODOdatabase";
+	private File configFile = new File(PARAM_CONFIG_DEFAULT_FILENAME);
+	private FileChooser fileChooser = new FileChooser();
+	private ArrayList<String> listOfConfigs = new ArrayList<String>();
+	private File dbFile=null;
+	private FileOutputStream outputStream;
+	private Stage primaryStage;
+	private String strDBdir = "";
+	private String strDBname = "";
+	private Logic logic;
+	private boolean launch=false;
+	private static UIMainController gui;
 	@Override
 	public void start(Stage primaryStage) 
 	{
@@ -83,12 +82,17 @@ public class UIConfiguration extends Application
 		{
 			System.out.println(e);
 		}
-		UIMain gui = new UIMain(logic);
+		gui = new UIMainController(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
+		launch=true;
+		System.out.println( "                                                                              "+ strDBdir);
 		gui.start(primaryStage);
 	}
-	
+	public boolean getLaunch()
+	{
+		return launch;
+	}
 	private void checkConfigsContent() throws IOException 
 	{
 		File testFile = new File(strDBdir);

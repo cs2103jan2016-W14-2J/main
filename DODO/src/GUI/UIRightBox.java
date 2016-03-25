@@ -79,6 +79,7 @@ public class UIRightBox {
 	private final String completedTab = "Completed Tasks";
 	private final String overDueTab = "Overdue Tasks";
 	private final String floatingTab = "Floating Tasks";
+	private final String allTab = "All Tasks";
 
 	private TitledPane titledPaneOnGoingTask = new TitledPane();
 	private TitledPane titledPaneCompletedTask = new TitledPane();
@@ -93,8 +94,10 @@ public class UIRightBox {
 	private PopOver po = new PopOver();
 	PopOver popUpFeedBack = new PopOver();
 
-	private UIFadeFeedBack fb = new UIFadeFeedBack();
+	Tab tabAll = new Tab(floatingTab);
+	VBox allVB = new VBox();
 
+	
 	Tab tabFloating = new Tab(floatingTab);
 	VBox floatingVB = new VBox();
 
@@ -109,19 +112,8 @@ public class UIRightBox {
 
 	private PopOver popOver;
 	private String strFeedBack;
-	
+	private Label feedBackLabel;
 	AnchorPane ap = new AnchorPane();
-	
-	public static TASK_STATUS getCurrentTab() 
-	{
-		System.out.print("tesssssssssssssssssssssssssssssssssssssssssssssssssssssss"+(TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData());
-		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
-	}
-
-	public UIRightBox(Logic logic) {
-		this.logic = logic;
-	}
-
 	public VBox UIRightBox(UILeftBox leftBox) {
 		setLeftBox(leftBox);
 		addTabPane();
@@ -129,8 +121,15 @@ public class UIRightBox {
 		addMainTextfield();
 		updateNewListItems();
 		updateTitledPane();
-		
 		return rightBox;
+	}
+	public static TASK_STATUS getCurrentTab() 
+	{
+		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
+	}
+
+	public UIRightBox(Logic logic) {
+		this.logic = logic;
 	}
 
 	private void setLeftBox(UILeftBox leftBox) {
@@ -147,7 +146,10 @@ public class UIRightBox {
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
 	}
-
+	public TextField getMainTextField()
+	{
+		return mainTextField;
+	}
 	private void initMainTextfield() {
 		mainTextField.setPrefSize(textfieldHeight, textfieldWidth);
 	}
@@ -216,7 +218,7 @@ public class UIRightBox {
 									String strTagging = item.getTag();
 									UICellComponents lsg = null;
 									System.out.println("at the line 219 try complete command cannt work BRO LOOK HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" + item.getComplete());
-									
+									System.out.println("ITEM.GETFLAG GET THE FLAG FOR THAT TASK TO CHECK IS IT FLAGGED " + item.getFlag());
 									if ((item instanceof DeadlinedTask) == true) 
 									{
 										System.out.println("DeadlinedTask");
@@ -226,7 +228,7 @@ public class UIRightBox {
 									} 
 									else if ((item instanceof Event) == true) 
 									{
-										System.out.println("in event");
+										System.out.println("in event" + ((Event) item).getEndDateTime());
 										lsg = new UICellComponents(Integer.toString(this.getIndex() + 1), strTagging,
 												item.getName(), ((Event) item).getStartDateTime(),
 												((Event) item).getEndDateTime(), item.getFlag());
@@ -260,11 +262,7 @@ public class UIRightBox {
 				listViewLabel.setOnKeyPressed(new EventHandler<KeyEvent>() {
 					public void handle(KeyEvent ke) {
 						if (ke.getCode().equals(KeyCode.ENTER)) {
-							
-							
 							createDisappearPane(listViewLabel);
-						    //rightBox.setEffect(new BoxBlur());
-							//leftBox.setEffect(new BoxBlur());
 						}
 					}
 				});
@@ -339,9 +337,10 @@ public class UIRightBox {
 	            	chkCurrentContent();
 	            	strFeedBack = logic.run(mainTextField.getText());
 	            	VBox vbPop = new VBox();
-	        		Label feedBackLabel = new Label(strFeedBack);
+	            	feedBackLabel = new Label(strFeedBack);
 	        		vbPop.getChildren().add(feedBackLabel);
 	        		vbPop.setPrefSize(1380, 50);
+	        		feedBackLabel.setId("lblFeedBack");
 	        		popUpFeedBack.setAutoFix(true);
 	        		popUpFeedBack.setContentNode(vbPop);
 	        		//popUpFeedBack.show(mainTextField);
@@ -487,33 +486,8 @@ public class UIRightBox {
 	private void createDisappearPane(ListView<Task> listViewLabel) 
 	{
 		
-		/*Stage dialog = new Stage();
-		VBox dialogVBox = new VBox();
-		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(primaryStage);
-		dialogVBox.getChildren().add(new Text("This is a Dialog"));
-		Scene dialogScene = new Scene(dialogVBox, dialogWidth, dialogHeight);
-		dialog.setScene(dialogScene);
-		dialog.show();
-		dialog.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			public void handle(WindowEvent we) {
-				rightBox.setEffect(null);
-				leftBox.setEffect(null);
-			}
-		});
-		dialog.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ESCAPE) {
-					rightBox.setEffect(null);
-					leftBox.setEffect(null);
-					dialog.close();
-				}
-			}
-		});*/
+		
 		int x= listViewLabel.getSelectionModel().getSelectedIndex();
-		/*Path caret = findCaret(listViewLabel);
-        Point2D screenLoc = findScreenLocation(caret);*/
 		VBox vbPop = new VBox();
 		vbPop.setPrefSize(500, 2000);
 		po.arrowSizeProperty().set(0);
@@ -543,17 +517,7 @@ public class UIRightBox {
 
 	    po.setY(listViewLabel.getHeight());
 	    po.setContentNode(vbPop);
-	   // po.show(listViewLabel, screenLoc.getX(), screenLoc.getY() + 70);
 	    po.show(listViewLabel);
-	    po.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent t) {
-				if (t.getCode() == KeyCode.ESCAPE) {
-					//rightBox.setEffect(null);
-					//leftBox.setEffect(null);
-				}
-			}
-		});
 	}
 
 	public int getOngoingSize() 

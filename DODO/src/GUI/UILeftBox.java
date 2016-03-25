@@ -14,6 +14,7 @@ import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.DatePicker;
@@ -41,34 +42,36 @@ import javafx.stage.Stage;
  */
 public class UILeftBox {
 
-	private VBox leftBox = new VBox(); //current box
+	private VBox leftBox;
 	private UIRightBox rightBox;
 	private Logic logic;
-	private Node content;
-	private DatePicker dp = new DatePicker(LocalDate.now());
-	private DatePickerSkin datePickerSkin = new DatePickerSkin(dp);
-	private ListView<String> list = new ListView<>(); 
-	private TitledPane titledPane = new TitledPane();
-	private VBox internalVBox = new VBox();
-	private ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();	
-	private PieChart chart = new PieChart(pieChartData);
+	private ListView<String> list;
+	private TitledPane titledPane;
+	private ObservableList<PieChart.Data> listData;	
+	private PieChart chart; 
 	public UILeftBox(Logic logic)
 	{
 		this.logic=logic;
 	}
-	public VBox UIleftBox(UIRightBox rightBox) 
+	public UILeftBox()
+	{
+		list = new ListView<>(); 
+		leftBox = new VBox();
+		listData  = FXCollections.observableArrayList();
+		titledPane = new TitledPane();
+		chart= new PieChart(listData);
+	}
+	public VBox UILeftBox(UIRightBox rightBox) 
 	{
 		setRightBox(rightBox);
 		addGraph();
 		addLabelCategories();
 		addTagCategories();
-		addCalendar();
 		setComponentsCSS();
 		return leftBox;	
 	}
 	private void setComponentsCSS() 
 	{
-		setPopupContentCosmetic();
 		setInternalVBoxCosmetic();
 		setChartCosmetic();
 		getTasks();
@@ -82,34 +85,31 @@ public class UILeftBox {
 		int intFloatingTasks = rightBox.floatingTasksSize();
 		int intOngoingTasks = rightBox.getOngoingSize();
 		
-		pieChartData.clear();
+		listData.clear();
+		
 		if(intOngoingTasks!=0)
 		{			
-			pieChartData.addAll(new PieChart.Data("On-going Tasks",intOngoingTasks));
+			listData.addAll(new PieChart.Data("On-going Tasks",intOngoingTasks));
 		}
 		if(intOverdueTasks!=0)
 		{
-			pieChartData.addAll(new PieChart.Data("Overdue Tasks",intOverdueTasks));
+			listData.addAll(new PieChart.Data("Overdue Tasks",intOverdueTasks));
 		}
 		if(intFloatingTasks!=0)
 		{
-			pieChartData.addAll(new PieChart.Data("Floating Tasks",intFloatingTasks));
+			listData.addAll(new PieChart.Data("Floating Tasks",intFloatingTasks));
 		}
 		if(intCompletedTasks!=0)
 		{
-			pieChartData.addAll(new PieChart.Data("Completed Tasks",intCompletedTasks));
+			listData.addAll(new PieChart.Data("Completed Tasks",intCompletedTasks));
 		}
 	}
-	private void setPopupContentCosmetic() 
-	{
-		content.styleProperty().set("-fx-border-color: black;");
-	}	
 	private void setInternalVBoxCosmetic() 
 	{
-		internalVBox.styleProperty().set("-fx-border-color: black;");
+		leftBox.styleProperty().set("-fx-border-color: black;");
 	}
 	private void setChartCosmetic() {
-		chart.setPrefSize(500, 1500);
+		chart.setPrefSize(500, 888);
 		chart.styleProperty().set("-fx-border-color: black;");
         chart.setTitle("Task");		
 	}
@@ -118,26 +118,13 @@ public class UILeftBox {
 	}
 	private void addLabelCategories() 
 	{
-		
-		
-		
-		leftBox.getChildren().add(internalVBox);
-		/*ImageView imgView = new ImageView();
-		Image img = new Image(UICellComponents.class.getResourceAsStream("tag2.png"));
-		imgView.setImage(img);*/
-		BorderPane bp = new BorderPane();
-		
 		ObservableList<String> list =FXCollections.observableArrayList("fku","fku","fku","fku","fku");
-
 		ListView<String> lv = new ListView<String>(list);
-		
 		Label lbl = new Label("Tag Categories");
+		lbl.setAlignment(Pos.CENTER_LEFT);
 		lv.setPrefHeight(888);
-
 		lbl.setFont(Font.font("Cambria", 25));
-		bp.setCenter(lbl);
-		bp.styleProperty().set("-fx-background-color: white;");
-		internalVBox.getChildren().addAll(bp,lv);
+		leftBox.getChildren().addAll(lbl,lv);
 	}
 	private void addGraph() 
 	{
@@ -147,45 +134,11 @@ public class UILeftBox {
 	{
 		addTagList(titledPane);
 	}
-	@SuppressWarnings("restriction")
-	private void addCalendar() 
-	{
-		StackPane sp = new StackPane();
-		//calendar tab not working
-		System.out.println(datePickerSkin.getNode() + "test test test test test test test test test test test test test test test test");
-		datePickerSkin.getDisplayNode();
-		datePickerSkin.getPopupContent().setFocusTraversable(false);
-		content = datePickerSkin.getPopupContent();
-	    
-	    sp.getChildren().add(content);
-
-		//leftBox.getChildren().add(popupContent);
-	    sp.focusTraversableProperty().set(false);
-	    sp.focusTraversableProperty().setValue(false);
-	    
-		leftBox.getChildren().add(sp);
-		sp.setDisable(true);
-		datePickerSkin.getNode().focusTraversableProperty().set(false);
-		datePickerSkin.getNode().focusTraversableProperty().setValue(false);
-		datePickerSkin.getNode().setFocusTraversable(false);
-		datePickerSkin.getDisplayNode().setFocusTraversable(false);
-		datePickerSkin.getSkinnable().setFocusTraversable(false);
-		datePickerSkin.getChildren().get(0).setFocusTraversable(false);
-		datePickerSkin.getChildren().get(0).setDisable(true);
-		content.setFocusTraversable(false);
-		content.focusTraversableProperty().set(false);
-		content.focusTraversableProperty().setValue(false);
-		
-		
-		
-		
-	}
 	private void addTagList(TitledPane titledPane)
 	{
 		titledPane.setFocusTraversable(false);
-		//list.setItems(arrayImgView);
 		titledPane.setContent(list);
-		internalVBox.getChildren().add(list);
+		leftBox.getChildren().add(list);
 	}
 	public void setEffect(Effect object)
 	{

@@ -38,6 +38,10 @@ public class Parser {
 	
 	private String _commandAdd = "add";
 	private EDIT_TYPE editType;
+	private SEARCH_TYPE searchType;
+	private String searchByTask;
+	private Date searchByDate;
+	private String searchByTag;
 	
 	public Parser() {
 		
@@ -118,6 +122,7 @@ public class Parser {
 			case SEARCH:
 				userInput = getUserInputContent(userInput);
 				SearchParser search = new SearchParser(userInput);
+				setSearchAttributes(search.getSearchByDate(), search.getSearchByTask(), search.getSearchByTag(), search.getSearchType());
 				break;
 			case SORT:
 				userInput = getUserInputContent(userInput);
@@ -313,19 +318,44 @@ public class Parser {
 		return this.editType;
 	}
 	
-	//**************************Accessors for Flag/Unflag/CompleteParser*********************//
-		private void setFlagAndCompleteAttributes(FLAGANDCOMPLETE_TYPE flagAndCompleteType, ArrayList<Integer> indexOfFlagAndMark) {
-			this.indexOfFlagAndMark = new ArrayList<Integer>();
-			this.indexOfFlagAndMark = indexOfFlagAndMark;
-			this.flagAndCompleteType = flagAndCompleteType;
-		}
+	//**************************** Accessors for Flag/Unflag/CompleteParser ***********************//
+	private void setFlagAndCompleteAttributes(FLAGANDCOMPLETE_TYPE flagAndCompleteType, ArrayList<Integer> indexOfFlagAndMark) {
+		this.indexOfFlagAndMark = new ArrayList<Integer>();
+		this.indexOfFlagAndMark = indexOfFlagAndMark;
+		this.flagAndCompleteType = flagAndCompleteType;
+	}
 		
-		public FLAGANDCOMPLETE_TYPE getFlagAndCompleteType() {
-			return this.flagAndCompleteType;
-		}
+	public FLAGANDCOMPLETE_TYPE getFlagAndCompleteType() {
+		return this.flagAndCompleteType;
+	}
 		
-		public ArrayList<Integer> getTaskToFlagAndMark() {
-			return this.indexOfFlagAndMark;
-		}
-
+	public ArrayList<Integer> getTaskToFlagAndMark() {
+		return this.indexOfFlagAndMark;
+	}
+	//********************************************* SearchParser ************************************//
+	private void setSearchAttributes(Date searchByDate, String searchByTask, String searchByTag,
+			SEARCH_TYPE searchType) {
+		this.searchType = searchType;
+		this.searchByTask = searchByTask;
+		this.searchByDate = searchByDate;
+		this.searchByTag = searchByTag;
+	}
+	
+	public SEARCH_TYPE getSearchType() {
+		return this.searchType;
+	}
+	
+	public String getSearchByTask() {
+		return this.searchByTask.trim();
+	}
+	
+	public String getSearchByTag() {
+		return this.searchByTag.trim();
+	}
+	
+	public Date getSearchByDate() {
+		return this.searchByDate;
+	}
+	
+	
 }

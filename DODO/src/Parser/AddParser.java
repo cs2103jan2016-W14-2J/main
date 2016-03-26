@@ -71,6 +71,7 @@ public class AddParser {
 	private void executeAddParser(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
 		taskItems = new ArrayList<String>(Arrays.asList(str));
+		userTask = checkForAbbreviation(taskItems);
 		
 		taskType = determineTaskType(taskItems);
 		System.out.println("Debug AddParser: Test executeAddParser @line71: " + taskType);
@@ -90,6 +91,17 @@ public class AddParser {
 				System.exit(1);
 		}
 		
+	}
+
+	private String checkForAbbreviation(ArrayList<String> taskItems) {
+		System.out.println("checkForAbbrevation");
+		String name = "";
+		DateTimeParser dt = new DateTimeParser();
+		name = dt.processToday(taskItems);
+		name = dt.processTomorrow(taskItems);
+		name = dt.processYesterday(taskItems);
+		
+		return name;
 	}
 
 	public TASK_TYPE determineTaskType(ArrayList<String> taskItems) {
@@ -297,8 +309,6 @@ public class AddParser {
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		}
-		
-	//	verifyIfDeadLineTask(dateTimeParser.getTempTaskName());
 			
 	}
 
@@ -323,22 +333,37 @@ public class AddParser {
 */	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
-	/*	this.taskName = toStringTaskElements(taskItems).trim();
-		DateAndTimeParser parser = new DateAndTimeParser();
-		Date endTime = parser.analysePossibleDateElements(taskItems);
-		setEndTime(endTime);
-		verifyIfDeadLineTask(parser.getTempTaskName());
-	*/
-		List<Date> date = new PrettyTimeParser().parse(userTask);
-		if (date.size() == 0) {
+
+		List<Date> dates = new PrettyTimeParser().parse(userTask);
+		System.out.println("parseFloating :" + dates.size());
+		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}
 		else {
-			
+			if (dates.size() == 1) {
+				setEndTime(dates.get(0));
+				extractDateElement(taskItems, userTask);
+				setTaskType(TASK_TYPE.DEADLINED);
+			}
+			else if (dates.size() > 1){
+				setEndTime(dates.get(1));
+				setStartTime(dates.get(0));
+				extractDateElement(taskItems, userTask);
+				setTaskType(TASK_TYPE.EVENT);
+			}
 		}
 	
 	}
 	
+	private void extractDateElement(ArrayList<String> taskItems, String userTask) {
+		DateTimeParser dt = new DateTimeParser();
+		String dateElements ="";
+		userTask = dt.removeTheDayAfterTomorrow(userTask);
+		userTask = dt.removeTomorrow(userTask);
+		userTask = dt.removeToday(userTask);
+		setTaskName(userTask);
+	}
+
 	/*
 	 * @param: an arraylist of task elements.
 	 * @description: concatenate the content of a task input together

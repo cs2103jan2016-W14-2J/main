@@ -46,7 +46,7 @@ public class UIConfiguration extends Application
 	private String strDBname = "";
 	private Logic logic;
 	private boolean launch=false;
-	private static UIMainController gui;
+	private UIMainController gui;
 	@Override
 	public void start(Stage primaryStage) 
 	{
@@ -85,8 +85,6 @@ public class UIConfiguration extends Application
 		gui = new UIMainController(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
-		launch=true;
-		System.out.println( "                                                                              "+ strDBdir);
 		gui.start(primaryStage);
 	}
 	public boolean getLaunch()

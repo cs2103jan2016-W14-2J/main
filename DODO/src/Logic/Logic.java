@@ -35,8 +35,8 @@ public class Logic {
 	}
 
 	public String save() {
-		String test = storage.save(TASK_STATUS.ONGOING, ongoingTasks);
-		System.out.println("[DEBUG/Logic/save] save: " + test);
+		System.out.println("=========LOGIC=========: " + floatingTasks);
+		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
 		storage.save(TASK_STATUS.FLOATING, floatingTasks);
 		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
@@ -79,8 +79,6 @@ public class Logic {
 		Parser parser = new Parser(input);
 		COMMAND_TYPE command = parser.getCommandType();
 		ArrayList<ArrayList<Task>> data = compress();
-		
-		
 
 		switch (command) {
 		case ADD:
@@ -106,7 +104,11 @@ public class Logic {
 			categories = tag.getCategories();
 			break;
 		case FLAG:
-			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG);
+			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG, true);
+			status = execute(flag, data);
+			break;
+		case UNFLAG:
+			flag = new Flag(parser, data, COMMAND_TYPE.FLAG, false);
 			status = execute(flag, data);
 			break;
 		case UNDO:

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
-import org.ocpsoft.prettytime.PrettyTime;
 
 import Command.*;
 import Task.*;
@@ -51,7 +50,6 @@ public class AddParser {
 	
 	private String userTask = "";
 	private String taskName = "";
-	private String tempTaskName = "";
 	private String contentToAnalyse;
 	private COMMAND_TYPE commandType;
 	private TASK_TYPE taskType;
@@ -60,9 +58,7 @@ public class AddParser {
 	private Date endTime;
 	
 	private ArrayList<String> taskItems;
-	private ArrayList<String> stringToAnalyse;
-	private ArrayList<String> taskNameArrayList;
-	
+
 	public AddParser(String userTask) {
 		this.userTask = userTask;
 		executeAddParser(userTask);

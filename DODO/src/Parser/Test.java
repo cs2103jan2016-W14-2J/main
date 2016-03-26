@@ -11,7 +11,7 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("complete 1,2,3,4");
+			Parser parser = new Parser("complete 1-10");
 			ArrayList<Integer> arr = new ArrayList<Integer>(parser.getTaskToFlagAndMark());
 			for (int i = 0; i < arr.size(); i++) {
 				System.out.println(arr.get(i));

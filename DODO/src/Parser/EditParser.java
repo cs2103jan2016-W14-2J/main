@@ -79,9 +79,7 @@ public class EditParser {
 
 
 	private void parseEditEndTime(ArrayList<String> editTaskElements) {
-		DateAndTimeParser parser = new DateAndTimeParser();
 		INDEX_OF_LAST_TO = editTaskElements.lastIndexOf(KEYWORD_TO);
-	
 		contentToAnalyse = new ArrayList<String>(editTaskElements.subList(INDEX_OF_LAST_TO, editTaskElements.size()));
 		newDate = parser.analysePossibleDateElements(contentToAnalyse);	
 		setNewEndDate(newDate);
@@ -201,12 +199,13 @@ public class EditParser {
 	 * 
 	 */
 	private boolean hasDeadLined(String userInput) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		
 		if (userInput.contains(KEYWORD_BEFORE) || userInput.contains(KEYWORD_BY) 
 			|| userInput.contains(KEYWORD_ON) || userInput.contains(KEYWORD_AT)) {
-			return true;
+			return (dates.size() ==0) ? true : false;
 		}
 		else {
-			System.out.println("Debug at hasDeadLined " + userInput);
 			return false;
 		}
 	}
@@ -217,13 +216,14 @@ public class EditParser {
 	 */
 	private boolean hasStartTime(String userInput) {
 		System.out.println("Debug at hasStartTime " + userInput);
-		return (userInput.contains(KEYWORD_FROM));
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		return (userInput.contains(KEYWORD_FROM) && dates.size() != 0) ? true : false;
 	}
 
 
 	private boolean hasEndTime(String userInput) {
-		System.out.println("Debug at hasEndTime " + userInput);
-		return (userInput.contains(KEYWORD_TO)) ? true : false;
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		return (userInput.contains(KEYWORD_TO) && dates.size() != 0) ? true : false;
 	}
 
 	
@@ -244,13 +244,21 @@ public class EditParser {
 
 	private int checkIfValidEditCommandInput(ArrayList<String> editTaskElements) {
 		if (editTaskElements.size() < 2) {
-			System.out.println(MESSAGE_EDIT_INPUT_ERROR);
+			setEditType(EDIT_TYPE.INVALID);
 		}
 		else {
 			taskID = Integer.parseInt(editTaskElements.get(0));
 			editTaskElements.remove(0);
 		}
 		return taskID;
+	}
+	
+	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
+		String name = "";
+		for (int i = 0; i < taskNameArrayList.size(); i++) {
+			name += taskNameArrayList.get(i) + " "; 
+		}
+		return name.trim();
 	}
 	
 	private void setNewTaskName(String newTaskName) {

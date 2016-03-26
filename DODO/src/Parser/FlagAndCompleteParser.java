@@ -4,23 +4,24 @@ import java.util.ArrayList;
 import Command.*;
 
 public class FlagAndCompleteParser {
-	private String usertaskIndex;
+	private String userTaskIndex;
 	private FLAGANDCOMPLETE_TYPE _type;
 	private ArrayList<Integer> taskIndex; 
 	
 	private static String MESSAGE_WRONG_DELETE_COMMAND = "Oops. Please enter a valid range.";
 	
 	
-	public FlagAndCompleteParser(String usertaskIndex) {
-		this.usertaskIndex = usertaskIndex;
+	public FlagAndCompleteParser(String userTaskIndex) {
+		this.userTaskIndex = userTaskIndex;
 		this.taskIndex = new ArrayList<Integer>();
-		executeDeleteParser();
+		executeDeleteParser(userTaskIndex);
 	}
 
-	private void executeDeleteParser() {
-		String[] str = usertaskIndex.replaceAll("[:.,]", " ").toLowerCase().split("\\s+");
+	private void executeDeleteParser(String userTaskIndex) {
 		
-		switch (detemineDeleteType(usertaskIndex.toLowerCase())) {
+		String[] str = userTaskIndex.trim().replaceAll("[:.,]", " ").toLowerCase().split("\\s+");
+		
+		switch (detemineDeleteType(userTaskIndex.toLowerCase())) {
 		
 			case SINGLE:
 				parseSingle(str);
@@ -30,7 +31,7 @@ public class FlagAndCompleteParser {
 				parseMultiple(str);
 				break;
 			case RANGE:
-				parseRange(str);
+				parseRange();
 				break;
 			case ALL:
 				break;
@@ -40,13 +41,23 @@ public class FlagAndCompleteParser {
 		}
 	}
 
-	private void parseRange(String[] str) {
-		if (str.length == 3) {
-			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
+	private void parseRange() {
+		
+		if (userTaskIndex.contains("-")) {
+			userTaskIndex = userTaskIndex.replace("-", " ");
+		}
+		else if (userTaskIndex.contains("to")) {
+			userTaskIndex = userTaskIndex.replace("to", " ");
+		}
+		
+		String[] temp = userTaskIndex.split("\\s+");
+		
+		if (temp.length == 2) {
+			for (int i = Integer.parseInt(temp[0]); i < Integer.parseInt(temp[1]) + 1; i++) {
 				taskIndex.add(i);
 			}
+			setTaskIndex(taskIndex);
 		}
-		setTaskIndex(taskIndex);
 	}
 
 	private void parseMultiple(String[] str) {

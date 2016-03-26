@@ -62,12 +62,10 @@ public class UIRightBox {
 	private final String completedTab = "Completed Tasks";
 	private final String overDueTab = "Overdue Tasks";
 	private final String floatingTab = "Floating Tasks";
-	private final String allTab = "All Tasks";
 
 	private static TabPane tabPane;
 	private TextField mainTextField;
 	
-	private TitledPane titledPaneAllTasks;
 	private TitledPane titledPaneOnGoingTask;
 	private TitledPane titledPaneCompletedTask;
 	private TitledPane titledPaneOverdueTask;
@@ -134,7 +132,6 @@ public class UIRightBox {
 
 		tabPane = new TabPane();
 		mainTextField = new TextField();
-		
 
 	}
 	//add list -> add vbtab ->
@@ -212,26 +209,27 @@ public class UIRightBox {
 									String strTagging = item.getTag();
 									String currentIndex=Integer.toString(this.getIndex() + 1);
 									UICellComponents lsg = null;
+									
 									if ((item instanceof DeadlinedTask) == true) 
 									{
 										System.out.println("DeadlinedTask");
 										lsg = new UICellComponents(currentIndex, strTagging,item.getName(), null, ((DeadlinedTask) item).getEndDateTime(), item.getFlag());
 										logger.info("DeadlinedTask");  
+									
 									} 
 									else if ((item instanceof Event) == true) 
 									{
 										System.out.println("in event" + ((Event) item).getEndDateTime());
 										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), ((Event) item).getStartDateTime(),((Event) item).getEndDateTime(), item.getFlag());
 										logger.info("Event");  
-
 									}
 									else if ((item instanceof Task) == true) 
 									{
 										System.out.println("in Task");
 										lsg = new UICellComponents(currentIndex,strTagging,item.getName(), null, null, item.getFlag());
+										
 										logger.info("Task");  
 									}
-									
 									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() {
 									    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 									        if(oldValue ==false)
@@ -247,6 +245,7 @@ public class UIRightBox {
 									        
 									    }
 									});
+									
 									setTooltip(lsg.getToolTip());
 									setGraphic(lsg.getCellRoot());
 								}
@@ -285,12 +284,15 @@ public class UIRightBox {
 							}
 					}
 				});
+				
+				
+				
 			}
 			
 		}).start();			
 		
 		//leftBox.updateChart();
-
+		listViewLabel.scrollTo(listTask.size()-1);
 		titledPane.setContent(listViewLabel);
 	}
 	private void createLog()

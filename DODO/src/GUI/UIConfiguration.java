@@ -85,6 +85,8 @@ public class UIConfiguration extends Application
 		gui = new UIMainController(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
+		launch=true;
+		System.out.println( "                                                                              "+ strDBdir);
 		gui.start(primaryStage);
 	}
 	public boolean getLaunch()

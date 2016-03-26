@@ -47,7 +47,7 @@ public class UIMainController {
 		rightBox = new UIRightBox(this.logic);
 		
 		leftBox.build(rightBox);
-		//rightBox.build(leftBox);
+		rightBox.build(leftBox);
 		
 
 		
@@ -63,7 +63,7 @@ public class UIMainController {
 	}
 	public void addLeftAndRightBox() 
 	{
-	//	root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
+		root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 	}
 
 	private void setPrimaryStage(Stage primaryStage) {

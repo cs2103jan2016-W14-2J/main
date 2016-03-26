@@ -28,10 +28,6 @@ public class DateTimeParser {
 		
 	}
 	
-	protected boolean isTheDayAfterTomorrow(String userInput) {
-		return (userInput.contains(" the day after tomorrow") || 
-				userInput.contains(" day after tomorrow")) ? true : false;
-	}
 
 	protected String removeTheDayAfterTomorrow(String userInput) {
 		if (userInput.contains(" the day after tomorrow")) {
@@ -57,6 +53,37 @@ public class DateTimeParser {
 		return userInput;
 	}
 	
+	protected String removeThisComingWeekday(String userInput) {
+		String[] str = userInput.toLowerCase().split("\\s+");
+		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
+		
+		if (userInput.contains(" this coming")) {
+			int index = taskItems.lastIndexOf("coming");
+			taskItems.remove(index + 1);
+			taskItems.remove(index);
+			taskItems.remove(index - 1);
+			userInput = toStringTaskElements(taskItems);
+		}
+		return userInput;
+	}
+	
+	protected String removeNextFewDays(String userInput) {
+		String[] str = userInput.toLowerCase().split("\\s+");
+		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
+		
+		if (userInput.contains(" next")) {
+			int index = taskItems.lastIndexOf("next");
+			taskItems.remove(index + 2);
+			taskItems.remove(index + 1);
+			taskItems.remove(index);
+			if (taskItems.get(index - 1).contains("the")) {
+				taskItems.remove(index - 1);
+			}
+			userInput = toStringTaskElements(taskItems);
+		}
+		return userInput;
+	}
+	
 	protected boolean containsYesterday(String userInput) {
 		return (userInput.contains(" ytd ")) ? true : false;
 	}
@@ -73,6 +100,11 @@ public class DateTimeParser {
 	
 	protected boolean containsToday(String userInput) {
 		return (userInput.contains(" tdy ")) ? true : false;
+	}
+	
+	protected boolean containsTheDayAfterTomorrow(String userInput) {
+		return (userInput.contains(" the day after tomorrow") || 
+				userInput.contains(" day after tomorrow")) ? true : false;
 	}
 	
 	protected String processToday (ArrayList<String> contentToAnalyse) {

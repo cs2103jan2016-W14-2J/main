@@ -209,8 +209,12 @@ public class AddParser {
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: submit assignment 1 by tomorrow
-			if (dates.size() != 0) {
+			if (dates.size() != 0 && !contentToAnalyse.contains(" next ")) {
 				setEndTime(dates.get(0));
+			}
+			// Example: submit assignment by next 2 weeks
+			else if (dates.size() != 0 && contentToAnalyse.contains(" next ")) {
+				setEndTime(dates.get(1));
 			}
 			// Example: take a walk by the beach
 			else {
@@ -300,8 +304,12 @@ public class AddParser {
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: submit assignment 1 before monday 2359hrs
-			if (dates.size() != 0) {
+			if (dates.size() != 0 && !contentToAnalyse.contains(" next ")) {
 				setEndTime(dates.get(0));
+			}
+			// Example: submit assignment by next 2 weeks
+			else if (dates.size() != 0 && contentToAnalyse.contains(" next ")) {
+				setEndTime(dates.get(1));
 			}
 			// Example: let the kids eat before us.
 			else {
@@ -361,6 +369,8 @@ public class AddParser {
 		userTask = dt.removeTheDayAfterTomorrow(userTask);
 		userTask = dt.removeTomorrow(userTask);
 		userTask = dt.removeToday(userTask);
+		userTask = dt.removeThisComingWeekday(userTask);
+		userTask = dt.removeNextFewDays(userTask);
 		setTaskName(userTask);
 	}
 

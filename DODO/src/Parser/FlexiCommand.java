@@ -25,11 +25,11 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiUnflagCommand();
 		possibleCommands = initiateFlexiTagCommand();
 		possibleCommands = initiateFlexiUntagCommand();
+		possibleCommands = initiateFlexiSearchCommand();
+		possibleCommands = initiateFlexiSortCommand();
 /*		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiExitCommand();
-		possibleCommands = initiateFlexiSearchCommand();
-		possibleCommands = initiateFlexiSortCommand();
 		possibleCommands = initiateFlexiClearCommand();*/
 		
 	}
@@ -139,6 +139,21 @@ public class FlexiCommand {
 		possibleCommands.put("untags", COMMAND_TYPE.UNTAG);
 		return possibleCommands;
 	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiSortCommand() {
+		possibleCommands.put("sort", COMMAND_TYPE.SORT);
+		possibleCommands.put("arrange", COMMAND_TYPE.SORT);
+		possibleCommands.put("sorts", COMMAND_TYPE.SORT);
+		return possibleCommands;
+		
+	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiSearchCommand() {
+		possibleCommands.put("search", COMMAND_TYPE.SEARCH);
+		possibleCommands.put("find", COMMAND_TYPE.SEARCH);
+		possibleCommands.put("f", COMMAND_TYPE.SEARCH);
+		return possibleCommands;
+	}
 	/*
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
 		possibleCommands.put("help", HELP);
@@ -166,21 +181,6 @@ public class FlexiCommand {
 		possibleCommands.put("q", EXIT);
 		possibleCommands.put("q!", EXIT);
 		possibleCommands.put("terminate", EXIT);
-		return possibleCommands;
-	}
-	
-	private HashMap<String, CommandType> initiateFlexiSortCommand() {
-		possibleCommands.put("sort", SORT);
-		possibleCommands.put("arrange", SORT);
-		possibleCommands.put("sorts", SORT);
-		return possibleCommands;
-		
-	}
-	
-	private HashMap<String, CommandType> initiateFlexiSearchCommand() {
-		possibleCommands.put("search", SEARCH);
-		possibleCommands.put("find", SEARCH);
-		possibleCommands.put("f", SEARCH);
 		return possibleCommands;
 	}
 	

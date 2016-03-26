@@ -43,6 +43,10 @@ public class Parser {
 	private Date searchByDate;
 	private String searchByTag;
 	
+	private String sortByAlphabetical;
+	private Date sortByDate;
+	private SORT_TYPE sortType;
+	
 	public Parser() {
 		
 	}
@@ -126,6 +130,8 @@ public class Parser {
 				break;
 			case SORT:
 				userInput = getUserInputContent(userInput);
+				SortParser sort = new SortParser(userInput);
+				setSortAttributes(sort.getSortByAlphabetical(), sort.getSortByDate(), sort.getSortType());
 				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
@@ -356,6 +362,23 @@ public class Parser {
 	public Date getSearchByDate() {
 		return this.searchByDate;
 	}
+	//********************************************* SortParser ************************************//
+	private void setSortAttributes(String sortByAlphabetical, Date sortByDate, SORT_TYPE sortType) {
+		this.sortByAlphabetical = sortByAlphabetical;
+		this.sortByDate = sortByDate;
+		this.sortType = sortType;
+		
+	}
 	
+	public String getSortByAlphabetical() {
+		return this.sortByAlphabetical;
+	}
 	
+	public Date getSortByDate() {
+		return this.sortByDate;
+	}
+	
+	public SORT_TYPE getSortType() {
+		return this.sortType;
+	}
 }

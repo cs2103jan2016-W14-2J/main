@@ -11,11 +11,10 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("search <  tag  >");
-			System.out.println(parser.getSearchByDate());
-			System.out.println(parser.getSearchByTag());
-			System.out.println(parser.getSearchByTask());
-			System.out.println(parser.getSearchType());
+			Parser parser = new Parser("sort by 1700hrs");
+			System.out.println(parser.getSortByAlphabetical());
+			System.out.println(parser.getSortByDate());
+			System.out.println(parser.getSortType());
 		
 		}
 }

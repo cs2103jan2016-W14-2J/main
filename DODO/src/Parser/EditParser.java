@@ -34,7 +34,6 @@ public class EditParser {
 	private ArrayList<String> editTaskElements;
 	
 	public EditParser(String userInput) {
-		System.out.println("Debug at EditParser");
 		executeEditParser(userInput);
 	}
 
@@ -47,8 +46,8 @@ public class EditParser {
 			System.out.println(editTaskElements.get(i));
 		}
 		
-		taskID = checkIfValidEditCommandInput(editTaskElements);
-		setTaskID(taskID);
+		userInput = checkIfValidEditCommandInput(editTaskElements);
+		System.out.println("Debug at EditParser :" + userInput);
 	
 		switch(determineEditType(userInput)) {
 		
@@ -257,24 +256,34 @@ public class EditParser {
 */	}
 
 
-	private int checkIfValidEditCommandInput(ArrayList<String> editTaskElements) {
+	private String checkIfValidEditCommandInput(ArrayList<String> editTaskElements) {
+		String temp = "";
 		if (editTaskElements.size() < 2) {
 			setEditType(EDIT_TYPE.INVALID);
 		}
 		else {
 			taskID = Integer.parseInt(editTaskElements.get(0));
+			setTaskID(taskID);
 			editTaskElements.remove(0);
+			temp = toStringTaskElements(editTaskElements);
 		}
-		return taskID;
+		return temp;
 	}
 	
+	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
+		String name = "";
+		for (int i = 0; i < taskNameArrayList.size(); i++) {
+			name += " " + taskNameArrayList.get(i); 
+		}
+		return name;
+	}
 	
 	private void setNewTaskName(String newTaskName) {
 		this.newTaskName = newTaskName;
 	}
 	
 	public String getNewTaskName() {
-		return this.newTaskName;
+		return this.newTaskName.trim();
 	}
 	
 	private void setNewStartDate(Date newStartDate) {

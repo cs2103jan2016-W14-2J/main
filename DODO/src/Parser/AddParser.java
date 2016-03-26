@@ -320,26 +320,6 @@ public class AddParser {
 			
 	}
 
-	private void verifyIfDeadLineTask(String tempTaskName) {
-		String temp = taskName.trim() + " " + tempTaskName.trim();
-		System.out.println("Debug: verifyIfDeadLineTask. " + temp.trim().length());
-		System.out.println("Debug: verifyIfDeadLineTask. " + userTask.trim().length());
-		
-		if (userTask.trim().length() == temp.trim().length()) {
-			System.out.println("Debug: verifyIfDeadLineTask. " + temp);
-			setTaskName(temp);
-			setTaskType(TASK_TYPE.FLOATING);
-		}
-		else if (temp.contains(KEYWORD_FROM) && !temp.contains(KEYWORD_TO)){
-			setTaskName(userTask);
-			setTaskType(TASK_TYPE.DEADLINED);
-		}
-/*		else {
-			setTaskName(temp);
-			setTaskType(TASK_TYPE.DEADLINED);
-		}
-*/	}
-
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
 
 		List<Date> dates = new PrettyTimeParser().parse(userTask);

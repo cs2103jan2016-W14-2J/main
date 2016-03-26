@@ -32,7 +32,6 @@ public class EditParser {
 	private EDIT_TYPE editType;
 	private String MESSAGE_EDIT_INPUT_ERROR = "You have entered an invalid command.";
 	private ArrayList<String> editTaskElements;
-	private ArrayList<String> contentToAnalyse;
 	
 	public EditParser(String userInput) {
 		System.out.println("Debug at EditParser");
@@ -269,13 +268,6 @@ public class EditParser {
 		return taskID;
 	}
 	
-	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
-		String name = "";
-		for (int i = 0; i < taskNameArrayList.size(); i++) {
-			name += taskNameArrayList.get(i) + " "; 
-		}
-		return name.trim();
-	}
 	
 	private void setNewTaskName(String newTaskName) {
 		this.newTaskName = newTaskName;

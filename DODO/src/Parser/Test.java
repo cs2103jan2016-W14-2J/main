@@ -11,9 +11,9 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("add <add  adasda >dinner !");
-			System.out.println(parser.getImportance());
-			System.out.println(parser.getTag());
+			Parser parser = new Parser("add visit home from monday to sunday");
+			System.out.println(parser.getStartTime());
+			System.out.println(parser.getEndTime());
 			System.out.println(parser.getName());
 		
 		}

@@ -3,6 +3,9 @@ package Parser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
+import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 import Command.*;
 
@@ -220,13 +223,14 @@ public class EditParser {
 
 	private boolean hasEndTime(String userInput) {
 		System.out.println("Debug at hasEndTime " + userInput);
-		return (userInput.contains(KEYWORD_TO));
+		return (userInput.contains(KEYWORD_TO)) ? true : false;
 	}
 
 	
 	private boolean hasTaskName(String userInput) {
-		
-		if (userInput.contains(KEYWORD_AT) || userInput.contains(KEYWORD_BEFORE) ||
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		return (dates.size() == 0) ? true : false;
+/*		if (userInput.contains(KEYWORD_AT) || userInput.contains(KEYWORD_BEFORE) ||
 			userInput.contains(KEYWORD_BY) || userInput.contains(KEYWORD_FROM) ||
 			userInput.contains(KEYWORD_ON) || userInput.contains(KEYWORD_TO)) {
 			System.out.println("Debug at hasTaskName " + userInput);
@@ -235,7 +239,7 @@ public class EditParser {
 		else {
 			return true;
 		}
-	}
+*/	}
 
 
 	private int checkIfValidEditCommandInput(ArrayList<String> editTaskElements) {

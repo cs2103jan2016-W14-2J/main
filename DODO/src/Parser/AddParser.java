@@ -172,7 +172,7 @@ public class AddParser {
 		
 		// Parse string with "from" ... "to".
 		if (userTask.lastIndexOf(KEYWORD_TO) > userTask.lastIndexOf(KEYWORD_FROM)) {
-			str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size() - 1)));
+			str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size())));
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			
 			if (dates.size() == 2) {
@@ -193,6 +193,7 @@ public class AddParser {
 				setStartTime(dates.get(0));
 			}
 		}
+		setTaskName(userTask.substring(0, userTask.lastIndexOf(KEYWORD_FROM)));
 	}
 
 	

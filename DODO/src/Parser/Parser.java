@@ -115,6 +115,10 @@ public class Parser {
 			case REDO:
 				setCommandType(COMMAND_TYPE.REDO);
 				break;
+			case SEARCH:
+				break;
+			case SORT:
+				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
 		}

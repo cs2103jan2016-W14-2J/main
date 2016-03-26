@@ -45,7 +45,7 @@ public class UIMainController {
 	}
 	public void start(Stage primaryStage) 
 	{		
-		leftBox = new UILeftBox();
+		//leftBox = new UILeftBox();
 		//rightBox = new UIRightBox();
 
 		this.primaryStage = primaryStage;
@@ -56,7 +56,7 @@ public class UIMainController {
 	}
 	public void addLeftAndRightBox() 
 	{
-		root.getChildren().addAll(leftBox.UILeftBox(rightBox),rightBox.UIRightBox(leftBox));
+		//root.getChildren().addAll(leftBox.UILeftBox(rightBox),rightBox.UIRightBox(leftBox));
 	}
 	public Scene getScene()
 	{

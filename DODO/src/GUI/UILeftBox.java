@@ -42,44 +42,61 @@ import javafx.stage.Stage;
  */
 public class UILeftBox {
 
+	private final String CATEGORY_HEADER ="Categories";
+	private final String CHART_HEADER ="Task";
+	
 	private VBox leftBox;
 	private UIRightBox rightBox;
 	private Logic logic;
-	private ListView<String> list;
+	private ListView<String> listView;
+	private ObservableList<String> list;
 	private TitledPane titledPane;
 	private ObservableList<PieChart.Data> listData;	
 	private PieChart chart; 
-	public UILeftBox(Logic logic)
+	private UICssScaling usc;
+	private Label lblCategory;
+	
+
+	public UILeftBox(Logic logic )
 	{
-		this.logic=logic;
-	}
-	public UILeftBox()
-	{
-		list = new ListView<>(); 
+		
 		leftBox = new VBox();
+		this.logic = logic;
+		usc = new UICssScaling();
+		listView = new ListView<>(); 
+		list = FXCollections.observableArrayList();
 		listData  = FXCollections.observableArrayList();
 		titledPane = new TitledPane();
 		chart= new PieChart(listData);
+		lblCategory = new Label(CATEGORY_HEADER);
+				
 	}
-	public VBox UILeftBox(UIRightBox rightBox) 
-	{
-		setRightBox(rightBox);
-		addGraph();
-		addLabelCategories();
-		addTagCategories();
-		setComponentsCSS();
-		return leftBox;	
+	
+	public void build(UIRightBox rightBox) {
+		this.rightBox = rightBox;
+		addTagContent();
+	    addTagListView();
+	    addChartTitle();
+		usc.cssLeftBoxComponents(leftBox,chart,titledPane,lblCategory,listView);
+		leftBox.getChildren().addAll(chart,lblCategory,listView);		
 	}
-	private void setComponentsCSS() 
-	{
-		setInternalVBoxCosmetic();
-		setChartCosmetic();
-		getTasks();
-		
-	}
-	public void getTasks() 
-	{
 
+	public VBox getRoot()
+	{
+		return leftBox;
+	}
+	private void addChartTitle() {
+		chart.setTitle("Task");			
+	}
+	private void addTagListView() {
+		listView = new ListView<String>(list);
+	}
+	private void addTagContent() {
+		list.addAll("fku","fku","fku","fku","fku");
+	}
+
+	public void updateChart() 
+	{
 		int intOverdueTasks = rightBox.overdueTasksSize();
 		int intCompletedTasks = rightBox.completedTasksSize();
 		int intFloatingTasks = rightBox.floatingTasksSize();
@@ -104,45 +121,10 @@ public class UILeftBox {
 			listData.addAll(new PieChart.Data("Completed Tasks",intCompletedTasks));
 		}
 	}
-	private void setInternalVBoxCosmetic() 
-	{
-		leftBox.styleProperty().set("-fx-border-color: black;");
-	}
-	private void setChartCosmetic() {
-		chart.setPrefSize(500, 888);
-		chart.styleProperty().set("-fx-border-color: black;");
-        chart.setTitle("Task");		
-	}
-	private void setRightBox(UIRightBox rightBox) {
-		this.rightBox = rightBox;
-	}
-	private void addLabelCategories() 
-	{
-		ObservableList<String> list =FXCollections.observableArrayList("fku","fku","fku","fku","fku");
-		ListView<String> lv = new ListView<String>(list);
-		Label lbl = new Label("Tag Categories");
-		lbl.setAlignment(Pos.CENTER_LEFT);
-		lv.setPrefHeight(888);
-		lbl.setFont(Font.font("Cambria", 25));
-		leftBox.getChildren().addAll(lbl,lv);
-	}
-	private void addGraph() 
-	{
-        leftBox.getChildren().add(chart);
-	}
-	private void addTagCategories() 
-	{
-		addTagList(titledPane);
-	}
-	private void addTagList(TitledPane titledPane)
-	{
-		titledPane.setFocusTraversable(false);
-		titledPane.setContent(list);
-		leftBox.getChildren().add(list);
-	}
-	public void setEffect(Effect object)
-	{
-		leftBox.setEffect(object);
-	}
+
+	
+
+	
+
 
 }

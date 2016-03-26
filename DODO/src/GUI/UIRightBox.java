@@ -285,7 +285,7 @@ public class UIRightBox {
 			
 		}).start();			
 		
-		leftBox.getTasks();
+		//leftBox.getTasks();
 
 		titledPane.setContent(listViewLabel);
 	}

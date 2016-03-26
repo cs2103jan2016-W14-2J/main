@@ -2,8 +2,11 @@ package GUI;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -62,5 +65,10 @@ public class UICssScaling
 			vbStartAndEnd.styleProperty().set("-fx-border-color: black;");
 			chkFlag.styleProperty().set("-fx-border-color: black;");
 			toolTip.styleProperty().set("-fx-border-color: black;");
+	}
+	public void cssLeftBoxComponents(VBox leftBox, PieChart chart, TitledPane titledPane, Label lblCategory,
+			ListView<String> listView) {
+		// TODO Auto-generated method stub
+		
 	}
 }

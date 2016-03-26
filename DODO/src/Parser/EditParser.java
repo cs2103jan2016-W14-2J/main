@@ -27,7 +27,8 @@ public class EditParser {
 	private int INDEX_OF_LAST_FROM = -1;
 	
 	private int taskID;
-	private Date newDate;
+	private Date newStartDate;
+	private Date newEndDate;
 	private EDIT_TYPE editType;
 	private String MESSAGE_EDIT_INPUT_ERROR = "You have entered an invalid command.";
 	private ArrayList<String> editTaskElements;
@@ -144,6 +145,7 @@ public class EditParser {
 		setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_FROM)));
 		String temp = userInput.substring(INDEX_OF_LAST_FROM, userInput.length());
 		List<Date> dates = new PrettyTimeParser().parse(temp);
+		System.out.println("Debug at parseEditEventTime :" + dates.get(0) + " " + dates.get(1));
 		if (dates.size() == 2) {
 			setNewStartDate(dates.get(0));
 			setNewEndDate(dates.get(1));
@@ -283,20 +285,20 @@ public class EditParser {
 		return this.newTaskName;
 	}
 	
-	private void setNewStartDate(Date newDate) {
-		this.newDate = newDate;
+	private void setNewStartDate(Date newStartDate) {
+		this.newStartDate = newStartDate;
 	}
 	
-	private void setNewEndDate(Date newDate) {
-		this.newDate = newDate;
+	private void setNewEndDate(Date newEndDate) {
+		this.newEndDate = newEndDate;
 	}
 	
 	public Date getStartNewDate() {
-		return this.newDate;
+		return this.newStartDate;
 	}
 	
 	public Date getEndNewDate() {
-		return this.newDate;
+		return this.newEndDate;
 	}
 	
 	private void setTaskID(int taskID) {

@@ -116,8 +116,11 @@ public class Parser {
 				setCommandType(COMMAND_TYPE.REDO);
 				break;
 			case SEARCH:
+				userInput = getUserInputContent(userInput);
+				SearchParser search = new SearchParser(userInput);
 				break;
 			case SORT:
+				userInput = getUserInputContent(userInput);
 				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);

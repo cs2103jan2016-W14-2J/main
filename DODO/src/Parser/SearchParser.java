@@ -3,6 +3,7 @@ package Parser;
 import java.util.Date;
 import java.util.List;
 
+import Command.*;
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class SearchParser {
@@ -22,11 +23,12 @@ public class SearchParser {
 			
 	}
 
-	private SE determineSearchType(String userTask) {
+	private SEARCH_TYPE determineSearchType(String userTask) {
 		
 		if (isSearchTaskName(userTask)) {
-			
+			return SEARCH_TYPE.BY_TASK;
 		}
+		ele if (isSearchDate())
 	}
 
 	private boolean isSearchTaskName(String userTask) {

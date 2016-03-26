@@ -11,6 +11,9 @@ public class SearchParser {
 	private String tag;
 	private SEARCH_TYPE searchType;
 	private Date searchByDate;
+	private String PREPOSITION_BY = "by";
+	private String SYMBOL_OPEN_PARENTHEISIS = "<";
+	private String SYMBOL_CLOSE_PARENTHEISIS = ">";
 	
 	public SearchParser(String userTask) {
 		this.userTask = userTask;
@@ -38,35 +41,14 @@ public class SearchParser {
 	}
 
 	private void processByTag(String userTask) {
-		int firstIndex = userTask.trim().lastIndexOf(">");
+		int firstIndex = userTask.trim().lastIndexOf(SYMBOL_CLOSE_PARENTHEISIS);
 		tag = userTask.trim().substring(1, firstIndex);
 		setSearchByTag(tag);
-	}
-
-	private void setSearchByTag(String tag) {
-		this.tag = tag;
-	}
-	
-	protected String getSearchByTag() {
-		return this.tag;
-	}
-
-	protected String getSearchByTask() {
-		return this.userTask;
 	}
 
 	private void processByDate(String userTask) {
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
 		setSearchByDate(dates.get(0));
-	}
-
-	private void setSearchByDate(Date searchByDate) {
-		this.searchByDate = searchByDate;
-		
-	}
-	
-	protected Date getSearchByDate() {
-		return this.searchByDate;
 	}
 
 	private SEARCH_TYPE determineSearchType(String userTask) {
@@ -91,7 +73,8 @@ public class SearchParser {
 	}
 
 	private boolean isSearchTag(String userTask) {
-		return (userTask.startsWith("<") && userTask.endsWith(">")) ? true : false;
+		return (userTask.startsWith(SYMBOL_OPEN_PARENTHEISIS) && 
+				userTask.endsWith(SYMBOL_CLOSE_PARENTHEISIS)) ? true : false;
 	}
 
 	private boolean isSearchDate(String userTask) {
@@ -100,23 +83,47 @@ public class SearchParser {
 	}
 
 	private boolean isSearchTaskName(String userTask) {
-		return (!userTask.startsWith("<") && !userTask.endsWith(">")) ? true : false;
+		return (!userTask.startsWith(SYMBOL_OPEN_PARENTHEISIS) && 
+				!userTask.endsWith(SYMBOL_CLOSE_PARENTHEISIS)) ? true : false;
 	}
 
 	private String removeBy(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
-		if (str[0].contains("by")) {
+		if (str[0].contains(PREPOSITION_BY)) {
 			userTask.replace(" by ", "");
 		}
 		return userTask;
+	}
+	
+	//*********** Setter ************//
+	private void setSearchByDate(Date searchByDate) {
+		this.searchByDate = searchByDate;
 	}
 	
 	private void setSearchType(SEARCH_TYPE searchType) {
 		this.searchType = searchType;
 	}
 	
+	private void setSearchByTag(String tag) {
+		this.tag = tag;
+	}
+	
+	//*********** Getter ************//
 	protected SEARCH_TYPE getSearchType() {
 		return this.searchType;
 	}
+	
+	protected Date getSearchByDate() {
+		return this.searchByDate;
+	}
+	
+	protected String getSearchByTag() {
+		return this.tag;
+	}
+
+	protected String getSearchByTask() {
+		return this.userTask;
+	}
+
 	
 }

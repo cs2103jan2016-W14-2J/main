@@ -25,39 +25,52 @@ import javafx.scene.paint.Color;
  */
 public class UIMainController {
 	
-	private HBox root = new HBox(); //main root
+	private HBox root;
 	private UILeftBox leftBox; 
 	private UIRightBox rightBox;
 	private Logic logic;
 	private Stage primaryStage;
 	private final double sceneWidth = 1800;  
 	private final double sceneHeight = 750; 
-	private Scene scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);	
+	private Scene scene;	
 	private String strDBdir = "";
 	private String strDBname = "";
 	
-
 	public UIMainController(Logic logic)
 	{
-		this.logic=logic;
-		leftBox = new UILeftBox(logic);
-		rightBox = new UIRightBox(logic);
+		this.logic = logic;
+		
+		root = new HBox();
+		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
+		
+		leftBox = new UILeftBox(this.logic);
+		rightBox = new UIRightBox(this.logic);
+		
+		leftBox.build(rightBox);
+		//rightBox.build(leftBox);
+		
+
+		
+		
+
 	}
 	public void start(Stage primaryStage) 
 	{		
-		//leftBox = new UILeftBox();
-		//rightBox = new UIRightBox();
-
-		this.primaryStage = primaryStage;
+		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
 		setEscCloseForm();
 		show();
-		System.out.println(root.getChildren().size());
 	}
 	public void addLeftAndRightBox() 
 	{
-		//root.getChildren().addAll(leftBox.UILeftBox(rightBox),rightBox.UIRightBox(leftBox));
+	//	root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 	}
+
+	private void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+		
+	}
+
 	public Scene getScene()
 	{
 		return scene;

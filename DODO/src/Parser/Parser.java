@@ -140,8 +140,8 @@ public class Parser {
 	
 	private String processUserInput(String userInput) {
 		String userTask = getUserInputContent(userInput);
-		taskItems = checkTaskImportance(userTask);
-		userTask = extractTag(taskItems);	
+		userTask = checkTaskImportance(userTask);
+		userTask = extractTag(userTask);	
 		return userTask;
 	}
 
@@ -182,38 +182,23 @@ public class Parser {
 		return temp[1];
 	}
 	
-	private ArrayList<String> checkTaskImportance(String userInput) {
-		String[] str = userInput.split("\\s+");
-		taskItems = new ArrayList<String>(Arrays.asList(str));
-		
-		int importanceType = taskItems.size() - 1;
-		String importance = taskItems.get(importanceType);
-		
-		if (importance.equals("!")) {
-			taskItems.remove(importanceType);
+	private String checkTaskImportance(String userInput) {
+		if (userInput.substring(userInput.length() - 1).equals("!")) {
+			userInput = userInput.replace(userInput.substring(userInput.length() - 1), "");
 			setTaskImportance(true);
 		}
 		else {
 			setTaskImportance(false);
 		}
-		return taskItems;
+		return userInput;
 	}
 	
-	private String extractTag(ArrayList<String> taskItems) {
-		StringBuilder str = new StringBuilder();
-		
-		for (int i = 0; i < taskItems.size(); i++) {
-			if (taskItems.get(i).endsWith(">") && taskItems.get(i).startsWith("<")) {
-				setTaskTag(taskItems.get(i).substring(1, taskItems.get(i).length() - 1));
-				taskItems.remove(i);
-			}
-		}
-		
-		for (String s: taskItems) {
-			str.append(s);
-			str.append(" ");
-		}
-		return str.toString();
+	private String extractTag(String userTask) {
+		int firstIndex = userTask.indexOf("<");
+		int lastIndex = userTask.indexOf(">");
+		setTaskTag(userTask.substring(firstIndex, lastIndex));
+		userTask = userTask.replace(userTask.substring(firstIndex, lastIndex + 1), "");
+		return userTask;
 	}
 	//******************************************* Mutators *****************************************//
 	protected void setCommandType(COMMAND_TYPE command) {

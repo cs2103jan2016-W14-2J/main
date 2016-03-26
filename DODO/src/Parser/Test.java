@@ -11,10 +11,10 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("sort by 1700hrs");
-			System.out.println(parser.getSortByAlphabetical());
-			System.out.println(parser.getSortByDate());
-			System.out.println(parser.getSortType());
+			Parser parser = new Parser("add <hello from the other side> dinner !");
+			System.out.println(parser.getImportance());
+			System.out.println(parser.getTag());
+			System.out.println(parser.getName());
 		
 		}
 }

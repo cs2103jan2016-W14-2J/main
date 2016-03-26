@@ -18,11 +18,6 @@ public class EditParser {
 	private String newTaskName = "";
 	private int INDEX_OF_LAST_TO = -1;
 	private int INDEX_OF_LAST_FROM = -1;
-	private int INDEX_OF_LAST_AT = -1;
-	private int INDEX_OF_LAST_BEFORE = -1;
-	private int INDEX_OF_LAST_ON = -1;
-	private int INDEX_OF_LAST_BY = -1;
-	
 	
 	private int taskID;
 	private Date newDate;

@@ -66,7 +66,7 @@ public class EditParser {
 		case START_TIME:
 			System.out.println("Debug at START_TIME " + userInput);
 			setEditType(EDIT_TYPE.START_TIME);
-			parseEditStartTime(userInput, editTaskElements);
+			parseEditStartTime(userInput);
 			break;
 		case DEADLINED:
 			parseEditDeadLined(userInput);
@@ -93,12 +93,12 @@ public class EditParser {
 	}
 
 
-	private void parseEditStartTime(String userInput, ArrayList<String> editTaskElements) {
+	private void parseEditStartTime(String userInput) {
 		System.out.println("Debug at parseEditStartTime ");
-		INDEX_OF_LAST_FROM = editTaskElements.lastIndexOf(KEYWORD_FROM);
-		contentToAnalyse = new ArrayList<String>(editTaskElements.subList(INDEX_OF_LAST_FROM, editTaskElements.size()));
+		INDEX_OF_LAST_FROM = userInput.lastIndexOf(KEYWORD_FROM);
+		String temp = userInput.substring(INDEX_OF_LAST_FROM, userInput.length());
 		setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_FROM)));
-		List<Date> dates = new PrettyTimeParser().parse(toStringTaskElements(contentToAnalyse));
+		List<Date> dates = new PrettyTimeParser().parse(temp);
 		setNewStartDate(dates.get(0));
 	}
 

@@ -1,0 +1,2 @@
+DBDIR = /Users/HaoJie/Documents/DODOdatabase.txt
+FILENAME = DODOdatabase.txt

@@ -194,10 +194,16 @@ public class Parser {
 	}
 	
 	private String extractTag(String userTask) {
-		int firstIndex = userTask.indexOf("<");
-		int lastIndex = userTask.indexOf(">");
-		setTaskTag(userTask.substring(firstIndex, lastIndex));
-		userTask = userTask.replace(userTask.substring(firstIndex, lastIndex + 1), "");
+		
+		if (userTask.contains("<") && userTask.contains(">")) {
+			int firstIndex = userTask.indexOf("<");
+			int lastIndex = userTask.indexOf(">");
+			
+			if (firstIndex < lastIndex) {
+				setTaskTag(userTask.substring(firstIndex, lastIndex));
+				userTask = userTask.replace(userTask.substring(firstIndex, lastIndex + 1), "");
+			}
+		}
 		return userTask;
 	}
 	//******************************************* Mutators *****************************************//

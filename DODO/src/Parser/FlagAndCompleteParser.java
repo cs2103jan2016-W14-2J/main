@@ -18,7 +18,7 @@ public class FlagAndCompleteParser {
 	}
 
 	private void executeDeleteParser() {
-		String[] str = usertaskIndex.replaceAll("[:.,]", "").toLowerCase().split("\\s+");
+		String[] str = usertaskIndex.replaceAll("[:.,]", " ").toLowerCase().split("\\s+");
 		
 		switch (detemineDeleteType(usertaskIndex.toLowerCase())) {
 		
@@ -93,12 +93,13 @@ public class FlagAndCompleteParser {
 	}
 
 	private boolean checkIfMultiple(String usertaskIndex) {
-		String[] str = usertaskIndex.toLowerCase().split("\\s+");
+		String[] str = usertaskIndex.replaceAll("[,]", " ").toLowerCase().split("\\s+");
 		return (str.length > 1 && !checkIfRange(usertaskIndex)) ? true : false;
 	}
 
 	private boolean checkIfSingle(String usertaskIndex) {
-		return (usertaskIndex.length() == 1 && !usertaskIndex.contains("all")) ? true : false;
+		return (!checkIfRange(usertaskIndex) && !checkIfMultiple(usertaskIndex)
+				&& !usertaskIndex.contains("all")) ? true : false;
 	}
 	
 	private void setFlagCompleteType(FLAGANDCOMPLETE_TYPE _type) {

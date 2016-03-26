@@ -11,9 +11,13 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("add visit home from monday to sunday");
-			System.out.println(parser.getStartTime());
-			System.out.println(parser.getEndTime());
+			Parser parser = new Parser("complete 1,2,3,4");
+			ArrayList<Integer> arr = new ArrayList<Integer>(parser.getTaskToFlagAndMark());
+			for (int i = 0; i < arr.size(); i++) {
+				System.out.println(arr.get(i));
+			}
+			System.out.println(parser.getFlagAndCompleteType());
+	//		System.out.println(parser.getin);
 			System.out.println(parser.getName());
 		
 		}

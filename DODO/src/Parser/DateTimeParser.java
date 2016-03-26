@@ -36,21 +36,21 @@ public class DateTimeParser {
 		else if (userInput.contains(" day after tomorrow")) {
 			userInput = userInput.replace(" day after tomorrow", "");
 		}
-		return userInput;
+		return userInput.trim();
 	}
 	
 	protected String removeTomorrow(String userInput) {
 		if (userInput.contains(" tomorrow")) {
 			userInput = userInput.replace(" tomorrow", "");
 		}
-		return userInput;
+		return userInput.trim();
 	}
 	
 	protected String removeToday(String userInput) {
 		if (userInput.contains(" today")) {
 			userInput = userInput.replace(" today", "");
 		}
-		return userInput;
+		return userInput.trim();
 	}
 	
 	protected String removeThisComingWeekday(String userInput) {
@@ -64,14 +64,14 @@ public class DateTimeParser {
 			taskItems.remove(index - 1);
 			userInput = toStringTaskElements(taskItems);
 		}
-		return userInput;
+		return userInput.trim();
 	}
 	
 	protected String removeNextFewDays(String userInput) {
 		String[] str = userInput.toLowerCase().split("\\s+");
 		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
 		
-		if (userInput.contains(" next")) {
+		if (userInput.contains(" next") && !userInput.contains(" next week")) {
 			int index = taskItems.lastIndexOf("next");
 			taskItems.remove(index + 2);
 			taskItems.remove(index + 1);
@@ -81,7 +81,36 @@ public class DateTimeParser {
 			}
 			userInput = toStringTaskElements(taskItems);
 		}
+		return userInput.trim();
+	}
+	
+	protected String removeNextWeek(String userInput) {
+	
+		if (userInput.contains(" next week")) {
+			userInput = userInput.replace(" next week", "");
+		}
+		return userInput.trim();
+	}
+	
+	protected String removeTime (String userInput) {
+		String[] str = userInput.toLowerCase().split("\\s+");
+		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
+		String temp = "";
+				
+		for (int i = 0; i < taskItems.size(); i++) {
+			System.out.println("removeTime :" + i + " " + taskItems.get(i));
+			temp = taskItems.get(i).substring(taskItems.get(i).length() - 2);
+			if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() != 2) {
+				taskItems.remove(i);
+			}
+			else if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() == 2) {
+				taskItems.remove(i);
+				taskItems.remove(i - 1);
+			}
+		}
+		userInput = toStringTaskElements(taskItems);
 		return userInput;
+		
 	}
 	
 	protected boolean containsYesterday(String userInput) {
@@ -110,8 +139,8 @@ public class DateTimeParser {
 	protected String processToday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if (todayTypes.contains(contentToAnalyse.get(i))) {
-				contentToAnalyse.remove(i);
-				contentToAnalyse.set(i, " today ");
+				contentToAnalyse.add(i, "today ");
+				contentToAnalyse.remove(i+1);
 			}
 		}
 		return toStringTaskElements(contentToAnalyse);
@@ -126,7 +155,7 @@ public class DateTimeParser {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			System.out.println("checkForAbbrevation :" + i + " " + contentToAnalyse.get(i));
 			if (tomorrowTypes.contains(contentToAnalyse.get(i))) {
-				contentToAnalyse.add(i, " tomorrow ");
+				contentToAnalyse.add(i, "tomorrow ");
 				contentToAnalyse.remove(i+1);
 			}
 		}

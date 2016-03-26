@@ -371,6 +371,8 @@ public class AddParser {
 		userTask = dt.removeToday(userTask);
 		userTask = dt.removeThisComingWeekday(userTask);
 		userTask = dt.removeNextFewDays(userTask);
+		userTask = dt.removeNextWeek(userTask);
+		userTask = dt.removeTime(userTask);
 		setTaskName(userTask);
 	}
 

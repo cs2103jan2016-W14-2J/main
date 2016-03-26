@@ -2,7 +2,7 @@ package Parser;
 
 import java.util.HashMap;
 import Command.*;
-import Task.*;
+
 /*
  *@author Pay Hao Jie
  *@Description: This class consolidates the possible inputs for a specific command 
@@ -154,6 +154,7 @@ public class FlexiCommand {
 		possibleCommands.put("f", COMMAND_TYPE.SEARCH);
 		return possibleCommands;
 	}
+	
 	/*
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
 		possibleCommands.put("help", HELP);

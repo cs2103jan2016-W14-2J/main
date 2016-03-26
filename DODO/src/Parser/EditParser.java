@@ -83,7 +83,6 @@ public class EditParser {
 		
 	}
 
-
 	private void parseEditEndTime(String userInput) {
 		System.out.println("Debug at parseEditEndTime ");
 		INDEX_OF_LAST_TO = userInput.lastIndexOf(KEYWORD_TO);
@@ -187,6 +186,7 @@ public class EditParser {
 		 * Example: edit 1 by tomorrow
 		 */
 		else if (hasDeadLined(userInput) && !hasEndTime(userInput) && !hasStartTime(userInput)) {
+			System.out.println("Debug at hasDeadLined true");
 			return EDIT_TYPE.DEADLINED;
 		}
 		/*
@@ -217,10 +217,9 @@ public class EditParser {
 	 */
 	private boolean hasDeadLined(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		
 		if (userInput.contains(KEYWORD_BEFORE) || userInput.contains(KEYWORD_BY) 
 			|| userInput.contains(KEYWORD_ON) || userInput.contains(KEYWORD_AT)) {
-			return (dates.size() ==0) ? true : false;
+			return (dates.size() != 0) ? true : false;
 		}
 		else {
 			return false;

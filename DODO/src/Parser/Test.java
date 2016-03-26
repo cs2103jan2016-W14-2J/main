@@ -11,7 +11,7 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("edit 1 to today");
+			Parser parser = new Parser("edit 1 at 7pm");
 			
 			System.out.println(parser.getEditType());
 			System.out.println(parser.getEndTime());

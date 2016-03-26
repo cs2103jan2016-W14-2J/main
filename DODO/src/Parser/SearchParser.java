@@ -1,5 +1,6 @@
 package Parser;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class SearchParser {
 	private String userTask;
+	private SEARCH_TYPE searchType;
 	
 	public SearchParser(String userTask) {
 		this.userTask = userTask;
@@ -26,9 +28,23 @@ public class SearchParser {
 	private SEARCH_TYPE determineSearchType(String userTask) {
 		
 		if (isSearchTaskName(userTask)) {
+			setSearchType(SEARCH_TYPE.BY_TASK);
 			return SEARCH_TYPE.BY_TASK;
 		}
-		ele if (isSearchDate())
+		else if (isSearchDate(userTask)) {
+			setSearchType(SEARCH_TYPE.BY_DATE);
+			return SEARCH_TYPE.BY_DATE;
+		}
+		else if (isSearchTag(userTask)) {
+			setSearchType(SEARCH_TYPE.BY_TAG);
+			return SEARCH_TYPE.BY_TAG;
+		}
+		
+	}
+
+	private boolean isSearchDate(String userTask) {
+		List<Date> dates = new PrettyTimeParser().parse(userTask);
+		return (dates.size() != 0) ? true : false;
 	}
 
 	private boolean isSearchTaskName(String userTask) {
@@ -41,6 +57,10 @@ public class SearchParser {
 			userTask.replace(" by ", "");
 		}
 		return userTask;
+	}
+	
+	private void setSearchType(SEARCH_TYPE searchType) {
+		this.searchType = searchType;
 	}
 	
 }

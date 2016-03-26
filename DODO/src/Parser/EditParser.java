@@ -73,8 +73,9 @@ public class EditParser {
 			setEditType(EDIT_TYPE.DEADLINED);
 			break;
 		case END_TIME:
-			parseEditEndTime(userInput, editTaskElements);
+			parseEditEndTime(userInput);
 			setEditType(EDIT_TYPE.END_TIME);
+			break;
 		case INVALID:
 			System.out.println(MESSAGE_EDIT_INPUT_ERROR);
 			setEditType(EDIT_TYPE.INVALID);
@@ -83,12 +84,12 @@ public class EditParser {
 	}
 
 
-	private void parseEditEndTime(String userInput, ArrayList<String> editTaskElements) {
+	private void parseEditEndTime(String userInput) {
 		System.out.println("Debug at parseEditEndTime ");
-		INDEX_OF_LAST_TO = editTaskElements.lastIndexOf(KEYWORD_TO);
-		contentToAnalyse = new ArrayList<String>(editTaskElements.subList(INDEX_OF_LAST_TO, editTaskElements.size()));
+		INDEX_OF_LAST_TO = userInput.lastIndexOf(KEYWORD_TO);
+		String temp = userInput.substring(INDEX_OF_LAST_TO, userInput.length());
 		setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_TO)));
-		List<Date> dates = new PrettyTimeParser().parse(toStringTaskElements(contentToAnalyse));
+		List<Date> dates = new PrettyTimeParser().parse(temp);
 		setNewEndDate(dates.get(0));
 	}
 

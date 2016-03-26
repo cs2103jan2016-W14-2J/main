@@ -27,19 +27,26 @@ public class SearchParser {
 
 	private SEARCH_TYPE determineSearchType(String userTask) {
 		
-		if (isSearchTaskName(userTask)) {
-			setSearchType(SEARCH_TYPE.BY_TASK);
-			return SEARCH_TYPE.BY_TASK;
-		}
-		else if (isSearchDate(userTask)) {
+		if (isSearchDate(userTask)) {
 			setSearchType(SEARCH_TYPE.BY_DATE);
 			return SEARCH_TYPE.BY_DATE;
+		}
+		else if (isSearchTaskName(userTask)) {
+			setSearchType(SEARCH_TYPE.BY_TASK);
+			return SEARCH_TYPE.BY_TASK;
 		}
 		else if (isSearchTag(userTask)) {
 			setSearchType(SEARCH_TYPE.BY_TAG);
 			return SEARCH_TYPE.BY_TAG;
 		}
+		else {
+			return SEARCH_TYPE.INVALID;
+		}
 		
+	}
+
+	private boolean isSearchTag(String userTask) {
+		return (userTask.startsWith("<") && userTask.endsWith(">")) ? true : false;
 	}
 
 	private boolean isSearchDate(String userTask) {
@@ -48,8 +55,7 @@ public class SearchParser {
 	}
 
 	private boolean isSearchTaskName(String userTask) {
-		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		return (dates.size() == 0) ? true : false;
+		return (!userTask.startsWith("<") && !userTask.endsWith(">")) ? true : false;
 	}
 
 	private String removeBy(String userTask) {

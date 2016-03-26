@@ -365,7 +365,6 @@ public class AddParser {
 	
 	private void extractDateElement(ArrayList<String> taskItems, String userTask) {
 		DateTimeParser dt = new DateTimeParser();
-		String dateElements ="";
 		userTask = dt.removeTheDayAfterTomorrow(userTask);
 		userTask = dt.removeTomorrow(userTask);
 		userTask = dt.removeToday(userTask);
@@ -373,6 +372,7 @@ public class AddParser {
 		userTask = dt.removeNextFewDays(userTask);
 		userTask = dt.removeNextWeek(userTask);
 		userTask = dt.removeTime(userTask);
+		userTask = dt.removeDate(userTask);
 		setTaskName(userTask);
 	}
 

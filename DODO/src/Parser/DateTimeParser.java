@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import Parser.DateAndTimeParser.DATE_TYPES;
+import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class DateTimeParser {
 	
@@ -16,19 +16,16 @@ public class DateTimeParser {
 	
 	private List<String> todayTypes = new ArrayList<>(Arrays.asList("tdy"));
 	private List<String> tomorrowTypes = new ArrayList<>(Arrays.asList("tmr", "tml", "tmrw", "2moro"));
-	private List<String> yesterdayTypes = new ArrayList<>(Arrays.asList("ytd"));
 	
 	private final String KEYWORD_AM = "am";
 	private final String KEYWORD_PM = "pm";
 	private final String KEYWORD_HRS = "hrs";
+	private final String KEYWORD_HR = "hr";
 
-	private String tempTaskName = "";
-	
 	public DateTimeParser () {
 		
 	}
 	
-
 	protected String removeTheDayAfterTomorrow(String userInput) {
 		if (userInput.contains(" the day after tomorrow")) {
 			userInput = userInput.replace(" the day after tomorrow", "");
@@ -40,8 +37,8 @@ public class DateTimeParser {
 	}
 	
 	protected String removeTomorrow(String userInput) {
-		if (userInput.contains(" tomorrow")) {
-			userInput = userInput.replace(" tomorrow", "");
+		if (userInput.contains(" tomorrow") || userInput.contains("tomorrow ")) {
+			userInput = userInput.replace("tomorrow", "");
 		}
 		return userInput.trim();
 	}
@@ -84,6 +81,20 @@ public class DateTimeParser {
 		return userInput.trim();
 	}
 	
+	protected String removeDate(String userInput) {
+		String[] str = userInput.toLowerCase().split("\\s+");
+		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
+		
+		for (int i = 0; i < taskItems.size(); i++) {
+			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
+			if (dates.size() != 0) {
+				taskItems.remove(i);
+			}
+		}
+		userInput = toStringTaskElements(taskItems);
+		return userInput;
+		
+	}
 	protected String removeNextWeek(String userInput) {
 	
 		if (userInput.contains(" next week")) {
@@ -96,25 +107,31 @@ public class DateTimeParser {
 		String[] str = userInput.toLowerCase().split("\\s+");
 		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
 		String temp = "";
+		String temp2 = "";
 				
 		for (int i = 0; i < taskItems.size(); i++) {
 			System.out.println("removeTime :" + i + " " + taskItems.get(i));
-			temp = taskItems.get(i).substring(taskItems.get(i).length() - 2);
-			if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() != 2) {
+			
+			if (taskItems.get(i).length() > 3) {
+				temp = taskItems.get(i).substring(taskItems.get(i).length() - 2);
+				temp2 = taskItems.get(i).substring(taskItems.get(i).length() - 3);
+			}
+			
+			if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM) || temp.equals(KEYWORD_HR)) 
+				&& taskItems.get(i).length() != 2) {
 				taskItems.remove(i);
 			}
 			else if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() == 2) {
 				taskItems.remove(i);
 				taskItems.remove(i - 1);
 			}
+			else if (temp2.equals(KEYWORD_HRS)) {
+				taskItems.remove(i);
+			}
 		}
 		userInput = toStringTaskElements(taskItems);
 		return userInput;
 		
-	}
-	
-	protected boolean containsYesterday(String userInput) {
-		return (userInput.contains(" ytd ")) ? true : false;
 	}
 	
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
@@ -127,15 +144,6 @@ public class DateTimeParser {
 		return toStringTaskElements(contentToAnalyse);
 	}
 	
-	protected boolean containsToday(String userInput) {
-		return (userInput.contains(" tdy ")) ? true : false;
-	}
-	
-	protected boolean containsTheDayAfterTomorrow(String userInput) {
-		return (userInput.contains(" the day after tomorrow") || 
-				userInput.contains(" day after tomorrow")) ? true : false;
-	}
-	
 	protected String processToday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if (todayTypes.contains(contentToAnalyse.get(i))) {
@@ -144,11 +152,6 @@ public class DateTimeParser {
 			}
 		}
 		return toStringTaskElements(contentToAnalyse);
-	}
-	
-	protected boolean containsTomorrow(String userInput) {
-		return (userInput.contains(" tmr ") || userInput.contains(" tmrw ")
-			|| userInput.contains(" tml ") || userInput.contains(" 2moro ")) ? true : false;
 	}
 	
 	protected String processTomorrow (ArrayList<String> contentToAnalyse) {

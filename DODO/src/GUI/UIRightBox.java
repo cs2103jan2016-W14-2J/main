@@ -57,7 +57,8 @@ public class UIRightBox {
 	private final double tabPaneHeight = 1450;
 	private final double titledPaneWidth = 1000; // centerBox titledPane size
 	private final double titledPaneHeight = 1450;
-
+	 
+	private final String allTab = "All Tasks";
 	private final String onGoingTab = "Ongoing Tasks";
 	private final String completedTab = "Completed Tasks";
 	private final String overDueTab = "Overdue Tasks";
@@ -65,12 +66,15 @@ public class UIRightBox {
 
 	private static TabPane tabPane;
 	private TextField mainTextField;
-	
+	private	boolean[] tabBool;
+
+	private TitledPane titledPaneAllTask;
 	private TitledPane titledPaneOnGoingTask;
 	private TitledPane titledPaneCompletedTask;
 	private TitledPane titledPaneOverdueTask;
 	private TitledPane titledPaneFloatingTask;
 	
+	private ArrayList<Task> allTasks;
 	private ArrayList<Task> ongoingTasks;
 	private ArrayList<Task> floatingTasks;
 	private ArrayList<Task> completedTasks;
@@ -88,43 +92,53 @@ public class UIRightBox {
 	private UILeftBox leftBox;
 	private Logic logic;
 	
+	private Tab tabAll;
 	private Tab tabFloating;
 	private Tab tabOngoing;
 	private Tab tabCompleted;
 	private Tab tabOverdue;
 
+	private VBox allVB;
 	private VBox floatingVB;
 	private VBox ongoingVB;
 	private VBox completedVB;
 	private VBox overdueVB;
 	
+	private int prevAllTasks;
 	private int prevOngoingTasks;
 	private int prevFloatingTasks;
 	private int prevOverdueTasks;
 	private int prevCompletedTasks;
 		
+	
+	
 	public UIRightBox(Logic logic)
 	{
 		rightBox = new VBox(); 
 		this.logic = logic;
 		usc = new UICssScaling();
 		logger = Logger.getLogger("MyLog"); 
+		tabBool = new boolean[6];
 
+		tabAll = new Tab(allTab);
 		tabFloating = new Tab(floatingTab);
 		tabOngoing = new Tab(onGoingTab);
 		tabCompleted = new Tab(completedTab);
 		tabOverdue = new Tab(overDueTab);
 		
+		allVB = new VBox();
 		floatingVB = new VBox();
 		ongoingVB = new VBox();
 		completedVB = new VBox();
 		overdueVB = new VBox();
 		 
+		allTasks = new ArrayList<Task>();
 		ongoingTasks = new ArrayList<Task>();
 		floatingTasks = new ArrayList<Task>();
 		completedTasks = new ArrayList<Task>();
 		overdueTasks = new ArrayList<Task>();
 
+		titledPaneAllTask = new TitledPane();
 		titledPaneOnGoingTask = new TitledPane();
 		titledPaneCompletedTask = new TitledPane();
 		titledPaneOverdueTask = new TitledPane();
@@ -139,31 +153,38 @@ public class UIRightBox {
 	{
 		this.leftBox = leftBox;
 
+		
+		allTasks(); //allTasks.addAll(logic.getAllTasks());
 		floatingTasks.addAll(logic.getFloatingTasks());
 		ongoingTasks.addAll(logic.getOngoingTasks());
 		completedTasks.addAll(logic.getCompletedTasks());
 		overdueTasks.addAll(logic.getOverdueTasks());
 
+		allVB.getChildren().add(titledPaneAllTask);
 		floatingVB.getChildren().add(titledPaneFloatingTask);
 		ongoingVB.getChildren().add(titledPaneOnGoingTask);
 		completedVB.getChildren().add(titledPaneCompletedTask);
 		overdueVB.getChildren().add(titledPaneOverdueTask);
 
+		tabAll.setContent(allVB);
 		tabFloating.setContent(floatingVB);
 		tabOngoing.setContent(ongoingVB);
 		tabCompleted.setContent(completedVB);
 		tabOverdue.setContent(overdueVB);
 		
+		tabPane.getTabs().add(tabAll);
 		tabPane.getTabs().add(tabFloating);
 		tabPane.getTabs().add(tabOngoing);
 		tabPane.getTabs().add(tabCompleted);
 		tabPane.getTabs().add(tabOverdue);
 
+		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
 		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
 		addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
 		addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
 		addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
 
+		
 		tabOngoing.setUserData(TASK_STATUS.ONGOING);
 		tabCompleted.setUserData(TASK_STATUS.COMPLETED);
 		tabOverdue.setUserData(TASK_STATUS.OVERDUE);
@@ -182,6 +203,12 @@ public class UIRightBox {
 	}
 		
 	
+	private void allTasks() {
+		allTasks.addAll(logic.getFloatingTasks());
+		allTasks.addAll(logic.getOngoingTasks());
+		allTasks.addAll(logic.getCompletedTasks());
+		allTasks.addAll(logic.getOverdueTasks());		
+	}
 	public static TASK_STATUS getCurrentTab() 
 	{
 		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
@@ -292,7 +319,6 @@ public class UIRightBox {
 		}).start();			
 		
 		//leftBox.updateChart();
-		listViewLabel.scrollTo(listTask.size()-1);
 		titledPane.setContent(listViewLabel);
 	}
 	private void createLog()

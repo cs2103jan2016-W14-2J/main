@@ -11,12 +11,13 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("edit 1 buy grocery from sengkang to yishun");
+			Parser parser = new Parser("sort by today");
 			
-			System.out.println(parser.getEditType());
+			System.out.println(parser.getSortType());
 			System.out.println(parser.getName());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());
+			System.out.println(parser.getTag());
 			System.out.println(parser.getTaskID());
 		
 		}

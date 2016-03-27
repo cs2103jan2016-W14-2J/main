@@ -75,9 +75,9 @@ public class SortParser {
 	private String removeBy(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
 		if (str[0].contains(PREPOSITION_BY)) {
-			userTask.replace(" by ", "");
+			userTask = userTask.replace("by", "");
 		}
-		return userTask;
+		return userTask.trim();
 	}
 	
 	//*********** Setter ************//

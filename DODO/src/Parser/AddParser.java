@@ -318,9 +318,9 @@ public class AddParser {
 	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
-
+		
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		System.out.println("parseFloating :" + dates.size());
+		System.out.println("TEST parseFloating :" + dates.size());
 		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}

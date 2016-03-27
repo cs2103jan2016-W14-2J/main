@@ -129,6 +129,7 @@ public class Parser {
 				break;
 			case SORT:
 				userInput = getUserInputContent(userInput);
+				System.out.println("TEST SORT :" + userInput);
 				SortParser sort = new SortParser(userInput);
 				setSortAttributes(sort.getSortByAlphabetical(), sort.getSortByDate(), sort.getSortType());
 				break;

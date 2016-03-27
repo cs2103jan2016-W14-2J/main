@@ -3,8 +3,8 @@ package Task;
 import java.util.*;
 
 public class Category {
-	String name;
-	TreeMap<String, Task> tasks;
+	private String name;
+	private TreeMap<String, Task> tasks;
 	
 	public Category(String name, TreeMap<String, Task> tasks) {
 		this.name = name;

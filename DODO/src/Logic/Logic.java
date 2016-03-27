@@ -67,6 +67,10 @@ public class Logic {
 	public TASK_STATUS getStatus() {
 		return this.status;
 	}
+	
+	public ArrayList<Task> getSearchResults() {
+		return this.results;
+	}
 
 	/***********************************PRIVATE METHODS***********************************************/
 	private Logic(String directory) {
@@ -75,7 +79,8 @@ public class Logic {
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
-		categories = new TreeMap<String, Category>();
+		categories = reinitialiseCategories();
+		results = new ArrayList<Task>();
 		history = new History();
 	}
 
@@ -136,6 +141,8 @@ public class Logic {
 			}
 			break;
 		case SEARCH:
+			Search search = new Search(parser, data, COMMAND_TYPE.SEARCH, categories);
+			message = execute(search, data);
 			break;
 		case SORT:
 			Sort sort = new Sort(parser, data, COMMAND_TYPE.SORT);
@@ -188,5 +195,36 @@ public class Logic {
 		this.completedTasks = data.get(2);
 		this.overdueTasks = data.get(3);
 		return "Data updated.";
+	}
+	
+	private TreeMap<String, Category> reinitialiseCategories() {
+		TreeMap<String, Category> categories = new TreeMap<String, Category>();
+		categories = readCategories(floatingTasks, categories);
+		categories = readCategories(ongoingTasks, categories);
+		categories = readCategories(completedTasks, categories);
+		categories = readCategories(overdueTasks, categories);
+		return categories;
+	}
+
+	private TreeMap<String, Category> readCategories(ArrayList<Task> tasks,
+			TreeMap<String, Category> categories) {
+		for (Task task: tasks) {
+			if (task.getTag()!=null) {
+				// task is specifically tagged
+				String key = task.getTag();
+				Category category = categories.get(key);
+				if (category!=null) {
+					// category already present
+					category.addTask(task);
+				}
+				else {
+					// new category needs to be created
+					TreeMap<String, Task> tasksUnderCategory = new TreeMap<String, Task>();
+					category = new Category(key, tasksUnderCategory);
+				}
+				categories.put(key, category);
+			}
+		}
+		return categories;
 	}
 }

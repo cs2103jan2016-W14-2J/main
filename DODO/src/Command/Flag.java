@@ -53,7 +53,6 @@ public class Flag extends Command {
 						status += "Task " + (index + INDEX_ADJUSTMENT) + " is already flagged.\n";
 					}
 					else {
-						task.setFlag(toFlag);
 						status += "Task " + (index + INDEX_ADJUSTMENT) + " is flagged.\n";
 					}
 				}

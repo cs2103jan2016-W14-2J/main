@@ -21,6 +21,7 @@ public class Logic {
 	private TreeMap<String, Category> categories;
 	private ArrayList<Task> results;
 	private History history;
+	private TASK_STATUS status;
 
 	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance(String directory) {
@@ -63,6 +64,10 @@ public class Logic {
 	public TreeMap<String, Category> getCategories() {
 		return this.categories;
 	}
+	
+	public TASK_STATUS getStatus() {
+		return this.status;
+	}
 
 	/***********************************PRIVATE METHODS***********************************************/
 	private Logic(String directory) {
@@ -75,7 +80,7 @@ public class Logic {
 	}
 
 	private String processCommand(String input) {
-		String status = "";
+		String message = "";
 		Parser parser = new Parser(input);
 		COMMAND_TYPE command = parser.getCommandType();
 		ArrayList<ArrayList<Task>> data = compress();
@@ -83,63 +88,65 @@ public class Logic {
 		switch (command) {
 		case ADD:
 			Add add = new Add(parser, data, COMMAND_TYPE.ADD);
-			status = execute(add, data);
+			message = execute(add, data);
 			break;
 		case DELETE:
 			Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE, categories);
-			status = execute(delete, data);
+			message = execute(delete, data);
 			categories = delete.getCategories();
 			break;
 		case EDIT:
 			Edit edit = new Edit(parser, data, COMMAND_TYPE.EDIT);
-			status = execute(edit, data);
+			message = execute(edit, data);
 			break;
 		case COMPLETE:
 			Complete complete = new Complete(parser, data, COMMAND_TYPE.COMPLETE);
-			status = execute(complete, data);
+			message = execute(complete, data);
+			this.status = TASK_STATUS.COMPLETED;
 			break;
 		case TAG:
 			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
-			status = execute(tag, data);
+			message = execute(tag, data);
 			categories = tag.getCategories();
 			break;
 		case FLAG:
 			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG, true);
-			status = execute(flag, data);
+			message = execute(flag, data);
 			break;
 		case UNFLAG:
 			flag = new Flag(parser, data, COMMAND_TYPE.FLAG, false);
-			status = execute(flag, data);
+			message = execute(flag, data);
 			break;
 		case UNDO:
 			try {
 				data = history.undo(data);
 				update(data);
-				status = "Undone successfully.";
+				message = "Undone successfully.";
 			} catch (EmptyStackException e) {
-				status = "There is nothing to be undone.";
+				message = "There is nothing to be undone.";
 			}
 			break;
 		case REDO:
 			try {
 				data = history.redo();
 				update(data);
-				status = "Redone successfully.";
+				message = "Redone successfully.";
 			} catch (EmptyStackException e) {
-				status = "There is nothing to be redone.";
+				message = "There is nothing to be redone.";
 			}
 			break;
 		default:
-			status = "Invalid Command.";
+			message = "Invalid Command.";
 		}
-		return status;
+		return message;
 	}
 
 	private String execute(Command command, ArrayList<ArrayList<Task>> data) {
 		history.save(cloneData(data));
-		String status = command.execute();
+		String message = command.execute();
 		this.update(command.getData());
-		return status;
+		this.status = command.getStatus();
+		return message;
 	}
 
 	private ArrayList<ArrayList<Task>> compress() {

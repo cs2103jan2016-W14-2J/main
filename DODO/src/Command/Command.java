@@ -17,6 +17,7 @@ public abstract class Command {
 	protected ArrayList<Task> overdueTasks;
 	protected ArrayList<Task> floatingTasks;
 	protected TASK_STATUS UIStatus;
+	protected TASK_STATUS nextStatus;
 	
 	public Command(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
 		this.UIStatus = UIRightBox.getCurrentTab();
@@ -28,18 +29,23 @@ public abstract class Command {
 		this.command_type = command_type;
 	}
 	
-	public COMMAND_TYPE getCommandType() {
-		return this.command_type;
-	}
-	
-	public ArrayList<ArrayList<Task>> getData() {
-		return compress();
-	}
-	
 	public abstract String execute();
 	
 	public abstract String undo();
 	
+	public ArrayList<ArrayList<Task>> getData() {
+		return this.compress();
+	}
+	
+	public COMMAND_TYPE getCommandType() {
+		return this.command_type;
+	}
+	
+	public TASK_STATUS getStatus() {
+		return this.nextStatus;
+	}
+	
+	/*********************************INTERNAL METHODS***************************************/
 	protected ArrayList<ArrayList<Task>> compress() {
 		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
 		tasks.add(floatingTasks);

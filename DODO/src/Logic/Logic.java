@@ -36,7 +36,6 @@ public class Logic {
 	}
 
 	public String save() {
-		System.out.println("=========LOGIC=========: " + floatingTasks);
 		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
 		storage.save(TASK_STATUS.FLOATING, floatingTasks);
@@ -76,6 +75,7 @@ public class Logic {
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
+		categories = new TreeMap<String, Category>();
 		history = new History();
 	}
 
@@ -134,6 +134,12 @@ public class Logic {
 			} catch (EmptyStackException e) {
 				message = "There is nothing to be redone.";
 			}
+			break;
+		case SEARCH:
+			break;
+		case SORT:
+			Sort sort = new Sort(parser, data, COMMAND_TYPE.SORT);
+			message = execute(sort, data);
 			break;
 		default:
 			message = "Invalid Command.";

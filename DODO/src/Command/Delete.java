@@ -75,7 +75,7 @@ public class Delete extends Command{
 				status += indexes.get(i) + ", ";
 			}
 			status = status.substring(0, status.length()-2);
-			status += " completed.";
+			status += " deleted.";
 			setTasks(this.UIStatus, tasks);
 		} catch (IndexOutOfBoundsException e) {
 			status = "Your index is out of bound.";

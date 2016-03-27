@@ -63,6 +63,7 @@ public class UIRightBox {
 	private final String completedTab = "Completed Tasks";
 	private final String overDueTab = "Overdue Tasks";
 	private final String floatingTab = "Floating Tasks";
+	private final String searchTab = "Search Tasks";
 
 	private static TabPane tabPane;
 	private TextField mainTextField;
@@ -73,12 +74,14 @@ public class UIRightBox {
 	private TitledPane titledPaneCompletedTask;
 	private TitledPane titledPaneOverdueTask;
 	private TitledPane titledPaneFloatingTask;
-	
+	private TitledPane titledPaneSearchTask;
+
 	private ArrayList<Task> allTasks;
 	private ArrayList<Task> ongoingTasks;
 	private ArrayList<Task> floatingTasks;
 	private ArrayList<Task> completedTasks;
 	private ArrayList<Task> overdueTasks;
+	private ArrayList<Task> searchTasks;
 
 	private PopOver po = new PopOver();
 	private PopOver popUpFeedBack = new PopOver();
@@ -97,18 +100,21 @@ public class UIRightBox {
 	private Tab tabOngoing;
 	private Tab tabCompleted;
 	private Tab tabOverdue;
+	private Tab tabSearch;
 
 	private VBox allVB;
 	private VBox floatingVB;
 	private VBox ongoingVB;
 	private VBox completedVB;
 	private VBox overdueVB;
+	private VBox searchVB;
 	
 	private int prevAllTasks;
 	private int prevOngoingTasks;
 	private int prevFloatingTasks;
 	private int prevOverdueTasks;
 	private int prevCompletedTasks;
+	private int prevSearchTasks;
 		
 	
 	
@@ -125,24 +131,28 @@ public class UIRightBox {
 		tabOngoing = new Tab(onGoingTab);
 		tabCompleted = new Tab(completedTab);
 		tabOverdue = new Tab(overDueTab);
+		tabSearch = new Tab(searchTab);
 		
 		allVB = new VBox();
 		floatingVB = new VBox();
 		ongoingVB = new VBox();
 		completedVB = new VBox();
 		overdueVB = new VBox();
+		searchVB = new VBox();
 		 
 		allTasks = new ArrayList<Task>();
 		ongoingTasks = new ArrayList<Task>();
 		floatingTasks = new ArrayList<Task>();
 		completedTasks = new ArrayList<Task>();
 		overdueTasks = new ArrayList<Task>();
+		searchTasks = new ArrayList<Task>();
 
 		titledPaneAllTask = new TitledPane();
 		titledPaneOnGoingTask = new TitledPane();
 		titledPaneCompletedTask = new TitledPane();
 		titledPaneOverdueTask = new TitledPane();
 		titledPaneFloatingTask = new TitledPane();
+		titledPaneSearchTask = new TitledPane();
 
 		tabPane = new TabPane();
 		mainTextField = new TextField();
@@ -159,31 +169,39 @@ public class UIRightBox {
 		ongoingTasks.addAll(logic.getOngoingTasks());
 		completedTasks.addAll(logic.getCompletedTasks());
 		overdueTasks.addAll(logic.getOverdueTasks());
+		//searchTasks.addAll(logic.getSearchTasks());
+		searchTasks.addAll(logic.getOngoingTasks());
 
+		
 		allVB.getChildren().add(titledPaneAllTask);
 		floatingVB.getChildren().add(titledPaneFloatingTask);
 		ongoingVB.getChildren().add(titledPaneOnGoingTask);
 		completedVB.getChildren().add(titledPaneCompletedTask);
 		overdueVB.getChildren().add(titledPaneOverdueTask);
+		searchVB.getChildren().add(titledPaneSearchTask);
 
 		tabAll.setContent(allVB);
 		tabFloating.setContent(floatingVB);
 		tabOngoing.setContent(ongoingVB);
 		tabCompleted.setContent(completedVB);
 		tabOverdue.setContent(overdueVB);
+		tabSearch.setContent(searchVB);
 		
 		tabPane.getTabs().add(tabAll);
 		tabPane.getTabs().add(tabFloating);
 		tabPane.getTabs().add(tabOngoing);
 		tabPane.getTabs().add(tabCompleted);
 		tabPane.getTabs().add(tabOverdue);
+		tabPane.getTabs().add(tabSearch);
 
+		//addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
 		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
 		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
 		addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
 		addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
 		addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
-
+		//addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.SEARCH);
+		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.FLOATING);
 		
 		tabOngoing.setUserData(TASK_STATUS.ONGOING);
 		tabCompleted.setUserData(TASK_STATUS.COMPLETED);

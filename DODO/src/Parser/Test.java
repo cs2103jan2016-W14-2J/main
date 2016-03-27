@@ -11,7 +11,7 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("add1");
+			Parser parser = new Parser("1735 1736 1737");
 			
 			System.out.println(parser.getType());
 			System.out.println(parser.getName());

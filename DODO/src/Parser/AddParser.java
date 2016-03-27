@@ -328,7 +328,6 @@ public class AddParser {
 			if (dates.size() == 1) {
 				setEndTime(dates.get(0));
 				extractDateElement(taskItems, userTask);
-				setTaskType(TASK_TYPE.DEADLINED);
 			}
 			else if (dates.size() > 1){
 				setEndTime(dates.get(1));
@@ -341,16 +340,23 @@ public class AddParser {
 	}
 	
 	private void extractDateElement(ArrayList<String> taskItems, String userTask) {
+		String temp = "";
 		DateTimeParser dt = new DateTimeParser();
-		userTask = dt.removeTheDayAfterTomorrow(userTask);
-		userTask = dt.removeTomorrow(userTask);
-		userTask = dt.removeToday(userTask);
-		userTask = dt.removeThisComingWeekday(userTask);
-		userTask = dt.removeNextFewDays(userTask);
-		userTask = dt.removeNextWeek(userTask);
-		userTask = dt.removeTime(userTask);
-		userTask = dt.removeDate(userTask);
+		temp = dt.removeTheDayAfterTomorrow(userTask);
+		temp = dt.removeTomorrow(temp);
+		temp = dt.removeToday(temp);
+		temp = dt.removeThisComingWeekday(temp);
+		temp = dt.removeNextFewDays(temp);
+		temp = dt.removeNextWeek(temp);
+		temp = dt.removeTime(temp);
+		temp = dt.removeDate(temp);
 		setTaskName(userTask);
+		if (temp.trim().equals(userTask.trim())) {
+			setTaskType(TASK_TYPE.FLOATING);
+		}
+		else {
+			setTaskType(TASK_TYPE.DEADLINED);
+		}
 	}
 
 	/*

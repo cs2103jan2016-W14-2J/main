@@ -88,7 +88,11 @@ public class DateTimeParser {
 		for (int i = 0; i < taskItems.size(); i++) {
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
 			if (dates.size() != 0) {
-				taskItems.remove(i);
+				String[] temp = taskItems.get(i).split("\\s+");
+				// string maybe in 20/12 or 20/12/16 format
+				if (temp.length > 2) {
+					taskItems.remove(i);
+				}
 			}
 		}
 		userInput = toStringTaskElements(taskItems);
@@ -131,7 +135,6 @@ public class DateTimeParser {
 		}
 		userInput = toStringTaskElements(taskItems);
 		return userInput;
-		
 	}
 	
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {

@@ -449,10 +449,10 @@ public class UIRightBox {
 	    });	
 	}
 	protected void runCommand()
-	{
-		currentTask = (TASK_STATUS)tabPane.getSelectionModel().getSelectedItem().getUserData();
-		
+	{		
 		strFeedBack = logic.run(mainTextField.getText());
+		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
+		currentTask = logic.getStatus();
     	VBox vbPop = new VBox();
     	feedBackLabel = new Label(strFeedBack);
 		vbPop.getChildren().add(feedBackLabel);
@@ -475,27 +475,22 @@ public class UIRightBox {
 		
 	
     	mainTextField.setText("");
-    	if(currentTask == TASK_STATUS.COMPLETED && completedTasks.size()>0)
+    	if(currentTask == TASK_STATUS.COMPLETED)
 		{
 			tabPane.getSelectionModel().select(tabCompleted);
 		}
-		else if(currentTask == TASK_STATUS.ONGOING && ongoingTasks.size()>0)
+		else if(currentTask == TASK_STATUS.ONGOING)
 		{
 			tabPane.getSelectionModel().select(tabOngoing);
 		}
-		else if(currentTask == TASK_STATUS.FLOATING && floatingTasks.size()>0 )
+		else if(currentTask == TASK_STATUS.FLOATING)
 		{
 			tabPane.getSelectionModel().select(tabFloating);
 		}
-		else if(currentTask == TASK_STATUS.OVERDUE && overdueTasks.size()>0 )
+		else if(currentTask == TASK_STATUS.OVERDUE)
 		{
 			tabPane.getSelectionModel().select(tabOverdue);
 		}	  
-		else
-		{
-			tabPane.getSelectionModel().select(tabFloating);
-
-		}
 		
     	leftBox.updateChart();		
 	}

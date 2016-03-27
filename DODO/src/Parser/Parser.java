@@ -35,7 +35,7 @@ public class Parser {
 	private ArrayList<Integer> indexOfFlagAndMark;
 	private FLAGANDCOMPLETE_TYPE flagAndCompleteType;
 	
-	private String _commandAdd = "add";
+	private String _commandAdd = "add ";
 	private EDIT_TYPE editType;
 	private SEARCH_TYPE searchType;
 	private String searchByTask;

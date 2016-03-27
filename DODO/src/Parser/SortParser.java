@@ -18,21 +18,22 @@ public class SortParser {
 	
 	private SORT_TYPE determineSortType(String userTask) {
 		if (isSortByDate(userTask)) {
-			setSortType(SORT_TYPE.BY_DATE);
 			return SORT_TYPE.BY_DATE;
 		}
 		else if (isSortByAlphabetical(userTask)) {
-			setSortType(SORT_TYPE.BY_ALPHABETICAL);
 			return SORT_TYPE.BY_ALPHABETICAL;
 		}
 		else if (isSortByReverseAlphabetical(userTask)) {
-			setSortType(SORT_TYPE.BY_ALPHABETICAL);
-			return SORT_TYPE.BY_ALPHABETICAL;
+			return SORT_TYPE.BY_REVERSE_ALPHABETICAL;
 		}
 		else {
-			setSortType(SORT_TYPE.INVALID);
 			return SORT_TYPE.INVALID;
 		}
+	}
+
+	private boolean isSortByReverseAlphabetical(String userTask) {
+		String[] str = userTask.toLowerCase().split("\\s+");
+		return (str[0].trim().contains(REVERSE_ALPHABETICAL_ORDER)) ? true : false;
 	}
 
 	private boolean isSortByAlphabetical(String userTask) {
@@ -52,32 +53,4 @@ public class SortParser {
 		}
 		return userTask.trim();
 	}
-	
-	//*********** Setter ************//
-	private void setSortType(SORT_TYPE sortType) {
-		this.sortType = sortType;
-	}
-	
-/*	private void setSortByAlphabetical(String sortByAlpha) {
-		this.sortByAlpha = sortByAlpha;
-	}
-	
-	private void setSortByDate(Date sortByDate) {
-		this.sortByDate = sortByDate;
-	}
-	
-*/	//*********** Getter ************//
-	protected SORT_TYPE getSortType() {
-		return this.sortType;
-	}
-/*	protected String getSortByAlphabetical () {
-		return sortByAlpha;
-	}
-	protected SORT_TYPE getSortType() {
-		return this.sortType;
-	}
-	
-	protected Date getSortByDate() {
-		return this.sortByDate;
-	}*/ 
 }

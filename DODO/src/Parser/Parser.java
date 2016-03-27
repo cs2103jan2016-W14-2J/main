@@ -62,7 +62,6 @@ public class Parser {
 	 */
 	
 	protected void executeCommand(String userInput) {
-	
 		userInput = userInput.trim();
 		checkIfValidUserInput(userInput);
 	
@@ -72,6 +71,7 @@ public class Parser {
 		// concatenate add command in front for processing
 		if (commandType == COMMAND_TYPE.ADD && !userInput.contains(_commandAdd)) {
 			userInput = _commandAdd + " " + userInput;
+			System.out.println("TEST ADD :" + userInput);
 		}
 		
 		System.out.println("DEBUG executeCommand @line97" + commandType);

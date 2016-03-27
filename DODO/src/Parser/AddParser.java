@@ -125,7 +125,7 @@ public class AddParser {
 		LAST_POSITION_OF_TO = taskItems.lastIndexOf(KEYWORD_TO);
 		
 		// add study from <startDate> to <endDate>
-		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO) {
+		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_FROM != -1) {
 			if (checkForDateAndTime(LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
 				return true;
 			}

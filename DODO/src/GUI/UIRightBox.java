@@ -185,45 +185,89 @@ public class UIRightBox {
 		overdueTasks.addAll(logic.getOverdueTasks());
 		searchTasks.addAll(logic.getOngoingTasks());
 
-		tabPane.getTabs().clear();
+		//tabPane.getTabs().clear();
 		updateTabMap();
 		if(tabMap[1]==true)
 		{
-			tabFloating = new Tab(floatingTab);
 			floatingVB.getChildren().remove(titledPaneFloatingTask);
 			floatingVB.getChildren().add(titledPaneFloatingTask);
+			if(!tabPane.getTabs().contains(tabFloating))
+			{
+				tabFloating = new Tab(floatingTab);
+				tabPane.getTabs().add(tabFloating);
+			}
 			tabFloating.setContent(floatingVB);
-			tabPane.getTabs().add(tabFloating);
-
+			addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
+			tabFloating.setUserData(TASK_STATUS.FLOATING);
+		}
+		else
+		{
+			tabPane.getTabs().remove(tabFloating);
+			floatingVB.getChildren().remove(titledPaneFloatingTask);
+			tabFloating=null;
 
 		}
 		if(tabMap[2]==true)
 		{
-			tabOngoing = new Tab(onGoingTab);
 			ongoingVB.getChildren().remove(titledPaneOnGoingTask);
 			ongoingVB.getChildren().add(titledPaneOnGoingTask);
+			
+			if(!tabPane.getTabs().contains(tabOngoing))
+			{
+				tabOngoing = new Tab(onGoingTab);
+				tabPane.getTabs().add(tabOngoing);
+			}
 			tabOngoing.setContent(ongoingVB);
-			tabPane.getTabs().add(tabOngoing);
+			addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
+			tabOngoing.setUserData(TASK_STATUS.ONGOING);
 
+		}
+		else
+		{
+			tabPane.getTabs().remove(tabOngoing);
+			ongoingVB.getChildren().remove(titledPaneFloatingTask);
+			tabOngoing=null;
 
 		}
 		if(tabMap[3]==true)
 		{
-			tabCompleted = new Tab(completedTab);
 			completedVB.getChildren().remove(titledPaneCompletedTask);
 			completedVB.getChildren().add(titledPaneCompletedTask);
+			
+			if(!tabPane.getTabs().contains(tabCompleted))
+			{
+				tabCompleted = new Tab(completedTab);
+				tabPane.getTabs().add(tabCompleted);
+			}
 			tabCompleted.setContent(completedVB);
-			tabPane.getTabs().add(tabCompleted);
-
+			addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
+			tabCompleted.setUserData(TASK_STATUS.COMPLETED);
+		}
+		else
+		{
+			tabPane.getTabs().remove(tabCompleted);
+			completedVB.getChildren().remove(titledPaneFloatingTask);
+			tabCompleted=null;
 
 		}
 		if(tabMap[4]==true)
 		{
-			tabOverdue = new Tab(overDueTab);
 			overdueVB.getChildren().remove(titledPaneOverdueTask);	
 			overdueVB.getChildren().add(titledPaneOverdueTask);
+			if(!tabPane.getTabs().contains(tabOverdue))
+			{
+				tabOverdue = new Tab(overDueTab);
+				tabPane.getTabs().add(tabOverdue);
+			}
 			tabOverdue.setContent(overdueVB);
-			tabPane.getTabs().add(tabOverdue);
+			addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
+			tabOverdue.setUserData(TASK_STATUS.OVERDUE);
+		}
+		else
+		{
+			tabPane.getTabs().remove(tabOverdue);
+			overdueVB.getChildren().remove(titledPaneFloatingTask);
+			tabOverdue=null;
 
 		}
 		
@@ -231,17 +275,10 @@ public class UIRightBox {
 
 
 		//addListToTitledPane(titledPaneAllTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
-		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
-		addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
-		addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
-		addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
 		//addListToTitledPane(titledPaneSearchTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.FLOATING);
 		
 		//tabSearch.setUserData(TASK_STATUS.FLOATING);
-		tabFloating.setUserData(TASK_STATUS.FLOATING);
-		tabOngoing.setUserData(TASK_STATUS.ONGOING);
-		tabCompleted.setUserData(TASK_STATUS.COMPLETED);
-		tabOverdue.setUserData(TASK_STATUS.OVERDUE);
+		
 		//tabAll.setUserData(TASK_STATUS.FLOATING);
 	}
 	private void updateTabMap() {
@@ -297,7 +334,7 @@ public class UIRightBox {
 		{
 			return TASK_STATUS.OVERDUE;
 		}	
-		
+		System.out.println((TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData());
 		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
 
@@ -491,6 +528,10 @@ public class UIRightBox {
 		{
 			tabPane.getSelectionModel().select(tabOverdue);
 		}	  
+		else
+		{
+			tabPane.getSelectionModel().select(null);
+		}
 		
     	leftBox.updateChart();		
 	}

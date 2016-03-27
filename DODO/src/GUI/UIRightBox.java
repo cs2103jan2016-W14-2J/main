@@ -183,7 +183,7 @@ public class UIRightBox {
 		ongoingTasks.addAll(logic.getOngoingTasks());
 		completedTasks.addAll(logic.getCompletedTasks());
 		overdueTasks.addAll(logic.getOverdueTasks());
-		searchTasks.addAll(logic.getOngoingTasks());
+		searchTasks.addAll(logic.getSearchResults());
 
 		//tabPane.getTabs().clear();
 		updateTabMap();
@@ -270,7 +270,26 @@ public class UIRightBox {
 			tabOverdue=null;
 
 		}
-		
+		if(tabMap[5]==true)
+		{
+			searchVB.getChildren().remove(titledPaneSearchTask);	
+			searchVB.getChildren().add(titledPaneSearchTask);
+			if(!tabPane.getTabs().contains(tabSearch))
+			{
+				tabSearch = new Tab(searchTab);
+				tabPane.getTabs().add(tabSearch);
+			}
+			tabSearch.setContent(searchVB);
+			addListToTitledPane(titledPaneSearchTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.SEARCH);
+			tabSearch.setUserData(TASK_STATUS.SEARCH);
+		}
+		else
+		{
+			tabPane.getTabs().remove(tabSearch);
+			searchVB.getChildren().remove(titledPaneSearchTask);
+			tabSearch=null;
+
+		}
 		
 
 
@@ -319,7 +338,15 @@ public class UIRightBox {
 			tabMap[4] = false;
 
 		}
-		
+		if(logic.getSearchResults().size()!=0)
+		{
+			tabMap[5] = true;
+		}
+		else 
+		{
+			tabMap[5] = false;
+
+		}
 		
 	}
 	private void allTasks() {
@@ -327,6 +354,7 @@ public class UIRightBox {
 		allTasks.addAll(logic.getOngoingTasks());
 		allTasks.addAll(logic.getCompletedTasks());
 		allTasks.addAll(logic.getOverdueTasks());		
+		
 	}
 	public static TASK_STATUS getCurrentTab() 
 	{

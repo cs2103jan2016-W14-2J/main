@@ -131,7 +131,7 @@ public class Parser {
 				userInput = getUserInputContent(userInput);
 				System.out.println("TEST SORT :" + userInput);
 				SortParser sort = new SortParser(userInput);
-				setSortAttributes(sort.getSortByAlphabetical(), sort.getSortByDate(), sort.getSortType());
+				setSortAttributes(sort.getSortType());
 				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
@@ -354,21 +354,10 @@ public class Parser {
 		return this.searchByDate;
 	}
 	//********************************************* SortParser ************************************//
-	private void setSortAttributes(String sortByAlphabetical, Date sortByDate, SORT_TYPE sortType) {
-		this.sortByAlphabetical = sortByAlphabetical;
-		this.sortByDate = sortByDate;
-		this.sortType = sortType;
-		
+	private void setSortAttributes(SORT_TYPE sortType) {
+		this.sortType = sortType;	
 	}
-	
-	public String getSortByAlphabetical() {
-		return this.sortByAlphabetical;
-	}
-	
-	public Date getSortByDate() {
-		return this.sortByDate;
-	}
-	
+
 	public SORT_TYPE getSortType() {
 		return this.sortType;
 	}

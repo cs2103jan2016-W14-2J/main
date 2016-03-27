@@ -11,9 +11,10 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("1735 1736 1737");
+			Parser parser = new Parser("sort cba");
 			
 			System.out.println(parser.getType());
+			System.out.println("Sort Type :" + parser.getSortType());
 			System.out.println(parser.getName());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());

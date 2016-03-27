@@ -36,6 +36,7 @@ public class Add extends Command {
 		
 		Task task = new Task(TASK_TYPE.FLOATING, name, tag);
 		floatingTasks.add(task);
+		this.UIStatus = TASK_STATUS.FLOATING;
 		return "Floating task \"" + name + "\" added to floatingTasks.";
 	}
 	
@@ -48,10 +49,12 @@ public class Add extends Command {
 		
 		if (task.getIsOverdue()){
 			overdueTasks.add(task);
+			this.UIStatus = TASK_STATUS.OVERDUE;
 			return "Deadlined task \"" + name + "\" added to overdueTasks.";
 		}
 		else {
 			ongoingTasks.add(task);
+			this.UIStatus = TASK_STATUS.ONGOING;
 			return "Deadlined task \"" + name + "\" added to ongoingTasks.";
 		}
 	}
@@ -66,10 +69,12 @@ public class Add extends Command {
 		
 		if (task.getIsOverdue()) {
 			overdueTasks.add(task);
+			this.UIStatus = TASK_STATUS.OVERDUE;
 			return "Event \"" + name + "\" added to overdueTasks.";
 		}
 		else {
 			ongoingTasks.add(task);
+			this.UIStatus = TASK_STATUS.ONGOING;
 			return "Event \"" + name + "\" added to ongoingTasks.";
 		}
 	}

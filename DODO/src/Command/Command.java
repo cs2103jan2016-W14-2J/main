@@ -17,7 +17,6 @@ public abstract class Command {
 	protected ArrayList<Task> overdueTasks;
 	protected ArrayList<Task> floatingTasks;
 	protected TASK_STATUS UIStatus;
-	protected TASK_STATUS nextStatus;
 	
 	public Command(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
 		this.UIStatus = UIRightBox.getCurrentTab();
@@ -42,7 +41,7 @@ public abstract class Command {
 	}
 	
 	public TASK_STATUS getStatus() {
-		return this.nextStatus;
+		return this.UIStatus;
 	}
 	
 	/*********************************INTERNAL METHODS***************************************/

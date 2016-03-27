@@ -293,6 +293,10 @@ public class UIRightBox {
 	}
 	public static TASK_STATUS getCurrentTab() 
 	{
+		if(tabPane.getSelectionModel().getSelectedItem()==null)
+		{
+			return TASK_STATUS.OVERDUE;
+		}
 		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
 	public TextField getMainTextField()

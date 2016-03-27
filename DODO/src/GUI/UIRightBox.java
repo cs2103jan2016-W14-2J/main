@@ -67,7 +67,7 @@ public class UIRightBox {
 
 	private static TabPane tabPane;
 	private TextField mainTextField;
-	private	boolean[] tabBool;
+	private	boolean[] tabMap;
 
 	private TitledPane titledPaneAllTask;
 	private TitledPane titledPaneOnGoingTask;
@@ -124,7 +124,7 @@ public class UIRightBox {
 		this.logic = logic;
 		usc = new UICssScaling();
 		logger = Logger.getLogger("MyLog"); 
-		tabBool = new boolean[6];
+		tabMap = new boolean[6];
 
 		tabAll = new Tab(allTab);
 		tabFloating = new Tab(floatingTab);
@@ -162,52 +162,9 @@ public class UIRightBox {
 	void build(UILeftBox leftBox) 
 	{
 		this.leftBox = leftBox;
+		
+		testMethod();
 
-		
-		allTasks(); //allTasks.addAll(logic.getAllTasks());
-		floatingTasks.addAll(logic.getFloatingTasks());
-		ongoingTasks.addAll(logic.getOngoingTasks());
-		completedTasks.addAll(logic.getCompletedTasks());
-		overdueTasks.addAll(logic.getOverdueTasks());
-		//searchTasks.addAll(logic.getSearchTasks());
-		searchTasks.addAll(logic.getOngoingTasks());
-
-		
-		allVB.getChildren().add(titledPaneAllTask);
-		floatingVB.getChildren().add(titledPaneFloatingTask);
-		ongoingVB.getChildren().add(titledPaneOnGoingTask);
-		completedVB.getChildren().add(titledPaneCompletedTask);
-		overdueVB.getChildren().add(titledPaneOverdueTask);
-		searchVB.getChildren().add(titledPaneSearchTask);
-
-		tabAll.setContent(allVB);
-		tabFloating.setContent(floatingVB);
-		tabOngoing.setContent(ongoingVB);
-		tabCompleted.setContent(completedVB);
-		tabOverdue.setContent(overdueVB);
-		tabSearch.setContent(searchVB);
-		
-		tabPane.getTabs().add(tabAll);
-		tabPane.getTabs().add(tabFloating);
-		tabPane.getTabs().add(tabOngoing);
-		tabPane.getTabs().add(tabCompleted);
-		tabPane.getTabs().add(tabOverdue);
-		tabPane.getTabs().add(tabSearch);
-
-		//addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
-		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
-		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
-		addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
-		addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
-		addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
-		//addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.SEARCH);
-		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.FLOATING);
-		
-		tabOngoing.setUserData(TASK_STATUS.ONGOING);
-		tabCompleted.setUserData(TASK_STATUS.COMPLETED);
-		tabOverdue.setUserData(TASK_STATUS.OVERDUE);
-		tabFloating.setUserData(TASK_STATUS.FLOATING);
-		
 		tabPane.setPrefSize(tabPaneHeight, tabPaneWidth);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		rightBox.getChildren().add(tabPane);
@@ -216,11 +173,118 @@ public class UIRightBox {
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
 		
-		
 		leftBox.updateChart();
 	}
-		
 	
+	private void testMethod() 
+	{
+		//allTasks(); //allTasks.addAll(logic.getAllTasks());
+		floatingTasks.addAll(logic.getFloatingTasks());
+		ongoingTasks.addAll(logic.getOngoingTasks());
+		completedTasks.addAll(logic.getCompletedTasks());
+		overdueTasks.addAll(logic.getOverdueTasks());
+		searchTasks.addAll(logic.getOngoingTasks());
+
+		tabPane.getTabs().clear();
+		updateTabMap();
+		if(tabMap[1]==true)
+		{
+			tabFloating = new Tab(floatingTab);
+			floatingVB.getChildren().remove(titledPaneFloatingTask);
+			floatingVB.getChildren().add(titledPaneFloatingTask);
+			tabFloating.setContent(floatingVB);
+			tabPane.getTabs().add(tabFloating);
+
+
+		}
+		if(tabMap[2]==true)
+		{
+			tabOngoing = new Tab(onGoingTab);
+			ongoingVB.getChildren().remove(titledPaneOnGoingTask);
+			ongoingVB.getChildren().add(titledPaneOnGoingTask);
+			tabOngoing.setContent(ongoingVB);
+			tabPane.getTabs().add(tabOngoing);
+
+
+		}
+		if(tabMap[3]==true)
+		{
+			tabCompleted = new Tab(completedTab);
+			completedVB.getChildren().remove(titledPaneCompletedTask);
+			completedVB.getChildren().add(titledPaneCompletedTask);
+			tabCompleted.setContent(completedVB);
+			tabPane.getTabs().add(tabCompleted);
+
+
+		}
+		if(tabMap[4]==true)
+		{
+			tabOverdue = new Tab(overDueTab);
+			overdueVB.getChildren().remove(titledPaneOverdueTask);	
+			overdueVB.getChildren().add(titledPaneOverdueTask);
+			tabOverdue.setContent(overdueVB);
+			tabPane.getTabs().add(tabOverdue);
+
+		}
+		
+		
+
+
+		//addListToTitledPane(titledPaneAllTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
+		addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
+		addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
+		addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
+		addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
+		//addListToTitledPane(titledPaneSearchTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.FLOATING);
+		
+		//tabSearch.setUserData(TASK_STATUS.FLOATING);
+		tabFloating.setUserData(TASK_STATUS.FLOATING);
+		tabOngoing.setUserData(TASK_STATUS.ONGOING);
+		tabCompleted.setUserData(TASK_STATUS.COMPLETED);
+		tabOverdue.setUserData(TASK_STATUS.OVERDUE);
+		//tabAll.setUserData(TASK_STATUS.FLOATING);
+	}
+	private void updateTabMap() {
+		
+		if(logic.getFloatingTasks().size()!=0)
+		{
+			tabMap[1] = true;
+		}
+		else 
+		{
+			tabMap[1] = false;
+
+		}
+		if(logic.getOngoingTasks().size()!=0)
+		{
+			tabMap[2] = true;
+		}
+		else 
+		{
+			tabMap[2] = false;
+
+		}
+		if(logic.getCompletedTasks().size()!=0)
+		{
+			tabMap[3] = true;
+		}
+		else 
+		{
+			tabMap[3] = false;
+
+		}
+		if(logic.getOverdueTasks().size()!=0)
+		{
+			tabMap[4] = true;
+		}
+		else 
+		{
+			tabMap[4] = false;
+
+		}
+		
+		
+	}
 	private void allTasks() {
 		allTasks.addAll(logic.getFloatingTasks());
 		allTasks.addAll(logic.getOngoingTasks());
@@ -231,7 +295,6 @@ public class UIRightBox {
 	{
 		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
-	
 	public TextField getMainTextField()
 	{
 		return mainTextField;
@@ -362,7 +425,6 @@ public class UIRightBox {
 		    logger.info("test1");  
 	}
 	
-
 	private void initTitledPane(TitledPane titledPane) {
 		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
 	}
@@ -405,26 +467,9 @@ public class UIRightBox {
 		completedTasks.clear();
 		overdueTasks.clear();
 		
-		ongoingTasks.addAll(logic.getOngoingTasks());
-		floatingTasks.addAll(logic.getFloatingTasks());
-		completedTasks.addAll(logic.getCompletedTasks());
-		overdueTasks.addAll(logic.getOverdueTasks());
+		testMethod();
 		
-		tabFloating.setContent(floatingVB);
-		tabPane.getTabs().add(tabFloating);
-    	addListToTitledPane(titledPaneFloatingTask, FXCollections.observableArrayList(floatingTasks),TASK_STATUS.FLOATING);
-
-    	tabOngoing.setContent(ongoingVB);
-		tabPane.getTabs().add(tabOngoing);
-    	addListToTitledPane(titledPaneOnGoingTask, FXCollections.observableArrayList(ongoingTasks),TASK_STATUS.ONGOING);
-
-		tabCompleted.setContent(completedVB);
-		tabPane.getTabs().add(tabCompleted);
-    	addListToTitledPane(titledPaneCompletedTask, FXCollections.observableArrayList(completedTasks),TASK_STATUS.COMPLETED);
-
-		tabOverdue.setContent(overdueVB);
-		tabPane.getTabs().add(tabOverdue);
-    	addListToTitledPane(titledPaneOverdueTask, FXCollections.observableArrayList(overdueTasks),TASK_STATUS.OVERDUE);
+		
 	
     	mainTextField.setText("");
     	if(prevCompletedTasks!=completedTasks.size())
@@ -445,6 +490,7 @@ public class UIRightBox {
 		}	  
     	leftBox.updateChart();		
 	}
+	
 	private Path findCaret(Parent parent) {
 	    for (Node n : parent.getChildrenUnmodifiable()) {
 	      if (n instanceof Path) {

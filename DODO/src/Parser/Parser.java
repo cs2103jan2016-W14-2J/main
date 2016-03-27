@@ -110,8 +110,8 @@ public class Parser {
 				setFlagAndCompleteAttributes(unflagParser.getFlagCompleteType(), unflagParser.getTaskIndex());
 				break;
 			case TAG:
-				userInput = getUserInputContent(userInput);
-				setTaskIndex(userInput);
+				userInput = processUserInput(userInput);
+				setTaskIndex(userInput.trim());
 				break;
 			case UNTAG:
 				setTaskIndex(userInput);

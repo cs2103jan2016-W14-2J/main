@@ -116,7 +116,7 @@ public class UIRightBox {
 	private int prevCompletedTasks;
 	private int prevSearchTasks;
 		
-	
+	private TASK_STATUS currentTask;
 	
 	public UIRightBox(Logic logic)
 	{
@@ -296,9 +296,11 @@ public class UIRightBox {
 		if(tabPane.getSelectionModel().getSelectedItem()==null)
 		{
 			return TASK_STATUS.OVERDUE;
-		}
+		}	
+		
 		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
+
 	public TextField getMainTextField()
 	{
 		return mainTextField;
@@ -448,10 +450,7 @@ public class UIRightBox {
 	}
 	protected void runCommand()
 	{
-		prevOngoingTasks= ongoingTasks.size();
-		prevFloatingTasks = floatingTasks.size();
-		prevCompletedTasks = completedTasks.size();
-		prevOverdueTasks = overdueTasks.size();	
+		currentTask = (TASK_STATUS)tabPane.getSelectionModel().getSelectedItem().getUserData();
 		
 		strFeedBack = logic.run(mainTextField.getText());
     	VBox vbPop = new VBox();
@@ -476,27 +475,33 @@ public class UIRightBox {
 		
 	
     	mainTextField.setText("");
-    	if(prevCompletedTasks!=completedTasks.size())
+    	if(currentTask == TASK_STATUS.COMPLETED && completedTasks.size()>0)
 		{
 			tabPane.getSelectionModel().select(tabCompleted);
 		}
-		else if(prevOngoingTasks!=ongoingTasks.size())
+		else if(currentTask == TASK_STATUS.ONGOING && ongoingTasks.size()>0)
 		{
 			tabPane.getSelectionModel().select(tabOngoing);
 		}
-		else if(prevFloatingTasks!=floatingTasks.size())
+		else if(currentTask == TASK_STATUS.FLOATING && floatingTasks.size()>0 )
 		{
 			tabPane.getSelectionModel().select(tabFloating);
 		}
-		else if(prevOverdueTasks!=overdueTasks.size())
+		else if(currentTask == TASK_STATUS.OVERDUE && overdueTasks.size()>0 )
 		{
-			tabPane.getSelectionModel().select(tabOngoing);
+			tabPane.getSelectionModel().select(tabOverdue);
 		}	  
+		else
+		{
+			tabPane.getSelectionModel().select(tabFloating);
+
+		}
+		
     	leftBox.updateChart();		
 	}
 	
-	private Path findCaret(Parent parent) {
-	    for (Node n : parent.getChildrenUnmodifiable()) {
+	private Path findCaret(Parent root) {
+	    for (Node n : root.getChildrenUnmodifiable()) {
 	      if (n instanceof Path) {
 	        return (Path) n;
 	      } else if (n instanceof Parent) {

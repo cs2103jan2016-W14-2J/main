@@ -4,19 +4,21 @@ import Command.*;
 
 public class SortParser {
 
-	private SORT_TYPE sortType;
 	private String ALPHABETICAL_ORDER = "abc";
+	private String NUMERICAL_ORDER = "123";
 	private String REVERSE_ALPHABETICAL_ORDER = "cba";
+	private String REVERSE_NUMERICAL_ORDER = "321";
 	private String DATE_ORDER = "date";
 	private String PREPOSITION_BY = "by";
 	
 	
 	public SortParser(String userTask) {
-		userTask = removeBy(userTask);
-		determineSortType(userTask);
+	
 	}
 	
-	private SORT_TYPE determineSortType(String userTask) {
+	protected SORT_TYPE determineSortType(String userTask) {
+		userTask = removeBy(userTask.toLowerCase());
+		
 		if (isSortByDate(userTask)) {
 			return SORT_TYPE.BY_DATE;
 		}
@@ -33,12 +35,14 @@ public class SortParser {
 
 	private boolean isSortByReverseAlphabetical(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
-		return (str[0].trim().contains(REVERSE_ALPHABETICAL_ORDER)) ? true : false;
+		return (str[0].trim().contains(REVERSE_ALPHABETICAL_ORDER) ||
+				str[0].trim().contains(REVERSE_NUMERICAL_ORDER)) ? true : false;
 	}
 
 	private boolean isSortByAlphabetical(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
-		return (str[0].trim().contains(ALPHABETICAL_ORDER)) ? true : false;
+		return (str[0].trim().contains(ALPHABETICAL_ORDER) ||
+				str[0].trim().contains(NUMERICAL_ORDER)) ? true : false;
 	}
 
 	private boolean isSortByDate(String userTask) {

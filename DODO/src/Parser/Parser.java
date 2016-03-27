@@ -131,7 +131,7 @@ public class Parser {
 				userInput = getUserInputContent(userInput);
 				System.out.println("TEST SORT :" + userInput);
 				SortParser sort = new SortParser(userInput);
-				setSortAttributes(sort.getSortType());
+				setSortAttributes(sort.determineSortType(userInput));
 				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);

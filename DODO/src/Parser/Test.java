@@ -11,7 +11,7 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("sort cba");
+			Parser parser = new Parser("sort by CBA");
 			
 			System.out.println(parser.getType());
 			System.out.println("Sort Type :" + parser.getSortType());

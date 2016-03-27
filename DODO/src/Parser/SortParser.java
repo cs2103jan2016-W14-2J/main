@@ -25,6 +25,10 @@ public class SortParser {
 			setSortType(SORT_TYPE.BY_ALPHABETICAL);
 			return SORT_TYPE.BY_ALPHABETICAL;
 		}
+		else if (isSortByReverseAlphabetical(userTask)) {
+			setSortType(SORT_TYPE.BY_ALPHABETICAL);
+			return SORT_TYPE.BY_ALPHABETICAL;
+		}
 		else {
 			setSortType(SORT_TYPE.INVALID);
 			return SORT_TYPE.INVALID;

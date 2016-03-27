@@ -23,10 +23,10 @@ public class SortParser {
 			return SORT_TYPE.BY_DATE;
 		}
 		else if (isSortByAlphabetical(userTask)) {
-			return SORT_TYPE.BY_ALPHABETICAL;
+			return SORT_TYPE.BY_ASCENDING;
 		}
 		else if (isSortByReverseAlphabetical(userTask)) {
-			return SORT_TYPE.BY_REVERSE_ALPHABETICAL;
+			return SORT_TYPE.BY_DESCENDING;
 		}
 		else {
 			return SORT_TYPE.INVALID;

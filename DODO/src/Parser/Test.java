@@ -11,7 +11,7 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("cycle with jun lem from nus to sengkang");
+			Parser parser = new Parser("cs2105 assignment 2");
 			
 			System.out.println(parser.getType());
 			System.out.println("Sort Type :" + parser.getSortType());

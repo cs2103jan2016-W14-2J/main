@@ -174,10 +174,15 @@ public class AddParser {
 			if (dates.size() == 2) {
 				setStartTime(dates.get(0));
 				setEndTime(dates.get(1));
+				setTaskName(userTask.substring(0, userTask.lastIndexOf(KEYWORD_FROM)));
 			}
 			
 			else if (dates.size() == 1) {
 				setStartTime(dates.get(0));
+				setTaskName(userTask.substring(0, userTask.lastIndexOf(KEYWORD_FROM)));
+			}
+			else if (dates.size() == 0) {
+				setTaskName(userTask);
 			}
 			
 		}
@@ -187,9 +192,9 @@ public class AddParser {
 			
 			if (dates.size() == 1) {
 				setStartTime(dates.get(0));
+				setTaskName(userTask.substring(0, userTask.lastIndexOf(KEYWORD_FROM)));
 			}
 		}
-		setTaskName(userTask.substring(0, userTask.lastIndexOf(KEYWORD_FROM)));
 	}
 
 	

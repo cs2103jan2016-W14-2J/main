@@ -27,9 +27,8 @@ public class Search extends Command {
 			System.out.println("============SEARCH=========== searchStr: " + searchStr);
 			return searchByKeyword(searchStr);
 		case BY_DATE:
-			/*Date searchDate = parser.getSearchByDate();
-			DateTime dt = new DateTime(searchDate);
-			System.out.println("============SEARCH=========== dt: " + dt);*/
+			Date searchDate = parser.getSearchByDate();
+			System.out.println("============SEARCH=========== dt: " + searchDate);
 			return "[SEARCH] UNDER DEVELOPMENT";
 		case BY_TAG:
 			String searchTag = parser.getSearchByTag();

@@ -6,7 +6,8 @@ import Parser.Parser;
 import Task.*;
 
 public class Sort extends Command {
-	private static final AlphabeticalComparator alphabeticalComparator = new AlphabeticalComparator();
+	private static final DescendingAlphabeticalComparator decendingAlphabeticalComparator = new DescendingAlphabeticalComparator();
+	private static final AscendingAlphaticalComparator ascendingAlphabeticalComparator = new AscendingAlphaticalComparator();
 	private static final DateComparator dateComparator = new DateComparator();
 
 	public Sort(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
@@ -18,8 +19,9 @@ public class Sort extends Command {
 		SORT_TYPE type = parser.getSortType();
 		System.out.println("============SORT==============: " + type);
 		switch (type) {
-		case BY_ALPHABETICAL:
-			return sortByAlphabet();
+		case BY_ASCENDING:
+		case BY_DESCENDING:
+			return sortByAlphabet(type);
 		case BY_DATE:
 			return sortByDate();
 		default: 
@@ -27,9 +29,14 @@ public class Sort extends Command {
 		}
 	}
 
-	public String sortByAlphabet() {
+	public String sortByAlphabet(SORT_TYPE type) {
 		ArrayList<Task> tasks = getTasks(this.UIStatus);
-		Collections.sort(tasks, alphabeticalComparator);
+		if (type==SORT_TYPE.BY_DESCENDING) {
+			Collections.sort(tasks, decendingAlphabeticalComparator);
+		}
+		else {
+			Collections.sort(tasks, ascendingAlphabeticalComparator);
+		}
 		return "Sorted by Alphabets.";
 	}
 	
@@ -44,12 +51,22 @@ public class Sort extends Command {
 		return null;
 	}
 
-	private static class AlphabeticalComparator implements Comparator<Task> {
+	private static class AscendingAlphaticalComparator implements Comparator<Task> {
 		@Override
 		public int compare(Task a, Task b) {
 			String nameA = a.getName();
 			String nameB = b.getName();
 			int comp = nameA.compareToIgnoreCase(nameB);
+			return comp;
+		}
+	}
+	
+	private static class DescendingAlphabeticalComparator implements Comparator<Task> {
+		@Override
+		public int compare(Task a, Task b) {
+			String nameA = a.getName();
+			String nameB = b.getName();
+			int comp = nameB.compareToIgnoreCase(nameA);
 			return comp;
 		}
 	}

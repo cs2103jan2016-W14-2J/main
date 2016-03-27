@@ -17,7 +17,7 @@ public class Tag extends Command {
 	@Override
 	public String execute() {
 		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
-		String tag = parser.getName();
+		String tag = parser.getTag();
 		switch (this.UIStatus)  {
 		case FLOATING:
 			return tag(tag, index, this.floatingTasks);

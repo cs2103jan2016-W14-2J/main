@@ -60,8 +60,9 @@ public class Logic {
 		return this.overdueTasks;
 	}
 
-	public TreeMap<String, Category> getCategories() {
-		return this.categories;
+	public ArrayList<Category> getCategories() {
+		ArrayList<Category> list = new ArrayList<Category>(this.categories.values());
+		return list;
 	}
 	
 	public TASK_STATUS getStatus() {

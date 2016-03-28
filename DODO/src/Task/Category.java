@@ -21,7 +21,8 @@ public class Category {
 		return this.name;
 	}
 	
-	public TreeMap<String, Task> getTasks() {
-		return this.tasks;
+	public ArrayList<Task> getTasks() {
+		ArrayList<Task> list = new ArrayList<Task>(tasks.values());
+		return list;
 	}
 }

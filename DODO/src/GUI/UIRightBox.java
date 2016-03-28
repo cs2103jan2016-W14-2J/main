@@ -38,6 +38,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Path;
 import javafx.stage.Stage;
@@ -105,7 +106,7 @@ public class UIRightBox {
 	private Tab tabOverdue;
 	private Tab tabSearch;
 
-	private VBox welcomeVB;
+	private HBox welcomeHB;
 	private VBox allVB;
 	private VBox floatingVB;
 	private VBox ongoingVB;
@@ -115,6 +116,7 @@ public class UIRightBox {
 	
 	private UIWelcomePage uiWelcome;
 	private TASK_STATUS currentTask;
+	private UIListener listen;
 	
 	public UIRightBox(Logic logic)
 	{
@@ -132,7 +134,7 @@ public class UIRightBox {
 		tabOverdue = new Tab(overDueTab);
 		tabSearch = new Tab(searchTab);
 		
-		welcomeVB = new VBox();
+		welcomeHB = new HBox();
 		allVB = new VBox();
 		floatingVB = new VBox();
 		ongoingVB = new VBox();
@@ -155,8 +157,11 @@ public class UIRightBox {
 		titledPaneSearchTask = new TitledPane();
 
 		
+		uiWelcome = new UIWelcomePage();
 		tabPane = new TabPane();
 		mainTextField = new TextField();
+		
+		listen = new UIListener();
 		
 	}
 	//add list -> add vbtab ->
@@ -173,14 +178,17 @@ public class UIRightBox {
 		mainTextField.setPrefSize(textfieldHeight, textfieldWidth);
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
-		
 		leftBox.updateLeftBox();
+		
 	}
 	
 	private void setGreetingTab() 
 	{
+		String str = "TASK_STATUS.WELCOME";
+		tabWelcome.setUserData(str);
 		tabPane.getTabs().add(tabWelcome);
-				
+		tabWelcome.setContent(welcomeHB);
+		uiWelcome.setRoot(welcomeHB);
 		
 		
 		
@@ -393,6 +401,7 @@ public class UIRightBox {
 	{
 		if(tabPane.getSelectionModel().getSelectedItem()==null)
 		{
+			//return TASK_STATUS.WELCOME;
 			return TASK_STATUS.OVERDUE;
 		}	
 		System.out.println((TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData());
@@ -740,5 +749,8 @@ public class UIRightBox {
 		return tabPane;
 	}
 
-
+	public int getTotalTabs()
+	{
+		return tabPane.getTabs().size();
+	}
 }

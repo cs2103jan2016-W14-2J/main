@@ -7,6 +7,7 @@ import Storage.*;
 import Task.*;
 import javafx.application.Application;
 import javafx.concurrent.Task;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -35,10 +36,12 @@ public class UIMainController {
 	private Scene scene;	
 	private String strDBdir = "";
 	private String strDBname = "";
-	
+	private UIListener listen;
 	public UIMainController(Logic logic)
 	{
 		this.logic = logic;
+		
+		listen = new UIListener();
 		
 		root = new HBox();
 		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
@@ -48,13 +51,17 @@ public class UIMainController {
 		
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
+		
+		
 	}
 	public void start(Stage primaryStage) 
 	{		
 		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
 		setEscCloseForm();
+		listen.transparentHelpSheet(primaryStage,root, rightBox);
 		show();
+		
 	}
 	public void addLeftAndRightBox() 
 	{
@@ -72,6 +79,17 @@ public class UIMainController {
 	}
 	public void show() 
 	{
+		scene.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler() {
+            public void handle(KeyEvent event) {
+               
+            }
+
+			@Override
+			public void handle(Event arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
 		root.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
@@ -85,6 +103,7 @@ public class UIMainController {
                 }
             }
         });
+		
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

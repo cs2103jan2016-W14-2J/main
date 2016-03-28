@@ -94,6 +94,15 @@ public class UICssScaling
 
 
 	}
+	public void cssWelcomePage(HBox root, Label welcomeLabel) {
+		
+		root.styleProperty().set("-fx-border-color: black;");
+		root.setPrefSize(500, 500);
+		welcomeLabel.setFont(Font.font("Cambria", 100));
+		welcomeLabel.setTranslateX(455);
+		welcomeLabel.setPrefSize(500, 500);
+
+	}
 
 
 

@@ -179,22 +179,10 @@ public class UIRightBox {
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
 		leftBox.updateLeftBox();
-		
+		usc.setCssAndScalingForRightBox(tabPane);
 	}
 	
-	private void setGreetingTab() 
-	{
-		String str = "TASK_STATUS.WELCOME";
-		tabWelcome.setUserData(str);
-		tabPane.getTabs().add(tabWelcome);
-		tabWelcome.setContent(welcomeHB);
-		uiWelcome.setRoot(welcomeHB);
-		
-		
-		
-		
-		
-	}
+	
 	private void testMethod() 
 	{
 		floatingTasks.addAll(logic.getFloatingTasks());
@@ -397,21 +385,7 @@ public class UIRightBox {
 		allTasks.addAll(logic.getOverdueTasks());		
 		
 	}
-	public static TASK_STATUS getCurrentTab() 
-	{
-		if(tabPane.getSelectionModel().getSelectedItem()==null)
-		{
-			//return TASK_STATUS.WELCOME;
-			return TASK_STATUS.OVERDUE;
-		}	
-		System.out.println((TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData());
-		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
-	}
 
-	public TextField getMainTextField()
-	{
-		return mainTextField;
-	}
 
 	private void addListToTitledPane(TitledPane titledPane, ObservableList<Task> listTask, TASK_STATUS typeOfTask) {
 		initTitledPane(titledPane);
@@ -621,58 +595,7 @@ public class UIRightBox {
 	    po.show(listViewLabel);
 	}
 
-	public int getOngoingSize() 
-	{
-		if(ongoingTasks==null)
-		{return 0;}
-		return ongoingTasks.size();
-	}
-	public int floatingTasksSize() 
-	{
-		if(floatingTasks==null)
-		{return 0;}
-		return floatingTasks.size();
-	}
-	public int completedTasksSize() 
-	{
-		if(completedTasks==null)
-		{return 0;}
-		return completedTasks.size();
-	}
-	public int overdueTasksSize() 
-	{
-		if(overdueTasks==null)
-		{return 0;}
-		return overdueTasks.size();
-	}
 
-	public void setCursorTextField() {
-		mainTextField.positionCaret(1);		
-	}
-
-	public TextField getTextField() 
-	{
-		return mainTextField;
-	}
-	public void setTextField(String str) 
-	{
-		mainTextField.textProperty().set(str);
-		mainTextField.setText(str);
-	}
-	public void setTextFieldAndEnter(String str) 
-	{
-		mainTextField.textProperty().set(str);
-		mainTextField.setText(str);
-		runCommand();
-	}
-	public String getFeedBack()
-	{
-		return strFeedBack;
-	}
-	public VBox getRoot() {
-		return rightBox;
-	}
-	
 	private void textFieldListener() {
 		
 		mainTextField.setOnKeyPressed(new EventHandler<KeyEvent>()
@@ -745,12 +668,103 @@ public class UIRightBox {
 		}
 		leftBox.updateLeftBox();
 	}
-	public TabPane getTabPane() {
-		return tabPane;
+	
+	
+	
+	
+	
+	
+	public static TASK_STATUS getCurrentTab() 
+	{
+		if(tabPane.getSelectionModel().getSelectedItem()==null)
+		{
+			//return TASK_STATUS.WELCOME;
+			return TASK_STATUS.OVERDUE;
+		}	
+		System.out.println((TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData());
+		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
 
+	public TextField getMainTextField()
+	{
+		return mainTextField;
+	}
+	
+	
+	
+	private void setGreetingTab() 
+	{
+		String str = "TASK_STATUS.WELCOME";
+		tabWelcome.setUserData(str);
+		tabPane.getTabs().add(tabWelcome);
+		tabWelcome.setContent(welcomeHB);
+		uiWelcome.setRoot(welcomeHB);
+	}
+	
+	public int getOngoingSize() 
+	{
+		if(ongoingTasks==null)
+		{return 0;}
+		return ongoingTasks.size();
+	}
+	public int getFloatingTasksSize() 
+	{
+		if(floatingTasks==null)
+		{return 0;}
+		return floatingTasks.size();
+	}
+	public int getCompletedTasksSize() 
+	{
+		if(completedTasks==null)
+		{return 0;}
+		return completedTasks.size();
+	}
+	public int getOverdueTasksSize() 
+	{
+		if(overdueTasks==null)
+		{return 0;}
+		return overdueTasks.size();
+	}
+
+	public TextField getTextField() 
+	{
+		return mainTextField;
+	}
+	public String getFeedBack()
+	{
+		return strFeedBack;
+	}
+	public VBox getRoot() 
+	{
+		return rightBox;
+	}
+	public TabPane getTabPane() 
+	{
+		return tabPane;
+	}
 	public int getTotalTabs()
 	{
 		return tabPane.getTabs().size();
 	}
+	
+	
+	
+	
+	
+	
+	public void setCursorTextField() {
+		mainTextField.positionCaret(1);		
+	}
+	public void setTextField(String str) 
+	{
+		mainTextField.textProperty().set(str);
+		mainTextField.setText(str);
+	}
+	public void setTextFieldAndEnter(String str) 
+	{
+		mainTextField.textProperty().set(str);
+		mainTextField.setText(str);
+		runCommand();
+	}
+	
 }

@@ -7,8 +7,10 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -19,9 +21,11 @@ import javafx.scene.text.Font;
 public class UICssScaling 
 {
 	String cssCellComponents;
+	String cssTabPane;
 	public UICssScaling()
 	{
 		cssCellComponents = "cellComponents.css";
+		cssTabPane = "tabPane.css";
 	}
 	public void setCssAndScalingForCell(HBox cellRoot, Label lblIndex, Label lblTag, Label lblName, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
@@ -103,6 +107,11 @@ public class UICssScaling
 		welcomeLabel.setPrefSize(500, 500);
 
 	}
+	public void setCssAndScalingForRightBox(TabPane tabPane) {
+		
+		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
+
+	} 
 
 
 

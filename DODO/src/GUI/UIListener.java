@@ -41,9 +41,9 @@ public class UIListener {
 	}
 	public void chartListener(PieChart chart, UIRightBox rightBox)
 	{
-		int intOverdueTasks = rightBox.overdueTasksSize();
-		int intCompletedTasks = rightBox.completedTasksSize();
-		int intFloatingTasks = rightBox.floatingTasksSize();
+		int intOverdueTasks = rightBox.getOverdueTasksSize();
+		int intCompletedTasks = rightBox.getCompletedTasksSize();
+		int intFloatingTasks = rightBox.getFloatingTasksSize();
 		int intOngoingTasks = rightBox.getOngoingSize();
 		
 		Tab chartTab = new Tab("Chart Data");
@@ -101,17 +101,23 @@ public class UIListener {
 		Label lblF5 = new Label("F5");
 		Label lblF6 = new Label("F6");
 		Label lblF7 = new Label("F7");
-    	ObservableList<Label> listLbl =FXCollections.observableArrayList(lblF1,lblF2,lblF3,lblF4,lblF5,lblF6,lblF7);
+		Label lblF8 = new Label("F8");
+
+		
+    	ObservableList<Label> listLbl =FXCollections.observableArrayList(lblF1,lblF2,lblF3,lblF4,lblF5,lblF6,lblF7,lblF8);
 		
 				root.setOnKeyPressed(new EventHandler<KeyEvent>() {
 					public void handle(KeyEvent ke) {
 					if (ke.getCode().equals(KeyCode.ALT)) 
 					{
 						int numberOfTabs = rightBox.getTotalTabs();
+						rightBox.getTabPane().layout();
+						System.out.println(rightBox.getTabPane().getChildrenUnmodifiable().get(1).getLayoutX());
+				        
 						double rightBoxX = rightBox.getRoot().getLayoutX();
 						double rightBoxY = rightBox.getRoot().getLayoutY();
 						pane.setPrefSize(root.getWidth(), root.getHeight());						
-						for(int x=0,y=0;x<numberOfTabs;x++,y+=100)
+						for(int x=0,y=0;x<numberOfTabs;x++,y+=150)
 						{
 							listLbl.get(x).setFont(Font.font("Cambria", 25));
 							listLbl.get(x).setLayoutX(rightBoxX+y);
@@ -120,7 +126,15 @@ public class UIListener {
 							pane.getChildren().add(listLbl.get(x));
 						}
 						
-						
+						/*int numberOfTabs = rightBox.getTotalTabs();
+						double rightBoxX = rightBox.getRoot().getLayoutX();
+						double rightBoxY = rightBox.getRoot().getLayoutY();
+						pane.setPrefSize(root.getWidth(), root.getHeight());
+						HBox hb = new HBox(new Label("welcome"));
+						hb.styleProperty().set("-fx-border-color: black;");
+						hb.setLayoutX(rightBoxX);
+						hb.setLayoutY(rightBoxY);
+						pane.getChildren().add(hb);*/
 						
 						transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
 					}

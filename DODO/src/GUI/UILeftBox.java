@@ -126,9 +126,9 @@ public class UILeftBox {
 	
 	public void updateChart() 
 	{		
-		intOverdueTasks = rightBox.overdueTasksSize();
-		intCompletedTasks = rightBox.completedTasksSize();
-		intFloatingTasks = rightBox.floatingTasksSize();
+		intOverdueTasks = rightBox.getOverdueTasksSize();
+		intCompletedTasks = rightBox.getCompletedTasksSize();
+		intFloatingTasks = rightBox.getFloatingTasksSize();
 		intOngoingTasks = rightBox.getOngoingSize();
 		
 		floatingData.setPieValue(intFloatingTasks);

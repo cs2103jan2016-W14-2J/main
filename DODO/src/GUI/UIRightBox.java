@@ -109,12 +109,6 @@ public class UIRightBox {
 	private VBox overdueVB;
 	private VBox searchVB;
 	
-	private int prevAllTasks;
-	private int prevOngoingTasks;
-	private int prevFloatingTasks;
-	private int prevOverdueTasks;
-	private int prevCompletedTasks;
-	private int prevSearchTasks;
 		
 	private TASK_STATUS currentTask;
 	
@@ -178,7 +172,7 @@ public class UIRightBox {
 	
 	private void testMethod() 
 	{
-		//allTasks(); //allTasks.addAll(logic.getAllTasks());
+		allTasks(); //allTasks.addAll(logic.getAllTasks());
 		floatingTasks.addAll(logic.getFloatingTasks());
 		ongoingTasks.addAll(logic.getOngoingTasks());
 		completedTasks.addAll(logic.getCompletedTasks());
@@ -187,6 +181,19 @@ public class UIRightBox {
 
 		//tabPane.getTabs().clear();
 		updateTabMap();
+		if(tabMap[0]==true)
+		{
+			allVB.getChildren().remove(titledPaneAllTask);
+			allVB.getChildren().add(titledPaneAllTask);
+			if(!tabPane.getTabs().contains(tabAll))
+			{
+				tabAll = new Tab(allTab);
+				tabPane.getTabs().add(tabAll);
+			}
+			tabAll.setContent(allVB);
+			addListToTitledPane(titledPaneAllTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.ALL);
+			tabAll.setUserData(TASK_STATUS.ALL);
+		}
 		if(tabMap[1]==true)
 		{
 			floatingVB.getChildren().remove(titledPaneFloatingTask);
@@ -302,6 +309,15 @@ public class UIRightBox {
 	}
 	private void updateTabMap() {
 		
+		if(logic.getFloatingTasks().size()!=0)
+		{
+			tabMap[0] = true;
+		}
+		else 
+		{
+			tabMap[0] = false;
+
+		}
 		if(logic.getFloatingTasks().size()!=0)
 		{
 			tabMap[1] = true;
@@ -540,7 +556,11 @@ public class UIRightBox {
 		
 	
     	mainTextField.setText("");
-    	if(currentTask == TASK_STATUS.COMPLETED)
+    	if(currentTask == TASK_STATUS.ALL)
+ 		{
+ 			tabPane.getSelectionModel().select(tabAll);
+ 		}
+    	else if(currentTask == TASK_STATUS.COMPLETED)
 		{
 			tabPane.getSelectionModel().select(tabCompleted);
 		}
@@ -556,6 +576,10 @@ public class UIRightBox {
 		{
 			tabPane.getSelectionModel().select(tabOverdue);
 		}	  
+		else if(currentTask == TASK_STATUS.SEARCH)
+		{
+			tabPane.getSelectionModel().select(tabSearch);
+		}	
 		else
 		{
 			tabPane.getSelectionModel().select(null);
@@ -609,6 +633,10 @@ public class UIRightBox {
 		po.arrowSizeProperty().set(0);
 		String moreName=null;
 		
+		if(getCurrentTab().equals(TASK_STATUS.ALL))
+		{
+			moreName = overdueTasks.get(x).getName();
+		}
 		if(getCurrentTab().equals(TASK_STATUS.ONGOING))
 		{
 			moreName =ongoingTasks.get(x).getName();
@@ -622,6 +650,10 @@ public class UIRightBox {
 			moreName =completedTasks.get(x).getName();
 		}
 		if(getCurrentTab().equals(TASK_STATUS.OVERDUE))
+		{
+			moreName = overdueTasks.get(x).getName();
+		}
+		if(getCurrentTab().equals(TASK_STATUS.SEARCH))
 		{
 			moreName = overdueTasks.get(x).getName();
 		}

@@ -48,11 +48,6 @@ public class UIMainController {
 		
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
-		
-
-		
-		
-
 	}
 	public void start(Stage primaryStage) 
 	{		
@@ -66,9 +61,9 @@ public class UIMainController {
 		root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 	}
 
-	private void setPrimaryStage(Stage primaryStage) {
+	private void setPrimaryStage(Stage primaryStage)
+	{
 		this.primaryStage = primaryStage;
-		
 	}
 
 	public Scene getScene()
@@ -77,7 +72,6 @@ public class UIMainController {
 	}
 	public void show() 
 	{
-
 		root.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
@@ -91,7 +85,6 @@ public class UIMainController {
                 }
             }
         });
-        		
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

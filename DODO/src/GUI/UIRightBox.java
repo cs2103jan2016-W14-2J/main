@@ -25,6 +25,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -58,6 +59,7 @@ public class UIRightBox {
 	private final double titledPaneWidth = 1000; // centerBox titledPane size
 	private final double titledPaneHeight = 1450;
 	 
+	private final String welcomeTab = "Welcome"; 
 	private final String allTab = "All Tasks";
 	private final String onGoingTab = "Ongoing Tasks";
 	private final String completedTab = "Completed Tasks";
@@ -95,6 +97,7 @@ public class UIRightBox {
 	private UILeftBox leftBox;
 	private Logic logic;
 	
+	private Tab tabWelcome;
 	private Tab tabAll;
 	private Tab tabFloating;
 	private Tab tabOngoing;
@@ -102,6 +105,7 @@ public class UIRightBox {
 	private Tab tabOverdue;
 	private Tab tabSearch;
 
+	private VBox welcomeVB;
 	private VBox allVB;
 	private VBox floatingVB;
 	private VBox ongoingVB;
@@ -109,7 +113,7 @@ public class UIRightBox {
 	private VBox overdueVB;
 	private VBox searchVB;
 	
-		
+	private UIWelcomePage uiWelcome;
 	private TASK_STATUS currentTask;
 	
 	public UIRightBox(Logic logic)
@@ -120,6 +124,7 @@ public class UIRightBox {
 		logger = Logger.getLogger("MyLog"); 
 		tabMap = new boolean[6];
 
+		tabWelcome = new Tab(welcomeTab);
 		tabAll = new Tab(allTab);
 		tabFloating = new Tab(floatingTab);
 		tabOngoing = new Tab(onGoingTab);
@@ -127,6 +132,7 @@ public class UIRightBox {
 		tabOverdue = new Tab(overDueTab);
 		tabSearch = new Tab(searchTab);
 		
+		welcomeVB = new VBox();
 		allVB = new VBox();
 		floatingVB = new VBox();
 		ongoingVB = new VBox();
@@ -148,17 +154,18 @@ public class UIRightBox {
 		titledPaneFloatingTask = new TitledPane();
 		titledPaneSearchTask = new TitledPane();
 
+		
 		tabPane = new TabPane();
 		mainTextField = new TextField();
-
+		
 	}
 	//add list -> add vbtab ->
 	void build(UILeftBox leftBox) 
 	{
 		this.leftBox = leftBox;
-		
+		setGreetingTab();
 		testMethod();
-
+		
 		tabPane.setPrefSize(tabPaneHeight, tabPaneWidth);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		rightBox.getChildren().add(tabPane);
@@ -167,17 +174,27 @@ public class UIRightBox {
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
 		
-		leftBox.updateChart();
+		leftBox.updateLeftBox();
 	}
 	
+	private void setGreetingTab() 
+	{
+		tabPane.getTabs().add(tabWelcome);
+				
+		
+		
+		
+		
+		
+	}
 	private void testMethod() 
 	{
-		allTasks(); //allTasks.addAll(logic.getAllTasks());
 		floatingTasks.addAll(logic.getFloatingTasks());
 		ongoingTasks.addAll(logic.getOngoingTasks());
 		completedTasks.addAll(logic.getCompletedTasks());
 		overdueTasks.addAll(logic.getOverdueTasks());
 		searchTasks.addAll(logic.getSearchResults());
+		allTasks(); //allTasks.addAll(logic.getAllTasks());
 
 		//tabPane.getTabs().clear();
 		updateTabMap();
@@ -295,7 +312,6 @@ public class UIRightBox {
 			tabPane.getTabs().remove(tabSearch);
 			searchVB.getChildren().remove(titledPaneSearchTask);
 			tabSearch=null;
-
 		}
 		
 
@@ -309,6 +325,7 @@ public class UIRightBox {
 	}
 	private void updateTabMap() {
 		
+		//change here
 		if(logic.getFloatingTasks().size()!=0)
 		{
 			tabMap[0] = true;
@@ -516,77 +533,7 @@ public class UIRightBox {
 		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
 	}
 
-	private void textFieldListener() {
-		
-		mainTextField.setOnKeyPressed(new EventHandler<KeyEvent>()
-	    {
-			public void handle(KeyEvent ke)
-	        {		
-				if (ke.getCode().equals(KeyCode.ENTER))
-	            {
-	            	runCommand();
-	            }	
-	        }
-	    });	
-	}
-	protected void runCommand()
-	{		
-		strFeedBack = logic.run(mainTextField.getText());
-		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
-		currentTask = logic.getStatus();
-    	VBox vbPop = new VBox();
-    	feedBackLabel = new Label(strFeedBack);
-		vbPop.getChildren().add(feedBackLabel);
-		vbPop.setPrefSize(1380, 50);
-		feedBackLabel.setId("lblFeedBack");
-		popUpFeedBack.setAutoFix(true);
-		popUpFeedBack.setContentNode(vbPop);
-		Path caret = findCaret(mainTextField);
-        Point2D screenLoc = findScreenLocation(caret);
-		popUpFeedBack.show(mainTextField, screenLoc.getX(), screenLoc.getY() + 70);
-	    mainTextField.requestFocus();
-	    
-	    ongoingTasks.clear();
-		floatingTasks.clear();
-		completedTasks.clear();
-		overdueTasks.clear();
-		
-		testMethod();
-		
-		
-	
-    	mainTextField.setText("");
-    	if(currentTask == TASK_STATUS.ALL)
- 		{
- 			tabPane.getSelectionModel().select(tabAll);
- 		}
-    	else if(currentTask == TASK_STATUS.COMPLETED)
-		{
-			tabPane.getSelectionModel().select(tabCompleted);
-		}
-		else if(currentTask == TASK_STATUS.ONGOING)
-		{
-			tabPane.getSelectionModel().select(tabOngoing);
-		}
-		else if(currentTask == TASK_STATUS.FLOATING)
-		{
-			tabPane.getSelectionModel().select(tabFloating);
-		}
-		else if(currentTask == TASK_STATUS.OVERDUE)
-		{
-			tabPane.getSelectionModel().select(tabOverdue);
-		}	  
-		else if(currentTask == TASK_STATUS.SEARCH)
-		{
-			tabPane.getSelectionModel().select(tabSearch);
-		}	
-		else
-		{
-			tabPane.getSelectionModel().select(null);
-		}
-		
-    	leftBox.updateChart();		
-	}
+
 	
 	private Path findCaret(Parent root) {
 	    for (Node n : root.getChildrenUnmodifiable()) {
@@ -619,10 +566,7 @@ public class UIRightBox {
 	    Point2D screenLoc = new Point2D(x, y);
 	    return screenLoc;
 	  }
-
-
-
-
+	  
 	private void createDisappearPane(ListView<Task> listViewLabel) 
 	{
 		
@@ -635,7 +579,7 @@ public class UIRightBox {
 		
 		if(getCurrentTab().equals(TASK_STATUS.ALL))
 		{
-			moreName = overdueTasks.get(x).getName();
+			moreName = allTasks.get(x).getName();
 		}
 		if(getCurrentTab().equals(TASK_STATUS.ONGOING))
 		{
@@ -719,7 +663,82 @@ public class UIRightBox {
 	public VBox getRoot() {
 		return rightBox;
 	}
-
+	
+	private void textFieldListener() {
+		
+		mainTextField.setOnKeyPressed(new EventHandler<KeyEvent>()
+	    {
+			public void handle(KeyEvent ke)
+	        {		
+				if (ke.getCode().equals(KeyCode.ENTER))
+	            {
+	            	runCommand();
+	            }	
+	        }
+	    });	
+	}
+	protected void runCommand()
+	{		
+		strFeedBack = logic.run(mainTextField.getText());
+		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
+		currentTask = logic.getStatus();
+		
+    	VBox vbPop = new VBox();
+    	feedBackLabel = new Label(strFeedBack);
+		vbPop.getChildren().add(feedBackLabel);
+		vbPop.setPrefSize(1380, 50);
+		feedBackLabel.setId("lblFeedBack");
+		popUpFeedBack.setAutoFix(true);
+		popUpFeedBack.setContentNode(vbPop);
+		Path caret = findCaret(mainTextField);
+        Point2D screenLoc = findScreenLocation(caret);
+		popUpFeedBack.show(mainTextField, screenLoc.getX(), screenLoc.getY() + 70);
+	    mainTextField.requestFocus();
+	    
+	    allTasks.clear();
+	    ongoingTasks.clear();
+		floatingTasks.clear();
+		completedTasks.clear();
+		overdueTasks.clear();
+		
+		testMethod();
+		
+		
+	
+    	mainTextField.setText("");
+    	if(currentTask == TASK_STATUS.ALL)
+ 		{
+ 			tabPane.getSelectionModel().select(tabAll);
+ 		}
+    	else if(currentTask == TASK_STATUS.COMPLETED)
+		{
+			tabPane.getSelectionModel().select(tabCompleted);
+		}
+		else if(currentTask == TASK_STATUS.ONGOING)
+		{
+			tabPane.getSelectionModel().select(tabOngoing);
+		}
+		else if(currentTask == TASK_STATUS.FLOATING)
+		{
+			tabPane.getSelectionModel().select(tabFloating);
+		}
+		else if(currentTask == TASK_STATUS.OVERDUE)
+		{
+			tabPane.getSelectionModel().select(tabOverdue);
+		}	  
+		else if(currentTask == TASK_STATUS.SEARCH)
+		{
+			tabPane.getSelectionModel().select(tabSearch);
+		}	
+		else
+		{
+			tabPane.getSelectionModel().select(null);
+		}
+		leftBox.updateLeftBox();
+	}
+	public TabPane getTabPane() {
+		return tabPane;
+	}
 
 
 }

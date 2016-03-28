@@ -72,8 +72,7 @@ public class Search extends Command {
 	private String searchByTag(String searchTag) {
 		Category category = categories.get(searchTag);
 		if (category==null) return "There is no tag called \"" + searchTag + "\"";
-		TreeMap<String, Task> tasksTreeMap = category.getTasks();
-		this.results = new ArrayList<Task>(tasksTreeMap.values());
+		this.results = category.getTasks();
 		return "Search for tag \"" + searchTag + "\" completed.";
 	}
 

@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -112,14 +113,13 @@ public class UIListener {
 					{
 						int numberOfTabs = rightBox.getTotalTabs();
 						rightBox.getTabPane().layout();
-						System.out.println(rightBox.getTabPane().getChildrenUnmodifiable().get(1).getLayoutX());
-				        
 						double rightBoxX = rightBox.getRoot().getLayoutX();
 						double rightBoxY = rightBox.getRoot().getLayoutY();
-						pane.setPrefSize(root.getWidth(), root.getHeight());						
+						pane.setPrefSize(root.getWidth(), root.getHeight());	
+									
 						for(int x=0,y=0;x<numberOfTabs;x++,y+=150)
 						{
-							listLbl.get(x).setFont(Font.font("Cambria", 25));
+							listLbl.get(x).setFont(Font.font("Cambria", 50));
 							listLbl.get(x).setLayoutX(rightBoxX+y);
 							listLbl.get(x).setLayoutY(rightBoxY);
 

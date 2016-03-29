@@ -139,7 +139,7 @@ public class DateTimeParser {
 	
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
-			if ((contentToAnalyse.get(i)).contains(" ytd ")) {
+			if ((contentToAnalyse.get(i).toLowerCase()).contains(" ytd ")) {
 				contentToAnalyse.remove(i);
 				contentToAnalyse.set(i, " yesterday ");
 			}
@@ -149,7 +149,7 @@ public class DateTimeParser {
 	
 	protected String processToday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
-			if (todayTypes.contains(contentToAnalyse.get(i))) {
+			if (todayTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
 				contentToAnalyse.add(i, "today ");
 				contentToAnalyse.remove(i+1);
 			}
@@ -160,7 +160,7 @@ public class DateTimeParser {
 	protected String processTomorrow (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			System.out.println("checkForAbbrevation :" + i + " " + contentToAnalyse.get(i));
-			if (tomorrowTypes.contains(contentToAnalyse.get(i))) {
+			if (tomorrowTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
 				contentToAnalyse.add(i, "tomorrow ");
 				contentToAnalyse.remove(i+1);
 			}

@@ -69,7 +69,7 @@ public class Parser {
 		COMMAND_TYPE commandType = determineCommandType(command);
 		
 		// concatenate add command in front for processing
-		if (commandType == COMMAND_TYPE.ADD && !userInput.contains(_commandAdd)) {
+		if (commandType == COMMAND_TYPE.ADD && !userInput.toLowerCase().contains(_commandAdd)) {
 			userInput = _commandAdd + " " + userInput;
 			System.out.println("TEST ADD :" + userInput);
 		}
@@ -152,7 +152,7 @@ public class Parser {
 	public COMMAND_TYPE determineCommandType(String commandType) {
 		FlexiCommand flexiCommand = new FlexiCommand();
 		possibleCommandErrors = flexiCommand.getKeywordsDataBase();
-		
+
 		if(possibleCommandErrors.containsKey(commandType)) {
 			this.command = possibleCommandErrors.get(commandType);
 			setCommandType(this.command);
@@ -172,7 +172,7 @@ public class Parser {
 	 */
 	private String getUserCommand(String userInput) {
 		String[] temp = userInput.split("\\s+", 2);
-		return temp[0];
+		return temp[0].toLowerCase();
 	}
 	
 	private String getUserInputContent(String userInput) {

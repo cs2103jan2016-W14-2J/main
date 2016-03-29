@@ -11,9 +11,9 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("cs2105 assignment 2");
+			Parser parser = new Parser("aDd SUBMIT ASSIGNMENT 1 FROM today TO tomorrow ");
 			
-			System.out.println(parser.getType());
+			System.out.println("command type :" + parser.getCommandType());
 			System.out.println("Sort Type :" + parser.getSortType());
 			System.out.println(parser.getName());
 			System.out.println(parser.getStartTime());

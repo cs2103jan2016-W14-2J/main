@@ -41,6 +41,10 @@ public class EditParser {
 	private void executeEditParser(String userInput) {
 		String[] editElements = userInput.replaceAll("[:.-]", "").toLowerCase().split("\\s+");
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
+		newTaskName = checkForAbbreviation(editTaskElements);
+		
+		String[] editElements2 = newTaskName.replaceAll("[:.-]", "").toLowerCase().split("\\s+");
+		editTaskElements = new ArrayList<String>(Arrays.asList(editElements2));
 		
 		for (int i = 0; i < editTaskElements.size(); i++) {
 			System.out.println(editTaskElements.get(i));
@@ -275,6 +279,17 @@ public class EditParser {
 		for (int i = 0; i < taskNameArrayList.size(); i++) {
 			name += " " + taskNameArrayList.get(i); 
 		}
+		return name;
+	}
+	
+	private String checkForAbbreviation(ArrayList<String> editTaskElements) {
+		System.out.println("checkForAbbrevation");
+		String name = "";
+		DateTimeParser dt = new DateTimeParser();
+		name = dt.processToday(editTaskElements);
+		name = dt.processTomorrow(editTaskElements);
+		name = dt.processYesterday(editTaskElements);
+		name = dt.processAt(editTaskElements);
 		return name;
 	}
 	

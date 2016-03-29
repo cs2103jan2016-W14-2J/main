@@ -11,7 +11,7 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("meet mum on 2016/13/5");
+			Parser parser = new Parser("edit 1 meet hannah on the bus at 2pm");
 			
 			System.out.println("command type :" + parser.getCommandType());
 			System.out.println("Task Type :" + parser.getType());
@@ -19,7 +19,7 @@ public class Test {
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getTag());
-			System.out.println(parser.getTaskID());
+			System.out.println(parser.getEditType());
 		
 		}
 }

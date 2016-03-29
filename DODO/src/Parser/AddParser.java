@@ -245,9 +245,9 @@ public class AddParser {
 			}
 		
 		}
-		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1) {
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON < LAST_POSITION_OF_AT) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
-			System.out.println("DEBUG @232:" + taskName);
+			System.out.println("DEBUG @250:" + taskName);
 			setTaskName(taskName);
 			
 			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, LAST_POSITION_OF_AT)));
@@ -282,12 +282,49 @@ public class AddParser {
 			}
 		
 		}
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON > LAST_POSITION_OF_AT) {
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+			System.out.println("DEBUG @250:" + taskName);
+			setTaskName(taskName);
+			
+			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_ON)));
+			List<Date> date1 = new PrettyTimeParser().parse(str);
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
+			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
+			
+			// Example: revise at chua chu kang on 24/7/2016
+			if (date1.size() == 0 && date2.size() != 0) {
+				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
+			//	setEndTime(date2.get(0));
+				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
+			}
+			// Example: meet hannah at 7pm on top of the building
+			else if (date1.size() != 0 && date2.size() == 0){
+				setTaskName(taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size()))));
+			//	setEndTime(date1.get(0));
+				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+			}
+			// Example: meet hannah at 2pm on 4th of April 2016 
+			else if (date1.size() != 0 && date2.size() != 0) {
+				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT))));
+				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
+			//	setEndTime(date3.get(0));
+				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
+			}
+			// Example: sleep on the study bench at the void deck
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
+		
+		}
 		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
 			String tempTaskName = "";
 			String confirmTaskName = "";
 			
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
-			System.out.println("DEBUG @266:" + taskName);
+			System.out.println("DEBUG @290:" + taskName);
 			// Example: meet Hannah at 7pm at Jurong East
 			if (taskName.lastIndexOf(KEYWORD_AT) != -1) {
 				tempTaskName = taskName.substring(taskName.lastIndexOf(KEYWORD_AT), taskName.length()).trim();

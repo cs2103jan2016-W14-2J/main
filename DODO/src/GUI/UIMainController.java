@@ -41,7 +41,6 @@ public class UIMainController {
 	{
 		this.logic = logic;
 		
-		listen = new UIListener();
 		
 		root = new HBox();
 		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
@@ -52,14 +51,15 @@ public class UIMainController {
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
 		
-		
+
 	}
 	public void start(Stage primaryStage) 
 	{		
 		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
 		setEscCloseForm();
-		listen.transparentHelpSheet(primaryStage,root, rightBox);
+		listen = new UIListener(root,primaryStage,rightBox,leftBox);
+		listen.assignHelpSheetListener();
 		show();
 		
 	}
@@ -79,17 +79,6 @@ public class UIMainController {
 	}
 	public void show() 
 	{
-		scene.addEventHandler(KeyEvent.KEY_RELEASED, new EventHandler() {
-            public void handle(KeyEvent event) {
-               
-            }
-
-			@Override
-			public void handle(Event arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-        });
 		root.addEventHandler(KeyEvent.ANY, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
@@ -150,6 +139,7 @@ public class UIMainController {
 	     	          logic.save();
 		        	  primaryStage.close();
 		          }
+		         
 		        }
 		    });			
 	}
@@ -194,4 +184,5 @@ public class UIMainController {
 	{
 		return leftBox;
 	}
+	
 }

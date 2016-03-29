@@ -310,7 +310,7 @@ public class UIRightBox {
 			tabSearch=null;
 		}
 		
-
+		
 
 		//addListToTitledPane(titledPaneAllTask, FXCollections.observableArrayList(allTasks),TASK_STATUS.FLOATING);
 		//addListToTitledPane(titledPaneSearchTask, FXCollections.observableArrayList(searchTasks),TASK_STATUS.FLOATING);
@@ -318,6 +318,7 @@ public class UIRightBox {
 		//tabSearch.setUserData(TASK_STATUS.FLOATING);
 		
 		//tabAll.setUserData(TASK_STATUS.FLOATING);
+		
 	}
 	private void updateTabMap() {
 		
@@ -668,20 +669,15 @@ public class UIRightBox {
 		}
 		leftBox.updateLeftBox();
 	}
-	
-	
-	
-	
-	
-	
 	public static TASK_STATUS getCurrentTab() 
 	{
-		if(tabPane.getSelectionModel().getSelectedItem()==null)
+		if(tabPane.getSelectionModel().getSelectedItem()==null )
 		{
 			//return TASK_STATUS.WELCOME;
 			return TASK_STATUS.OVERDUE;
 		}	
 		System.out.println((TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData());
+		
 		return (TASK_STATUS) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
 
@@ -695,7 +691,7 @@ public class UIRightBox {
 	private void setGreetingTab() 
 	{
 		String str = "TASK_STATUS.WELCOME";
-		tabWelcome.setUserData(str);
+		tabWelcome.setUserData(TASK_STATUS.FLOATING);
 		tabPane.getTabs().add(tabWelcome);
 		tabWelcome.setContent(welcomeHB);
 		uiWelcome.setRoot(welcomeHB);
@@ -742,16 +738,19 @@ public class UIRightBox {
 	{
 		return tabPane;
 	}
+	public ArrayList<Tab> getListTabs()
+	{
+		ArrayList<Tab> tabList = new ArrayList<Tab>();
+		for(int x=0;x<tabPane.getTabs().size();x++)
+		{
+			tabList.addAll(tabPane.getTabs());
+		}
+		return tabList;
+	}
 	public int getTotalTabs()
 	{
 		return tabPane.getTabs().size();
 	}
-	
-	
-	
-	
-	
-	
 	public void setCursorTextField() {
 		mainTextField.positionCaret(1);		
 	}

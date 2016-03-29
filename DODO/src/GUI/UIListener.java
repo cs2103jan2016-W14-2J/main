@@ -23,6 +23,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -35,10 +37,21 @@ import javafx.stage.Window;
 
 public class UIListener {
 	private final String TASK_STATUSdotEMPTY = "TASK_STATUS.EMPTY";
+	private Stage primaryStage;
+	private UIRightBox rightBox;
+	private UILeftBox leftBox;
+	private HBox root;
 	
 	public UIListener()
 	{
 		
+	}
+	public UIListener(HBox root,Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox)
+	{
+		this.root = root;
+		this.primaryStage =primaryStage;
+		this.rightBox = rightBox;
+		this.leftBox= leftBox;
 	}
 	public void chartListener(PieChart chart, UIRightBox rightBox)
 	{
@@ -81,63 +94,102 @@ public class UIListener {
 		    {
 		    	chartTab.setContent(vb);
 		    	rightBox.getTabPane().getTabs().add(chartTab);
-		    	rightBox.getTabPane().getSelectionModel().select(chartTab);		    	
+		    	rightBox.getTabPane().getSelectionModel().select(chartTab);
 		    }
 		});
 	}
-	public void transparentHelpSheet(Stage primaryStage, HBox root, UIRightBox rightBox) 
+	public void assignHelpSheetListener() 
 	{
 		
 		PopOver transparentPo = new PopOver();
     	Pane pane = new Pane();
-    	transparentPo.arrowSizeProperty().set(10);
-    	transparentPo.arrowLocationProperty().set(ArrowLocation.TOP_CENTER);
+    	transparentPo.arrowSizeProperty().set(0);
+
+
     	transparentPo.detachableProperty().set(false);
     	transparentPo.setContentNode(pane);
 		transparentPo.setOpacity(0.6);
-		Label lblF1 = new Label("F1");
-		Label lblF2 = new Label("F2");
-		Label lblF3 = new Label("F3");
-		Label lblF4 = new Label("F4");
-		Label lblF5 = new Label("F5");
-		Label lblF6 = new Label("F6");
-		Label lblF7 = new Label("F7");
-		Label lblF8 = new Label("F8");
-
+		Label lblF1 = new Label("Ctrl"+'\n'+ "A");
+		Label lblF2 = new Label("Ctrl"+'\n'+ "S");
+		Label lblF3 = new Label("Ctrl"+'\n'+ "D");
+		Label lblF4 = new Label("Ctrl"+'\n'+ "F");
+		Label lblF5 = new Label("Ctrl"+'\n'+ "G");
+		Label lblF6 = new Label("Ctrl"+'\n'+ "H");
+		Label lblF7 = new Label("Ctrl"+'\n'+ "J");
+		Label lblF8 = new Label("Ctrl"+'\n'+ "K");
 		
+		KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.A,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb2 = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb3 = new KeyCodeCombination(KeyCode.D,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb4 = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb5 = new KeyCodeCombination(KeyCode.G,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J,KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K,KeyCombination.CONTROL_DOWN);
+
     	ObservableList<Label> listLbl =FXCollections.observableArrayList(lblF1,lblF2,lblF3,lblF4,lblF5,lblF6,lblF7,lblF8);
 		
-				root.setOnKeyPressed(new EventHandler<KeyEvent>() {
-					public void handle(KeyEvent ke) {
-					if (ke.getCode().equals(KeyCode.ALT)) 
-					{
-						int numberOfTabs = rightBox.getTotalTabs();
-						rightBox.getTabPane().layout();
-						double rightBoxX = rightBox.getRoot().getLayoutX();
-						double rightBoxY = rightBox.getRoot().getLayoutY();
-						pane.setPrefSize(root.getWidth(), root.getHeight());	
-									
-						for(int x=0,y=0;x<numberOfTabs;x++,y+=150)
+    		root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+    		public void handle(KeyEvent ke) {
+						if (ke.getCode().equals(KeyCode.ALT)) 
 						{
-							listLbl.get(x).setFont(Font.font("Cambria", 50));
-							listLbl.get(x).setLayoutX(rightBoxX+y);
-							listLbl.get(x).setLayoutY(rightBoxY);
+							int numberOfTabs = rightBox.getTotalTabs();
+							double rightBoxX = rightBox.getRoot().getLayoutX();
+							double rightBoxY = rightBox.getRoot().getLayoutY();
+							pane.setPrefSize(root.getWidth(), root.getHeight());	
+							pane.getChildren().removeAll(listLbl);
+							for(int x=0,y=20;x<numberOfTabs;x++,y+=150)
+							{
+								listLbl.get(x).setFont(Font.font("Cambria", 30));
+								listLbl.get(x).setLayoutX(rightBoxX+y);
+								listLbl.get(x).setLayoutY(rightBoxY);
+	
+								pane.getChildren().add(listLbl.get(x));
+							}
 
-							pane.getChildren().add(listLbl.get(x));
+							transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
+							
 						}
 						
-						/*int numberOfTabs = rightBox.getTotalTabs();
-						double rightBoxX = rightBox.getRoot().getLayoutX();
-						double rightBoxY = rightBox.getRoot().getLayoutY();
-						pane.setPrefSize(root.getWidth(), root.getHeight());
-						HBox hb = new HBox(new Label("welcome"));
-						hb.styleProperty().set("-fx-border-color: black;");
-						hb.setLayoutX(rightBoxX);
-						hb.setLayoutY(rightBoxY);
-						pane.getChildren().add(hb);*/
-						
-						transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
-					}
+						if (ke.getCode().equals(KeyCode.CONTROL)) 
+						{
+							rightBox.getTabPane().requestFocus();
+
+						}
+						if (keyComb1.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(0);
+
+						}
+						if (keyComb2.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(1);
+						}
+						if (keyComb3.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(2);							
+						}
+						if (keyComb4.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(3);
+						}
+						if (keyComb5.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(4);
+						}
+						if (keyComb6.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(5);
+						}
+						if (keyComb7.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(6);
+						}
+						if (keyComb8.match(ke)) 
+						{
+							rightBox.getTabPane().getSelectionModel().select(7);
+						}
+						ke.consume();
 				}
 				});
 				root.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -153,5 +205,12 @@ public class UIListener {
 			
 	
 	}
+	
+	
 
+	
+	
+	
+	
+	
 }

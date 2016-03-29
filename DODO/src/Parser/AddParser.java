@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.text.ParseException;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
@@ -14,37 +13,14 @@ import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 import Command.*;
 import Task.*;
 
-/*
- * V 0.1: At this moment, this CommandParser function is only able to handle the following input format.
- * 
- * Timed Task:
- * 1. add revise on CS2103T at 1930hrs
- * 2. add finish CS2103T by 2359hrs
- * 3. add meeting with boss on 21.07.2016
- * 4. add cs2010 lab5 due on 01/03
- * 
- * Floating Task:
- * 1. add buy beer from 7-11
- * 2. add study CS2103T on the floor
- * 3. add revise CS2103T by the beach
- * 4. add visit ramen store @ nus
- * 5. add travel from 7/11 to yishun
- * 
- * Event Task:
- * 1. add study CS2103T from 1800hrs to 2000hrs
- * 2. add code from 1130pm to 1030am
- * 
- * 
- */
-
 public class AddParser {
-	private final String KEYWORD_FROM = " from ";
+	private final String KEYWORD_FROM = "from ";
 	private final String KEYWORD_TO = " to ";
-	private final String KEYWORD_ON = "on";
-	private final String KEYWORD_BY = "by";
-	private final String KEYWORD_AT = "at";
-	private final String KEYWORD_BEFORE = "before";
-	
+	private final String KEYWORD_ON = " on ";
+	private final String KEYWORD_BY = " by ";
+	private final String KEYWORD_AT = " at ";
+	private final String KEYWORD_BEFORE = " before ";
+
 	private int LAST_POSITION_OF_FROM = -1;
 	private int LAST_POSITION_OF_TO = -1;
 	private int LAST_POSITION_OF_ON = -1;
@@ -71,18 +47,16 @@ public class AddParser {
 	private void executeAddParser(String userTask) {
 		String[] str = userTask.split("\\s+");
 		taskItems = new ArrayList<String>(Arrays.asList(str));
-		userTask = checkForAbbreviation(taskItems);
+		taskName = checkForAbbreviation(taskItems);
+
+		taskType = determineTaskType(taskItems, taskName);
 		
-		taskType = determineTaskType(taskItems, userTask);
-		System.out.println("Debug AddParser: Test executeAddParser @line71: " + taskType);
-		
-		// initiate categorisation of a task.
 		switch(taskType) {
 			case DEADLINED:
 				parseDEADLINED();
 				break;
 			case FLOATING:
-				parseFloating(taskItems, userTask);
+				parseFloating(taskItems, taskName);
 				break;
 			case EVENT:
 				parseEVENT();
@@ -100,21 +74,20 @@ public class AddParser {
 		name = dt.processToday(taskItems);
 		name = dt.processTomorrow(taskItems);
 		name = dt.processYesterday(taskItems);
-		
+		name = dt.processAt(taskItems);
 		return name;
 	}
 
-	public TASK_TYPE determineTaskType(ArrayList<String> taskItems, String userTask) {
-		
-		if (checkIfFloatingTask(taskItems, userTask)) {
+	public TASK_TYPE determineTaskType(ArrayList<String> taskItems, String taskName) {
+		if (checkIfFloatingTask(taskItems, taskName)) {
 			setTaskType(TASK_TYPE.FLOATING);
 			return TASK_TYPE.FLOATING;
 		}
-		else if (checkIfDeadlinedTask(taskItems, userTask)) {
+		else if (checkIfDeadlinedTask(taskItems, taskName)) {
 			setTaskType(TASK_TYPE.DEADLINED);
 			return TASK_TYPE.DEADLINED;
 		}
-		else if (checkIfEventTask(userTask)) {
+		else if (checkIfEventTask(taskName)) {
 			setTaskType(TASK_TYPE.EVENT);
 			return TASK_TYPE.EVENT;
 		}
@@ -123,14 +96,23 @@ public class AddParser {
 		}
 	}
 
-	private boolean checkIfEventTask(String userTask) {
-		
-		LAST_POSITION_OF_FROM = userTask.toLowerCase().lastIndexOf(KEYWORD_FROM);
-		LAST_POSITION_OF_TO = userTask.toLowerCase().lastIndexOf(KEYWORD_TO);
-		
+	private boolean checkIfEventTask(String taskName) {
+	
+		LAST_POSITION_OF_FROM = taskName.toLowerCase().lastIndexOf(KEYWORD_FROM);
+		LAST_POSITION_OF_TO = taskName.toLowerCase().lastIndexOf(KEYWORD_TO);
+
 		// add study from <startDate> to <endDate>
 		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_FROM != -1) {
-			if (checkForDateAndTime(LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
+			if (checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
+				return true;
+			}
+			else {
+				setTaskType(TASK_TYPE.FLOATING);
+				return false;
+			}
+		}
+		else if (LAST_POSITION_OF_FROM > LAST_POSITION_OF_TO) {
+			if (checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, taskName.length())) {
 				return true;
 			}
 			else {
@@ -143,34 +125,35 @@ public class AddParser {
 		}
 	}
 
-	private boolean checkForDateAndTime(int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
-		String str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+	private boolean checkForDateAndTime(String taskName, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
+		String str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
+		System.out.println("Test checkForDateAndTime : " + str);
 		List<Date> dates = new PrettyTimeParser().parse(str);
-		return (dates.size() == 0) ? false : true; 
+		return (dates.size() != 0) ? true : false; 
 	}
 
-	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String userTask) {
-		getKeywordPosition(userTask);
+	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String taskName) {
+		getKeywordPosition(taskName);
 		return (LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
 			LAST_POSITION_OF_BEFORE != -1 || LAST_POSITION_OF_BY != -1) ? true : false;
 	}
 
-	private void getKeywordPosition(String userTask) {
-		ArrayList<String> temp = new ArrayList<String>(convertArrayListToLowerCase(userTask));
-		LAST_POSITION_OF_AT = temp.lastIndexOf(KEYWORD_AT);
-		LAST_POSITION_OF_ON = temp.lastIndexOf(KEYWORD_ON);
-		LAST_POSITION_OF_BEFORE = temp.lastIndexOf(KEYWORD_BEFORE);
-		LAST_POSITION_OF_BY = temp.lastIndexOf(KEYWORD_BY);
+	private void getKeywordPosition(String taskName) {
+		ArrayList<String> temp = new ArrayList<String>(convertArrayListToLowerCase(taskName));
+		LAST_POSITION_OF_AT = temp.lastIndexOf("at");
+		LAST_POSITION_OF_ON = temp.lastIndexOf("on");
+		LAST_POSITION_OF_BEFORE = temp.lastIndexOf("before");
+		LAST_POSITION_OF_BY = temp.lastIndexOf("by");
 	}
 
-	private ArrayList<String> convertArrayListToLowerCase(String userTask) {
-		String[] str = userTask.toLowerCase().split("\\s+");
+	private ArrayList<String> convertArrayListToLowerCase(String taskName) {
+		String[] str = taskName.toLowerCase().split("\\s+");
 		ArrayList<String> temp = new ArrayList<String>(Arrays.asList(str));
 		return temp;
 	}
 
-	private boolean checkIfFloatingTask(ArrayList<String> taskItems, String userTask) {
-		return (!checkIfEventTask(userTask) && !checkIfDeadlinedTask(taskItems, userTask)) ? true : false;
+	private boolean checkIfFloatingTask(ArrayList<String> taskItems, String taskName) {
+		return (!checkIfEventTask(taskName) && !checkIfDeadlinedTask(taskItems, taskName)) ? true : false;
 	}
 	
 
@@ -179,44 +162,41 @@ public class AddParser {
 		Date date = new Date();
 		
 		// Parse string with "from" ... "to".
-		if (userTask.toLowerCase().lastIndexOf(KEYWORD_TO) > userTask.toLowerCase().lastIndexOf(KEYWORD_FROM)) {
-//			str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size())));
-			str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO) {
+			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
 			List<Date> dates = new PrettyTimeParser().parse(str);
-			
 			if (dates.size() == 2) {
+				System.out.println("Test parseEvent : " + taskName);
+				
 				setStartTime(dates.get(0));
-			//	setEndTime(dates.get(1));
 				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
-				setTaskName(userTask.substring(0, userTask.toLowerCase().lastIndexOf(KEYWORD_FROM)));
+				setTaskName(taskName.substring(0, LAST_POSITION_OF_FROM));
 			}
 			
 			else if (dates.size() == 1) {
 				setStartTime(dates.get(0));
-				setTaskName(userTask.substring(0, userTask.toLowerCase().lastIndexOf(KEYWORD_FROM)));
+				setTaskName(taskName.substring(0, LAST_POSITION_OF_FROM));
 			}
 			else if (dates.size() == 0) {
-				setTaskName(userTask);
+				setTaskName(taskName);
 			}
 			
 		}
-		else if (userTask.toLowerCase().lastIndexOf(KEYWORD_TO) < userTask.toLowerCase().lastIndexOf(KEYWORD_FROM)) {
-			str = userTask.substring(LAST_POSITION_OF_FROM, userTask.length());
+		else if (taskName.toLowerCase().lastIndexOf(KEYWORD_TO) < taskName.toLowerCase().lastIndexOf(KEYWORD_FROM)) {
+			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			
 			if (dates.size() == 1) {
 				setStartTime(dates.get(0));
-				setTaskName(userTask.substring(0, userTask.toLowerCase().lastIndexOf(KEYWORD_FROM)));
+				setTaskName(taskName.substring(0, taskName.toLowerCase().lastIndexOf(KEYWORD_FROM)));
 			}
 		}
 	}
 
 	
 	private void parseDEADLINED() {
-		getKeywordPosition(userTask);
+		getKeywordPosition(taskName);
 		Date date = new Date();
-		
-		System.out.println("DEBUG :" + LAST_POSITION_OF_BY);
 		
 		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));

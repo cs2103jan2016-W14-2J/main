@@ -139,9 +139,8 @@ public class DateTimeParser {
 	
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
-			if ((contentToAnalyse.get(i).toLowerCase()).contains(" ytd ")) {
-				contentToAnalyse.remove(i);
-				contentToAnalyse.set(i, " yesterday ");
+			if ((contentToAnalyse.get(i).toLowerCase()).contains("ytd")) {
+				contentToAnalyse.set(i, "yesterday");
 			}
 		}
 		return toStringTaskElements(contentToAnalyse);
@@ -150,8 +149,7 @@ public class DateTimeParser {
 	protected String processToday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if (todayTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
-				contentToAnalyse.add(i, "today ");
-				contentToAnalyse.remove(i+1);
+				contentToAnalyse.set(i, "today");
 			}
 		}
 		return toStringTaskElements(contentToAnalyse);
@@ -161,13 +159,21 @@ public class DateTimeParser {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			System.out.println("checkForAbbrevation :" + i + " " + contentToAnalyse.get(i));
 			if (tomorrowTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
-				contentToAnalyse.add(i, "tomorrow ");
-				contentToAnalyse.remove(i+1);
+				contentToAnalyse.set(i, "tomorrow");
 			}
 		}
 		return toStringTaskElements(contentToAnalyse);
 	}
 	
+	protected String processAt (ArrayList<String> contentToAnalyse) {
+		for (int i = 0; i < contentToAnalyse.size(); i++) {
+			System.out.println("checkForAbbrevation :" + i + " " + contentToAnalyse.get(i));
+			if (contentToAnalyse.get(i).contains("@")) {
+				contentToAnalyse.set(i, "at");
+			}
+		}
+		return toStringTaskElements(contentToAnalyse);
+	}
 	/*
 	 * @param: an arraylist of task elements.
 	 * @description: concatenate the content of a task input together

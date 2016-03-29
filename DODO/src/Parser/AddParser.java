@@ -110,7 +110,7 @@ public class AddParser {
 			setTaskType(TASK_TYPE.FLOATING);
 			return TASK_TYPE.FLOATING;
 		}
-		else if (checkIfDeadlinedTask(taskItems)) {
+		else if (checkIfDeadlinedTask(taskItems, userTask)) {
 			setTaskType(TASK_TYPE.DEADLINED);
 			return TASK_TYPE.DEADLINED;
 		}
@@ -149,21 +149,28 @@ public class AddParser {
 		return (dates.size() == 0) ? false : true; 
 	}
 
-	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems) {
-		getKeywordPosition(taskItems);
+	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String userTask) {
+		getKeywordPosition(userTask);
 		return (LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
 			LAST_POSITION_OF_BEFORE != -1 || LAST_POSITION_OF_BY != -1) ? true : false;
 	}
 
-	private void getKeywordPosition(ArrayList<String> taskItems) {
-		LAST_POSITION_OF_AT = taskItems.lastIndexOf(KEYWORD_AT);
-		LAST_POSITION_OF_ON = taskItems.lastIndexOf(KEYWORD_ON);
-		LAST_POSITION_OF_BEFORE = taskItems.lastIndexOf(KEYWORD_BEFORE);
-		LAST_POSITION_OF_BY = taskItems.lastIndexOf(KEYWORD_BY);
+	private void getKeywordPosition(String userTask) {
+		ArrayList<String> temp = new ArrayList<String>(convertArrayListToLowerCase(userTask));
+		LAST_POSITION_OF_AT = temp.lastIndexOf(KEYWORD_AT);
+		LAST_POSITION_OF_ON = temp.lastIndexOf(KEYWORD_ON);
+		LAST_POSITION_OF_BEFORE = temp.lastIndexOf(KEYWORD_BEFORE);
+		LAST_POSITION_OF_BY = temp.lastIndexOf(KEYWORD_BY);
+	}
+
+	private ArrayList<String> convertArrayListToLowerCase(String userTask) {
+		String[] str = userTask.toLowerCase().split("\\s+");
+		ArrayList<String> temp = new ArrayList<String>(Arrays.asList(str));
+		return temp;
 	}
 
 	private boolean checkIfFloatingTask(ArrayList<String> taskItems, String userTask) {
-		return (!checkIfEventTask(userTask) && !checkIfDeadlinedTask(taskItems)) ? true : false;
+		return (!checkIfEventTask(userTask) && !checkIfDeadlinedTask(taskItems, userTask)) ? true : false;
 	}
 	
 
@@ -206,13 +213,12 @@ public class AddParser {
 
 	
 	private void parseDEADLINED() {
-		getKeywordPosition(taskItems);
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		getKeywordPosition(userTask);
 		Date date = new Date();
 		
-		System.out.println("DEBUG :" + LAST_POSITION_OF_BEFORE);
+		System.out.println("DEBUG :" + LAST_POSITION_OF_BY);
 		
-		if (taskItems.lastIndexOf(KEYWORD_BY) != -1 && taskItems.lastIndexOf(KEYWORD_AT) == -1) {
+		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
 			System.out.println("DEBUG @line 193:" + taskName);
 			setTaskName(taskName);
@@ -239,7 +245,7 @@ public class AddParser {
 	
 		}
 		
-		else if (taskItems.lastIndexOf(KEYWORD_ON) != -1 && taskItems.lastIndexOf(KEYWORD_AT) == -1) {
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT == -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 			System.out.println("DEBUG @line213:" + taskName);
 			setTaskName(taskName);
@@ -259,7 +265,7 @@ public class AddParser {
 			}
 		
 		}
-		else if (taskItems.lastIndexOf(KEYWORD_ON) != -1 && taskItems.lastIndexOf(KEYWORD_AT) != -1) {
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 			System.out.println("DEBUG @232:" + taskName);
 			setTaskName(taskName);
@@ -296,7 +302,7 @@ public class AddParser {
 			}
 		
 		}
-		else if (taskItems.lastIndexOf(KEYWORD_AT) != -1 && taskItems.lastIndexOf(KEYWORD_ON) == -1) {
+		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 			System.out.println("DEBUG @266:" + taskName);
 			setTaskName(taskName);
@@ -316,7 +322,7 @@ public class AddParser {
 			}
 		}
 			
-		else if (taskItems.lastIndexOf(KEYWORD_BEFORE) != -1) {
+		else if (LAST_POSITION_OF_BEFORE != -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BEFORE)));
 			setTaskName(taskName);
 			System.out.println("DEBUG BEFORE:" + taskName);

@@ -175,7 +175,7 @@ public class DateAndTimeParser {
 		
 		System.out.println("Debug: @DateAndTimeParser line 149. " + timeString);
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Calendar cal = Calendar.getInstance(); 
 	
 		try {

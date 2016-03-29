@@ -21,7 +21,7 @@ import Parser.*;
 public class TestParser {
 
 	@Test
-	public void testTaskType() {
+	public void testTaskType() throws Exception {
 		
 		
 		Parser parser = new Parser("drive by the beach");
@@ -54,7 +54,7 @@ public class TestParser {
 	}
 	
 	@Test
-	public void testFloating() {
+	public void testFloating() throws Exception{
 		
 		Parser parser = new Parser("drive by the beach");
 		assertEquals("drive by the beach", parser.getName());
@@ -89,7 +89,7 @@ public class TestParser {
 	}
 	
 	@Test
-	public void testDeadlined() throws ParseException {
+	public void testDeadlined() throws Exception {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
 		Parser parser = new Parser("drive baby howard home by tomorrow");
@@ -152,7 +152,7 @@ public class TestParser {
 	}
 
 	@Test
-	public void testEvent() throws ParseException {
+	public void testEvent() throws Exception {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
 		Parser parser = new Parser("study cs2103t from 01.04.2016 to 05.04.2016");

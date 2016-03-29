@@ -117,10 +117,8 @@ public class Parser {
 				setTaskIndex(userInput);
 				break;
 			case UNDO:
-				setCommandType(COMMAND_TYPE.UNDO);
 				break;
 			case REDO:
-				setCommandType(COMMAND_TYPE.REDO);
 				break;
 			case SEARCH:
 				userInput = getUserInputContent(userInput);

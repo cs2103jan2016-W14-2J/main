@@ -1,9 +1,13 @@
 package Parser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.text.ParseException;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
@@ -165,6 +169,7 @@ public class AddParser {
 
 	private void parseEVENT() {
 		String str = "";
+		Date date = new Date();
 		
 		// Parse string with "from" ... "to".
 		if (userTask.lastIndexOf(KEYWORD_TO) > userTask.lastIndexOf(KEYWORD_FROM)) {
@@ -173,7 +178,8 @@ public class AddParser {
 			
 			if (dates.size() == 2) {
 				setStartTime(dates.get(0));
-				setEndTime(dates.get(1));
+			//	setEndTime(dates.get(1));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
 				setTaskName(userTask.substring(0, userTask.lastIndexOf(KEYWORD_FROM)));
 			}
 			
@@ -200,6 +206,9 @@ public class AddParser {
 	
 	private void parseDEADLINED() {
 		getKeywordPosition(taskItems);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		
 		System.out.println("DEBUG :" + LAST_POSITION_OF_BEFORE);
 		
 		if (taskItems.lastIndexOf(KEYWORD_BY) != -1 && taskItems.lastIndexOf(KEYWORD_AT) == -1) {
@@ -212,11 +221,14 @@ public class AddParser {
 			
 			// Example: submit assignment 1 by tomorrow
 			if (dates.size() != 0 && !contentToAnalyse.contains(" next ")) {
-				setEndTime(dates.get(0));
+				System.out.println("TEST test");
+			//	setEndTime(dates.get(0));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: submit assignment by next 2 weeks
 			else if (dates.size() != 0 && contentToAnalyse.contains(" next ")) {
-				setEndTime(dates.get(1));
+			//	setEndTime(dates.get(1));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
 			}
 			// Example: take a walk by the beach
 			else {
@@ -236,7 +248,8 @@ public class AddParser {
 			
 			// Example: revise on cs2130t chapter 1 on sunday
 			if (dates.size() != 0) {
-				setEndTime(dates.get(0));
+			//	setEndTime(dates.get(0));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: take a walk by the beach
 			else {
@@ -258,19 +271,22 @@ public class AddParser {
 			// Example: revise on cs2130t at 2pm
 			if (date1.size() == 0 && date2.size() != 0) {
 				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT))));
-				setEndTime(date2.get(0));
+			//	setEndTime(date2.get(0));
+				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah on 4 april, 2016 at suntec city
 			else if (date1.size() != 0 && date2.size() == 0){
 				setTaskName(taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size()))));
-				setEndTime(date1.get(0));
+			//	setEndTime(date1.get(0));
+				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah on 4th of April 2016 at 2pm
 			else if (date1.size() != 0 && date2.size() != 0) {
 				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
-				setEndTime(date3.get(0));
+			//	setEndTime(date3.get(0));
+				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
 			}
 			// Example: sleep on the study bench at the void deck
 			else {
@@ -289,7 +305,8 @@ public class AddParser {
 			
 			// Example: submit assignment 1 at 2359hrs
 			if (dates.size() != 0) {
-				setEndTime(dates.get(0));
+			//	setEndTime(dates.get(0));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: take a walk by the beach
 			else {
@@ -307,11 +324,13 @@ public class AddParser {
 			
 			// Example: submit assignment 1 before monday 2359hrs
 			if (dates.size() != 0 && !contentToAnalyse.contains(" next ")) {
-				setEndTime(dates.get(0));
+			//	setEndTime(dates.get(0));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: submit assignment by next 2 weeks
 			else if (dates.size() != 0 && contentToAnalyse.contains(" next ")) {
-				setEndTime(dates.get(1));
+			//	setEndTime(dates.get(1));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: let the kids eat before us.
 			else {
@@ -320,6 +339,33 @@ public class AddParser {
 			}
 		}
 			
+	}
+
+	private Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
+		Date newDate = date;
+		SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String dateWithoutTime = df.format(date);
+		
+		System.out.println("checkAndSetDefaultEndTime date:" + dateWithoutTime);
+		
+		try {
+			Date dateWithoutDate = sdf.parse(sdf.format(date));
+			System.out.println("checkAndSetDefaultEndTime date:" + dateWithoutDate);
+			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
+			System.out.println("checkAndSetDefaultEndTime date:" + currentWithoutDate);
+			
+			if (dateWithoutDate.equals(currentWithoutDate)) {
+				String newDateWithTime = dateWithoutTime + " " + "23:59:59";
+				newDate = sf.parse(newDateWithTime);
+			} 
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return newDate;
+		
 	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {

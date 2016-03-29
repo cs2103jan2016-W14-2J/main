@@ -12,6 +12,7 @@ public class SearchParser {
 	private SEARCH_TYPE searchType;
 	private Date searchByDate;
 	private String PREPOSITION_BY = "by";
+	private String PREPOSITION_BY_WITH_SPACE = "by";
 	private String SYMBOL_OPEN_PARENTHEISIS = "<";
 	private String SYMBOL_CLOSE_PARENTHEISIS = ">";
 	
@@ -90,7 +91,7 @@ public class SearchParser {
 	private String removeBy(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");
 		if (str[0].contains(PREPOSITION_BY)) {
-			userTask.replace(" by ", "");
+			userTask.replace(PREPOSITION_BY_WITH_SPACE, "");
 		}
 		return userTask;
 	}

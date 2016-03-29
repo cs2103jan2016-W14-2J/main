@@ -2,9 +2,7 @@ package Task;
 
 import java.util.Date;
 
-/*
- * @author: Lu Yang
- */
+/* @@author: Lu Yang */
 
 public class Event extends Task {
 	private Date startDateTime;
@@ -40,5 +38,14 @@ public class Event extends Task {
 		return this.endDateTime;
 	}
 	
+	/*******************************MUTATORS********************************/
+	
+	public void setStartDateTime(Date startDateTime) {
+		this.startDateTime = startDateTime;
+	}
+	
+	public void setEndDateTime(Date endDateTime) {
+		this.endDateTime = endDateTime;
+	}
 	
 }

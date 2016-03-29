@@ -2,9 +2,7 @@ package Task;
 
 import java.util.*;
 
-/*
- * @author: Lu Yang
- */
+/* @@author: Lu Yang */
 
 public class DeadlinedTask extends Task {
 	private Date endDateTime;
@@ -17,12 +15,8 @@ public class DeadlinedTask extends Task {
 	}
 	
 	private boolean checkOverdue() {
-		System.out.println("deadlinedTask/checkoverdue: checkpoint1");
 		Date current = new Date();
-		System.out.println("deadlinedTask/checkoverdue: checkpoint2");
-		System.out.println("[DEBUG] current: " + current);
 		if  (current.after(endDateTime)) {
-			System.out.println("deadlinedTask/checkoverdue: checkpoint3");
 			return true;
 		}
 		else return false;
@@ -36,5 +30,10 @@ public class DeadlinedTask extends Task {
 	
 	public Date getEndDateTime() {
 		return this.endDateTime;
+	}
+	
+	/*************************************MUTATORS*********************************/
+	public void setEndDateTime(Date endDateTime) {
+		this.endDateTime = endDateTime;
 	}
 }

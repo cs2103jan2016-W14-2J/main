@@ -6,10 +6,7 @@ import Storage.*;
 import Task.*;
 import java.util.*;
 
-/*
- * @author: Lu Yang
- * description: 
- */
+/* @@author: Lu Yang */
 
 public class Logic {
 	private static Logic theOne; //singleton
@@ -87,7 +84,12 @@ public class Logic {
 
 	private String processCommand(String input) {
 		String message = "";
-		Parser parser = new Parser(input);
+		Parser parser;
+		try {
+			parser = new Parser(input);
+		} catch (NumberFormatException e) {
+			return "ERROR FROM PARSER";
+		}
 		COMMAND_TYPE command = parser.getCommandType();
 		ArrayList<ArrayList<Task>> data = compress();
 

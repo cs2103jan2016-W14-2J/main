@@ -1,9 +1,7 @@
 package Task;
 
-/*
- *@author Pay Hao Jie
- *@Description: This class sets and returns the attributes of a task. 
- */
+/* @@author: Lu Yang */
+
 public class Task extends Object {
 	private TASK_TYPE type;
 	private TASK_STATUS status;

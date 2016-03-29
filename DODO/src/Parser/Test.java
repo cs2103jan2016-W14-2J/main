@@ -11,10 +11,10 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
 */
-			Parser parser = new Parser("aDd SUBMIT ASSIGNMENT 1 FROM today TO tomorrow ");
+			Parser parser = new Parser("meet mum on 2016/13/5");
 			
 			System.out.println("command type :" + parser.getCommandType());
-			System.out.println("Sort Type :" + parser.getSortType());
+			System.out.println("Task Type :" + parser.getType());
 			System.out.println(parser.getName());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());

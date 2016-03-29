@@ -50,7 +50,7 @@ public class AddParser {
 		taskName = checkForAbbreviation(taskItems);
 
 		taskType = determineTaskType(taskItems, taskName);
-		
+		System.out.println("At line 53 : " + taskType);
 		switch(taskType) {
 			case DEADLINED:
 				parseDEADLINED();
@@ -283,17 +283,34 @@ public class AddParser {
 		
 		}
 		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
+			String tempTaskName = "";
+			String confirmTaskName = "";
+			
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 			System.out.println("DEBUG @266:" + taskName);
-			setTaskName(taskName);
+			// Example: meet Hannah at 7pm at Jurong East
+			if (taskName.lastIndexOf(KEYWORD_AT) != -1) {
+				tempTaskName = taskName.substring(taskName.lastIndexOf(KEYWORD_AT), taskName.length()).trim();
+				confirmTaskName = taskName.substring(0, taskName.lastIndexOf(KEYWORD_AT)).trim();
+			}
+			else {
+				setTaskName(taskName);
+			}
 			
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
+			List<Date> date1 = new PrettyTimeParser().parse(tempTaskName);
 			
-			// Example: submit assignment 1 at 2359hrs
-			if (dates.size() != 0) {
+			// Example: meet hannah at the beach at 2359hrs
+			if (dates.size() != 0 && date1.size() == 0) {
 			//	setEndTime(dates.get(0));
 				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setTaskName(confirmTaskName + " " + tempTaskName);
+			}
+			// Example: meet hannah at 2359hrs at the Padang
+			else if (dates.size() == 0 && date1.size() != 0) {
+				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+				setTaskName(confirmTaskName + " " + contentToAnalyse);
 			}
 			// Example: take a walk by the beach
 			else {
@@ -335,14 +352,10 @@ public class AddParser {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		String dateWithoutTime = df.format(date);
 		
-		System.out.println("checkAndSetDefaultEndTime date:" + dateWithoutTime);
-		
 		try {
 			Date dateWithoutDate = sdf.parse(sdf.format(date));
-			System.out.println("checkAndSetDefaultEndTime date:" + dateWithoutDate);
 			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
-			System.out.println("checkAndSetDefaultEndTime date:" + currentWithoutDate);
-			
+
 			if (dateWithoutDate.equals(currentWithoutDate)) {
 				String newDateWithTime = dateWithoutTime + " " + "23:59:59";
 				newDate = sf.parse(newDateWithTime);

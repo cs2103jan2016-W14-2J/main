@@ -9,6 +9,13 @@ public class Event extends Task {
 	private Date endDateTime;
 	private boolean isOverdue;
 	
+	public Event() {
+		super();
+		this.startDateTime = null;
+		this.endDateTime = null;
+		isOverdue = false;
+	}
+	
 	public Event(TASK_TYPE type, String name, String tag, Date startDateTime, Date endDateTime) {
 		super(type, name, tag);
 		this.startDateTime = startDateTime;

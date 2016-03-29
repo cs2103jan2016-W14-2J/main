@@ -9,15 +9,24 @@ public class Task extends Object {
 	private String tag;
 	private boolean flag;
 	private boolean isComplete;
-
+	
+	public Task() {
+		this(TASK_TYPE.FLOATING, "Default", null, false, false);
+	}
+	
 	public Task(TASK_TYPE type, String name, String tag) {
 		this.type = type; // parser-determined
 		this.name = name; // must have
 		this.tag = tag; // may be null
-		this.isComplete = false;
-		this.flag = false;
 	}
 	
+	public Task(TASK_TYPE type, String name, String tag, boolean flag, boolean isComplete) {
+		this.type = type;
+		this.name = name;
+		this.tag = tag;
+		this.flag = flag;
+		this.isComplete = isComplete;
+	}
 	// copy constructor
 	public Task(Task original) {
 		this.type = original.type;

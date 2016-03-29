@@ -9,10 +9,12 @@ import Parser.*;
 import Task.*;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 public class Storage {
@@ -22,6 +24,8 @@ public class Storage {
 	private static final String FILENAME_OVERDUE_TASKS = "OverdueTasks.txt";
 
 	private static final String EMPTY_STRING = "";
+
+	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
 
 	PrintWriter pw;
 	BufferedReader br;
@@ -42,7 +46,7 @@ public class Storage {
 		if (!fileExists(floatingDirectory)) initialiseFile(floatingDirectory);
 		if (!fileExists(overdueDirectory)) initialiseFile(overdueDirectory);
 	}
-	
+
 	private boolean fileExists(String directory) {
 		File file = new File(directory);
 		if (file.exists()) return true;
@@ -81,9 +85,11 @@ public class Storage {
 
 	private String printToFile(String filename, ArrayList<Task> tasks)  {
 		clearFile(filename);
-		String output = "";
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")) {
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			GsonBuilder gsonBuilder = new GsonBuilder()
+					.setPrettyPrinting()
+					.setDateFormat("dd/MM/yy hh:mm:ss");
+			Gson gson = gsonBuilder.create();
 			gson.toJson(tasks, writer);
 		}
 		catch (UnsupportedEncodingException e) {
@@ -100,9 +106,10 @@ public class Storage {
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
 			br = new BufferedReader(new FileReader(filename));
-			Gson gson = new GsonBuilder().create();
-			tasks = gson.fromJson(br, new TypeToken<ArrayList<Task>>() {
-			}.getType());
+			GsonBuilder gsonBuilder = new GsonBuilder()
+					.registerTypeAdapter(tasks.getClass(), new CustomDeserializer());
+			Gson gson = gsonBuilder.create();
+			tasks = gson.fromJson(br, new TypeToken<ArrayList<Task>>() {}.getType());
 			br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -136,4 +143,95 @@ public class Storage {
 		}
 	}
 
+	/*public class DateSerializer implements JsonSerializer<Date>{
+		@Override
+		public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
+			String str = formatter.format(src);
+			return new JsonPrimitive(str);
+		}
+	}
+
+	public class DateDeserializer implements JsonDeserializer<Date> {
+		public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+			throws JsonParseException	 {
+			String date = json.getAsString();
+			return new Date(json.getAsJsonPrimitive().getAsString());
+		}
+	}*/
+	
+	/*public class CustomSerializer implements JsonSerializer<ArrayList<Task>> {
+		private static TreeMap<String, Class> map = new TreeMap<String, Class>();
+		
+		@Override 
+		public JsonElement serialize(ArrayList<Task> src, Type typeOfSrc, JsonSerializationContext context) {
+			JsonArray ja = new JsonArray();
+			for (Task task: src) {
+				
+			}
+		}
+	}*/
+	
+	public class CustomDeserializer implements JsonDeserializer<ArrayList<Task>> {
+		@Override
+		public ArrayList<Task> deserialize(JsonElement json, Type typeofT, JsonDeserializationContext context)
+				throws JsonParseException {
+			ArrayList<Task> list = new ArrayList<Task>();
+			JsonArray ja = json.getAsJsonArray();
+			for (JsonElement je: ja) {
+				String type = je.getAsJsonObject().get("type").getAsString();
+				System.out.println("=====CustomDeserializer=====" + type);
+				if (type.equals("DEADLINED")) {
+					JsonObject jsonObj = je.getAsJsonObject();
+					String endDateTimeStr = jsonObj.get("endDateTime").getAsString();
+					TASK_TYPE task_type = TASK_TYPE.EVENT;
+					String name = jsonObj.get("name").getAsString();
+					boolean flag = jsonObj.get("flag").getAsBoolean();
+					boolean isComplete = jsonObj.get("isComplete").getAsBoolean();
+					String tag = null;
+					try {
+						tag = jsonObj.get("tag").getAsString();
+					} catch (NullPointerException e) {
+					}
+					
+					Date endDateTime = null;
+					try {
+						endDateTime = formatter.parse(endDateTimeStr);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					DeadlinedTask task = new DeadlinedTask(task_type, name, tag, endDateTime);
+					list.add(task);
+				}
+				else if (type.equals("EVENT")) {
+					JsonObject jsonObj = je.getAsJsonObject();
+					String startDateTimeStr = jsonObj.get("startDateTime").getAsString();
+					String endDateTimeStr = jsonObj.get("endDateTime").getAsString();
+					TASK_TYPE task_type = TASK_TYPE.EVENT;
+					String name = jsonObj.get("name").getAsString();
+					boolean flag = jsonObj.get("flag").getAsBoolean();
+					boolean isComplete = jsonObj.get("isComplete").getAsBoolean();
+					String tag = null;
+					try {
+						tag = jsonObj.get("tag").getAsString();
+					} catch (NullPointerException e) {
+					}
+					Date startDateTime = null;
+					Date endDateTime = null;
+					try {
+						startDateTime = formatter.parse(startDateTimeStr);
+						endDateTime = formatter.parse(endDateTimeStr);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					Event event = new Event(task_type, name, tag, startDateTime, endDateTime);
+					list.add(event);
+				}
+				else {
+					list.add(context.deserialize(je, Task.class));
+				}
+			}
+			return list;
+		}
+		
+	}
 }

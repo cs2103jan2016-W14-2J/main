@@ -8,6 +8,12 @@ public class DeadlinedTask extends Task {
 	private Date endDateTime;
 	private boolean isOverdue;
 	
+	public DeadlinedTask() {
+		super();
+		this.endDateTime = null;
+		this.isOverdue = false;
+	}
+	
 	public DeadlinedTask(TASK_TYPE type, String name, String tag, Date endDateTime) {
 		super(type, name, tag);
 		this.endDateTime = endDateTime;

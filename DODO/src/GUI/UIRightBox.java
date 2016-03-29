@@ -30,6 +30,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -117,9 +118,11 @@ public class UIRightBox {
 	private UIWelcomePage uiWelcome;
 	private TASK_STATUS currentTask;
 	private UIListener listen;
+	private	HBox mainControllerRoot; 
 	
-	public UIRightBox(Logic logic)
+	public UIRightBox(Logic logic, HBox root)
 	{
+		mainControllerRoot = root;
 		rightBox = new VBox(); 
 		this.logic = logic;
 		usc = new UICssScaling();
@@ -180,6 +183,47 @@ public class UIRightBox {
 		rightBox.getChildren().add(mainTextField);
 		leftBox.updateLeftBox();
 		usc.setCssAndScalingForRightBox(tabPane);
+		
+
+		mainControllerRoot.setOnKeyPressed(new EventHandler<KeyEvent>() 
+		{
+			public void handle(KeyEvent ke) 
+			{
+				if (ke.getCode().equals(KeyCode.TAB)) 
+				{
+					/*if(getCurrentTab().equals(TASK_STATUS.WELCOME))
+					{
+					}*/
+					if(getCurrentTab().equals(TASK_STATUS.ALL))
+					{
+						titledPaneAllTask.getContent().requestFocus();
+					}
+					if(getCurrentTab().equals(TASK_STATUS.FLOATING))
+					{
+						titledPaneFloatingTask.getContent().requestFocus();
+					}
+					if(getCurrentTab().equals(TASK_STATUS.ONGOING))
+					{
+						titledPaneOnGoingTask.getContent().requestFocus();
+					}
+					if(getCurrentTab().equals(TASK_STATUS.COMPLETED))
+					{
+						titledPaneCompletedTask.getContent().requestFocus();
+					}
+					if(getCurrentTab().equals(TASK_STATUS.OVERDUE))
+					{
+						titledPaneOverdueTask.getContent().requestFocus();
+					}
+					if(getCurrentTab().equals(TASK_STATUS.SEARCH))
+					{
+						titledPaneSearchTask.getContent().requestFocus();
+					}
+					
+
+					//SET ALL THE SELECTION HERE
+				}
+			}
+		});
 	}
 	
 	
@@ -389,6 +433,10 @@ public class UIRightBox {
 
 
 	private void addListToTitledPane(TitledPane titledPane, ObservableList<Task> listTask, TASK_STATUS typeOfTask) {
+		
+		
+		
+		
 		initTitledPane(titledPane);
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
 		new Thread(new Runnable() {
@@ -423,10 +471,10 @@ public class UIRightBox {
 									{
 										System.out.println("in Task");
 										lsg = new UICellComponents(currentIndex,strTagging,item.getName(), null, null, item.getFlag());
-										
 										logger.info("Task");  
 									}
-									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() {
+									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
+									{
 									    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 									        if(oldValue ==false)
 									        {
@@ -448,7 +496,7 @@ public class UIRightBox {
 							}
 						};
 						// cell.setStyle("-fx-control-background: Transparent");
-
+					
 						return cell;
 					}
 				});
@@ -483,12 +531,15 @@ public class UIRightBox {
 				
 				
 				
+				
 			}
 			
 		}).start();			
 		
 		//leftBox.updateChart();
 		titledPane.setContent(listViewLabel);
+		
+		
 	}
 	private void createLog()
 	{
@@ -765,5 +816,6 @@ public class UIRightBox {
 		mainTextField.setText(str);
 		runCommand();
 	}
+
 	
 }

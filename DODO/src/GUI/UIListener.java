@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
+import Logic.Logic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -41,13 +42,15 @@ public class UIListener {
 	private UIRightBox rightBox;
 	private UILeftBox leftBox;
 	private HBox root;
+	private Logic logic;
 	
 	public UIListener()
 	{
 		
 	}
-	public UIListener(HBox root,Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox)
+	public UIListener(HBox root,Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox, Logic logic)
 	{
+		this.logic = logic;
 		this.root = root;
 		this.primaryStage =primaryStage;
 		this.rightBox = rightBox;
@@ -150,7 +153,12 @@ public class UIListener {
 							transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
 							
 						}
-						
+						if (ke.getCode().equals(KeyCode.SHIFT)) 
+						{
+							rightBox.getTabPane().requestFocus();
+
+
+						}
 						if (ke.getCode().equals(KeyCode.CONTROL)) 
 						{
 							rightBox.getTabPane().requestFocus();
@@ -189,6 +197,17 @@ public class UIListener {
 						{
 							rightBox.getTabPane().getSelectionModel().select(7);
 						}
+						/*if(ke.getCode().equals(KeyCode.SHIFT))
+						{
+							rightBox.getTabPane().getTabs().get(1).getContent(;
+						}*/
+					     if(ke.getCode()==KeyCode.ESCAPE)
+					     {
+					    	 logic.save();
+					    	 primaryStage.close();
+					     }
+					         
+					        
 						ke.consume();
 				}
 				});

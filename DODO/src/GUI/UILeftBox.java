@@ -68,7 +68,7 @@ public class UILeftBox {
 	private int intFloatingTasks = 0;
 	private int intOngoingTasks =0 ;
 	
-	public UILeftBox(Logic logic )
+	public UILeftBox(Logic logic, HBox root )
 	{
 		leftBox = new VBox();
 		this.logic = logic;

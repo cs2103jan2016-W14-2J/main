@@ -45,8 +45,8 @@ public class UIMainController {
 		root = new HBox();
 		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
 		
-		leftBox = new UILeftBox(this.logic);
-		rightBox = new UIRightBox(this.logic);
+		leftBox = new UILeftBox(this.logic,this.root);
+		rightBox = new UIRightBox(this.logic,this.root);
 		
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
@@ -58,7 +58,7 @@ public class UIMainController {
 		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
 		setEscCloseForm();
-		listen = new UIListener(root,primaryStage,rightBox,leftBox);
+		listen = new UIListener(root,primaryStage,rightBox,leftBox,logic);
 		listen.assignHelpSheetListener();
 		show();
 		

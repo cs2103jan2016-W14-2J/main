@@ -10,6 +10,7 @@ import java.text.ParseException;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
+
 import Command.*;
 import Task.*;
 
@@ -48,6 +49,7 @@ public class AddParser {
 		String[] str = userTask.split("\\s+");
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		taskName = checkForAbbreviation(taskItems);
+		taskName = checkForDateElement(taskItems);
 
 		taskType = determineTaskType(taskItems, taskName);
 		System.out.println("At line 53 : " + taskType);
@@ -67,6 +69,38 @@ public class AddParser {
 		
 	}
 
+	private String checkForDateElement(ArrayList<String> taskItems) {
+		for (int i = 0; i < taskItems.size(); i++) {
+			try {
+				DateFormat srcDf = new SimpleDateFormat("dd/MM/yyyy");
+				Date date = srcDf.parse(taskItems.get(i));
+				DateFormat destDf = new SimpleDateFormat("yyyy/MM/dd");
+				taskItems.set(i, destDf.format(date));
+			}
+			catch (ParseException e) {				
+			}
+			try {
+				DateFormat srcDf = new SimpleDateFormat("dd.MM.yyyy");
+				Date date = srcDf.parse(taskItems.get(i));
+				DateFormat destDf = new SimpleDateFormat("yyyy/MM/dd");
+				taskItems.set(i, destDf.format(date));
+			}
+			catch (ParseException e) {				
+			}
+			
+			try {
+				DateFormat srcDf = new SimpleDateFormat("dd-MM-yyyy");
+				Date date = srcDf.parse(taskItems.get(i));
+				DateFormat destDf = new SimpleDateFormat("yyyy/MM/dd");
+				taskItems.set(i, destDf.format(date));
+			}
+			catch (ParseException e) {				
+			}
+			
+		}
+		return toStringTaskElements(taskItems);
+	}
+	
 	private String checkForAbbreviation(ArrayList<String> taskItems) {
 		System.out.println("checkForAbbrevation");
 		String name = "";

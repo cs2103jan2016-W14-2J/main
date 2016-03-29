@@ -39,11 +39,11 @@ public class EditParser {
 
 	
 	private void executeEditParser(String userInput) {
-		String[] editElements = userInput.replaceAll("[:.-]", "").toLowerCase().split("\\s+");
+		String[] editElements = userInput.replaceAll("[:-]", "").toLowerCase().split("\\s+");
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
 		newTaskName = checkForAbbreviation(editTaskElements);
 		
-		String[] editElements2 = newTaskName.replaceAll("[:.-]", "").toLowerCase().split("\\s+");
+		String[] editElements2 = newTaskName.replaceAll("[:-]", "").toLowerCase().split("\\s+");
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements2));
 		
 		for (int i = 0; i < editTaskElements.size(); i++) {
@@ -108,6 +108,8 @@ public class EditParser {
 	private void parseEditDeadLined(String userInput) {
 		System.out.println("Debug at parseEditDeadlined ");
 		String temp = "";
+		INDEX_OF_LAST_ON = userInput.lastIndexOf(KEYWORD_ON);
+		INDEX_OF_LAST_AT = userInput.lastIndexOf(KEYWORD_AT);
 		
 		if (userInput.lastIndexOf(KEYWORD_BY) != -1 && userInput.lastIndexOf(KEYWORD_AT) == -1) {
 			INDEX_OF_LAST_BY = userInput.lastIndexOf(KEYWORD_BY);
@@ -115,7 +117,7 @@ public class EditParser {
 			temp = userInput.substring(INDEX_OF_LAST_BY, userInput.length());
 		}
 		
-		else if (userInput.lastIndexOf(KEYWORD_ON) != -1) {
+		else if (userInput.lastIndexOf(KEYWORD_ON) != -1 && userInput.lastIndexOf(KEYWORD_AT) == -1) {
 			INDEX_OF_LAST_ON = userInput.lastIndexOf(KEYWORD_ON);
 			setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_ON)));
 			temp = userInput.substring(INDEX_OF_LAST_ON, userInput.length());
@@ -126,6 +128,37 @@ public class EditParser {
 			INDEX_OF_LAST_AT = userInput.lastIndexOf(KEYWORD_AT);
 			setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_AT)));
 			temp = userInput.substring(INDEX_OF_LAST_AT, userInput.length());
+		}
+		
+		else if (INDEX_OF_LAST_ON != -1 && INDEX_OF_LAST_ON < INDEX_OF_LAST_AT) {
+			setNewTaskName(userInput.substring(0, INDEX_OF_LAST_ON));
+			temp = userInput.substring(INDEX_OF_LAST_ON, INDEX_OF_LAST_AT);
+			String temp2 = userInput.substring(INDEX_OF_LAST_AT, userInput.length());
+			List<Date> dateTemp = new PrettyTimeParser().parse(temp);
+			List<Date> dateTemp2 = new PrettyTimeParser().parse(temp2);
+			if (dateTemp.size() == 0 && dateTemp2.size() != 0) {
+				setNewTaskName(newTaskName + " " + temp.trim());
+				temp = temp2;
+			}
+			else if (dateTemp.size() != 0 && dateTemp2.size() == 0) {
+				setNewTaskName(newTaskName + " " + temp2.trim());
+			}
+			
+		}
+		else if (INDEX_OF_LAST_AT != -1 && INDEX_OF_LAST_ON > INDEX_OF_LAST_AT) {
+			setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_AT)));
+			temp = userInput.substring(INDEX_OF_LAST_AT, INDEX_OF_LAST_ON);
+			String temp2 = userInput.substring(INDEX_OF_LAST_ON, userInput.length());
+			List<Date> dateTemp = new PrettyTimeParser().parse(temp);
+			List<Date> dateTemp2 = new PrettyTimeParser().parse(temp2);
+			if (dateTemp.size() == 0 && dateTemp2.size() != 0) {
+				setNewTaskName(newTaskName + " " + temp.trim());
+				temp = temp2;
+			}
+			else if (dateTemp.size() != 0 && dateTemp2.size() == 0) {
+				setNewTaskName(newTaskName + " " + temp2.trim());
+			}
+			
 		}
 			
 		else if (userInput.lastIndexOf(KEYWORD_BEFORE) != -1) {

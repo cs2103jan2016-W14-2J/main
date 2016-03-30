@@ -37,14 +37,24 @@ public class DateTimeParser {
 	}
 	
 	protected String removeTomorrow(String userInput) {
-		if (userInput.contains(" tomorrow") || userInput.contains("tomorrow ")) {
+		if (userInput.contains("tomorrow") || userInput.contains("tomorrow ")) {
 			userInput = userInput.replace("tomorrow", "");
 		}
 		return userInput.trim();
 	}
 	
+	protected String removeYesterday(String userInput) {
+		if (userInput.contains("yesterday")) {
+			userInput = userInput.replace("yesterday", "");
+		}
+		else if (userInput.contains("ytd")) {
+			userInput = userInput.replace("ytd", "");
+		}
+		return userInput.trim();
+	}
+	
 	protected String removeToday(String userInput) {
-		if (userInput.contains(" today")) {
+		if (userInput.contains("today")) {
 			userInput = userInput.replace(" today", "");
 		}
 		return userInput.trim();
@@ -116,24 +126,26 @@ public class DateTimeParser {
 		for (int i = 0; i < taskItems.size(); i++) {
 			System.out.println("removeTime :" + i + " " + taskItems.get(i));
 			
-			if (taskItems.get(i).length() > 3) {
+			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
+			
+	/*		if (taskItems.get(i).length() >= 3) {
 				temp = taskItems.get(i).substring(taskItems.get(i).length() - 2);
 				temp2 = taskItems.get(i).substring(taskItems.get(i).length() - 3);
 			}
-			
-			if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM) || temp.equals(KEYWORD_HR)) 
-				&& taskItems.get(i).length() != 2) {
+	*/		
+			if ((taskItems.get(i).contains(KEYWORD_AM) || taskItems.get(i).contains(KEYWORD_PM) 
+				|| taskItems.get(i).contains(KEYWORD_HR) || taskItems.get(i).contains(KEYWORD_HRS) ) 
+				&& dates.size() != 0) {
 				taskItems.remove(i);
+				System.out.println("removeTime :" + userInput);
 			}
-			else if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() == 2) {
+	/*		else if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() == 2) {
 				taskItems.remove(i);
 				taskItems.remove(i - 1);
 			}
-			else if (temp2.equals(KEYWORD_HRS)) {
-				taskItems.remove(i);
-			}
-		}
+	*/	}
 		userInput = toStringTaskElements(taskItems);
+		System.out.println("removeTime :" + userInput);
 		return userInput;
 	}
 	

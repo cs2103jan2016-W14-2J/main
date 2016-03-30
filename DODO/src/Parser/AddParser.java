@@ -55,13 +55,16 @@ public class AddParser {
 		System.out.println("At line 53 : " + taskType);
 		switch(taskType) {
 			case DEADLINED:
-				parseDEADLINED();
+				taskName = parseDEADLINED();
+				System.out.println("@line 59 :" + taskName);
+				parseFloating(taskItems, taskName);
 				break;
 			case FLOATING:
 				parseFloating(taskItems, taskName);
 				break;
 			case EVENT:
-				parseEVENT();
+				taskName = parseEVENT();
+				parseFloating(taskItems, taskName);
 				break;
 			default:
 				System.exit(1);
@@ -191,7 +194,7 @@ public class AddParser {
 	}
 	
 
-	private void parseEVENT() {
+	private String parseEVENT() {
 		String str = "";
 		Date date = new Date();
 		
@@ -200,16 +203,17 @@ public class AddParser {
 			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			if (dates.size() == 2) {
-				System.out.println("Test parseEvent : " + taskName);
-				
+				System.out.println("Test parseEvent : " + dates.get(1));
+				taskName = taskName.substring(0, LAST_POSITION_OF_FROM);
 				setStartTime(dates.get(0));
 				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
-				setTaskName(taskName.substring(0, LAST_POSITION_OF_FROM));
+				setTaskName(taskName);
 			}
 			
 			else if (dates.size() == 1) {
+				taskName = taskName.substring(0, LAST_POSITION_OF_FROM);
 				setStartTime(dates.get(0));
-				setTaskName(taskName.substring(0, LAST_POSITION_OF_FROM));
+				setTaskName(taskName);
 			}
 			else if (dates.size() == 0) {
 				setTaskName(taskName);
@@ -221,14 +225,16 @@ public class AddParser {
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			
 			if (dates.size() == 1) {
+				taskName = taskName.substring(0, taskName.toLowerCase().lastIndexOf(KEYWORD_FROM));
 				setStartTime(dates.get(0));
-				setTaskName(taskName.substring(0, taskName.toLowerCase().lastIndexOf(KEYWORD_FROM)));
+				setTaskName(taskName);
 			}
 		}
+		return taskName;
 	}
 
 	
-	private void parseDEADLINED() {
+	private String parseDEADLINED() {
 		getKeywordPosition(taskName);
 		Date date = new Date();
 		
@@ -241,19 +247,14 @@ public class AddParser {
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: submit assignment 1 by tomorrow
-			if (dates.size() != 0 && !contentToAnalyse.contains(" next ")) {
+			if (dates.size() != 0) {
 				System.out.println("TEST test");
-			//	setEndTime(dates.get(0));
 				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
-			}
-			// Example: submit assignment by next 2 weeks
-			else if (dates.size() != 0 && contentToAnalyse.contains(" next ")) {
-			//	setEndTime(dates.get(1));
-				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
 			}
 			// Example: take a walk by the beach
 			else {
-				setTaskName(userTask);
+				taskName = userTask;
+				setTaskName(taskName);
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 	
@@ -272,9 +273,10 @@ public class AddParser {
 			//	setEndTime(dates.get(0));
 				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 			}
-			// Example: take a walk by the beach
+			// Example: sleep on the floor
 			else {
-				setTaskName(userTask);
+				taskName = userTask;
+				setTaskName(taskName);
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		
@@ -291,27 +293,30 @@ public class AddParser {
 			
 			// Example: revise on cs2130t at 2pm
 			if (date1.size() == 0 && date2.size() != 0) {
-				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT))));
+				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+				setTaskName(taskName);
 			//	setEndTime(date2.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah on 4 april, 2016 at suntec city
 			else if (date1.size() != 0 && date2.size() == 0){
-				setTaskName(taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size()))));
+				taskName = taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+				setTaskName(taskName);
 			//	setEndTime(date1.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah on 4th of April 2016 at 2pm
 			else if (date1.size() != 0 && date2.size() != 0) {
+				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
-			//	setEndTime(date3.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
 			}
 			// Example: sleep on the study bench at the void deck
 			else {
-				setTaskName(userTask);
+				taskName = userTask;
+				setTaskName(taskName);
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		
@@ -328,19 +333,22 @@ public class AddParser {
 			
 			// Example: revise at chua chu kang on 24/7/2016
 			if (date1.size() == 0 && date2.size() != 0) {
-				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
+				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
+				setTaskName(taskName);
 			//	setEndTime(date2.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah at 7pm on top of the building
 			else if (date1.size() != 0 && date2.size() == 0){
-				setTaskName(taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size()))));
+				taskName = taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
+				setTaskName(taskName);
 			//	setEndTime(date1.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah at 2pm on 4th of April 2016 
 			else if (date1.size() != 0 && date2.size() != 0) {
-				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT))));
+				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+				setTaskName(taskName);
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
 			//	setEndTime(date3.get(0));
@@ -348,7 +356,8 @@ public class AddParser {
 			}
 			// Example: sleep on the study bench at the void deck
 			else {
-				setTaskName(userTask);
+				taskName = userTask;
+				setTaskName(taskName);
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		
@@ -367,7 +376,6 @@ public class AddParser {
 			}
 			else {
 				tempTaskName = taskName;
-				System.out.println("TEST TEST TEST :" + taskName);
 				setTaskName(tempTaskName);
 			}
 			
@@ -378,16 +386,19 @@ public class AddParser {
 			if (dates.size() != 0 && date1.size() == 0) {
 			//	setEndTime(dates.get(0));
 				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
-				setTaskName(confirmTaskName + " " + tempTaskName);
+				taskName = confirmTaskName + " " + tempTaskName;
+				setTaskName(taskName);
 			}
 			// Example: meet hannah at 2359hrs at the Padang
 			else if (dates.size() == 0 && date1.size() != 0) {
 				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
-				setTaskName(confirmTaskName + " " + contentToAnalyse);
+				taskName = confirmTaskName + " " + contentToAnalyse;
+				setTaskName(taskName);
 			}
 			// Example: take a walk by the beach
 			else {
-				setTaskName(userTask);
+				taskName= userTask;
+				setTaskName(taskName);
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		}
@@ -415,7 +426,7 @@ public class AddParser {
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		}
-			
+		return taskName;
 	}
 
 	private Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
@@ -442,31 +453,35 @@ public class AddParser {
 	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
+		DateTimeParser dt = new DateTimeParser();
+		String timeChecker = dt.removeTime(userTask);
 		
+		Date date = new Date();
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
 		System.out.println("TEST parseFloating :" + dates.size());
 		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}
 		else {
-			if (dates.size() == 1) {
-				setEndTime(dates.get(0));
-				extractDateElement(taskItems, userTask);
+			if (dates.size() == 1 && (!userTask.equals(timeChecker))) {
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				extractDateElement(userTask);
 			}
 			else if (dates.size() > 1){
-				setEndTime(dates.get(1));
+				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
 				setStartTime(dates.get(0));
-				extractDateElement(taskItems, userTask);
+				extractDateElement(userTask);
 				setTaskType(TASK_TYPE.EVENT);
 			}
 		}
 	
 	}
 	
-	private void extractDateElement(ArrayList<String> taskItems, String userTask) {
+	private void extractDateElement(String userTask) {
 		String temp = "";
 		DateTimeParser dt = new DateTimeParser();
 		temp = dt.removeTheDayAfterTomorrow(userTask);
+		temp = dt.removeYesterday(temp);
 		temp = dt.removeTomorrow(temp);
 		temp = dt.removeToday(temp);
 		temp = dt.removeThisComingWeekday(temp);
@@ -474,13 +489,29 @@ public class AddParser {
 		temp = dt.removeNextWeek(temp);
 		temp = dt.removeTime(temp);
 		temp = dt.removeDate(temp);
-		setTaskName(userTask);
+		setTaskName(extractLastPreposition(temp));
 		if (temp.trim().equals(userTask.trim())) {
 			setTaskType(TASK_TYPE.FLOATING);
 		}
 		else {
 			setTaskType(TASK_TYPE.DEADLINED);
 		}
+	}
+
+	private String extractLastPreposition(String temp) {
+		String[] str = temp.split("[\\s+]");
+		String newStr = "";
+		int lastWordPosition = str.length - 1;
+		
+		if (str[lastWordPosition].contains("at") || 
+			str[lastWordPosition].contains("by") ||
+			str[lastWordPosition].contains("on")) {
+			str[lastWordPosition] = "";
+		}
+		for (int i = 0; i < str.length; i++) {
+			newStr += str[i] + " ";
+		}
+		return newStr.trim();
 	}
 
 	/*

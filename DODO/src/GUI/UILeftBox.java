@@ -7,6 +7,7 @@ import Storage.*;
 import Task.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
@@ -14,6 +15,8 @@ import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
@@ -29,6 +32,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -43,155 +47,133 @@ import javafx.stage.Stage;
  */
 public class UILeftBox {
 
-	private final String CATEGORY_HEADER ="Categories";
-	private final String CHART_HEADER ="Task";
-	
+	private final String CATEGORY_HEADER = "Categories";
+	private final String CHART_HEADER = "Task";
+
 	private VBox leftBox;
 	private UIRightBox rightBox;
 	private Logic logic;
 	private ListView<String> listView;
 	private ObservableList<String> list;
 	private TitledPane titledPane;
-	private ObservableList<PieChart.Data> listData;	
-	private PieChart chart; 
+	private ObservableList<PieChart.Data> listData;
+	private PieChart chart;
 	private UICssScaling usc;
 	private Label lblCategory;
-	private TreeMap<String, Category> tagMap;
+	private ArrayList<Category> tagMap;
 	private UIListener listen;
 	private PieChart.Data floatingData;
 	private PieChart.Data ongoingData;
 	private PieChart.Data completedData;
 	private PieChart.Data overdueData;
-	
+	private FlowPane flowpaneCategory;
 	private int intOverdueTasks = 0;
-	private int intCompletedTasks =0;
+	private int intCompletedTasks = 0;
 	private int intFloatingTasks = 0;
-	private int intOngoingTasks =0 ;
-	
-	public UILeftBox(Logic logic, HBox root )
-	{
+	private int intOngoingTasks = 0;
+
+	public UILeftBox(Logic logic, HBox root) {
 		leftBox = new VBox();
 		this.logic = logic;
 		usc = new UICssScaling();
-		listView = new ListView<>(); 
+		listView = new ListView<>();
 		list = FXCollections.observableArrayList();
-		listData  = FXCollections.observableArrayList();
+		listData = FXCollections.observableArrayList();
 		titledPane = new TitledPane();
-		chart= new PieChart(listData);
+		chart = new PieChart(listData);
 		lblCategory = new Label(CATEGORY_HEADER);
-		tagMap = new TreeMap<String, Category>();
+		tagMap = new ArrayList<Category>();
 		listen = new UIListener();
-		floatingData = new PieChart.Data("Floating Tasks",intFloatingTasks);
-		ongoingData= new PieChart.Data("On-going Tasks",intOngoingTasks);
-		completedData= new PieChart.Data("Completed Tasks",intCompletedTasks);
-		overdueData= new PieChart.Data("Overdue Tasks",intOverdueTasks);
-		
+		floatingData = new PieChart.Data("Floating Tasks", intFloatingTasks);
+		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
+		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
+		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
+		flowpaneCategory = new FlowPane();
+		flowpaneCategory.setHgap(20);
+
+		flowpaneCategory.setPrefSize(500, 500);
+
 	}
-	public void build(UIRightBox rightBox) 
-	{
+
+	public void build(UIRightBox rightBox) {
 		this.rightBox = rightBox;
-	    addChartTitle();
+		addChartTitle();
 		updateChart();
-		//updateTag();
-		listen.chartListener(chart,rightBox);
-		listData.addAll(floatingData,ongoingData,completedData,overdueData);
-		usc.cssLeftBoxComponents(leftBox,chart,titledPane,lblCategory,listView);
-		leftBox.getChildren().addAll(chart,lblCategory,listView);
+		updateTag();
+		listen.chartListener(chart, rightBox);
+		listData.addAll(floatingData, ongoingData, completedData, overdueData);
+		usc.cssLeftBoxComponents(leftBox, chart, titledPane, lblCategory, listView);
+		leftBox.getChildren().addAll(chart, lblCategory, flowpaneCategory);
 	}
-	public void updateLeftBox()
-	{
-		//updateTag();
+
+	public void updateLeftBox() {
 		updateChart();
 	}
-	public VBox getRoot()
-	{
+
+	public VBox getRoot() {
 		return leftBox;
 	}
-	private void addChartTitle() 
-	{
-		chart.setTitle("Task");			
+
+	private void addChartTitle() {
+		chart.setTitle("Task");
 	}
-	private void updateTag() 
-	{
-		/*tagMap = logic.getCategories();
-		for(int x=0;x<tagMap.size();x++)
-		{
-			if(tagMap.get(x).getName()!=null)
-			{
-				//list.add(tagMap);
+
+	private void updateTag() {
+		tagMap = logic.getCategories();
+		/*
+		 * for(int x=0;x<tagMap.size();x++) { if(tagMap.get(x).getName()!=null)
+		 * { list.add(tagMap.get(x).getName()); } } listView = new
+		 * ListView<String>(list);
+		 */
+
+		for (int x = 0; x < tagMap.size(); x++) {
+			if (tagMap.get(x).getName() != null) {
+				flowpaneCategory.getChildren().add(new Label(tagMap.get(x).getName()));
 			}
 		}
-		listView = new ListView<String>(list);*/
+
 	}
-	
-	public void updateChart() 
-	{		
+
+	public void updateChart() {
 		intOverdueTasks = rightBox.getOverdueTasksSize();
 		intCompletedTasks = rightBox.getCompletedTasksSize();
 		intFloatingTasks = rightBox.getFloatingTasksSize();
 		intOngoingTasks = rightBox.getOngoingSize();
-		
+
 		floatingData.setPieValue(intFloatingTasks);
 		ongoingData.setPieValue(intOngoingTasks);
 		completedData.setPieValue(intCompletedTasks);
 		overdueData.setPieValue(intOverdueTasks);
-		
-		
-		
-		if(intOverdueTasks==0)
-		{
+
+		if (intOverdueTasks == 0) {
 			listData.remove(overdueData);
-		}
-		else
-		{
-			if(!listData.contains(overdueData))
-			{
+		} else {
+			if (!listData.contains(overdueData)) {
 				listData.add(overdueData);
 			}
 		}
-		if(intCompletedTasks==0)
-		{
+		if (intCompletedTasks == 0) {
 			listData.remove(completedData);
-		}
-		else
-		{
-			if(!listData.contains(completedData))
-			{
+		} else {
+			if (!listData.contains(completedData)) {
 				listData.add(completedData);
-			}		
+			}
 		}
-		if(intFloatingTasks==0)
-		{
+		if (intFloatingTasks == 0) {
 			listData.remove(floatingData);
-		}
-		else
-		{
-			if(!listData.contains(floatingData))
-			{
+		} else {
+			if (!listData.contains(floatingData)) {
 				listData.add(floatingData);
-			}	
+			}
 		}
-		if(intOngoingTasks==0)
-		{
+		if (intOngoingTasks == 0) {
 			listData.remove(ongoingData);
-		}
-		else
-		{
-			if(!listData.contains(ongoingData))
-			{
+		} else {
+			if (!listData.contains(ongoingData)) {
 				listData.add(ongoingData);
 			}
 		}
-		
-		
-		
-	
-		
+
 	}
-
-	
-
-	
-
 
 }

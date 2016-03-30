@@ -336,6 +336,8 @@ public class UIRightBox {
 		}
 		if(tabMap[5]==true)
 		{
+			System.out.println(searchTasks.get(0).getName());
+
 			searchVB.getChildren().remove(titledPaneSearchTask);	
 			searchVB.getChildren().add(titledPaneSearchTask);
 			if(!tabPane.getTabs().contains(tabSearch))
@@ -672,6 +674,7 @@ public class UIRightBox {
 		vbPop.getChildren().add(feedBackLabel);
 		vbPop.setPrefSize(1380, 50);
 		feedBackLabel.setId("lblFeedBack");
+		popUpFeedBack.consumeAutoHidingEventsProperty().set(false);
 		popUpFeedBack.setAutoFix(true);
 		popUpFeedBack.setContentNode(vbPop);
 		Path caret = findCaret(mainTextField);

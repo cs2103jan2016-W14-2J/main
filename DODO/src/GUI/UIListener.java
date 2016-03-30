@@ -43,193 +43,161 @@ public class UIListener {
 	private UILeftBox leftBox;
 	private HBox root;
 	private Logic logic;
-	
-	public UIListener()
-	{
-		
+
+	public UIListener() {
+
 	}
-	public UIListener(HBox root,Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox, Logic logic)
-	{
+
+	public UIListener(HBox root, Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox, Logic logic) {
 		this.logic = logic;
 		this.root = root;
-		this.primaryStage =primaryStage;
+		this.primaryStage = primaryStage;
 		this.rightBox = rightBox;
-		this.leftBox= leftBox;
+		this.leftBox = leftBox;
 	}
-	public void chartListener(PieChart chart, UIRightBox rightBox)
-	{
+
+	public void chartListener(PieChart chart, UIRightBox rightBox) {
 		int intOverdueTasks = rightBox.getOverdueTasksSize();
 		int intCompletedTasks = rightBox.getCompletedTasksSize();
 		int intFloatingTasks = rightBox.getFloatingTasksSize();
 		int intOngoingTasks = rightBox.getOngoingSize();
-		
+
 		Tab chartTab = new Tab("Chart Data");
 		chartTab.setUserData(TASK_STATUSdotEMPTY);
 		VBox vb = new VBox();
 		HBox hb = new HBox();
-		
+
 		NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-		LineChart<Number,Number> lineChart = new LineChart<Number,Number>(xAxis,yAxis);
+		NumberAxis yAxis = new NumberAxis();
+		LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
 		lineChart.setTitle("TASKS MONITORING");
 		XYChart.Series series = new XYChart.Series();
-        series.setName("My portfolio");
-        //populating the series with data
-        series.getData().add(new XYChart.Data(1, 23));
-        series.getData().add(new XYChart.Data(2, 14));
-        series.getData().add(new XYChart.Data(3, 15));
-        series.getData().add(new XYChart.Data(4, 24));
-        series.getData().add(new XYChart.Data(5, 34));
-        series.getData().add(new XYChart.Data(6, 36));
-        series.getData().add(new XYChart.Data(7, 22));
-        series.getData().add(new XYChart.Data(8, 45));
-        series.getData().add(new XYChart.Data(9, 43));
-        series.getData().add(new XYChart.Data(10, 17));
-        series.getData().add(new XYChart.Data(11, 29));
-        series.getData().add(new XYChart.Data(12, 25));
-        lineChart.getData().add(series);
+		series.setName("My portfolio");
+		// populating the series with data
+		series.getData().add(new XYChart.Data(1, 23));
+		series.getData().add(new XYChart.Data(2, 14));
+		series.getData().add(new XYChart.Data(3, 15));
+		series.getData().add(new XYChart.Data(4, 24));
+		series.getData().add(new XYChart.Data(5, 34));
+		series.getData().add(new XYChart.Data(6, 36));
+		series.getData().add(new XYChart.Data(7, 22));
+		series.getData().add(new XYChart.Data(8, 45));
+		series.getData().add(new XYChart.Data(9, 43));
+		series.getData().add(new XYChart.Data(10, 17));
+		series.getData().add(new XYChart.Data(11, 29));
+		series.getData().add(new XYChart.Data(12, 25));
+		lineChart.getData().add(series);
 		hb.getChildren().add(lineChart);
 		vb.getChildren().add(hb);
-		
+
 		chart.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-		    @Override
-		    public void handle(MouseEvent mouseEvent)
-		    {
-		    	chartTab.setContent(vb);
-		    	rightBox.getTabPane().getTabs().add(chartTab);
-		    	rightBox.getTabPane().getSelectionModel().select(chartTab);
-		    }
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				chartTab.setContent(vb);
+				rightBox.getTabPane().getTabs().add(chartTab);
+				rightBox.getTabPane().getSelectionModel().select(chartTab);
+			}
 		});
 	}
-	public void assignHelpSheetListener() 
-	{
-		
+
+	public void assignHelpSheetListener() {
+
 		PopOver transparentPo = new PopOver();
-    	Pane pane = new Pane();
-    	transparentPo.arrowSizeProperty().set(0);
+		Pane pane = new Pane();
+		transparentPo.arrowSizeProperty().set(0);
 
-
-    	transparentPo.detachableProperty().set(false);
-    	transparentPo.setContentNode(pane);
+		transparentPo.detachableProperty().set(false);
+		transparentPo.setContentNode(pane);
 		transparentPo.setOpacity(0.6);
-		Label lblF1 = new Label("Ctrl"+'\n'+ "A");
-		Label lblF2 = new Label("Ctrl"+'\n'+ "S");
-		Label lblF3 = new Label("Ctrl"+'\n'+ "D");
-		Label lblF4 = new Label("Ctrl"+'\n'+ "F");
-		Label lblF5 = new Label("Ctrl"+'\n'+ "G");
-		Label lblF6 = new Label("Ctrl"+'\n'+ "H");
-		Label lblF7 = new Label("Ctrl"+'\n'+ "J");
-		Label lblF8 = new Label("Ctrl"+'\n'+ "K");
-		
-		KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.A,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb2 = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb3 = new KeyCodeCombination(KeyCode.D,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb4 = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb5 = new KeyCodeCombination(KeyCode.G,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J,KeyCombination.CONTROL_DOWN);
-		KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K,KeyCombination.CONTROL_DOWN);
+		Label lblF1 = new Label("Ctrl" + '\n' + "A");
+		Label lblF2 = new Label("Ctrl" + '\n' + "S");
+		Label lblF3 = new Label("Ctrl" + '\n' + "D");
+		Label lblF4 = new Label("Ctrl" + '\n' + "F");
+		Label lblF5 = new Label("Ctrl" + '\n' + "G");
+		Label lblF6 = new Label("Ctrl" + '\n' + "H");
+		Label lblF7 = new Label("Ctrl" + '\n' + "J");
+		Label lblF8 = new Label("Ctrl" + '\n' + "K");
 
-    	ObservableList<Label> listLbl =FXCollections.observableArrayList(lblF1,lblF2,lblF3,lblF4,lblF5,lblF6,lblF7,lblF8);
-		
-    		root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-    		public void handle(KeyEvent ke) {
-						if (ke.getCode().equals(KeyCode.ALT)) 
-						{
-							int numberOfTabs = rightBox.getTotalTabs();
-							double rightBoxX = rightBox.getRoot().getLayoutX();
-							double rightBoxY = rightBox.getRoot().getLayoutY();
-							pane.setPrefSize(root.getWidth(), root.getHeight());	
-							pane.getChildren().removeAll(listLbl);
-							for(int x=0,y=20;x<numberOfTabs;x++,y+=150)
-							{
-								listLbl.get(x).setFont(Font.font("Cambria", 30));
-								listLbl.get(x).setLayoutX(rightBoxX+y);
-								listLbl.get(x).setLayoutY(rightBoxY);
-	
-								pane.getChildren().add(listLbl.get(x));
-							}
+		KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb2 = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb3 = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb4 = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb5 = new KeyCodeCombination(KeyCode.G, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J, KeyCombination.CONTROL_DOWN);
+		KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K, KeyCombination.CONTROL_DOWN);
 
-							transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
-							
-						}
-						if (ke.getCode().equals(KeyCode.SHIFT)) 
-						{
-							rightBox.getTabPane().requestFocus();
+		ObservableList<Label> listLbl = FXCollections.observableArrayList(lblF1, lblF2, lblF3, lblF4, lblF5, lblF6,
+				lblF7, lblF8);
 
+		root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent ke) {
+				System.out.println(ke);
+				if (ke.getCode().equals(KeyCode.ALT)) {
+					int numberOfTabs = rightBox.getTotalTabs();
+					double rightBoxX = rightBox.getRoot().getLayoutX();
+					double rightBoxY = rightBox.getRoot().getLayoutY();
+					pane.setPrefSize(root.getWidth(), root.getHeight());
+					pane.getChildren().removeAll(listLbl);
+					for (int x = 0, y = 20; x < numberOfTabs; x++, y += 150) {
+						listLbl.get(x).setFont(Font.font("Cambria", 30));
+						listLbl.get(x).setLayoutX(rightBoxX + y);
+						listLbl.get(x).setLayoutY(rightBoxY);
 
-						}
-						if (ke.getCode().equals(KeyCode.CONTROL)) 
-						{
-							rightBox.getTabPane().requestFocus();
-
-						}
-						if (keyComb1.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(0);
-
-						}
-						if (keyComb2.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(1);
-						}
-						if (keyComb3.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(2);							
-						}
-						if (keyComb4.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(3);
-						}
-						if (keyComb5.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(4);
-						}
-						if (keyComb6.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(5);
-						}
-						if (keyComb7.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(6);
-						}
-						if (keyComb8.match(ke)) 
-						{
-							rightBox.getTabPane().getSelectionModel().select(7);
-						}
-						/*if(ke.getCode().equals(KeyCode.SHIFT))
-						{
-							rightBox.getTabPane().getTabs().get(1).getContent(;
-						}*/
-					     if(ke.getCode()==KeyCode.ESCAPE)
-					     {
-					    	 logic.save();
-					    	 primaryStage.close();
-					     }
-					         
-					        
-						ke.consume();
-				}
-				});
-				root.setOnKeyReleased(new EventHandler<KeyEvent>() {
-					public void handle(KeyEvent ke) {
-					if (ke.getCode().equals(KeyCode.ALT)) 
-					{
-						pane.getChildren().removeAll(listLbl);
-
-						transparentPo.hide();
+						pane.getChildren().add(listLbl.get(x));
 					}
-				}
-				});
-			
-	
-	}
-	
-	
 
-	
-	
-	
-	
-	
+					transparentPo.show(primaryStage, primaryStage.getX(), primaryStage.getY());
+					rightBox.getTabPane().requestFocus();
+				}
+
+				if (keyComb1.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(0);
+
+				}
+				if (keyComb2.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(1);
+				}
+				if (keyComb3.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(2);
+				}
+				if (keyComb4.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(3);
+				}
+				if (keyComb5.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(4);
+				}
+				if (keyComb6.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(5);
+				}
+				if (keyComb7.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(6);
+				}
+				if (keyComb8.match(ke)) {
+					rightBox.getTabPane().getSelectionModel().select(7);
+				}
+				/*
+				 * if(ke.getCode().equals(KeyCode.SHIFT)) {
+				 * rightBox.getTabPane().getTabs().get(1).getContent(; }
+				 */
+				if (ke.getCode() == KeyCode.ESCAPE) {
+					logic.save();
+					primaryStage.close();
+				}
+
+				ke.consume();
+			}
+		});
+		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ALT)) {
+					pane.getChildren().removeAll(listLbl);
+
+					transparentPo.hide();
+				}
+			}
+		});
+
+	}
+
 }

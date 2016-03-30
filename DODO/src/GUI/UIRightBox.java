@@ -655,11 +655,19 @@ public class UIRightBox {
 
 
 	private void textFieldListener() {
-		
+		//listen.rightBoxListener(mainTextField);
 		mainTextField.setOnKeyPressed(new EventHandler<KeyEvent>()
 	    {
 			public void handle(KeyEvent ke)
 	        {		
+				if (ke.getCode().equals(KeyCode.UP))
+				{
+					System.out.println("test");
+					
+					String prevCmd ="";
+					prevCmd =  logic.getPreviousCommand();
+					mainTextField.setText(prevCmd);
+				}
 				if (ke.getCode().equals(KeyCode.ENTER))
 	            {
 	            	runCommand();

@@ -57,6 +57,14 @@ public abstract class Command {
 		return tasks;
 	}
 	
+	protected ArrayList<Task> combine(ArrayList<ArrayList<Task>> all) {
+		ArrayList<Task> temp = new ArrayList<Task>();
+		for (ArrayList<Task> element: all) {
+			temp.addAll(element);
+		}
+		return temp;
+	}
+	
 	protected ArrayList<Task> getTasks(UI_TAB status) {
 		switch (status) {
 		case ONGOING:
@@ -67,6 +75,8 @@ public abstract class Command {
 			return this.completedTasks;
 		case OVERDUE:
 			return this.overdueTasks;
+		case ALL:
+			return combine(compress());
 		default:
 			return null;
 		}

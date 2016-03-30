@@ -16,11 +16,11 @@ public class Logic {
 	private ArrayList<Task> completedTasks;
 	private ArrayList<Task> overdueTasks;
 	private ArrayList<Task> floatingTasks;
-	private TreeMap<String, Category> categories;
 	private ArrayList<Task> results;
 	private ArrayList<Task> all;
 	private History history;
 	private UI_TAB status;
+	private TreeMap<String, Category> categories;
 
 	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance(String directory) {
@@ -68,6 +68,15 @@ public class Logic {
 	public ArrayList<Category> getCategories() {
 		ArrayList<Category> list = new ArrayList<Category>(this.categories.values());
 		return list;
+	}
+	
+	public ArrayList<Task> getAll() {
+		ArrayList<Task> temp = new ArrayList<Task>();
+		temp.addAll(this.overdueTasks);
+		temp.addAll(this.ongoingTasks);
+		temp.addAll(this.floatingTasks);
+		temp.addAll(this.completedTasks);
+		return temp;
 	}
 	
 	public UI_TAB getStatus() {

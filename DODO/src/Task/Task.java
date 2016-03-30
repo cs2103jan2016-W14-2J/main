@@ -131,10 +131,16 @@ public class Task {
 	}
 	
 	public void setStart(Date start) {
+		if (this.start==null) {
+			this.type = TASK_TYPE.EVENT;
+		}
 		this.start = formatter.format(start);
 	}
 	
 	public void setEnd(Date end) {
+		if (this.end ==null && this.type!=TASK_TYPE.EVENT) {
+			this.type = TASK_TYPE.DEADLINED;
+		}
 		this.end = formatter.format(end);
 	}
 	

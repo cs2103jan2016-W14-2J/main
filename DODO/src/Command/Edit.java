@@ -25,6 +25,7 @@ public class Edit extends Command {
 	private String edit(int index, UI_TAB status, EDIT_TYPE edit_type) {
 		try {
 			ArrayList<Task> tasks = getTasks(status);
+			System.out.println("=====EDIT===== edit_type: " + edit_type);
 			Task task = tasks.get(index);
 			switch (edit_type) {
 			case TASK_NAME:
@@ -44,10 +45,13 @@ public class Edit extends Command {
 				return MESSAGE_INTERNAL_ERROR;
 			}
 		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
 			return "Please key in a valid index.";
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			return MESSAGE_INTERNAL_ERROR;
 		} catch (ClassCastException e) {
+			e.printStackTrace();
 			return "Please key in a valid edit command.";
 		}
 	}
@@ -55,25 +59,25 @@ public class Edit extends Command {
 	private String editStartTime(Task task, int index) {
 		Date newStartTime = parser.getStartTime();
 		task.setStart(newStartTime);
-		return "Task " + index + " has been changed to " + "\"" + task.getStart() + "\".";
+		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getStart() + "\".";
 	}
 	
 	private String editEndTime(Task task, int index) {
 		Date newEndTime = parser.getEndTime();
 		task.setEnd(newEndTime);
-		return "Task " + index + " has been changed to " + "\"" + task.getEnd() + "\".";
+		return "Task " + (index+INDEX_ADJUSTMENT)  + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}
 
 	private String editDeadlined(Task task, int index) {
 		Date newDeadline = parser.getEndTime();
 		task.setEnd(newDeadline);
-		return "Task " + index + " has been changed to " + "\"" + task.getEnd() + "\".";
+		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}
 
 	private String editName(Task task, int index) {
 		String newName = parser.getName();
 		task.setName(newName);
-		return  "Task " + index + " has been renamed as " + "\"" + task.getName() + "\".";
+		return  "Task " + (index+INDEX_ADJUSTMENT) + " has been renamed as " + "\"" + task.getName() + "\".";
 	}
 
 	@Override

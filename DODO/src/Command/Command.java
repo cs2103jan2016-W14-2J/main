@@ -95,6 +95,29 @@ public abstract class Command {
 		case OVERDUE:
 			this.overdueTasks = list;
 			break;
+		case ALL:
+			split(list);
+		}
+	}
+	
+	private void split(ArrayList<Task> all) {
+		this.floatingTasks.clear();
+		this.ongoingTasks.clear();
+		this.overdueTasks.clear();
+		this.completedTasks.clear();
+		for (Task task: all) {
+			if (task.getStatus()==TASK_STATUS.FLOATING) {
+				this.floatingTasks.add(task);
+			}
+			else if (task.getStatus()==TASK_STATUS.ONGOING) {
+				this.ongoingTasks.add(task);
+			}
+			else if (task.getStatus()==TASK_STATUS.COMPLETED) {
+				this.completedTasks.add(task);
+			}
+			else if (task.getStatus()==TASK_STATUS.OVERDUE) {
+				this.overdueTasks.add(task);
+			}
 		}
 	}
 }

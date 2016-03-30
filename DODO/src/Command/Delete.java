@@ -43,7 +43,7 @@ public class Delete extends Command{
 	}
 
 	private String deleteTags(ArrayList<String> tags) {
-		String status = "";;
+		String status = "";
 		for (int i=0; i<tags.size(); i++) {
 			String element = tags.get(0);
 			if (!categories.containsKey(element)) {
@@ -69,7 +69,6 @@ public class Delete extends Command{
 		if (tasks.size()==0) {
 			return this.UIStatus + " is empty. There is nothing to delete.";
 		}
-		
 		String status = "Task ";
 		try {
 			for (int i=0; i<indexes.size(); i++) {

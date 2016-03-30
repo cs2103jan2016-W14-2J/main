@@ -1,6 +1,7 @@
 package Logic;
 
 import Command.*;
+import GUI.UI_TAB;
 import Parser.*;
 import Storage.*;
 import Task.*;
@@ -19,7 +20,7 @@ public class Logic {
 	private ArrayList<Task> results;
 	private ArrayList<Task> all;
 	private History history;
-	private TASK_STATUS status;
+	private UI_TAB status;
 
 	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance(String directory) {
@@ -69,7 +70,7 @@ public class Logic {
 		return list;
 	}
 	
-	public TASK_STATUS getStatus() {
+	public UI_TAB getStatus() {
 		return this.status;
 	}
 	
@@ -123,7 +124,7 @@ public class Logic {
 		case COMPLETE:
 			Complete complete = new Complete(parser, data, COMMAND_TYPE.COMPLETE);
 			message = execute(complete, data);
-			this.status = TASK_STATUS.COMPLETED;
+			this.status = UI_TAB.COMPLETED;
 			break;
 		case TAG:
 			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
@@ -161,7 +162,7 @@ public class Logic {
 			history.save(cloneData(data));
 			message = search.execute();
 			this.results = search.getSearchResults();
-			this.status = TASK_STATUS.SEARCH;
+			this.status = UI_TAB.SEARCH;
 			break;
 		case SORT:
 			Sort sort = new Sort(parser, data, COMMAND_TYPE.SORT);

@@ -1,0 +1,5 @@
+package GUI;
+
+public enum UI_TAB {
+	WELCOME, ALL, FLOATING, ONGOING, COMPLETED, OVERDUE, SEARCH, HELP;
+}

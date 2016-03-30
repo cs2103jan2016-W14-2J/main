@@ -21,8 +21,7 @@ public abstract class Command {
 	protected UI_TAB UIStatus;
 	
 	public Command(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		/*this.UIStatus = UIRightBox.getCurrentTab();*/
-		this.UIStatus = UI_TAB.FLOATING;
+		this.UIStatus = UIRightBox.getCurrentTab();
 		this.parser = parser;
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);

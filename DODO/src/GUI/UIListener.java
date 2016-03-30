@@ -6,6 +6,8 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
 import Logic.Logic;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -23,6 +25,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -55,6 +58,27 @@ public class UIListener {
 		this.primaryStage =primaryStage;
 		this.rightBox = rightBox;
 		this.leftBox= leftBox;
+	}
+	public void rightBoxListener(TextField mainTextField)
+	{
+
+		mainTextField.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
+		{
+
+			@Override
+			public void handle(KeyEvent event) {
+				if (event.getCode().equals(KeyCode.UP))
+				{
+					System.out.println("test");
+					
+					String prevCmd ="";
+					prevCmd =  logic.getPreviousCommand();
+					mainTextField.setText(prevCmd);
+				}
+			}
+			
+		});
+
 	}
 	public void chartListener(PieChart chart, UIRightBox rightBox)
 	{
@@ -132,7 +156,7 @@ public class UIListener {
 
     	ObservableList<Label> listLbl =FXCollections.observableArrayList(lblF1,lblF2,lblF3,lblF4,lblF5,lblF6,lblF7,lblF8);
 	
-    		root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+    	root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
     		public void handle(KeyEvent ke) {
     			System.out.println(ke);
 						if (ke.getCode().equals(KeyCode.ALT)) 

@@ -71,6 +71,7 @@ public class UILeftBox {
 	private int intCompletedTasks = 0;
 	private int intFloatingTasks = 0;
 	private int intOngoingTasks = 0;
+	private UIMakeTag makeTag;
 
 	public UILeftBox(Logic logic, HBox root) {
 		leftBox = new VBox();
@@ -90,7 +91,7 @@ public class UILeftBox {
 		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
-
+		makeTag = new UIMakeTag();
 		flowpaneCategory.setPrefSize(500, 500);
 
 	}
@@ -108,6 +109,7 @@ public class UILeftBox {
 
 	public void updateLeftBox() {
 		updateChart();
+		updateTag();
 	}
 
 	public VBox getRoot() {
@@ -118,19 +120,30 @@ public class UILeftBox {
 		chart.setTitle("Task");
 	}
 
-	private void updateTag() {
-		tagMap = logic.getCategories();
-		/*
-		 * for(int x=0;x<tagMap.size();x++) { if(tagMap.get(x).getName()!=null)
-		 * { list.add(tagMap.get(x).getName()); } } listView = new
-		 * ListView<String>(list);
-		 */
+	private void updateTag() 
+	{
+		tagMap.clear();
+		flowpaneCategory.getChildren().removeAll();
+		if(logic.getCategories()!=null)
+		{
+			tagMap = logic.getCategories();
+			/*
+			 * for(int x=0;x<tagMap.size();x++) { if(tagMap.get(x).getName()!=null)
+			 * { list.add(tagMap.get(x).getName()); } } listView = new
+			 * ListView<String>(list);
+			 */
 
-		for (int x = 0; x < tagMap.size(); x++) {
-			if (tagMap.get(x).getName() != null) {
-				flowpaneCategory.getChildren().add(new Label(tagMap.get(x).getName()));
+			for (int x = 0; x < tagMap.size(); x++)
+			{
+				if (tagMap.get(x).getName() != null) 
+				{
+					HBox root = makeTag.getTag(tagMap.get(x).getName());
+					flowpaneCategory.getChildren().add(root);			
+				}
 			}
+		
 		}
+		
 
 	}
 

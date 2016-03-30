@@ -26,6 +26,7 @@ public class UICellComponents
     private CheckBox chkFlag;
 	private Tooltip toolTip;
 	private HBox cellRoot;
+	private UIMakeTag makeTag;
 
 	public UICellComponents(String strIndex,String strTag, String strName, Date startTime,Date endTime,boolean Flag)
 	{
@@ -33,6 +34,9 @@ public class UICellComponents
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
+		//makeTag = new UIMakeTag();
+		//HBox rootTag = makeTag.getTag(strTag);
+		//rootTag.setPrefSize(100, 100);
 		lblTag = new Label(strTag);
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
@@ -56,12 +60,9 @@ public class UICellComponents
 		{
 			chkFlag.setSelected(false);
 		}
-	
-	
 		toolTip = new Tooltip(strName);
 		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag,toolTip);
 		cellRoot.getChildren().addAll(lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag);
-		
 	}
 	
 	

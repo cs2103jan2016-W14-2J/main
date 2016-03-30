@@ -118,7 +118,7 @@ public class UIMainController {
 	     	         }
 	     	     };
 	     	    startThread(task);
-	            System.out.println("Stage is closing");
+	          //  System.out.println("Stage is closing");
 	          }
 
 			private void startThread(Task<Void> task) {

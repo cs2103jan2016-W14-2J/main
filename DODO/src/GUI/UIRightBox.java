@@ -191,13 +191,13 @@ public class UIRightBox {
 			{
 				if (ke.getCode().equals(KeyCode.TAB)) 
 				{
-					/*if(getCurrentTab().equals(UI_TAB.WELCOME))
+					if(getCurrentTab().equals(UI_TAB.WELCOME))
 					{
-					}*/
-					/*if(getCurrentTab().equals(UI_TAB.ALL))
+					}
+					if(getCurrentTab().equals(UI_TAB.ALL))
 					{
 						titledPaneAllTask.getContent().requestFocus();
-					}*/
+					}
 					if(getCurrentTab().equals(UI_TAB.FLOATING))
 					{
 						titledPaneFloatingTask.getContent().requestFocus();
@@ -234,11 +234,11 @@ public class UIRightBox {
 		completedTasks.addAll(logic.getCompletedTasks());
 		overdueTasks.addAll(logic.getOverdueTasks());
 		searchTasks.addAll(logic.getSearchResults());
-		allTasks(); //allTasks.addAll(logic.getAllTasks());
+		allTasks.addAll(logic.getAll());
 
 		//tabPane.getTabs().clear();
 		updateTabMap();
-		/*if(tabMap[0]==true)
+		if(tabMap[0]==true)
 		{
 			allVB.getChildren().remove(titledPaneAllTask);
 			allVB.getChildren().add(titledPaneAllTask);
@@ -250,7 +250,14 @@ public class UIRightBox {
 			tabAll.setContent(allVB);
 			addListToTitledPane(titledPaneAllTask, FXCollections.observableArrayList(allTasks),UI_TAB.ALL);
 			tabAll.setUserData(UI_TAB.ALL);
-		}*/
+		}
+		else
+		{
+			tabPane.getTabs().remove(tabAll);
+			allVB.getChildren().remove(titledPaneAllTask);
+			tabAll=null;
+
+		}
 		if(tabMap[1]==true)
 		{
 			floatingVB.getChildren().remove(titledPaneFloatingTask);
@@ -368,7 +375,7 @@ public class UIRightBox {
 	private void updateTabMap() {
 		
 		//change here
-		if(logic.getFloatingTasks().size()!=0)
+		if(logic.getAll().size()!=0)
 		{
 			tabMap[0] = true;
 		}
@@ -423,13 +430,6 @@ public class UIRightBox {
 		}
 		
 	}
-	private void allTasks() {
-		allTasks.addAll(logic.getFloatingTasks());
-		allTasks.addAll(logic.getOngoingTasks());
-		allTasks.addAll(logic.getCompletedTasks());
-		allTasks.addAll(logic.getOverdueTasks());		
-		
-	}
 
 
 	private void addListToTitledPane(TitledPane titledPane, ObservableList<Task> listTask, UI_TAB typeOfTask) {
@@ -456,22 +456,28 @@ public class UIRightBox {
 									
 									if (item.getType() == TASK_TYPE.DEADLINED) 
 									{
-										System.out.println("DeadlinedTask");
+										//System.out.println("DeadlinedTask");
 										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), null, item.getEnd(), item.getFlag());
 										logger.info("DeadlinedTask");  
 									
 									} 
 									else if (item.getType() == TASK_TYPE.EVENT) 
 									{
-										System.out.println("in event" + item.getEnd());
+										//System.out.println("in event" + item.getEnd());
 										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
 										logger.info("Event");  
 									}
 									else if (item.getType() == TASK_TYPE.FLOATING) 
 									{
-										System.out.println("in FLOATING Task");
+										//System.out.println("in FLOATING Task");
 										lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 										logger.info("Task");  
+									}
+									else 
+									{
+											//System.out.println("in search Task");
+											lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
+											logger.info("search");  
 									}
 									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
 									{
@@ -479,12 +485,12 @@ public class UIRightBox {
 									        if(oldValue ==false)
 									        {
 									        	setTextFieldAndEnter("flag "+ currentIndex);
-									        	System.out.println("flag ");
+									        	//System.out.println("flag ");
 									        }
 									        else if(oldValue==true) 
 									        {
 									        	setTextFieldAndEnter("unflag "+ currentIndex);
-									        	System.out.println("unflag ");
+									        //	System.out.println("unflag ");
 									        }
 									        
 									    }
@@ -634,7 +640,7 @@ public class UIRightBox {
 		}
 		if(getCurrentTab().equals(UI_TAB.SEARCH))
 		{
-			moreName = overdueTasks.get(x).getName();
+			moreName = searchTasks.get(x).getName();
 		}
 	    Label lbl = new Label(moreName);
 	    lbl.setWrapText(true);
@@ -722,13 +728,12 @@ public class UIRightBox {
 	}
 	public static UI_TAB getCurrentTab() 
 	{
-		if(tabPane.getSelectionModel().getSelectedItem()==null )
+	/*	if(tabPane.getSelectionModel().getSelectedItem()==null )
 		{
-			//return UI_TAB.WELCOME;
-			return UI_TAB.OVERDUE;
+			return UI_TAB.WELCOME;
 		}	
 		System.out.println((UI_TAB) tabPane.getSelectionModel().getSelectedItem().getUserData());
-		
+		*/
 		return (UI_TAB) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
 
@@ -741,8 +746,7 @@ public class UIRightBox {
 	
 	private void setGreetingTab() 
 	{
-		String str = "UI_TAB.WELCOME";
-		tabWelcome.setUserData(UI_TAB.FLOATING);
+		tabWelcome.setUserData(UI_TAB.WELCOME);
 		tabPane.getTabs().add(tabWelcome);
 		tabWelcome.setContent(welcomeHB);
 		uiWelcome.setRoot(welcomeHB);

@@ -10,12 +10,10 @@ import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class Test {
 
-		private static ArrayList<SimpleDateFormat> dateFormats;
-
 		public static void main (String[] args) {
 	//		List<Date> dates = new PrettyTimeParser().parse("16/10/18");
 	//		System.out.println(dates.get(0));
-			Parser parser = new Parser("read book from 26/05/2016 to 26.05.17");
+			Parser parser = new Parser("eat at 2pm at padang");
 			System.out.println(parser.getName());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());

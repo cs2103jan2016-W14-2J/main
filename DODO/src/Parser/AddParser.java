@@ -358,6 +358,7 @@ public class AddParser {
 			String confirmTaskName = "";
 			
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 			System.out.println("DEBUG @290:" + taskName);
 			// Example: meet Hannah at 7pm at Jurong East
 			if (taskName.lastIndexOf(KEYWORD_AT) != -1) {
@@ -365,10 +366,11 @@ public class AddParser {
 				confirmTaskName = taskName.substring(0, taskName.lastIndexOf(KEYWORD_AT)).trim();
 			}
 			else {
-				setTaskName(taskName);
+				tempTaskName = taskName;
+				System.out.println("TEST TEST TEST :" + taskName);
+				setTaskName(tempTaskName);
 			}
 			
-			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			List<Date> date1 = new PrettyTimeParser().parse(tempTaskName);
 			
@@ -503,7 +505,7 @@ public class AddParser {
 	}
 
 	protected void setTaskName(String taskName) {
-		this.taskName = taskName;
+		this.taskName = taskName.trim();
 	}
 	
 	protected void setTaskType(TASK_TYPE taskType) {

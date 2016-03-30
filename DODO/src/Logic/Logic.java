@@ -30,7 +30,13 @@ public class Logic {
 	}
 
 	public String run(String input) {
-		return processCommand(input);
+		Parser parser;
+		try {
+			parser = new Parser(input);
+		} catch (NumberFormatException e) {
+			return "ERROR FROM PARSER";
+		}
+		return processCommand(parser);
 	}
 
 	public String save() {
@@ -72,7 +78,7 @@ public class Logic {
 	}
 
 	/***********************************PRIVATE METHODS***********************************************/
-	private Logic(String directory) {
+	protected Logic(String directory) {
 		storage = new Storage(directory);
 		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
@@ -83,14 +89,9 @@ public class Logic {
 		history = new History();
 	}
 
-	private String processCommand(String input) {
+	protected String processCommand(Parser parser) {
 		String message = "";
-		Parser parser;
-		try {
-			parser = new Parser(input);
-		} catch (NumberFormatException e) {
-			return "ERROR FROM PARSER";
-		}
+		
 		COMMAND_TYPE command = parser.getCommandType();
 		ArrayList<ArrayList<Task>> data = compress();
 

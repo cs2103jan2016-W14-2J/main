@@ -53,7 +53,7 @@ public class Storage {
 		else return false; 
 	}
 
-	public ArrayList<Task> read(TASK_STATUS task_status) {
+	public ArrayList<Task> read(UI_TAB task_status) {
 		switch (task_status) {
 		case ONGOING:
 			return readFromFile(ongoingDirectory);
@@ -68,7 +68,7 @@ public class Storage {
 		}
 	}
 
-	public String save(TASK_STATUS task_status, ArrayList<Task> tasks) {
+	public String save(UI_TAB task_status, ArrayList<Task> tasks) {
 		switch (task_status) {
 		case ONGOING:
 			return printToFile(ongoingDirectory, tasks);
@@ -86,9 +86,7 @@ public class Storage {
 	private String printToFile(String filename, ArrayList<Task> tasks)  {
 		clearFile(filename);
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")) {
-			GsonBuilder gsonBuilder = new GsonBuilder()
-					.setPrettyPrinting()
-					.setDateFormat("dd/MM/yy hh:mm:ss");
+			GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
 			Gson gson = gsonBuilder.create();
 			gson.toJson(tasks, writer);
 		}
@@ -106,8 +104,7 @@ public class Storage {
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
 			br = new BufferedReader(new FileReader(filename));
-			GsonBuilder gsonBuilder = new GsonBuilder()
-					.registerTypeAdapter(tasks.getClass(), new CustomDeserializer());
+			GsonBuilder gsonBuilder = new GsonBuilder();
 			Gson gson = gsonBuilder.create();
 			tasks = gson.fromJson(br, new TypeToken<ArrayList<Task>>() {}.getType());
 			br.close();
@@ -171,7 +168,7 @@ public class Storage {
 		}
 	}*/
 	
-	public class CustomDeserializer implements JsonDeserializer<ArrayList<Task>> {
+	/*public class CustomDeserializer implements JsonDeserializer<ArrayList<Task>> {
 		@Override
 		public ArrayList<Task> deserialize(JsonElement json, Type typeofT, JsonDeserializationContext context)
 				throws JsonParseException {
@@ -233,5 +230,5 @@ public class Storage {
 			return list;
 		}
 		
-	}
+	}*/
 }

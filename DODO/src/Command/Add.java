@@ -8,6 +8,8 @@ import Task.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+import GUI.UI_TAB;
+
 
 public class Add extends Command {
 
@@ -36,9 +38,9 @@ public class Add extends Command {
 		String name = parser.getName(); // cannot be null
 		String tag = parser.getTag(); // may be null
 		
-		Task task = new Task(TASK_TYPE.FLOATING, name, tag);
+		Task task = new Task(name, tag);
 		floatingTasks.add(task);
-		this.UIStatus = TASK_STATUS.FLOATING;
+		this.UIStatus = UI_TAB.FLOATING;
 		return "Floating task \"" + name + "\" added to floatingTasks.";
 	}
 	
@@ -47,16 +49,16 @@ public class Add extends Command {
 		String tag = parser.getTag(); // may be null
 		Date endDateTime = parser.getEndTime(); // cannot be null
 		
-		DeadlinedTask task = new DeadlinedTask(TASK_TYPE.DEADLINED, name, tag, endDateTime);
+		Task task = new Task(name, tag, endDateTime);
 		
 		if (task.getIsOverdue()){
 			overdueTasks.add(task);
-			this.UIStatus = TASK_STATUS.OVERDUE;
+			this.UIStatus = UI_TAB.OVERDUE;
 			return "Deadlined task \"" + name + "\" added to overdueTasks.";
 		}
 		else {
 			ongoingTasks.add(task);
-			this.UIStatus = TASK_STATUS.ONGOING;
+			this.UIStatus = UI_TAB.ONGOING;
 			return "Deadlined task \"" + name + "\" added to ongoingTasks.";
 		}
 	}
@@ -67,16 +69,16 @@ public class Add extends Command {
 		Date startDateTime = parser.getStartTime();
 		Date endDateTime = parser.getEndTime();
 		
-		Event task = new Event(TASK_TYPE.EVENT, name, tag, startDateTime, endDateTime);
+		Task task = new Task(name, tag, startDateTime, endDateTime);
 		
 		if (task.getIsOverdue()) {
 			overdueTasks.add(task);
-			this.UIStatus = TASK_STATUS.OVERDUE;
+			this.UIStatus = UI_TAB.OVERDUE;
 			return "Event \"" + name + "\" added to overdueTasks.";
 		}
 		else {
 			ongoingTasks.add(task);
-			this.UIStatus = TASK_STATUS.ONGOING;
+			this.UIStatus = UI_TAB.ONGOING;
 			return "Event \"" + name + "\" added to ongoingTasks.";
 		}
 	}

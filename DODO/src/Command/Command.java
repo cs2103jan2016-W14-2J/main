@@ -18,10 +18,11 @@ public abstract class Command {
 	protected ArrayList<Task> completedTasks;
 	protected ArrayList<Task> overdueTasks;
 	protected ArrayList<Task> floatingTasks;
-	protected TASK_STATUS UIStatus;
+	protected UI_TAB UIStatus;
 	
 	public Command(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		this.UIStatus = UIRightBox.getCurrentTab();
+		/*this.UIStatus = UIRightBox.getCurrentTab();*/
+		this.UIStatus = UI_TAB.FLOATING;
 		this.parser = parser;
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);
@@ -42,7 +43,7 @@ public abstract class Command {
 		return this.command_type;
 	}
 	
-	public TASK_STATUS getStatus() {
+	public UI_TAB getStatus() {
 		return this.UIStatus;
 	}
 	
@@ -56,7 +57,7 @@ public abstract class Command {
 		return tasks;
 	}
 	
-	protected ArrayList<Task> getTasks(TASK_STATUS status) {
+	protected ArrayList<Task> getTasks(UI_TAB status) {
 		switch (status) {
 		case ONGOING:
 			return this.ongoingTasks;
@@ -71,7 +72,7 @@ public abstract class Command {
 		}
 	}
 
-	protected void setTasks(TASK_STATUS status, ArrayList<Task> list) {
+	protected void setTasks(UI_TAB status, ArrayList<Task> list) {
 		switch(status) {
 		case ONGOING:
 			this.ongoingTasks = list;

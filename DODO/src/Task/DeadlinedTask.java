@@ -1,8 +1,8 @@
-package Task;
+/*package Task;
 
 import java.util.*;
 
-/* @@author: Lu Yang */
+ @@author: Lu Yang 
 
 public class DeadlinedTask extends Task {
 	private Date endDateTime;
@@ -28,7 +28,7 @@ public class DeadlinedTask extends Task {
 		else return false;
 	}
 	
-	/*************************************ACCESSORS*********************************/
+	*//*************************************ACCESSORS*********************************//*
 	
 	public boolean getIsOverdue() {
 		return this.isOverdue;
@@ -38,8 +38,8 @@ public class DeadlinedTask extends Task {
 		return this.endDateTime;
 	}
 	
-	/*************************************MUTATORS*********************************/
+	*//*************************************MUTATORS*********************************//*
 	public void setEndDateTime(Date endDateTime) {
 		this.endDateTime = endDateTime;
 	}
-}
+}*/

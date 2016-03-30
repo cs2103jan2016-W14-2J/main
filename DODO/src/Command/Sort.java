@@ -76,41 +76,17 @@ public class Sort extends Command {
 	private static class DateComparator implements Comparator<Task> {
 		@Override
 		public int compare(Task a, Task b) {
-			Date aDate = null;
-			Date bDate = null;
-			if (a instanceof DeadlinedTask) {
-				aDate = ((DeadlinedTask) a).getEndDateTime();
-				bDate = getDate(b);
-			}
-			else if (a instanceof Event) {
-				aDate = ((Event) a).getStartDateTime();
-				bDate = getDate(b);
-			}
-			else {
-				return -1;
-			}
-			
-			if (bDate == null) {
-				//Task B is floating task
+			Date aDate = a.getEnd();
+			Date bDate = a.getEnd();
+			if (aDate==null) return -1;
+			if (bDate==null) return 1;
+			if (aDate.after(bDate)) {
 				return 1;
 			}
-			
-			if (bDate.after(aDate)) return -1;
-			else if (bDate.before(aDate)) return 1;
+			else if (aDate.before(bDate)) {
+				return -1;
+			}
 			else return 0;
-		}
-		
-		private Date getDate(Task b) {
-			Date bDate = null;
-			if (b instanceof DeadlinedTask) {
-				b = (DeadlinedTask) b;
-				bDate = ((DeadlinedTask) b).getEndDateTime();
-			}
-			else if (b instanceof Event) {
-				b = (Event) b;
-				bDate = ((Event) b).getStartDateTime();
-			}
-			return bDate;
 		}
 	}
 }

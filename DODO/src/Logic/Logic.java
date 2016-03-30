@@ -41,10 +41,10 @@ public class Logic {
 	}
 
 	public String save() {
-		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
-		storage.save(TASK_STATUS.COMPLETED, completedTasks);
-		storage.save(TASK_STATUS.FLOATING, floatingTasks);
-		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
+		storage.save(UI_TAB.ONGOING, ongoingTasks);
+		storage.save(UI_TAB.COMPLETED, completedTasks);
+		storage.save(UI_TAB.FLOATING, floatingTasks);
+		storage.save(UI_TAB.OVERDUE, overdueTasks);
 		return "Saved successfully";
 	}
 
@@ -81,10 +81,10 @@ public class Logic {
 	/***********************************PRIVATE METHODS***********************************************/
 	private Logic(String directory) {
 		storage = new Storage(directory);
-		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
-		completedTasks = storage.read(TASK_STATUS.COMPLETED);
-		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
-		floatingTasks = storage.read(TASK_STATUS.FLOATING);
+		ongoingTasks = storage.read(UI_TAB.ONGOING);
+		completedTasks = storage.read(UI_TAB.COMPLETED);
+		overdueTasks = storage.read(UI_TAB.OVERDUE);
+		floatingTasks = storage.read(UI_TAB.FLOATING);
 		categories = reinitialiseCategories();
 		results = new ArrayList<Task>();
 		history = new History();

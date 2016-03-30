@@ -49,11 +49,11 @@ public class Complete extends Command {
 			try {
 				index = indexes.get(i)-1;
 				Task task = tasks.get(index);
-				if (task.getComplete()) {
+				if (task.getStatus()==TASK_STATUS.COMPLETED) {
 					status += "Task " + (index + INDEX_ADJUSTMENT) + " has been completed before.\n";
 				}
 				else {
-					task.complete(true);
+					task.setComplete();;
 					tasks.remove(index);
 					completedTasks.add(task);
 					setTasks(this.UIStatus, tasks);

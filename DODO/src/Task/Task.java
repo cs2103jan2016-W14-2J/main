@@ -19,31 +19,39 @@ public class Task {
 	
 	// Default Constructor
 	public Task() {
-		this(TASK_TYPE.FLOATING, null, null);
+		this(null, null);
 	}
 	
 	// Constructor of Floating Tasks
-	public Task(TASK_TYPE type, String name, String tag) {
-		this.type = type; // parser-determined
+	public Task(String name, String tag) {
+		this.type = TASK_TYPE.FLOATING;
+		this.status = TASK_STATUS.FLOATING;
 		this.name = name; // must have
 		this.tag = tag; // may be null
 		this.flag = false;
 	}
 	
-	// Constructor of Timed Tasks
-	public Task(TASK_TYPE type, String name, String tag, Date end) {
-		this.type = type;
+	// Constructor of Deadlined Tasks
+	public Task(String name, String tag, Date end) {
+		this.type = TASK_TYPE.DEADLINED;
+		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
 		this.tag = tag;
+		this.end = formatter.format(end);
 		this.flag = false;;
+		this.isOverdue = checkOverdue();
 	}
 	
 	// Constructor of Event
-	public Task(TASK_TYPE type, String name, String tag, Date start, Date end) {
-		this.type = type;
+	public Task(String name, String tag, Date start, Date end) {
+		this.type = TASK_TYPE.EVENT;
+		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
 		this.tag = tag;
-		
+		this.start = formatter.format(start);
+		this.end = formatter.format(end);
+		this.flag = false;
+		this.isOverdue = checkOverdue();
 	}
 	
 	// copy constructor
@@ -83,13 +91,25 @@ public class Task {
 		return this.isOverdue;
 	}
 	
-	public Date getStart() throws ParseException {
-		Date date = formatter.parse(this.start);
+	public Date getStart() {
+		Date date = null;
+		try {
+			date = formatter.parse(this.start);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return date;
 	}
 	
-	public Date getEnd() throws ParseException {
-		Date date = formatter.parse(this.end);
+	public Date getEnd() {
+		Date date = null;
+		try {
+			date = formatter.parse(this.end);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return date;
 	}
 
@@ -121,5 +141,19 @@ public class Task {
 	@Override
 	public String toString() {
 		return this.name;
+	}
+	
+	private boolean checkOverdue() {
+		Date current = new Date();
+		try {
+			if  (current.after(formatter.parse(end))) {
+				this.status = TASK_STATUS.OVERDUE;
+				return true;
+			}
+			else return false;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

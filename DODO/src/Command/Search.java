@@ -50,18 +50,18 @@ public class Search extends Command {
 	
 	/**********************************INTERNAL METHODS***************************************/
 	
-	private String searchByDate(DateTime searchDate) {
+	/*private String searchByDate(DateTime searchDate) {
 		ArrayList<Task> floatingResults = searchTasksByDate(floatingTasks, searchDate);
 		return null;
-	}
+	}*/
 	
-	private ArrayList<Task> searchTasksByDate(ArrayList<Task> tasks, DateTime searchDate) {
+	/*private ArrayList<Task> searchTasksByDate(ArrayList<Task> tasks, DateTime searchDate) {
 		System.out.println(searchDate);
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		ArrayList<Task> results = new ArrayList<Task>();
 		for (int i=0; i<tasks.size(); i++) {
 			Task task = tasks.get(i);
-			if (task instanceof DeadlinedTask) {
+			if (task.getStatus()==TASK_TYPE.DEADLINED) {
 				DateTime endDate = new DateTime(((DeadlinedTask) task).getEndDateTime());
 			}
 			else if (task instanceof Event) {
@@ -69,7 +69,7 @@ public class Search extends Command {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	private String searchByTag(String searchTag) {
 		Category category = categories.get(searchTag);

@@ -3,6 +3,8 @@ package Command;
 /* @@author: Lu Yang */
 
 import java.util.*;
+
+import GUI.UI_TAB;
 import Task.*;
 import Parser.*;
 
@@ -20,7 +22,7 @@ public class Edit extends Command {
 		return edit(index, this.UIStatus, edit_type);
 	}
 
-	private String edit(int index, TASK_STATUS status, EDIT_TYPE edit_type) {
+	private String edit(int index, UI_TAB status, EDIT_TYPE edit_type) {
 		try {
 			ArrayList<Task> tasks = getTasks(status);
 			Task task = tasks.get(index);
@@ -28,17 +30,16 @@ public class Edit extends Command {
 			case TASK_NAME:
 				return editName(task, index);
 			case DEADLINED:
-				return editDeadlined((DeadlinedTask)task, index);
+				return editDeadlined(task, index);
 			case START_TIME:
-				return editStartTime((Event) task, index);
+				return editStartTime(task, index);
 			case END_TIME:
-				return editEndTime((Event) task, index);
+				return editEndTime(task, index);
 			case EVENT_TIME:
-				task = (Event) task;
-				editStartTime((Event) task, index);
-				editEndTime((Event) task, index);
-				return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to from \"" + ((Event) task).getStartDateTime()
-						+ "\" to \"" + ((Event)task).getEndDateTime() + "\".";
+				editStartTime(task, index);
+				editEndTime(task, index);
+				return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to from \"" + task.getStart()
+						+ "\" to \"" + task.getEnd() + "\".";
 			default:
 				return MESSAGE_INTERNAL_ERROR;
 			}
@@ -51,23 +52,22 @@ public class Edit extends Command {
 		}
 	}
 
-	private String editStartTime(Event task, int index) {
+	private String editStartTime(Task task, int index) {
 		Date newStartTime = parser.getStartTime();
-		task.setStartDateTime(newStartTime);
-		return "Task " + index + " has been changed to " + "\"" + task.getStartDateTime() + "\".";
+		task.setStart(newStartTime);
+		return "Task " + index + " has been changed to " + "\"" + task.getStart() + "\".";
 	}
 	
-	private String editEndTime(Event task, int index) {
+	private String editEndTime(Task task, int index) {
 		Date newEndTime = parser.getEndTime();
-		task.setEndDateTime(newEndTime);
-		return "Task " + index + " has been changed to " + "\"" + task.getEndDateTime() + "\".";
+		task.setEnd(newEndTime);
+		return "Task " + index + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}
 
-	private String editDeadlined(DeadlinedTask task, int index) {
+	private String editDeadlined(Task task, int index) {
 		Date newDeadline = parser.getEndTime();
-		System.out.println("=========EDIT========== newDeadline" + newDeadline);
-		task.setEndDateTime(newDeadline);
-		return "Task " + index + " has been changed to " + "\"" + task.getEndDateTime() + "\".";
+		task.setEnd(newDeadline);
+		return "Task " + index + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}
 
 	private String editName(Task task, int index) {

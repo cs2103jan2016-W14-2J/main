@@ -1,8 +1,8 @@
-package Task;
+/*package Task;
 
 import java.util.Date;
 
-/* @@author: Lu Yang */
+ @@author: Lu Yang 
 
 public class Event extends Task {
 	private Date startDateTime;
@@ -32,7 +32,7 @@ public class Event extends Task {
 		else return false;
 	}
 	
-	/*******************************ACCESSORS********************************/
+	*//*******************************ACCESSORS********************************//*
 	public boolean getIsOverdue() {
 		return this.isOverdue;
 	}
@@ -45,7 +45,7 @@ public class Event extends Task {
 		return this.endDateTime;
 	}
 	
-	/*******************************MUTATORS********************************/
+	*//*******************************MUTATORS********************************//*
 	
 	public void setStartDateTime(Date startDateTime) {
 		this.startDateTime = startDateTime;
@@ -56,3 +56,4 @@ public class Event extends Task {
 	}
 	
 }
+*/

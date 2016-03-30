@@ -17,6 +17,7 @@ public class Logic {
 	private ArrayList<Task> floatingTasks;
 	private TreeMap<String, Category> categories;
 	private ArrayList<Task> results;
+	private ArrayList<Task> all;
 	private History history;
 	private TASK_STATUS status;
 
@@ -145,7 +146,10 @@ public class Logic {
 			break;
 		case SEARCH:
 			Search search = new Search(parser, data, COMMAND_TYPE.SEARCH, categories);
-			message = execute(search, data);
+			history.save(cloneData(data));
+			message = search.execute();
+			this.results = search.getSearchResults();
+			this.status = TASK_STATUS.SEARCH;
 			break;
 		case SORT:
 			Sort sort = new Sort(parser, data, COMMAND_TYPE.SORT);

@@ -18,14 +18,14 @@ public class Parser {
 	
 	private final String MESSAGE_INPUT_ERROR = "You have entered an invalid input.";
 	
-	private TASK_TYPE taskType;
-	private COMMAND_TYPE command;
-	private String taskName;
-	private Date startTime;
-	private Date endTime;
-	private int taskID;
-	private String tag;
-	private boolean isImportant;
+	protected TASK_TYPE taskType;
+	protected COMMAND_TYPE command;
+	protected String taskName;
+	protected Date startTime;
+	protected Date endTime;
+	protected int taskID;
+	protected String tag;
+	protected boolean isImportant;
 	
 	private DELETE_TYPE deleteType;
 	private ArrayList<String> tagToDelete;

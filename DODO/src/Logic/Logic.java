@@ -78,13 +78,24 @@ public class Logic {
 	}
 
 	/***********************************PRIVATE METHODS***********************************************/
-	protected Logic(String directory) {
+	private Logic(String directory) {
 		storage = new Storage(directory);
 		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
 		categories = reinitialiseCategories();
+		results = new ArrayList<Task>();
+		history = new History();
+	}
+	
+	// for testing
+	protected Logic() {
+		ongoingTasks = new ArrayList<Task>();
+		completedTasks = new ArrayList<Task>();
+		overdueTasks = new ArrayList<Task>();
+		floatingTasks = new ArrayList<Task>();
+		categories = new TreeMap<String, Category>();
 		results = new ArrayList<Task>();
 		history = new History();
 	}

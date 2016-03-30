@@ -21,6 +21,7 @@ public class Logic {
 	private History history;
 	private UI_TAB status;
 	private TreeMap<String, Category> categories;
+	private String previous;
 
 	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance(String directory) {
@@ -31,6 +32,7 @@ public class Logic {
 	}
 
 	public String run(String input) {
+		this.previous = input;
 		Parser parser;
 		try {
 			parser = new Parser(input);
@@ -85,6 +87,13 @@ public class Logic {
 	
 	public ArrayList<Task> getSearchResults() {
 		return this.results;
+	}
+	
+	public String getPreviousCommand() {
+		if (this.previous==null) {
+			return "";
+		}
+		return this.previous;
 	}
 
 	/***********************************PRIVATE METHODS***********************************************/

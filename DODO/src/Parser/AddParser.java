@@ -241,19 +241,40 @@ public class AddParser {
 	private String parseDEADLINED() {
 		getKeywordPosition(taskName);
 		Date date = new Date();
+		boolean checkForDateTime = false;
 		
 		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
+			String tempTaskName = "";
+			String confirmTaskName = "";
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
-			System.out.println("DEBUG @line 193:" + taskName);
-			setTaskName(taskName);
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
-			System.out.println("DEBUG2 :" + contentToAnalyse);
-			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
-			// Example: submit assignment 1 by tomorrow
-			if (dates.size() != 0) {
+			System.out.println("DEBUG @@250:" + taskName);
+			// Example: meet Hannah by 2359hrs by the beach
+			if (taskName.lastIndexOf(KEYWORD_BY) != -1) {
+				tempTaskName = taskName.substring(taskName.lastIndexOf(KEYWORD_BY), taskName.length()).trim();
+				confirmTaskName = taskName.substring(0, taskName.lastIndexOf(KEYWORD_BY)).trim();
+			}
+			else {
+				tempTaskName = taskName;
+				setTaskName(tempTaskName);
+			}
+			
+			List<Date> dateOneBy = new PrettyTimeParser().parse(contentToAnalyse);
+			List<Date> dateTwoBy = new PrettyTimeParser().parse(tempTaskName);
+			
+			// Example: finish jogging with baby by the beach by tomorrow
+			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0) {
 				System.out.println("TEST test");
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
+				taskName = confirmTaskName + " " + tempTaskName;
+				setTaskName(taskName);
+			}
+			// Example: finish jogging with baby by tomorrow by the beach
+			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0) {
+				setEndTime(checkAndSetDefaultEndTime(dateTwoBy.get(0), date));
+				taskName = confirmTaskName + " " + contentToAnalyse;
+				setTaskName(taskName);
 			}
 			// Example: take a walk by the beach
 			else {
@@ -262,6 +283,97 @@ public class AddParser {
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 	
+		}
+		
+		else if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT != -1) {
+			System.out.println("TEST @line 288");
+			String tempTaskName = "";
+			String confirmTaskName = "";
+			
+			if (LAST_POSITION_OF_BY < LAST_POSITION_OF_AT) {
+				confirmTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
+				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, LAST_POSITION_OF_AT)));
+				tempTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+				checkForDateTime = extractDate(tempTaskName);
+				
+				List<Date> dateByToAt = new PrettyTimeParser().parse(contentToAnalyse);
+				List<Date> dateAtToEnd = new PrettyTimeParser().parse(tempTaskName);
+				
+				// Example: meet buyer by tonight at city hall
+				if (dateByToAt.size()!= 0 && dateAtToEnd.size() == 0 && checkForDateTime == true) {
+					System.out.println("@line304 :");
+					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
+					taskName = confirmTaskName + " " + tempTaskName;
+					setTaskName(taskName);
+				}
+				else if (dateByToAt.size() == 0 && dateAtToEnd.size() != 0 && checkForDateTime == true) {
+					setEndTime(checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
+					taskName = confirmTaskName + " " + contentToAnalyse;
+					setTaskName(taskName);
+				}
+				else if (dateByToAt.size() != 0 && dateAtToEnd.size() != 0 && checkForDateTime == true) {
+					String dateToExtract = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
+					List<Date> dates = new PrettyTimeParser().parse(dateToExtract);
+					setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+					taskName = confirmTaskName;
+					setTaskName(taskName);
+				}
+				// Example: meet buyer by tonight at block 2359
+				else if (checkForDateTime == false && dateAtToEnd.size() != 0) {
+					System.out.println("@line322 :");
+					taskName = confirmTaskName.trim() + " " + tempTaskName.trim();
+					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
+					setTaskName(taskName);
+				}
+				else {
+					taskName = userTask;
+					setTaskName(taskName);
+					setTaskType(TASK_TYPE.FLOATING);
+				}
+			}
+			else if (LAST_POSITION_OF_BY > LAST_POSITION_OF_AT) {
+				confirmTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_BY)));
+				tempTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
+				checkForDateTime = extractDate(contentToAnalyse);
+				
+				List<Date> dateAtToBy = new PrettyTimeParser().parse(contentToAnalyse);
+				List<Date> dateByToEnd = new PrettyTimeParser().parse(tempTaskName);
+				
+				// Example: meet buyer by tonight at city hall
+				if (dateAtToBy.size()!= 0 && dateByToEnd.size() == 0 && checkForDateTime == true) {
+					setEndTime(checkAndSetDefaultEndTime(dateAtToBy.get(0), date));
+					taskName = confirmTaskName + " " + tempTaskName;
+					setTaskName(taskName);
+				}
+				// Example: meet buyer at city hall by tonight
+				else if (dateAtToBy.size() == 0 && dateByToEnd.size() != 0 && checkForDateTime == true) {
+					setEndTime(checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
+					taskName = confirmTaskName + " " + contentToAnalyse;
+					setTaskName(taskName);
+				}
+				// Example: meeting with hannah at 7pm by monday
+				else if (dateAtToBy.size() != 0 && dateByToEnd.size() != 0 && checkForDateTime == true) {
+					String dateToExtract = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+					List<Date> dates = new PrettyTimeParser().parse(dateToExtract.replace(" by", ""));
+					setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+					taskName = confirmTaskName;
+					setTaskName(taskName);
+				}
+				// Example: meeting with hannah at block 2359 by thursday
+				else if (checkForDateTime == false && dateAtToBy.size() != 0) {
+					System.out.println("@line363 :");
+					taskName = confirmTaskName.trim() + " " + contentToAnalyse.trim();
+					setEndTime(checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
+					setTaskName(taskName);
+				}
+				else {
+					taskName = userTask;
+					setTaskName(taskName);
+					setTaskType(TASK_TYPE.FLOATING);
+				}
+			}
+				
 		}
 		
 		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT == -1) {
@@ -554,7 +666,23 @@ public class AddParser {
 			setTaskType(TASK_TYPE.DEADLINED);
 		}
 	}
-
+	
+	private boolean extractDate(String userTask) {
+		String temp = "";
+		DateTimeParser dt = new DateTimeParser();
+		temp = dt.removeTheDayAfterTomorrow(userTask);
+		temp = dt.removeYesterday(temp);
+		temp = dt.removeTomorrow(temp);
+		temp = dt.removeToday(temp);
+		temp = dt.removeThisComingWeekday(temp);
+		temp = dt.removeNextFewDays(temp);
+		temp = dt.removeNextWeek(temp);
+		temp = dt.removeTime(temp);
+		temp = dt.removeDate(temp);
+	
+		return (temp.trim().equals(userTask.trim())) ? false : true;
+	}
+	
 	private String extractLastPreposition(String temp) {
 		String[] str = temp.split("[\\s+]");
 		String newStr = "";

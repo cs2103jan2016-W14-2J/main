@@ -59,18 +59,47 @@ public class Edit extends Command {
 	private String editStartTime(Task task, int index) {
 		Date newStartTime = parser.getStartTime();
 		task.setStart(newStartTime);
+		if (task.getType()==TASK_TYPE.FLOATING) {
+			this.floatingTasks.remove(task);
+			if (task.getIsOverdue()==true) {
+				this.overdueTasks.add(task);
+			}
+			else {
+				this.ongoingTasks.add(task);
+			}
+		}
+		
 		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getStart() + "\".";
 	}
 	
 	private String editEndTime(Task task, int index) {
 		Date newEndTime = parser.getEndTime();
 		task.setEnd(newEndTime);
+		if (task.getType()==TASK_TYPE.FLOATING) {
+			convertFromFloatingToDeadlined(task);
+		}
 		return "Task " + (index+INDEX_ADJUSTMENT)  + " has been changed to " + "\"" + task.getEnd() + "\".";
+	}
+	
+	private void convertFromFloatingToDeadlined(Task task) {
+		this.floatingTasks.remove(task);	
+		if (task.getIsOverdue()==true) {
+			this.overdueTasks.add(task);
+			this.UIStatus = UI_TAB.OVERDUE;
+		}
+		else {
+			this.ongoingTasks.add(task);
+			this.UIStatus = UI_TAB.ONGOING;
+		}
 	}
 
 	private String editDeadlined(Task task, int index) {
+		TASK_TYPE type = task.getType();
 		Date newDeadline = parser.getEndTime();
 		task.setEnd(newDeadline);
+		if (type==TASK_TYPE.FLOATING) {
+			convertFromFloatingToDeadlined(task);
+		}
 		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}
 

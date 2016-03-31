@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Task {
 	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
-	
+
 	private TASK_TYPE type;
 	private TASK_STATUS status;
 	private String name;
@@ -16,12 +16,12 @@ public class Task {
 	private String start;
 	private boolean flag;
 	private boolean isOverdue;
-	
+
 	// Default Constructor
 	public Task() {
 		this(null, null);
 	}
-	
+
 	// Constructor of Floating Tasks
 	public Task(String name, String tag) {
 		this.type = TASK_TYPE.FLOATING;
@@ -30,7 +30,7 @@ public class Task {
 		this.tag = tag; // may be null
 		this.flag = false;
 	}
-	
+
 	// Constructor of Deadlined Tasks
 	public Task(String name, String tag, Date end) {
 		this.type = TASK_TYPE.DEADLINED;
@@ -39,9 +39,9 @@ public class Task {
 		this.tag = tag;
 		this.end = formatter.format(end);
 		this.flag = false;;
-		this.isOverdue = checkOverdue();
+		this.isOverdue = checkOverdue(end);
 	}
-	
+
 	// Constructor of Event
 	public Task(String name, String tag, Date start, Date end) {
 		this.type = TASK_TYPE.EVENT;
@@ -51,9 +51,9 @@ public class Task {
 		this.start = formatter.format(start);
 		this.end = formatter.format(end);
 		this.flag = false;
-		this.isOverdue = checkOverdue();
+		this.isOverdue = checkOverdue(end);
 	}
-	
+
 	// copy constructor
 	public Task(Task original) {
 		this.type = original.type;
@@ -70,11 +70,11 @@ public class Task {
 	public TASK_TYPE getType() {
 		return this.type;
 	}
-	
+
 	public TASK_STATUS getStatus() {
 		return this.status;
 	}
-	
+
 	public boolean getFlag() {
 		return this.flag;
 	}
@@ -82,15 +82,15 @@ public class Task {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public String getTag() {
 		return this.tag;
 	}
-	
+
 	public boolean getIsOverdue() {
 		return this.isOverdue;
 	}
-	
+
 	public Date getStart() {
 		Date date = null;
 		try {
@@ -101,7 +101,7 @@ public class Task {
 		}
 		return date;
 	}
-	
+
 	public Date getEnd() {
 		Date date = null;
 		try {
@@ -117,49 +117,49 @@ public class Task {
 	public void setTag(String tag) { 
 		this.tag = tag; 
 	}
-	
+
 	public void setFlag(boolean flag) {	
 		this.flag = flag; 
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public void setComplete() {
 		this.status = TASK_STATUS.COMPLETED;
 	}
-	
+
 	public void setStart(Date start) {
 		if (this.start==null) {
 			this.type = TASK_TYPE.EVENT;
 		}
 		this.start = formatter.format(start);
 	}
-	
+
 	public void setEnd(Date end) {
-		if (this.end ==null && this.type!=TASK_TYPE.EVENT) {
+		// if the task is a floating task
+		if (this.end ==null && this.type==TASK_TYPE.FLOATING) {
 			this.type = TASK_TYPE.DEADLINED;
+			this.isOverdue = checkOverdue(end);
 		}
 		this.end = formatter.format(end);
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.name;
 	}
-	
-	private boolean checkOverdue() {
+
+	private boolean checkOverdue(Date end) {
 		Date current = new Date();
-		try {
-			if  (current.after(formatter.parse(end))) {
-				this.status = TASK_STATUS.OVERDUE;
-				return true;
-			}
-			else return false;
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if  (current.after(end)) {
+			this.status = TASK_STATUS.OVERDUE;
+			return true;
 		}
-		return false;
+		else {
+			this.status = TASK_STATUS.ONGOING;
+			return false;
+		}
 	}
 }

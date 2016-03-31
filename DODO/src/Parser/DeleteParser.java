@@ -16,6 +16,8 @@ public class DeleteParser {
 	private String STRING_CHECKER_CLOSE_PARENTHESES = ">";
 	private String STRING_CHECKER_TAG = "tag";
 	private String STRING_CHECKER_CATEGORY = "category";
+	private String STRING_START_DATE = "start date";
+	private String STRING_END_DATE = "end date";
 	
 	public DeleteParser(String userTask) {
 		this.userTask = userTask;
@@ -50,14 +52,27 @@ public class DeleteParser {
 				break;
 			case ALL_TAGS:
 				break;
+			case START_DATE:
+				parseDeleteStartDate(str);
+				break;
+			case END_DATE:
+				parseDeleteEndDate(str);
+				break;
 			default:
 				break;
 		}
 	}
 
-
 	private boolean isTaskIndex(String[] str) {
 		return (str[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES)) ? false : true;
+	}
+
+	private void parseDeleteEndDate(String[] str) {
+		indexToDelete.add(Integer.parseInt(str[0]));
+	}
+
+	private void parseDeleteStartDate(String[] str) {
+		indexToDelete.add(Integer.parseInt(str[0]));
 	}
 
 	private void parseRangeDelete(String[] str) {
@@ -108,7 +123,7 @@ public class DeleteParser {
 			setDeleteType(DELETE_TYPE.SINGLE_TAG);
 			return DELETE_TYPE.SINGLE_TAG;	
 		}
-		else if (checkIfDeleteRange(userTask)) {
+		else if (checkIfDeleteRange(userTask) && isInteger == true) {
 			setDeleteType(DELETE_TYPE.RANGE_INDEXES);
 			return DELETE_TYPE.RANGE_INDEXES;
 		}
@@ -120,9 +135,25 @@ public class DeleteParser {
 			setDeleteType(DELETE_TYPE.MULTIPLE_TAGS);
 			return DELETE_TYPE.MULTIPLE_TAGS;
 		}
+		else if(checkIfDeleteStartDate(userTask)) {
+			setDeleteType(DELETE_TYPE.START_DATE);
+			return DELETE_TYPE.START_DATE;
+		}
+		else if(checkIfDeleteEndDate(userTask)) {
+			setDeleteType(DELETE_TYPE.END_DATE);
+			return DELETE_TYPE.END_DATE;
+		}
 		else {
 			return null;
 		}
+	}
+
+	private boolean checkIfDeleteEndDate(String userTask) {
+		return (userTask.contains(STRING_END_DATE)) ? true : false;
+	}
+
+	private boolean checkIfDeleteStartDate(String userTask) {
+		return (userTask.contains(STRING_START_DATE)) ? true : false;
 	}
 
 	private boolean checkIfDeleteAllTag(String userTask) {
@@ -142,7 +173,9 @@ public class DeleteParser {
 
 	private boolean checkIfDeleteMultiple(String userTask) {
 		String[] str = userTask.toLowerCase().split("\\s+");	
-		return (str.length > 1 && !checkIfDeleteRange(userTask)) ? true : false;
+		return (str.length > 1 && !checkIfDeleteRange(userTask) && 
+				!checkIfDeleteEndDate(userTask) &&
+				!checkIfDeleteStartDate(userTask)) ? true : false;
 	}
 
 	private boolean checkIfDeleteSingleIndex(String userTask) {

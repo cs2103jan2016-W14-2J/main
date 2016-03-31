@@ -81,8 +81,8 @@ public class EditParser {
 		case INVALID:
 			System.out.println(MESSAGE_EDIT_INPUT_ERROR);
 			setEditType(EDIT_TYPE.INVALID);
-		}
-		
+			break;
+		}	
 	}
 
 	private void parseEditEndTime(String userInput) {

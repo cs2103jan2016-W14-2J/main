@@ -458,12 +458,17 @@ public class AddParser {
 		
 		Date date = new Date();
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		System.out.println("TEST parseFloating :" + dates.size());
+		System.out.println("TEST parseFloating :" + timeChecker);
 		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}
 		else {
 			if (dates.size() == 1 && (!userTask.equals(timeChecker))) {
+				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				extractDateElement(userTask);
+			}
+			else if (dates.size() == 1 && (userTask.contains("tomorrow")
+					|| userTask.contains("today") || userTask.contains("yesterday"))) {
 				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
 				extractDateElement(userTask);
 			}

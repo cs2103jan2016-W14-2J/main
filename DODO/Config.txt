@@ -1,2 +1,2 @@
-DBDIR = C:\Users\CHIANG-DELL\AppData\Roaming\Microsoft\Windows\Network Shortcuts\DODOdatabase.txt
+DBDIR = /Users/HaoJie/Dropbox/DODOdatabase.txt
 FILENAME = DODOdatabase.txt

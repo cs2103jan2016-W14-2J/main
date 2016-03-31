@@ -59,6 +59,7 @@ public class DeleteParser {
 				parseDeleteEndDate(str);
 				break;
 			default:
+				setDeleteType(DELETE_TYPE.INVALID);
 				break;
 		}
 	}
@@ -68,11 +69,21 @@ public class DeleteParser {
 	}
 
 	private void parseDeleteEndDate(String[] str) {
-		indexToDelete.add(Integer.parseInt(str[0]));
+		if (!str[0].contains("end")) {
+			indexToDelete.add(Integer.parseInt(str[0]));
+		}
+		else {
+			setDeleteType(DELETE_TYPE.INVALID);
+		}
 	}
 
 	private void parseDeleteStartDate(String[] str) {
-		indexToDelete.add(Integer.parseInt(str[0]));
+		if (!str[0].contains("start")) {
+			indexToDelete.add(Integer.parseInt(str[0]));
+		}
+		else {
+			setDeleteType(DELETE_TYPE.INVALID);
+		}
 	}
 
 	private void parseRangeDelete(String[] str) {
@@ -144,7 +155,8 @@ public class DeleteParser {
 			return DELETE_TYPE.END_DATE;
 		}
 		else {
-			return null;
+			setDeleteType(DELETE_TYPE.INVALID);
+			return DELETE_TYPE.INVALID;
 		}
 	}
 

@@ -131,19 +131,34 @@ public class Task {
 	}
 
 	public void setStart(Date start) {
-		if (this.start==null) {
-			this.type = TASK_TYPE.EVENT;
+		if (start==null) {
+			// convert to deadlined
+			this.type = TASK_TYPE.DEADLINED;
+			this.start = null;
 		}
-		this.start = formatter.format(start);
+		else {
+			if (this.start==null) {
+				// convert to Event
+				this.type = TASK_TYPE.EVENT;
+			}
+			this.start = formatter.format(start);
+		}
 	}
 
 	public void setEnd(Date end) {
-		// if the task is a floating task
-		if (this.end ==null && this.type==TASK_TYPE.FLOATING) {
-			this.type = TASK_TYPE.DEADLINED;
-			this.isOverdue = checkOverdue(end);
+		if (end==null) {
+			// convert to floating
+			this.type = TASK_TYPE.FLOATING;
+			this.end = null;
 		}
-		this.end = formatter.format(end);
+		else {
+			if (this.type==TASK_TYPE.FLOATING) {
+				// if the task is a floating task
+				this.type = TASK_TYPE.DEADLINED;
+			}
+			this.isOverdue = checkOverdue(end);
+			this.end = formatter.format(end);
+		}
 	}
 
 	@Override

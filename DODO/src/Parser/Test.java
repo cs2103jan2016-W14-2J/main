@@ -11,13 +11,16 @@ import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 public class Test {
 
 		public static void main (String[] args) {
-	//		List<Date> dates = new PrettyTimeParser().parse("16/10/18");
-	//		System.out.println(dates.get(0));
-			Parser parser = new Parser("eat at 2pm at padang");
+		//	List<Date> dates = new PrettyTimeParser().parse("2500hrs");
+		//	System.out.println(dates.get(0));
+			Parser parser = new Parser("delete 10 end date");
 			System.out.println(parser.getName());
+			System.out.println(parser.getDeleteType());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getType());
+			System.out.println(parser.getIndexToDelete());
+			
 
 
 /*

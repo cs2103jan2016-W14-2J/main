@@ -6,7 +6,7 @@ import java.util.*;
 /* @@author: Lu Yang */
 
 public class Task {
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
 	private TASK_TYPE type;
 	private TASK_STATUS status;

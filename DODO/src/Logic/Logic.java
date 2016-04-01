@@ -101,10 +101,10 @@ public class Logic {
 	/***********************************PRIVATE METHODS***********************************************/
 	private Logic(String directory) {
 		storage = new Storage(directory);
-		ongoingTasks = storage.read(UI_TAB.ONGOING);
-		completedTasks = storage.read(UI_TAB.COMPLETED);
-		overdueTasks = storage.read(UI_TAB.OVERDUE);
-		floatingTasks = storage.read(UI_TAB.FLOATING);
+		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
+		completedTasks = storage.read(TASK_STATUS.COMPLETED);
+		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
+		floatingTasks = storage.read(TASK_STATUS.FLOATING);
 		categories = reinitialiseCategories();
 		results = new ArrayList<Task>();
 		history = new History();

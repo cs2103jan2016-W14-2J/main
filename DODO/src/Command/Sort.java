@@ -12,14 +12,13 @@ public class Sort extends Command {
 	private static final AscendingAlphaticalComparator ascendingAlphabeticalComparator = new AscendingAlphaticalComparator();
 	private static final DateComparator dateComparator = new DateComparator();
 
-	public Sort(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		super(parser, data, command_type);
+	public Sort(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+		super(parser, data, categories);
 	}
 
 	@Override
 	public String execute() {
 		SORT_TYPE type = parser.getSortType();
-		System.out.println("============SORT==============: " + type);
 		switch (type) {
 		case BY_ASCENDING:
 		case BY_DESCENDING:
@@ -48,10 +47,6 @@ public class Sort extends Command {
 		return "Sorted by Dates.";
 	}
 
-	@Override
-	public String undo() {
-		return null;
-	}
 
 	private static class AscendingAlphaticalComparator implements Comparator<Task> {
 		@Override
@@ -81,10 +76,10 @@ public class Sort extends Command {
 			if (aDate==null) return -1;
 			if (bDate==null) return 1;
 			if (aDate.after(bDate)) {
-				return 1;
+				return -1;
 			}
 			else if (aDate.before(bDate)) {
-				return -1;
+				return 1;
 			}
 			else return 0;
 		}

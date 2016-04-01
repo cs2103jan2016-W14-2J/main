@@ -20,7 +20,7 @@ public class Logic {
 	private ArrayList<Task> all;
 	private History history;
 	private UI_TAB status;
-	private TreeMap<String, Category> categories;
+	private ArrayList<String> categories;
 	private String previous;
 
 	/*************************************PUBLIC METHODS******************************************/
@@ -42,7 +42,7 @@ public class Logic {
 		}
 		return processCommand(parser);
 	}
-
+	
 	public String save() {
 		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
@@ -68,10 +68,8 @@ public class Logic {
 		return this.overdueTasks;
 	}
 
-	public ArrayList<Category> getCategories() {
-		ArrayList<Category> list = new ArrayList<Category>(this.categories.values());
-		System.out.println("======Logic===== size: " + list.size());
-		return list;
+	public ArrayList<String> getCategories() {
+		return this.categories;
 	}
 	
 	public ArrayList<Task> getAll() {
@@ -105,13 +103,13 @@ public class Logic {
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
-		categories = reinitialiseCategories();
+		categories = initialiseCategories();
 		results = new ArrayList<Task>();
 		history = new History();
 	}
 	
 	// for testing
-	protected Logic() {
+	/*protected Logic() {
 		ongoingTasks = new ArrayList<Task>();
 		completedTasks = new ArrayList<Task>();
 		overdueTasks = new ArrayList<Task>();
@@ -119,7 +117,7 @@ public class Logic {
 		categories = new TreeMap<String, Category>();
 		results = new ArrayList<Task>();
 		history = new History();
-	}
+	}*/
 
 	protected String processCommand(Parser parser) {
 		String message = "";
@@ -129,41 +127,41 @@ public class Logic {
 
 		switch (command) {
 		case ADD:
-			Add add = new Add(parser, data, COMMAND_TYPE.ADD);
+			Add add = new Add(parser, data, categories);
 			message = execute(add, data);
 			break;
 		case DELETE:
-			Delete delete = new Delete(parser, data, COMMAND_TYPE.DELETE, categories);
+			Delete delete = new Delete(parser, data, categories);
 			message = execute(delete, data);
 			categories = delete.getCategories();
 			break;
 		case EDIT:
-			Edit edit = new Edit(parser, data, COMMAND_TYPE.EDIT);
+			Edit edit = new Edit(parser, data, categories);
 			message = execute(edit, data);
 			break;
 		case COMPLETE:
-			Complete complete = new Complete(parser, data, COMMAND_TYPE.COMPLETE);
+			Complete complete = new Complete(parser, data, categories);
 			message = execute(complete, data);
 			this.status = UI_TAB.COMPLETED;
 			break;
 		case TAG:
-			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
+			Tag tag = new Tag(parser, data, categories);
 			message = execute(tag, data);
 			categories = tag.getCategories();
 			System.out.println(categories);
 			break;
 		case FLAG:
-			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG, true);
+			Flag flag = new Flag(parser, data, categories, true);
 			message = execute(flag, data);
 			break;
 		case UNFLAG:
-			flag = new Flag(parser, data, COMMAND_TYPE.FLAG, false);
+			flag = new Flag(parser, data, categories, false);
 			message = execute(flag, data);
 			break;
 		case UNDO:
 			try {
 				data = history.undo(data);
-				update(data);
+				update(data, this.categories);
 				message = "Undone successfully.";
 			} catch (EmptyStackException e) {
 				message = "There is nothing to be undone.";
@@ -172,21 +170,21 @@ public class Logic {
 		case REDO:
 			try {
 				data = history.redo();
-				update(data);
+				update(data, this.categories);
 				message = "Redone successfully.";
 			} catch (EmptyStackException e) {
 				message = "There is nothing to be redone.";
 			}
 			break;
 		case SEARCH:
-			Search search = new Search(parser, data, COMMAND_TYPE.SEARCH, categories);
+			Search search = new Search(parser, data, categories);
 			history.save(cloneData(data));
 			message = search.execute();
 			this.results = search.getSearchResults();
 			this.status = search.getStatus();
 			break;
 		case SORT:
-			Sort sort = new Sort(parser, data, COMMAND_TYPE.SORT);
+			Sort sort = new Sort(parser, data, categories);
 			message = execute(sort, data);
 			break;
 		default:
@@ -196,9 +194,8 @@ public class Logic {
 	}
 
 	private String execute(Command command, ArrayList<ArrayList<Task>> data) {
-		history.save(cloneData(data));
 		String message = command.execute();
-		this.update(command.getData());
+		this.update(command.getData(), command.getCategories());
 		this.status = command.getStatus();
 		return message;
 	}
@@ -230,24 +227,37 @@ public class Logic {
 		return newData;
 	}
 
-	private String update(ArrayList<ArrayList<Task>> data) {
+	private String update(ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);
 		this.completedTasks = data.get(2);
 		this.overdueTasks = data.get(3);
+		this.categories = categories;
 		return "Data updated.";
 	}
 	
-	private TreeMap<String, Category> reinitialiseCategories() {
-		TreeMap<String, Category> categories = new TreeMap<String, Category>();
+	private ArrayList<String> initialiseCategories() {
+		ArrayList<String> categories = new ArrayList<String>();
 		categories = readCategories(floatingTasks, categories);
 		categories = readCategories(ongoingTasks, categories);
 		categories = readCategories(completedTasks, categories);
 		categories = readCategories(overdueTasks, categories);
 		return categories;
 	}
-
-	private TreeMap<String, Category> readCategories(ArrayList<Task> tasks,
+	
+	private ArrayList<String> readCategories(ArrayList<Task> tasks, ArrayList<String> categories) {
+		for (Task task: tasks) {
+			ArrayList<String> tags = task.getTags();
+			for (String tag: tags) {
+				if (!hasTag(categories, tag)) {
+					categories.add(tag);
+				}
+			}
+		}
+		return categories;
+	}
+	
+	/*private TreeMap<String, Category> readCategories(ArrayList<Task> tasks,
 			TreeMap<String, Category> categories) {
 		for (Task task: tasks) {
 			if (task.getTag()!=null) {
@@ -267,5 +277,14 @@ public class Logic {
 			}
 		}
 		return categories;
+	}*/
+	
+	private boolean hasTag(ArrayList<String> categories, String key) {
+		for (String tag: categories) {
+			if (key.equalsIgnoreCase(tag)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

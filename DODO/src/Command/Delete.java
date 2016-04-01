@@ -8,12 +8,9 @@ import GUI.UI_TAB;
 import Parser.*;
 import Task.*;
 
-public class Delete extends Command{
-	private TreeMap<String, Category> categories;
-
-	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type, TreeMap<String, Category> categories) {
-		super(parser, data, command_type);
-		this.categories = categories;
+public class Delete extends Command {
+	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+		super(parser, data, categories);
 	}
 
 	public String execute() {
@@ -44,7 +41,7 @@ public class Delete extends Command{
 	}
 
 	private String deleteAllTags() {
-		this.categories = new TreeMap<String, Category>();
+		this.categories = new ArrayList<String>();
 		return "All tags deleted";
 	}
 	
@@ -54,6 +51,7 @@ public class Delete extends Command{
 			Task task = tasks.get(index- INDEX_ADJUSTMENT);
 			task.setStart(null);
 		}
+		this.setTasks(this.UIStatus, tasks);
 		return "Start Time of tasks at " + indexes + " has been removed.";
 	}
 	
@@ -74,7 +72,7 @@ public class Delete extends Command{
 		String status = "";
 		for (int i=0; i<tags.size(); i++) {
 			String element = tags.get(0);
-			if (!categories.containsKey(element)) {
+			if (!categories.contains(element)) {
 				status += "Tag " + element + " is not found.\n";
 			}
 			categories.remove(element);
@@ -111,9 +109,4 @@ public class Delete extends Command{
 		}
 		return status;
 	}
-
-	public TreeMap<String, Category> getCategories() {
-		return this.categories;
-	}
-
 }

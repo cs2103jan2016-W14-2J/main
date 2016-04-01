@@ -12,12 +12,10 @@ import Task.*;
 
 public class Search extends Command {
 	private ArrayList<Task> results;
-	private TreeMap<String, Category> categories;
 
-	public Search(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type, TreeMap<String, Category> categories) {
-		super(parser, data, command_type);
+	public Search(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+		super(parser, data, categories);
 		this.results = new ArrayList<Task>();
-		this.categories = categories;
 	}
 
 	@Override
@@ -73,11 +71,23 @@ public class Search extends Command {
 	}*/
 	
 	private String searchByTag(String searchTag) {
-		Category category = categories.get(searchTag);
-		if (category==null) return "There is no tag called \"" + searchTag + "\"";
-		this.results = category.getTasks();
-		this.UIStatus = UI_TAB.SEARCH;
-		return "Search for tag \"" + searchTag + "\" completed.";
+		if (categories.contains(searchTag)) {
+			searchList(this.floatingTasks, searchTag);
+			searchList(this.ongoingTasks, searchTag);
+			searchList(this.completedTasks, searchTag);
+			searchList(this.overdueTasks, searchTag);
+			this.UIStatus = UI_TAB.SEARCH;
+			return "Search for tag \"" + searchTag + "\" completed.";
+		}
+		else return "There is no tag called \"" + searchTag + "\"";
+	}
+	
+	private void searchList(ArrayList<Task> tasks, String searchTag) {
+		for (Task task: tasks) {
+			if (task.hasTag(searchTag)) {
+				this.results.add(task);
+			}
+		}
 	}
 
 	private String searchByKeyword(String searchStr) {
@@ -105,11 +115,4 @@ public class Search extends Command {
 		}
 		return results;
 	}
-
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

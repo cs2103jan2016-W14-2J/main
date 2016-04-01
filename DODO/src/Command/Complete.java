@@ -9,8 +9,8 @@ import Task.*;
 
 public class Complete extends Command {
 
-	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		super(parser, data, command_type);
+	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+		super(parser, data, categories);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class Complete extends Command {
 				else {
 					task.setComplete();;
 					tasks.remove(index);
-					completedTasks.add(task);
+					this.completedTasks.add(task);
 					setTasks(this.UIStatus, tasks);
 					status += "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.\n";
 				}
@@ -63,13 +63,4 @@ public class Complete extends Command {
 		}
 		return status;
 	}
-
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
 }

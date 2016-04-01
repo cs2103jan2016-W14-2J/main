@@ -11,8 +11,8 @@ import Parser.*;
 public class Edit extends Command {
 	private static final String MESSAGE_INTERNAL_ERROR = "[INTERNAL ERROR] edit/edit.";
 	
-	public Edit(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		super(parser, data, command_type);
+	public Edit(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+		super(parser, data, categories);
 	}
 
 	@Override
@@ -103,11 +103,4 @@ public class Edit extends Command {
 		task.setName(newName);
 		return  "Task " + (index+INDEX_ADJUSTMENT) + " has been renamed as " + "\"" + task.getName() + "\".";
 	}
-
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

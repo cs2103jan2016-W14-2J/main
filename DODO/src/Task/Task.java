@@ -11,11 +11,11 @@ public class Task {
 	private TASK_TYPE type;
 	private TASK_STATUS status;
 	private String name;
-	private String tag;
 	private String end;
 	private String start;
 	private boolean flag;
 	private boolean isOverdue;
+	private ArrayList<String> tags;
 
 	// Default Constructor
 	public Task() {
@@ -23,33 +23,54 @@ public class Task {
 	}
 
 	// Constructor of Floating Tasks
-	public Task(String name, String tag) {
+	public Task(String name, ArrayList<String> tags) {
 		this.type = TASK_TYPE.FLOATING;
 		this.status = TASK_STATUS.FLOATING;
 		this.name = name; // must have
-		this.tag = tag; // may be null
+		
+		if (tags==null) {
+			this.tags = new ArrayList<String>();
+		}
+		else {
+			this.tags = tags;
+		}
 		this.flag = false;
+		this.isOverdue = false;
 	}
 
 	// Constructor of Deadlined Tasks
-	public Task(String name, String tag, Date end) {
+	public Task(String name, ArrayList<String> tags, Date end) {
 		this.type = TASK_TYPE.DEADLINED;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
-		this.tag = tag;
 		this.end = formatter.format(end);
+		
+		if (tags==null) {
+			this.tags = new ArrayList<String>();
+		}
+		else {
+			this.tags = tags;
+		}
+		
 		this.flag = false;;
 		this.isOverdue = checkOverdue(end);
 	}
 
 	// Constructor of Event
-	public Task(String name, String tag, Date start, Date end) {
+	public Task(String name,  ArrayList<String> tags, Date start, Date end) {
 		this.type = TASK_TYPE.EVENT;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
-		this.tag = tag;
 		this.start = formatter.format(start);
 		this.end = formatter.format(end);
+		
+		if (tags==null) {
+			this.tags = new ArrayList<String>();
+		}
+		else {
+			this.tags = tags;
+		}
+		
 		this.flag = false;
 		this.isOverdue = checkOverdue(end);
 	}
@@ -59,11 +80,11 @@ public class Task {
 		this.type = original.type;
 		this.status = original.status;
 		this.name = original.name;
-		this.tag = original.tag;
 		this.end = original.end;
 		this.start = original.start;
 		this.flag = original.flag;
 		this.isOverdue = original.isOverdue;
+		this.tags = original.tags;
 	}
 
 	/**************************************ACCESSORS**************************/
@@ -83,8 +104,8 @@ public class Task {
 		return this.name;
 	}
 
-	public String getTag() {
-		return this.tag;
+	public ArrayList<String> getTags() {
+		return this.tags;
 	}
 
 	public boolean getIsOverdue() {
@@ -114,10 +135,6 @@ public class Task {
 	}
 
 	/***********************************MUTATORS*****************************/
-	public void setTag(String tag) { 
-		this.tag = tag; 
-	}
-
 	public void setFlag(boolean flag) {	
 		this.flag = flag; 
 	}
@@ -159,6 +176,43 @@ public class Task {
 			this.isOverdue = checkOverdue(end);
 			this.end = formatter.format(end);
 		}
+	}
+	
+	public void setTags(ArrayList<String> tags) {
+		this.tags = tags;
+	}
+	
+	public boolean addTag(String tag) {
+		if (!this.hasTag(tag)) {
+			tags.add(tag);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean removeTag(String tag) {
+		if (this.hasTag(tag)) {
+			tags.remove(tag);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean editTag(String oldTag, String newTag) {
+		if (this.hasTag(oldTag)) {
+			int index = tags.indexOf(oldTag);
+			String tag = tags.remove(index);
+			tags.add(index, newTag);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasTag(String tag) {
+		for (String current: tags) {
+			if (current.equalsIgnoreCase(tag)) return true;
+		}
+		return false;
 	}
 
 	@Override

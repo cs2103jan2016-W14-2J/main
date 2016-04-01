@@ -10,8 +10,8 @@ import Task.Task;
 public class Flag extends Command {
 	private boolean toFlag;
 
-	public Flag(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type, boolean toFlag) {
-		super(parser, data, command_type);
+	public Flag(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories, boolean toFlag) {
+		super(parser, data, categories);
 		this.toFlag = toFlag;
 	}
 
@@ -85,11 +85,4 @@ public class Flag extends Command {
 			return "Task " + index + " is flagged.";
 		}
 	}*/
-
-	@Override
-	public String undo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

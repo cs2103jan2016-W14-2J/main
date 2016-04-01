@@ -11,17 +11,14 @@ import java.util.Date;
 import GUI.UI_TAB;
 
 
-public class Add extends Command {
-
-	public Add(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		super(parser, data, command_type);
+public class Add extends Command {	
+	public Add(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+		super(parser, data, categories);
 	}
 
 	@Override
 	public String execute() {
 		TASK_TYPE type = parser.getType();
-		System.out.println("[DEBUG/ADD] command type: " + parser.getCommandType());
-		System.out.println("[DEBUG/ADD] type: " + type);
 		switch (type) {
 		case FLOATING:
 			return addFloatingTasks();
@@ -35,22 +32,25 @@ public class Add extends Command {
 	}
 	
 	private String addFloatingTasks() {
-		String name = parser.getName(); // cannot be null
-		String tag = parser.getTag(); // may be null
+		String name = parser.getName();
+		ArrayList<String> tags = parser.getTag();
+		//ArrayList<String> tags = null;
+		this.updateCategories(tags);
 		
-		Task task = new Task(name, tag);
-		floatingTasks.add(task);
+		Task task = new Task(name, tags);
+		this.floatingTasks.add(task);
 		this.UIStatus = UI_TAB.FLOATING;
 		return "Floating task \"" + name + "\" added to floatingTasks.";
 	}
 	
 	private String addDeadlinedTasks() {
 		String name = parser.getName(); // cannot be null
-		String tag = parser.getTag(); // may be null
-		Date endDateTime = parser.getEndTime(); // cannot be null
+		ArrayList<String> tags = parser.getTag();
+		//ArrayList<String> tags = null;
+		Date endDateTime = parser.getEndTime();
+		this.updateCategories(tags);
 		
-		Task task = new Task(name, tag, endDateTime);
-		
+		Task task = new Task(name, tags, endDateTime);
 		if (task.getIsOverdue()){
 			overdueTasks.add(task);
 			this.UIStatus = UI_TAB.OVERDUE;
@@ -65,11 +65,13 @@ public class Add extends Command {
 	
 	private String addEvent() {
 		String name = parser.getName(); // cannot be null
-		String tag = parser.getTag(); // may be null
+		//ArrayList<String> tags = parser.getTags();
+		ArrayList<String> tags = null;
 		Date startDateTime = parser.getStartTime();
 		Date endDateTime = parser.getEndTime();
+		this.updateCategories(tags);
 		
-		Task task = new Task(name, tag, startDateTime, endDateTime);
+		Task task = new Task(name, tags, startDateTime, endDateTime);
 		
 		if (task.getIsOverdue()) {
 			overdueTasks.add(task);
@@ -81,11 +83,5 @@ public class Add extends Command {
 			this.UIStatus = UI_TAB.ONGOING;
 			return "Event \"" + name + "\" added to ongoingTasks.";
 		}
-	}
-
-	@Override
-	public String undo() {
-		//TODO
-		return null;
 	}
 }

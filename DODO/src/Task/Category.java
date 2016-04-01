@@ -27,4 +27,9 @@ public class Category {
 		ArrayList<Task> list = new ArrayList<Task>(tasks.values());
 		return list;
 	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }

@@ -11,39 +11,37 @@ import Task.*;
 
 public abstract class Command {
 	protected static final int INDEX_ADJUSTMENT = 1;
-	
-	protected COMMAND_TYPE command_type;
+
 	protected Parser parser;
 	protected ArrayList<Task> ongoingTasks;
 	protected ArrayList<Task> completedTasks;
 	protected ArrayList<Task> overdueTasks;
 	protected ArrayList<Task> floatingTasks;
+	protected ArrayList<String> categories;
 	protected UI_TAB UIStatus;
 	
-	public Command(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
+	public Command(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
 		this.UIStatus = UIRightBox.getCurrentTab();
 		this.parser = parser;
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);
 		this.completedTasks = data.get(2);
 		this.overdueTasks = data.get(3);
-		this.command_type = command_type;
+		this.categories = categories;
 	}
 	
 	public abstract String execute();
-	
-	public abstract String undo();
 	
 	public ArrayList<ArrayList<Task>> getData() {
 		return this.compress();
 	}
 	
-	public COMMAND_TYPE getCommandType() {
-		return this.command_type;
-	}
-	
 	public UI_TAB getStatus() {
 		return this.UIStatus;
+	}
+	
+	public ArrayList<String> getCategories() {
+		return this.categories;
 	}
 	
 	/*********************************INTERNAL METHODS***************************************/
@@ -119,5 +117,23 @@ public abstract class Command {
 				this.overdueTasks.add(task);
 			}
 		}
+	}
+	
+	protected void updateCategories(ArrayList<String> tags) {
+		if (tags==null) return;
+		for (String tag: tags) {
+			if (!this.categories.contains(tag)) {
+				this.categories.add(tag);
+			}
+		}
+	}
+	
+	protected boolean hasTag(String key) {
+		for (String tag: categories) {
+			if (key.equalsIgnoreCase(tag)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

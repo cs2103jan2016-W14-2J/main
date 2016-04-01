@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import org.joda.time.*;
 
+import GUI.UI_TAB;
 import Parser.Parser;
 import Task.*;
 
@@ -75,6 +76,7 @@ public class Search extends Command {
 		Category category = categories.get(searchTag);
 		if (category==null) return "There is no tag called \"" + searchTag + "\"";
 		this.results = category.getTasks();
+		this.UIStatus = UI_TAB.SEARCH;
 		return "Search for tag \"" + searchTag + "\" completed.";
 	}
 
@@ -88,6 +90,7 @@ public class Search extends Command {
 		this.results.addAll(completedResults);
 		this.results.addAll(overdueResults);
 		System.out.println(results); // FOR DEBUG
+		this.UIStatus = UI_TAB.SEARCH;
 		return "Search for tasks named \"" + searchStr + "\" completed.";
 	}
 

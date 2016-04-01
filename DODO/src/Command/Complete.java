@@ -10,9 +10,7 @@ import Task.*;
 public class Complete extends Command {
 
 	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, COMMAND_TYPE command_type) {
-		super(parser, data, command_type
-
-				);
+		super(parser, data, command_type);
 	}
 
 	@Override
@@ -35,7 +33,7 @@ public class Complete extends Command {
 		ArrayList<Task> tasks = getTasks(this.UIStatus);
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
 		
-		for (int i=0; i<tasks.size(); i++) {
+		for (int i=0; i<=tasks.size(); i++) {
 			indexes.add(i);
 		}
 		return complete(indexes);

@@ -70,6 +70,7 @@ public class Logic {
 
 	public ArrayList<Category> getCategories() {
 		ArrayList<Category> list = new ArrayList<Category>(this.categories.values());
+		System.out.println("======Logic===== size: " + list.size());
 		return list;
 	}
 	
@@ -149,6 +150,7 @@ public class Logic {
 			Tag tag = new Tag(parser, data, COMMAND_TYPE.TAG, categories);
 			message = execute(tag, data);
 			categories = tag.getCategories();
+			System.out.println(categories);
 			break;
 		case FLAG:
 			Flag flag = new Flag(parser, data, COMMAND_TYPE.FLAG, true);

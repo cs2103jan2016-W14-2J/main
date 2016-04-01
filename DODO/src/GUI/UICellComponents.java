@@ -19,7 +19,9 @@ public class UICellComponents
 	private UIRightBox rightBox;
 	private UICssScaling usc;
 	private Label lblIndex;
-	private Label lblTag;
+	
+	private ArrayList<Label> lblTag;
+	
 	private Label lblName;
 	private VBox vbStartAndEnd;
 	private Label lblStart=null;
@@ -36,13 +38,17 @@ public class UICellComponents
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
+		lblTag = new ArrayList<Label>();
 		if(listOfTags.size()!=0)
 		{
-			lblTag = new Label(listOfTags.get(0));
+			for(int x=0;x<listOfTags.size();x++)
+			{
+				lblTag.add(new Label(listOfTags.get(x)));
+			}
 		}
 		else
 		{
-			lblTag = new Label();
+			lblTag.add(new Label(""));
 		}
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
@@ -70,8 +76,9 @@ public class UICellComponents
 			chkFlag.setSelected(false);
 		}
 		toolTip = new Tooltip(strName);
-		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag,toolTip);
-		vbNameAndTag.getChildren().addAll(hbIndexAndName,lblTag);
+		usc.setCssAndScalingForCell(cellRoot,lblName,vbStartAndEnd,chkFlag,toolTip);
+		vbNameAndTag.getChildren().add(hbIndexAndName);
+		vbNameAndTag.getChildren().addAll(lblTag);
 		cellRoot.getChildren().addAll(chkFlag,vbNameAndTag,vbStartAndEnd);
 	}
 	

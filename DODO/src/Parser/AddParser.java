@@ -406,29 +406,36 @@ public class AddParser {
 			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, LAST_POSITION_OF_AT)));
 			List<Date> date1 = new PrettyTimeParser().parse(str);
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+			checkForDateTime = extractDate(contentToAnalyse);
 			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: revise on cs2130t at 2pm
-			if (date1.size() == 0 && date2.size() != 0) {
+			if (date1.size() == 0 && date2.size() != 0 && checkForDateTime == true) {
 				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 				setTaskName(taskName);
 			//	setEndTime(date2.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah on 4 april, 2016 at suntec city
-			else if (date1.size() != 0 && date2.size() == 0){
+			else if (date1.size() != 0 && date2.size() == 0 && checkForDateTime == true){
 				taskName = taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 				setTaskName(taskName);
 			//	setEndTime(date1.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah on 4th of April 2016 at 2pm
-			else if (date1.size() != 0 && date2.size() != 0) {
+			else if (date1.size() != 0 && date2.size() != 0 && checkForDateTime == true) {
 				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
 				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
+			}
+			else if (checkForDateTime == false && date2.size() != 0 && date1.size() != 0) {
+				System.out.println("@line322 :");
+				taskName = taskName.trim() + " " + contentToAnalyse.trim();
+				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+				setTaskName(taskName);
 			}
 			// Example: sleep on the study bench at the void deck
 			else {
@@ -446,31 +453,38 @@ public class AddParser {
 			
 			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_ON)));
 			List<Date> date1 = new PrettyTimeParser().parse(str);
+			checkForDateTime = extractDate(str);
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: revise at chua chu kang on 24/7/2016
-			if (date1.size() == 0 && date2.size() != 0) {
+			if (date1.size() == 0 && date2.size() != 0 && checkForDateTime == true) {
 				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 				setTaskName(taskName);
 			//	setEndTime(date2.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah at 7pm on top of the building
-			else if (date1.size() != 0 && date2.size() == 0){
+			else if (date1.size() != 0 && date2.size() == 0 && checkForDateTime == true){
 				taskName = taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				setTaskName(taskName);
 			//	setEndTime(date1.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah at 2pm on 4th of April 2016 
-			else if (date1.size() != 0 && date2.size() != 0) {
+			else if (date1.size() != 0 && date2.size() != 0 && checkForDateTime == true) {
 				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 				setTaskName(taskName);
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
 			//	setEndTime(date3.get(0));
 				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
+			}
+			// Example: meet hannah at block 2359 on the ground floor.
+			else if (checkForDateTime == false && date2.size() != 0 && date1.size() != 0) {
+				taskName = taskName.trim() + " " + str.trim();
+				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
+				setTaskName(taskName);
 			}
 			// Example: sleep on the study bench at the void deck
 			else {

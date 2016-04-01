@@ -30,7 +30,7 @@ public class Parser {
 	private DELETE_TYPE deleteType;
 	private ArrayList<String> tagToDelete;
 	private ArrayList<Integer> indexToDelete;
-	private ArrayList<String> taskItems;
+	private ArrayList<String> tags;
 	
 	private ArrayList<Integer> indexOfFlagAndMark;
 	private FLAGANDCOMPLETE_TYPE flagAndCompleteType;
@@ -192,17 +192,19 @@ public class Parser {
 	}
 	
 	private String extractTag(String userTask) {
-		
-		if (userTask.contains("<") && userTask.contains(">")) {
-			int firstIndex = userTask.indexOf("<");
-			int lastIndex = userTask.indexOf(">");
-			
-			if (firstIndex < lastIndex) {
-				setTaskTag(userTask.substring(firstIndex, lastIndex));
-				userTask = userTask.replace(userTask.substring(firstIndex, lastIndex + 1), "");
+		tags = new ArrayList<String>();
+		String[] str = userTask.split("[\\s+]");
+		String temp = "";
+		for (int i = 0; i < str.length; i++) {
+			if (str[i].contains("#") && !str[i].contains("-")) {
+				tags.add(str[i].replace("#", "").trim());
+				str[i] = " ";
+			}
+			else {
+				temp += str[i] + " ";
 			}
 		}
-		return userTask;
+		return temp.trim();
 	}
 	//******************************************* Mutators *****************************************//
 	protected void setCommandType(COMMAND_TYPE command) {
@@ -224,8 +226,8 @@ public class Parser {
 		this.taskType = taskType;
 	}
 	
-	protected void setTaskTag(String tag) {
-		this.tag = tag.substring(1, tag.length());
+	protected void setTaskTag(ArrayList<String> tags) {
+		this.tags = tags;
 	}
 	
 	protected void setTaskIndex(String index) {
@@ -266,8 +268,8 @@ public class Parser {
 		return this.isImportant;
 	}
 
-	public String getTag() {
-		return this.tag;
+	public ArrayList<String> getTag() {
+		return this.tags;
 	}
 	
 	

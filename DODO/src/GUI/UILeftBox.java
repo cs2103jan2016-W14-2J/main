@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import org.controlsfx.control.HiddenSidesPane;
+
 import com.sun.javafx.scene.control.skin.DatePickerSkin;
 
 import javafx.collections.FXCollections;
@@ -120,8 +122,10 @@ public class UILeftBox {
 		chart.setTitle("Task");
 	}
 
-	private void updateTag() 
+	public void updateTag() 
 	{
+		System.out.println("127 + ##############################################################################################"+logic.getCategories().size());
+		
 		tagMap.clear();
 		flowpaneCategory.getChildren().removeAll();
 		if(logic.getCategories()!=null)
@@ -132,7 +136,6 @@ public class UILeftBox {
 			 * { list.add(tagMap.get(x).getName()); } } listView = new
 			 * ListView<String>(list);
 			 */
-
 			for (int x = 0; x < tagMap.size(); x++)
 			{
 				if (tagMap.get(x).getName() != null) 
@@ -143,10 +146,7 @@ public class UILeftBox {
 			}
 		
 		}
-		
-
 	}
-
 	public void updateChart() {
 		intOverdueTasks = rightBox.getOverdueTasksSize();
 		intCompletedTasks = rightBox.getCompletedTasksSize();

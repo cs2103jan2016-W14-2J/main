@@ -30,6 +30,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -56,7 +57,7 @@ public class UIRightBox {
 
 	private final double textfieldWidth = 55; // centerBox txtfield size
 	private final double textfieldHeight = 1233;
-	private final double tabPaneWidth = 1000; // centerBox tabPane size
+	private final double tabPaneWidth = 1500; // centerBox tabPane size
 	private final double tabPaneHeight = 1450;
 	private final double titledPaneWidth = 1000; // centerBox titledPane size
 	private final double titledPaneHeight = 1450;
@@ -119,7 +120,7 @@ public class UIRightBox {
 	private UI_TAB currentTask;
 	private UIListener listen;
 	private	HBox mainControllerRoot; 
-	
+	private Pagination pagination;
 	public UIRightBox(Logic logic, HBox root)
 	{
 		mainControllerRoot = root;
@@ -184,15 +185,31 @@ public class UIRightBox {
 		leftBox.updateLeftBox();
 		usc.setCssAndScalingForRightBox(tabPane);
 		
-
-		mainControllerRoot.setOnKeyPressed(new EventHandler<KeyEvent>() 
+		mainControllerRoot.setOnKeyReleased(new EventHandler<KeyEvent>() 
 		{
 			public void handle(KeyEvent ke) 
 			{
 				if (ke.getCode().equals(KeyCode.TAB)) 
 				{
+				    pagination.setStyle("");
+				}
+			}
+		});
+		mainControllerRoot.setOnKeyPressed(new EventHandler<KeyEvent>() 
+		{
+			public void handle(KeyEvent ke) 
+			{
+				if (ke.getCode().equals(KeyCode.ALT)) 
+				{
+					pagination.setStyle("");
+				}
+				if (ke.getCode().equals(KeyCode.TAB)) 
+				{
+					
 					if(getCurrentTab().equals(UI_TAB.WELCOME))
 					{
+						pagination.requestFocus();
+					    pagination.setStyle("-fx-border-color:black;");
 					}
 					if(getCurrentTab().equals(UI_TAB.ALL))
 					{
@@ -680,6 +697,7 @@ public class UIRightBox {
 		strFeedBack = logic.run(mainTextField.getText());
 		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
 		currentTask = logic.getStatus();
+		leftBox.updateTag();
     	VBox vbPop = new VBox();
     	feedBackLabel = new Label(strFeedBack);
 		vbPop.getChildren().add(feedBackLabel);
@@ -754,10 +772,11 @@ public class UIRightBox {
 	
 	private void setGreetingTab() 
 	{
+		pagination = new Pagination(1, 0);
 		tabWelcome.setUserData(UI_TAB.WELCOME);
 		tabPane.getTabs().add(tabWelcome);
 		tabWelcome.setContent(welcomeHB);
-		uiWelcome.setRoot(welcomeHB);
+		uiWelcome.setRoot(welcomeHB,pagination);
 	}
 	
 	public int getOngoingSize() 

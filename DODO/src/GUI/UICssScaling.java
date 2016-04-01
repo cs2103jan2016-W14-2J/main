@@ -90,12 +90,12 @@ public class UICssScaling
 		
 		lblCategory.setAlignment(Pos.CENTER);
 		
-		AlignmentCheck(lblCategory);
+		AlignmentCheck(lblCategory,leftBox);
 		
 	}
-	private void AlignmentCheck(Label lblCategory) {
+	private void AlignmentCheck(Label lblCategory,VBox leftBox) {
 		lblCategory.styleProperty().set("-fx-border-color: black;");
-
+		leftBox.styleProperty().set("-fx-border-color: black;");
 
 	}
 	public void cssWelcomePage(HBox root, Label welcomeLabel) {

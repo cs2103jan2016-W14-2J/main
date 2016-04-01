@@ -9,16 +9,23 @@ import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.MaskerPane;
+import org.controlsfx.control.PropertySheet;
+import org.controlsfx.control.PopOver;
 
 /*
  *@author Chiang Jia Feng
@@ -40,11 +47,9 @@ public class UIMainController {
 	public UIMainController(Logic logic)
 	{
 		this.logic = logic;
-		
-		
+
 		root = new HBox();
 		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
-		
 		leftBox = new UILeftBox(this.logic,this.root);
 		rightBox = new UIRightBox(this.logic,this.root);
 		
@@ -55,16 +60,21 @@ public class UIMainController {
 	}
 	public void start(Stage primaryStage) 
 	{		
+		primaryStage.sizeToScene();
 		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
 		setEscCloseForm();
 		listen = new UIListener(root,primaryStage,rightBox,leftBox,logic);
 		listen.assignHelpSheetListener();
+		
+	
 		show();
+		
 		
 	}
 	public void addLeftAndRightBox() 
 	{
+		//root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 		root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 	}
 

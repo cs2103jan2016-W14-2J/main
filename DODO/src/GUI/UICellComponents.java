@@ -34,12 +34,11 @@ public class UICellComponents
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
-		//makeTag = new UIMakeTag();
-		//HBox rootTag = makeTag.getTag(strTag);
-		//rootTag.setPrefSize(100, 100);
 		lblTag = new Label(strTag);
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
+		VBox vbNameAndTag = new VBox();
+		
 		if(startTime!=null && endTime!=null)
 		{
 			lblStart = new Label(startTime.toString());
@@ -62,7 +61,8 @@ public class UICellComponents
 		}
 		toolTip = new Tooltip(strName);
 		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag,toolTip);
-		cellRoot.getChildren().addAll(lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag);
+		vbNameAndTag.getChildren().addAll(lblName,lblTag);
+		cellRoot.getChildren().addAll(chkFlag,lblIndex,vbNameAndTag,vbStartAndEnd);
 	}
 	
 	
@@ -82,6 +82,8 @@ public class UICellComponents
 
 
 	
-	
+	//makeTag = new UIMakeTag();
+	//HBox rootTag = makeTag.getTag(strTag);
+	//rootTag.setPrefSize(100, 100);
 	
 }

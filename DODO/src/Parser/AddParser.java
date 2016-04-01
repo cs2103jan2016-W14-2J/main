@@ -181,6 +181,7 @@ public class AddParser {
 		LAST_POSITION_OF_ON = temp.lastIndexOf("on");
 		LAST_POSITION_OF_BEFORE = temp.lastIndexOf("before");
 		LAST_POSITION_OF_BY = temp.lastIndexOf("by");
+		LAST_POSITION_OF_FROM = temp.lastIndexOf("from");
 	}
 
 	private ArrayList<String> convertArrayListToLowerCase(String taskName) {
@@ -197,9 +198,11 @@ public class AddParser {
 	private String parseEVENT() {
 		String str = "";
 		Date date = new Date();
+		LAST_POSITION_OF_AT = taskName.lastIndexOf(KEYWORD_AT);
+		System.out.println("DEBUG @line 201:" + LAST_POSITION_OF_AT);
 		
 		// Parse string with "from" ... "to".
-		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO) {
+		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_AT == -1) {
 			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			if (dates.size() == 2) {
@@ -220,7 +223,8 @@ public class AddParser {
 			}
 			
 		}
-		else if (taskName.toLowerCase().lastIndexOf(KEYWORD_TO) < taskName.toLowerCase().lastIndexOf(KEYWORD_FROM)) {
+		else if (taskName.toLowerCase().lastIndexOf(KEYWORD_TO) < taskName.toLowerCase().lastIndexOf(KEYWORD_FROM)
+				&& LAST_POSITION_OF_AT == -1) {
 			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
 			List<Date> dates = new PrettyTimeParser().parse(str);
 			
@@ -237,19 +241,40 @@ public class AddParser {
 	private String parseDEADLINED() {
 		getKeywordPosition(taskName);
 		Date date = new Date();
+		boolean checkForDateTime = false;
 		
 		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
+			String tempTaskName = "";
+			String confirmTaskName = "";
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
-			System.out.println("DEBUG @line 193:" + taskName);
-			setTaskName(taskName);
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
-			System.out.println("DEBUG2 :" + contentToAnalyse);
-			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
 			
-			// Example: submit assignment 1 by tomorrow
-			if (dates.size() != 0) {
+			System.out.println("DEBUG @@250:" + taskName);
+			// Example: meet Hannah by 2359hrs by the beach
+			if (taskName.lastIndexOf(KEYWORD_BY) != -1) {
+				tempTaskName = taskName.substring(taskName.lastIndexOf(KEYWORD_BY), taskName.length()).trim();
+				confirmTaskName = taskName.substring(0, taskName.lastIndexOf(KEYWORD_BY)).trim();
+			}
+			else {
+				tempTaskName = taskName;
+				setTaskName(tempTaskName);
+			}
+			
+			List<Date> dateOneBy = new PrettyTimeParser().parse(contentToAnalyse);
+			List<Date> dateTwoBy = new PrettyTimeParser().parse(tempTaskName);
+			
+			// Example: finish jogging with baby by the beach by tomorrow
+			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0) {
 				System.out.println("TEST test");
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
+				taskName = confirmTaskName + " " + tempTaskName;
+				setTaskName(taskName);
+			}
+			// Example: finish jogging with baby by tomorrow by the beach
+			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0) {
+				setEndTime(checkAndSetDefaultEndTime(dateTwoBy.get(0), date));
+				taskName = confirmTaskName + " " + contentToAnalyse;
+				setTaskName(taskName);
 			}
 			// Example: take a walk by the beach
 			else {
@@ -258,6 +283,97 @@ public class AddParser {
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 	
+		}
+		
+		else if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT != -1) {
+			System.out.println("TEST @line 288");
+			String tempTaskName = "";
+			String confirmTaskName = "";
+			
+			if (LAST_POSITION_OF_BY < LAST_POSITION_OF_AT) {
+				confirmTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
+				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, LAST_POSITION_OF_AT)));
+				tempTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+				checkForDateTime = extractDate(tempTaskName);
+				
+				List<Date> dateByToAt = new PrettyTimeParser().parse(contentToAnalyse);
+				List<Date> dateAtToEnd = new PrettyTimeParser().parse(tempTaskName);
+				
+				// Example: meet buyer by tonight at city hall
+				if (dateByToAt.size()!= 0 && dateAtToEnd.size() == 0 && checkForDateTime == true) {
+					System.out.println("@line304 :");
+					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
+					taskName = confirmTaskName + " " + tempTaskName;
+					setTaskName(taskName);
+				}
+				else if (dateByToAt.size() == 0 && dateAtToEnd.size() != 0 && checkForDateTime == true) {
+					setEndTime(checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
+					taskName = confirmTaskName + " " + contentToAnalyse;
+					setTaskName(taskName);
+				}
+				else if (dateByToAt.size() != 0 && dateAtToEnd.size() != 0 && checkForDateTime == true) {
+					String dateToExtract = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
+					List<Date> dates = new PrettyTimeParser().parse(dateToExtract);
+					setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+					taskName = confirmTaskName;
+					setTaskName(taskName);
+				}
+				// Example: meet buyer by tonight at block 2359
+				else if (checkForDateTime == false && dateAtToEnd.size() != 0) {
+					System.out.println("@line322 :");
+					taskName = confirmTaskName.trim() + " " + tempTaskName.trim();
+					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
+					setTaskName(taskName);
+				}
+				else {
+					taskName = userTask;
+					setTaskName(taskName);
+					setTaskType(TASK_TYPE.FLOATING);
+				}
+			}
+			else if (LAST_POSITION_OF_BY > LAST_POSITION_OF_AT) {
+				confirmTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_BY)));
+				tempTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
+				checkForDateTime = extractDate(contentToAnalyse);
+				
+				List<Date> dateAtToBy = new PrettyTimeParser().parse(contentToAnalyse);
+				List<Date> dateByToEnd = new PrettyTimeParser().parse(tempTaskName);
+				
+				// Example: meet buyer by tonight at city hall
+				if (dateAtToBy.size()!= 0 && dateByToEnd.size() == 0 && checkForDateTime == true) {
+					setEndTime(checkAndSetDefaultEndTime(dateAtToBy.get(0), date));
+					taskName = confirmTaskName + " " + tempTaskName;
+					setTaskName(taskName);
+				}
+				// Example: meet buyer at city hall by tonight
+				else if (dateAtToBy.size() == 0 && dateByToEnd.size() != 0 && checkForDateTime == true) {
+					setEndTime(checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
+					taskName = confirmTaskName + " " + contentToAnalyse;
+					setTaskName(taskName);
+				}
+				// Example: meeting with hannah at 7pm by monday
+				else if (dateAtToBy.size() != 0 && dateByToEnd.size() != 0 && checkForDateTime == true) {
+					String dateToExtract = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+					List<Date> dates = new PrettyTimeParser().parse(dateToExtract.replace(" by", ""));
+					setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+					taskName = confirmTaskName;
+					setTaskName(taskName);
+				}
+				// Example: meeting with hannah at block 2359 by thursday
+				else if (checkForDateTime == false && dateAtToBy.size() != 0) {
+					System.out.println("@line363 :");
+					taskName = confirmTaskName.trim() + " " + contentToAnalyse.trim();
+					setEndTime(checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
+					setTaskName(taskName);
+				}
+				else {
+					taskName = userTask;
+					setTaskName(taskName);
+					setTaskType(TASK_TYPE.FLOATING);
+				}
+			}
+				
 		}
 		
 		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT == -1) {
@@ -281,7 +397,8 @@ public class AddParser {
 			}
 		
 		}
-		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON < LAST_POSITION_OF_AT) {
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1 
+				&& LAST_POSITION_OF_ON < LAST_POSITION_OF_AT) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 			System.out.println("DEBUG @250:" + taskName);
 			setTaskName(taskName);
@@ -321,7 +438,8 @@ public class AddParser {
 			}
 		
 		}
-		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON > LAST_POSITION_OF_AT) {
+		else if (LAST_POSITION_OF_ON != -1 && LAST_POSITION_OF_AT != -1 && 
+				(LAST_POSITION_OF_ON > LAST_POSITION_OF_AT)) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 			System.out.println("DEBUG @250:" + taskName);
 			setTaskName(taskName);
@@ -362,12 +480,13 @@ public class AddParser {
 			}
 		
 		}
-		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1) {
+		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_ON == -1 && LAST_POSITION_OF_FROM == -1) {
 			String tempTaskName = "";
 			String confirmTaskName = "";
 			
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+			
 			System.out.println("DEBUG @290:" + taskName);
 			// Example: meet Hannah at 7pm at Jurong East
 			if (taskName.lastIndexOf(KEYWORD_AT) != -1) {
@@ -402,7 +521,52 @@ public class AddParser {
 				setTaskType(TASK_TYPE.FLOATING);
 			}
 		}
+		else if (LAST_POSITION_OF_FROM != -1 && (LAST_POSITION_OF_AT > LAST_POSITION_OF_FROM)) {
+			String tempTaskName = "";
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_FROM)));
+			System.out.println("DEBUG @line415:" + taskName);
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, LAST_POSITION_OF_AT)));
+			tempTaskName= toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
+			List<Date> dateFromToAt = new PrettyTimeParser().parse(contentToAnalyse);
+			List<Date> dateAtToEnd = new PrettyTimeParser().parse(tempTaskName);
 			
+			// Example: jog from yishun to ang mo kio at 7pm
+			if (dateFromToAt.size() == 0 && dateAtToEnd.size() != 0) {
+				setEndTime(checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
+				setTaskName(taskName.trim() + " " + contentToAnalyse.trim());
+			}
+			// Example: jog from 2pm to 8pm at bishan park
+			else if (dateFromToAt.size() != 0 && dateAtToEnd.size() == 0) {
+				setEndTime(checkAndSetDefaultEndTime(dateFromToAt.get(1), date));
+				setStartTime(dateFromToAt.get(0));
+				setTaskName(taskName.trim() + " " + tempTaskName.trim());
+				setTaskType(TASK_TYPE.EVENT);
+			}
+			// Example: jog from nus to home at the park
+			else {
+				setTaskName(userTask);
+				setTaskType(TASK_TYPE.FLOATING);
+			}
+		}
+		else if (LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_AT < LAST_POSITION_OF_FROM) {
+			String tempTaskName = "";
+			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_FROM)));
+			tempTaskName= toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_FROM, taskItems.size())));
+			List<Date> dateAtToFrom = new PrettyTimeParser().parse(contentToAnalyse);
+			List<Date> dateFromToEnd = new PrettyTimeParser().parse(tempTaskName);
+			// Example: jog at 7pm from yishun to khatib
+			if (dateAtToFrom.size() != 0 && dateFromToEnd.size() == 0) {
+				setEndTime(checkAndSetDefaultEndTime(dateAtToFrom.get(0), date));
+				setTaskName(tempTaskName.trim() + " " + tempTaskName.trim());
+			}
+			else if (dateAtToFrom.size() == 0 && dateFromToEnd.size() != 0) {
+				setTaskName(tempTaskName.trim() + " " + contentToAnalyse);
+				setStartTime(dateFromToEnd.get(0));
+				setEndTime(checkAndSetDefaultEndTime(dateFromToEnd.get(1), date));
+				setTaskType(TASK_TYPE.EVENT);
+			}
+		}
 		else if (LAST_POSITION_OF_BEFORE != -1) {
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BEFORE)));
 			setTaskName(taskName);
@@ -502,7 +666,23 @@ public class AddParser {
 			setTaskType(TASK_TYPE.DEADLINED);
 		}
 	}
-
+	
+	private boolean extractDate(String userTask) {
+		String temp = "";
+		DateTimeParser dt = new DateTimeParser();
+		temp = dt.removeTheDayAfterTomorrow(userTask);
+		temp = dt.removeYesterday(temp);
+		temp = dt.removeTomorrow(temp);
+		temp = dt.removeToday(temp);
+		temp = dt.removeThisComingWeekday(temp);
+		temp = dt.removeNextFewDays(temp);
+		temp = dt.removeNextWeek(temp);
+		temp = dt.removeTime(temp);
+		temp = dt.removeDate(temp);
+	
+		return (temp.trim().equals(userTask.trim())) ? false : true;
+	}
+	
 	private String extractLastPreposition(String temp) {
 		String[] str = temp.split("[\\s+]");
 		String newStr = "";

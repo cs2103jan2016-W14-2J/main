@@ -89,9 +89,7 @@ public class UIRightBox {
 	private ArrayList<Task> searchTasks;
 
 	private PopOver popUpCell = new PopOver();
-	private PopOver popUpFeedBack = new PopOver();
 
-	private PopOver popOver;
 	private String strFeedBack;
 	private Label feedBackLabel;
 	
@@ -121,10 +119,14 @@ public class UIRightBox {
 	private UIListener listen;
 	private	HBox mainControllerRoot; 
 	private Pagination pagination;
-	public UIRightBox(Logic logic, HBox root)
+	private UIPopUpFeedBack uiPopUpFeedBack;
+	private PopOver popUpFeedBack = new PopOver();
+	private Scene scene;
+	public UIRightBox(Logic logic, HBox root, Scene scene)
 	{
 		mainControllerRoot = root;
 		rightBox = new VBox(); 
+		this.scene = scene;
 		this.logic = logic;
 		usc = new UICssScaling();
 		logger = Logger.getLogger("MyLog"); 
@@ -159,14 +161,13 @@ public class UIRightBox {
 		titledPaneOverdueTask = new TitledPane();
 		titledPaneFloatingTask = new TitledPane();
 		titledPaneSearchTask = new TitledPane();
-
 		
 		uiWelcome = new UIWelcomePage();
 		tabPane = new TabPane();
 		mainTextField = new TextField();
-		
 		listen = new UIListener();
-		
+		uiPopUpFeedBack = new UIPopUpFeedBack(popUpFeedBack, mainTextField);
+
 	}
 	//add list -> add vbtab ->
 	void build(UILeftBox leftBox) 
@@ -183,7 +184,7 @@ public class UIRightBox {
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
 		leftBox.updateLeftBox();
-		usc.setCssAndScalingForRightBox(tabPane);
+		usc.setCssAndScalingForRightBox(tabPane,mainTextField);
 		
 		mainControllerRoot.setOnKeyReleased(new EventHandler<KeyEvent>() 
 		{
@@ -205,7 +206,6 @@ public class UIRightBox {
 				}
 				if (ke.getCode().equals(KeyCode.TAB)) 
 				{
-					
 					if(getCurrentTab().equals(UI_TAB.WELCOME))
 					{
 						pagination.requestFocus();
@@ -235,8 +235,6 @@ public class UIRightBox {
 					{
 						titledPaneSearchTask.getContent().requestFocus();
 					}
-					
-
 					//SET ALL THE SELECTION HERE
 				}
 			}
@@ -467,33 +465,35 @@ public class UIRightBox {
 								super.updateItem(item, empty);
 								if (item != null) {
 									
-									String strTagging = item.getTag();
+									//String strTagging = item.getTag();
+									ArrayList<String> listOfTags = item.getTags();
+								
 									String currentIndex=Integer.toString(this.getIndex() + 1);
 									UICellComponents lsg = null;
 									
 									if (item.getType() == TASK_TYPE.DEADLINED) 
 									{
 										//System.out.println("DeadlinedTask");
-										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), null, item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(currentIndex, listOfTags, item.getName(), null, item.getEnd(), item.getFlag());
 										logger.info("DeadlinedTask");  
 									
 									} 
 									else if (item.getType() == TASK_TYPE.EVENT) 
 									{
 										//System.out.println("in event" + item.getEnd());
-										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(currentIndex, listOfTags, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
 										logger.info("Event");  
 									}
 									else if (item.getType() == TASK_TYPE.FLOATING) 
 									{
 										//System.out.println("in FLOATING Task");
-										lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
+										lsg = new UICellComponents(currentIndex, listOfTags ,item.getName(), null, null, item.getFlag());
 										logger.info("Task");  
 									}
 									else 
 									{
 											//System.out.println("in search Task");
-											lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
+											lsg = new UICellComponents(currentIndex, listOfTags ,item.getName(), null, null, item.getFlag());
 											logger.info("search");  
 									}
 									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
@@ -591,40 +591,6 @@ public class UIRightBox {
 		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
 	}
 
-
-	
-	private Path findCaret(Parent root) {
-	    for (Node n : root.getChildrenUnmodifiable()) {
-	      if (n instanceof Path) {
-	        return (Path) n;
-	      } else if (n instanceof Parent) {
-	        Path p = findCaret((Parent) n);
-	        if (p != null) {
-	          return p;
-	        }
-	      }
-	    }
-	    return null;
-	  }
-
-	  private Point2D findScreenLocation(Node node) {
-	    double x = 0;
-	    double y = 0;
-	    for (Node n = node; n != null; n=n.getParent()) {
-	      Bounds parentBounds = n.getBoundsInParent();
-	      x += parentBounds.getMinX();
-	      y += parentBounds.getMinY();
-	    }
-	    Scene scene = node.getScene();
-	    x += scene.getX();
-	    y += scene.getY();
-	    Window window = scene.getWindow();
-	    x += window.getX();
-	    y += window.getY();
-	    Point2D screenLoc = new Point2D(x, y);
-	    return screenLoc;
-	  }
-	  
 	private void createDisappearPane(ListView<Task> listViewLabel) 
 	{
 		
@@ -698,18 +664,10 @@ public class UIRightBox {
 		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
 		currentTask = logic.getStatus();
 		leftBox.updateTag();
-    	VBox vbPop = new VBox();
-    	feedBackLabel = new Label(strFeedBack);
-		vbPop.getChildren().add(feedBackLabel);
-		vbPop.setPrefSize(1380, 50);
-		feedBackLabel.setId("lblFeedBack");
-		popUpFeedBack.consumeAutoHidingEventsProperty().set(false);
-		popUpFeedBack.setAutoFix(true);
-		popUpFeedBack.setContentNode(vbPop);
-		Path caret = findCaret(mainTextField);
-        Point2D screenLoc = findScreenLocation(caret);
-		popUpFeedBack.show(mainTextField, screenLoc.getX(), screenLoc.getY() + 70);
-	    mainTextField.requestFocus();
+		
+		uiPopUpFeedBack.createPopUpFeedBack(strFeedBack,scene);
+		
+		mainTextField.requestFocus();
 	    
 	    allTasks.clear();
 	    ongoingTasks.clear();

@@ -21,6 +21,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -62,7 +63,7 @@ public class UILeftBox {
 	private PieChart chart;
 	private UICssScaling usc;
 	private Label lblCategory;
-	private ArrayList<Category> tagMap;
+	private ArrayList<String> tagMap;
 	private UIListener listen;
 	private PieChart.Data floatingData;
 	private PieChart.Data ongoingData;
@@ -75,7 +76,7 @@ public class UILeftBox {
 	private int intOngoingTasks = 0;
 	private UIMakeTag makeTag;
 
-	public UILeftBox(Logic logic, HBox root) {
+	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
 		this.logic = logic;
 		usc = new UICssScaling();
@@ -85,7 +86,7 @@ public class UILeftBox {
 		titledPane = new TitledPane();
 		chart = new PieChart(listData);
 		lblCategory = new Label(CATEGORY_HEADER);
-		tagMap = new ArrayList<Category>();
+		tagMap = new ArrayList<String>();
 		listen = new UIListener();
 		floatingData = new PieChart.Data("Floating Tasks", intFloatingTasks);
 		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
@@ -138,9 +139,9 @@ public class UILeftBox {
 			 */
 			for (int x = 0; x < tagMap.size(); x++)
 			{
-				if (tagMap.get(x).getName() != null) 
+				if (tagMap.get(x) != null) 
 				{
-					HBox root = makeTag.getTag(tagMap.get(x).getName());
+					HBox root = makeTag.getTag(tagMap.get(x));
 					flowpaneCategory.getChildren().add(root);			
 				}
 			}

@@ -38,8 +38,8 @@ public class UIMainController {
 	private UIRightBox rightBox;
 	private Logic logic;
 	private Stage primaryStage;
-	private final double sceneWidth = 1800;  
-	private final double sceneHeight = 750; 
+	private final double sceneWidth = 1800;  //1900
+	private final double sceneHeight = 750;  //900
 	private Scene scene;	
 	private String strDBdir = "";
 	private String strDBname = "";
@@ -50,8 +50,9 @@ public class UIMainController {
 
 		root = new HBox();
 		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
-		leftBox = new UILeftBox(this.logic,this.root);
-		rightBox = new UIRightBox(this.logic,this.root);
+		
+		leftBox = new UILeftBox(this.logic,this.root,scene);
+		rightBox = new UIRightBox(this.logic,this.root,scene);
 		
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);

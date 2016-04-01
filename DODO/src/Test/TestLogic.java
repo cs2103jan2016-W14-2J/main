@@ -7,7 +7,7 @@ import Command.*;
 import Logic.Logic;
 import Test.ParserStub;
 
-public class TestLogic extends Logic {
+public class TestLogic /*extends Logic*/ {
 	public static void main(String args[]) {
 		System.out.println("hello world");
 		String filename = args[0];
@@ -21,8 +21,8 @@ public class TestLogic extends Logic {
 					String tag = inputs[2];*/
 					Parser parser = new Parser(str);
 					TestLogic test = new TestLogic();
-					System.out.println(test.processCommand(parser));
-					str = reader.readLine();
+/*					System.out.println(test.processCommand(parser));
+*/					str = reader.readLine();
 				}
 			reader.close();
 		}

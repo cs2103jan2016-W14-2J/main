@@ -8,6 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
@@ -107,11 +108,13 @@ public class UICssScaling
 		welcomeLabel.setPrefSize(500, 500);
 
 	}
-	public void setCssAndScalingForRightBox(TabPane tabPane) {
+	public void setCssAndScalingForRightBox(TabPane tabPane, TextField mainTextField) {
 		
 		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
+		mainTextField.setFont(Font.font("Cambria", 25));
 
-	} 
+	}
+
 
 
 

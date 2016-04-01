@@ -1,5 +1,6 @@
 package GUI;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.controlsfx.glyphfont.FontAwesome;
@@ -27,16 +28,25 @@ public class UICellComponents
 	private Tooltip toolTip;
 	private HBox cellRoot;
 	private UIMakeTag makeTag;
+	private HBox hbIndexAndName;
 
-	public UICellComponents(String strIndex,String strTag, String strName, Date startTime,Date endTime,boolean Flag)
+	public UICellComponents(String strIndex,ArrayList<String> listOfTags, String strName, Date startTime,Date endTime,boolean Flag)
 	{
 		this.rightBox = rightBox;
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
-		lblTag = new Label(strTag);
+		if(listOfTags.size()!=0)
+		{
+			lblTag = new Label(listOfTags.get(0));
+		}
+		else
+		{
+			lblTag = new Label();
+		}
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
+		hbIndexAndName = new HBox(lblIndex,lblName);
 		VBox vbNameAndTag = new VBox();
 		
 		if(startTime!=null && endTime!=null)
@@ -61,8 +71,8 @@ public class UICellComponents
 		}
 		toolTip = new Tooltip(strName);
 		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag,toolTip);
-		vbNameAndTag.getChildren().addAll(lblName,lblTag);
-		cellRoot.getChildren().addAll(chkFlag,lblIndex,vbNameAndTag,vbStartAndEnd);
+		vbNameAndTag.getChildren().addAll(hbIndexAndName,lblTag);
+		cellRoot.getChildren().addAll(chkFlag,vbNameAndTag,vbStartAndEnd);
 	}
 	
 	

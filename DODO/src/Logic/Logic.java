@@ -36,8 +36,9 @@ public class Logic {
 		Parser parser;
 		try {
 			parser = new Parser(input);
-		} catch (NumberFormatException e) {
-			return "ERROR FROM PARSER";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Invalid Command.";
 		}
 		return processCommand(parser);
 	}
@@ -180,7 +181,7 @@ public class Logic {
 			history.save(cloneData(data));
 			message = search.execute();
 			this.results = search.getSearchResults();
-			this.status = UI_TAB.SEARCH;
+			this.status = search.getStatus();
 			break;
 		case SORT:
 			Sort sort = new Sort(parser, data, COMMAND_TYPE.SORT);

@@ -44,10 +44,10 @@ public class Logic {
 	}
 
 	public String save() {
-		storage.save(UI_TAB.ONGOING, ongoingTasks);
-		storage.save(UI_TAB.COMPLETED, completedTasks);
-		storage.save(UI_TAB.FLOATING, floatingTasks);
-		storage.save(UI_TAB.OVERDUE, overdueTasks);
+		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
+		storage.save(TASK_STATUS.COMPLETED, completedTasks);
+		storage.save(TASK_STATUS.FLOATING, floatingTasks);
+		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
 		return "Saved successfully";
 	}
 

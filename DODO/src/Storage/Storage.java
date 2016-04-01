@@ -53,7 +53,7 @@ public class Storage {
 		else return false; 
 	}
 
-	public ArrayList<Task> read(UI_TAB task_status) {
+	public ArrayList<Task> read(TASK_STATUS task_status) {
 		switch (task_status) {
 		case ONGOING:
 			return readFromFile(ongoingDirectory);
@@ -68,7 +68,7 @@ public class Storage {
 		}
 	}
 
-	public String save(UI_TAB task_status, ArrayList<Task> tasks) {
+	public String save(TASK_STATUS task_status, ArrayList<Task> tasks) {
 		switch (task_status) {
 		case ONGOING:
 			return printToFile(ongoingDirectory, tasks);

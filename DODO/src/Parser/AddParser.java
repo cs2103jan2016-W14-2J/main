@@ -285,7 +285,7 @@ public class AddParser {
 	
 		}
 		
-		else if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT != -1) {
+		else if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_FROM == -1) {
 			System.out.println("TEST @line 288");
 			String tempTaskName = "";
 			String confirmTaskName = "";
@@ -558,10 +558,10 @@ public class AddParser {
 			// Example: jog at 7pm from yishun to khatib
 			if (dateAtToFrom.size() != 0 && dateFromToEnd.size() == 0) {
 				setEndTime(checkAndSetDefaultEndTime(dateAtToFrom.get(0), date));
-				setTaskName(tempTaskName.trim() + " " + tempTaskName.trim());
+				setTaskName(taskName.trim() + " " + tempTaskName.trim());
 			}
 			else if (dateAtToFrom.size() == 0 && dateFromToEnd.size() != 0) {
-				setTaskName(tempTaskName.trim() + " " + contentToAnalyse);
+				setTaskName(taskName.trim() + " " + contentToAnalyse);
 				setStartTime(dateFromToEnd.get(0));
 				setEndTime(checkAndSetDefaultEndTime(dateFromToEnd.get(1), date));
 				setTaskType(TASK_TYPE.EVENT);

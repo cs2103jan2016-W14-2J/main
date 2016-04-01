@@ -3,6 +3,8 @@ package Command;
 /* @@author: Lu Yang */
 
 import java.util.*;
+
+import GUI.UI_TAB;
 import Parser.*;
 import Task.*;
 
@@ -32,6 +34,10 @@ public class Delete extends Command{
 			return deleteTags(tags);
 		case ALL_TAGS:
 			return deleteAllTags();
+		case START_DATE:
+			return convertToDeadlined(indexes);
+		case END_DATE:
+			return convertToFloating(indexes);
 		default:
 			return "INVALID";
 		}
@@ -40,6 +46,28 @@ public class Delete extends Command{
 	private String deleteAllTags() {
 		this.categories = new TreeMap<String, Category>();
 		return "All tags deleted";
+	}
+	
+	private String convertToDeadlined(ArrayList<Integer> indexes) {
+		ArrayList<Task> tasks = getTasks(this.UIStatus); 
+		for (Integer index: indexes) {
+			Task task = tasks.get(index- INDEX_ADJUSTMENT);
+			task.setStart(null);
+		}
+		return "Start Time of tasks at " + indexes + " has been removed.";
+	}
+	
+	private String convertToFloating(ArrayList<Integer> indexes) {
+		ArrayList<Task> tasks = getTasks(this.UIStatus); 
+		for (Integer index: indexes) {
+			Task task = tasks.get(index - INDEX_ADJUSTMENT);
+			task.setEnd(null);
+			this.floatingTasks.add(task);
+			tasks.remove(index- INDEX_ADJUSTMENT);
+		}
+		this.setTasks(this.UIStatus, tasks);
+		this.UIStatus = UI_TAB.FLOATING;
+		return "Deadline of tasks at " + indexes + " has been removed.";
 	}
 
 	private String deleteTags(ArrayList<String> tags) {

@@ -57,31 +57,26 @@ public class Edit extends Command {
 	}
 
 	private String editStartTime(Task task, int index) {
+		TASK_TYPE type = task.getType();
 		Date newStartTime = parser.getStartTime();
 		task.setStart(newStartTime);
-		if (task.getType()==TASK_TYPE.FLOATING) {
-			this.floatingTasks.remove(task);
-			if (task.getIsOverdue()==true) {
-				this.overdueTasks.add(task);
-			}
-			else {
-				this.ongoingTasks.add(task);
-			}
+		if (type==TASK_TYPE.FLOATING) {
+			convertFromFloating(task);
 		}
-		
-		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getStart() + "\".";
+		return "Task " + task + " has been changed to " + "\"" + task.getStart() + "\".";
 	}
 	
 	private String editEndTime(Task task, int index) {
+		TASK_TYPE type = task.getType();
 		Date newEndTime = parser.getEndTime();
 		task.setEnd(newEndTime);
-		if (task.getType()==TASK_TYPE.FLOATING) {
-			convertFromFloatingToDeadlined(task);
+		if (type==TASK_TYPE.FLOATING) {
+			convertFromFloating(task);
 		}
 		return "Task " + (index+INDEX_ADJUSTMENT)  + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}
 	
-	private void convertFromFloatingToDeadlined(Task task) {
+	private void convertFromFloating(Task task) {
 		this.floatingTasks.remove(task);	
 		if (task.getIsOverdue()==true) {
 			this.overdueTasks.add(task);
@@ -98,7 +93,7 @@ public class Edit extends Command {
 		Date newDeadline = parser.getEndTime();
 		task.setEnd(newDeadline);
 		if (type==TASK_TYPE.FLOATING) {
-			convertFromFloatingToDeadlined(task);
+			convertFromFloating(task);
 		}
 		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getEnd() + "\".";
 	}

@@ -13,7 +13,7 @@ public class Test {
 		public static void main (String[] args) {
 		//	List<Date> dates = new PrettyTimeParser().parse("2500hrs");
 		//	System.out.println(dates.get(0));
-			Parser parser = new Parser("delete 10 end date");
+/*			Parser parser = new Parser("delete haojie");
 			System.out.println(parser.getName());
 			System.out.println(parser.getDeleteType());
 			System.out.println(parser.getStartTime());
@@ -21,11 +21,23 @@ public class Test {
 			System.out.println(parser.getType());
 			System.out.println(parser.getIndexToDelete());
 			
+*/
 
 
-/*
-			Parser parser = new Parser("meeting with hannah from 2016/05/28 7pm to 2016/05/30 9am");
-			
+			Parser parser = new Parser("delete #nus #german #singapore");
+		//	Parser parser = new Parser("jog with hannah at orchard from ntu to nus at home");
+		//	Parser parser = new Parser("meet hannah at nus at 7pm");
+		//	Parser parser = new Parser("meet hannah at 7pm at nus");
+		//	Parser parser = new Parser("meet hannah tmr 7pm");
+		//	Parser parser = new Parser("meet hannah on 24/07/2016 at 7pm");
+		//	Parser parser = new Parser("meet hannah on thursday at 7pm");
+		//	Parser parser = new Parser("meet hannah on thursday 7pm");
+		//	Parser parser = new Parser("meet hannah on the ground floor at 7pm");
+		//	Parser parser = new Parser("meet hannah on thursday at #100am# mall");
+		//	Parser parser = new Parser("meet hannah at block 2359 on the ground floor ");
+		//	Parser parser = new Parser("meet hannah at block 2359 on 24th of march 2017 ");
+		//	Parser parser = new Parser("meet hannah at block 2359 on 24th of march 2017 7pm");
+		//	Parser parser = new Parser("meet hannah on thursday at block 2359");
 			System.out.println("command type :" + parser.getCommandType());
 			System.out.println("Task Type :" + parser.getType());
 			System.out.println(parser.getName());
@@ -33,7 +45,8 @@ public class Test {
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getTag());
 			System.out.println(parser.getEditType());
-*/
+			System.out.println(parser.getTagToDelete());
+
 	
 			
 		}

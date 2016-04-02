@@ -29,7 +29,7 @@ public class DeleteParser {
 
 	private void executeDeleteParser() {
 		boolean isInteger = false;
-		String[] str = userTask.replaceAll("[:.,]", "").toLowerCase().split("\\s+");
+		String[] str = userTask.replaceAll("[:.,]", "").split("\\s+");
 		isInteger = isTaskIndex(str);
 		
 		switch (detemineDeleteType(userTask.toLowerCase(), isInteger)) {
@@ -88,7 +88,7 @@ public class DeleteParser {
 	}
 
 	private void parseRangeDelete(String[] str) {
-		// Example: user enters "delete 1 to 5"
+		// Example: delete 1 to 5 / delete 1 - 5
 		if (str.length == 3) {
 			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
 				indexToDelete.add(i);
@@ -97,12 +97,14 @@ public class DeleteParser {
 	}
 
 	private void parseMultipleDeleteIndexes(String[] str) {
+		// Example: delete 1 4 9 14
 		for (int i = 0; i < str.length; i++) {
 			indexToDelete.add(Integer.parseInt(str[i]));
 		}
 	}
 	
 	private void parseMutipleDeleteTags(String[] str) {
+		// Example: delete #nus #soc #singapore
 		for (int i = 0; i < str.length; i++) {
 			tagToDelete.add(str[i].substring(1, str[i].length()));
 		}
@@ -110,6 +112,7 @@ public class DeleteParser {
 
 	
 	private void parseSingleDeleteTag(String[] str) {
+		// Example: delete #nus
 		tagToDelete.add(str[0].substring(1, str[0].length()));
 	}
 	

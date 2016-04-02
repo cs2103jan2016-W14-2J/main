@@ -92,16 +92,17 @@ public class UILeftBox {
 		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
 		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
 		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
+	
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
 		makeTag = new UIMakeTag();
 		flowpaneCategory.setPrefSize(500, 500);
+		
 
 	}
 
 	public void build(UIRightBox rightBox) {
 		this.rightBox = rightBox;
-		addChartTitle();
 		updateChart();
 		updateTag();
 		listen.chartListener(chart, rightBox);
@@ -119,16 +120,14 @@ public class UILeftBox {
 		return leftBox;
 	}
 
-	private void addChartTitle() {
-		chart.setTitle("Task");
-	}
 
 	public void updateTag() 
 	{
-		System.out.println("127 + ##############################################################################################"+logic.getCategories().size());
+		//System.out.println("127 + ##############################################################################################"+logic.getCategories().size());
 		
-		tagMap.clear();
-		flowpaneCategory.getChildren().removeAll();
+		tagMap =new ArrayList<String>();
+		flowpaneCategory.getChildren().clear();
+		
 		if(logic.getCategories()!=null)
 		{
 			tagMap = logic.getCategories();
@@ -145,7 +144,6 @@ public class UILeftBox {
 					flowpaneCategory.getChildren().add(root);			
 				}
 			}
-		
 		}
 	}
 	public void updateChart() {

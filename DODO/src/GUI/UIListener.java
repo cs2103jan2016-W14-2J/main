@@ -237,13 +237,16 @@ public class UIListener {
 					}
 				}
 				});
-				primaryStage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
+/*				primaryStage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
 
 				    @Override
 				    public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1)
 				    {   	
+				    	//	private final double sceneWidth = 1800;  //1900
+				    	// private final double sceneHeight = 750;  //900
+				    	
 				    }
-				});
+				});*/
 	
 	}
 	

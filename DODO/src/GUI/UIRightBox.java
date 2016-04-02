@@ -120,8 +120,10 @@ public class UIRightBox {
 	private	HBox mainControllerRoot; 
 	private Pagination pagination;
 	private UIPopUpFeedBack uiPopUpFeedBack;
+	private UIMakeTag uiMakeTag;
 	private PopOver popUpFeedBack = new PopOver();
 	private Scene scene;
+	
 	public UIRightBox(Logic logic, HBox root, Scene scene)
 	{
 		mainControllerRoot = root;
@@ -166,6 +168,7 @@ public class UIRightBox {
 		tabPane = new TabPane();
 		mainTextField = new TextField();
 		listen = new UIListener();
+		uiMakeTag = new UIMakeTag();
 		uiPopUpFeedBack = new UIPopUpFeedBack(popUpFeedBack, mainTextField);
 
 	}
@@ -449,14 +452,14 @@ public class UIRightBox {
 
 	private void addListToTitledPane(TitledPane titledPane, ObservableList<Task> listTask, UI_TAB typeOfTask) {
 		
-		
-		
-		
 		initTitledPane(titledPane);
+		
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
-		new Thread(new Runnable() {
+		new Thread(new Runnable() 
+		{
 			@Override
-			public void run() {
+			public void run() 
+			{
 				listViewLabel.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
 					public ListCell<Task> call(ListView<Task> param) {
 						ListCell<Task> cell = new ListCell<Task>() {
@@ -465,35 +468,37 @@ public class UIRightBox {
 								super.updateItem(item, empty);
 								if (item != null) {
 									
-									//String strTagging = item.getTag();
-									ArrayList<String> listOfTags = item.getTags();
-								
+									ArrayList<String> strTagging = item.getTags();
+									/*ArrayList<Label> lblTag = new ArrayList<Label>();
+									uiMakeTag.MatchTagToCategories(logic, logic.getCategories());//match all the categories with a user data
+									lblTag.addAll(uiMakeTag.assignTagUserData(logic,item.getTags()));//apply the user data to each task's tag
+									*/
 									String currentIndex=Integer.toString(this.getIndex() + 1);
 									UICellComponents lsg = null;
 									
 									if (item.getType() == TASK_TYPE.DEADLINED) 
 									{
 										//System.out.println("DeadlinedTask");
-										lsg = new UICellComponents(currentIndex, listOfTags, item.getName(), null, item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), null, item.getEnd(), item.getFlag());
 										logger.info("DeadlinedTask");  
 									
 									} 
 									else if (item.getType() == TASK_TYPE.EVENT) 
 									{
 										//System.out.println("in event" + item.getEnd());
-										lsg = new UICellComponents(currentIndex, listOfTags, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
 										logger.info("Event");  
 									}
 									else if (item.getType() == TASK_TYPE.FLOATING) 
 									{
 										//System.out.println("in FLOATING Task");
-										lsg = new UICellComponents(currentIndex, listOfTags ,item.getName(), null, null, item.getFlag());
+										lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 										logger.info("Task");  
 									}
 									else 
 									{
 											//System.out.println("in search Task");
-											lsg = new UICellComponents(currentIndex, listOfTags ,item.getName(), null, null, item.getFlag());
+											lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 											logger.info("search");  
 									}
 									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
@@ -588,6 +593,8 @@ public class UIRightBox {
 	}
 	
 	private void initTitledPane(TitledPane titledPane) {
+	
+		titledPane.setCollapsible(false);
 		titledPane.setPrefSize(titledPaneHeight, titledPaneWidth);
 	}
 
@@ -663,7 +670,6 @@ public class UIRightBox {
 		strFeedBack = logic.run(mainTextField.getText());
 		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
 		currentTask = logic.getStatus();
-		leftBox.updateTag();
 		
 		uiPopUpFeedBack.createPopUpFeedBack(strFeedBack,scene);
 		
@@ -675,8 +681,10 @@ public class UIRightBox {
 		completedTasks.clear();
 		overdueTasks.clear();
 		
+		//uiMakeTag.tagMapping(logic.getCategories());
 		testMethod();
-		
+		leftBox.updateTag();
+
 		
 	
     	mainTextField.setText("");

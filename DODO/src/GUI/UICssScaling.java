@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
@@ -25,32 +26,37 @@ public class UICssScaling
 {
 	String cssCellComponents;
 	String cssTabPane;
+	String cssTag;
 	public UICssScaling()
 	{
 		cssCellComponents = "cellComponents.css";
 		cssTabPane = "tabPane.css";
+		cssTag = "tagBack.css";
 	}
-	public void setCssAndScalingForCell(HBox cellRoot, Label lblName, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
+	public void setCssAndScalingForCell(HBox cellRoot,Label lblIndex, Label lblName, ArrayList<Label> lblListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
 		cellRoot.setPrefSize(100, 55);
-		//lblTag.setPrefSize(100, 500);
-		
-		//lblTag.setPrefSize(125, 500);
 		lblName.setPrefSize(800, 500);
+		lblIndex.setMinSize(100, 55);
 		vbStartAndEnd.setPrefSize(400, 500);
 		chkFlag.setPrefSize(70, 50);
 		
-		//lblTag.setFont(Font.font ("Verdana", 20));
-		//lblTag.setFont(Font.font ("Verdana", 20));
-		lblName.setFont(Font.font ("Verdana", 20));
+		for(int x=0;x<lblListTag.size();x++)
+		{
+			lblListTag.get(x).setFont(Font.font ("Verdana", 20));
+			lblListTag.get(x).setId("CellTag");
+			//lblListTag.get(x).styleProperty().set("-fx-border-color: black;");
+			lblListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
+		}
 		
-		//lblTag.setAlignment(Pos.CENTER);
+		lblIndex.setFont(Font.font ("Verdana", 20));
+		lblName.setFont(Font.font ("Verdana", 20));
+		lblName.setAlignment(Pos.CENTER_LEFT);
 		vbStartAndEnd.setAlignment(Pos.CENTER);
 		chkFlag.setAlignment(Pos.CENTER);
 		
 		cellRoot.setId("CellRoot");
-		//lblTag.setId("CellIndex");
-		//lblTag.setId("CellTag");
+		lblName.setId("CellIndex");
 		lblName.setId("CellName");
 		chkFlag.setId("CellFlag");
 		
@@ -70,13 +76,13 @@ public class UICssScaling
 			((Label) vbStartAndEnd.getChildren().get(1)).setFont(Font.font ("Verdana", 20));
 		}
 		chkFlag.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
-		//AlignmentCheck(cellRoot, lblIndex,lblTag,lblName,vbStartAndEnd,chkFlag, toolTip);
+		AlignmentCheck(cellRoot, lblName,lblIndex,vbStartAndEnd,chkFlag, toolTip);
 	}
-	private void AlignmentCheck(HBox cellRoot, Label lblIndex, Label lblTag, Label lblName, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
+	private void AlignmentCheck(HBox cellRoot,Label lblName, Label lblIndex, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
 		cellRoot.styleProperty().set("-fx-border-color: black;");
+		cellRoot.styleProperty().set("-fx-border-color: black;");
 		lblIndex.styleProperty().set("-fx-border-color: black;");
-		lblTag.styleProperty().set("-fx-border-color: black;");
 		lblName.styleProperty().set("-fx-border-color: black;");
 		vbStartAndEnd.styleProperty().set("-fx-border-color: black;");
 		chkFlag.styleProperty().set("-fx-border-color: black;");
@@ -97,25 +103,29 @@ public class UICssScaling
 		AlignmentCheck(lblCategory,leftBox);
 		
 	}
-	private void AlignmentCheck(Label lblCategory,VBox leftBox) {
+	private void AlignmentCheck(Label lblCategory,VBox leftBox)
+	{
 		lblCategory.styleProperty().set("-fx-border-color: black;");
 		leftBox.styleProperty().set("-fx-border-color: black;");
-
 	}
-	public void cssWelcomePage(HBox root, Label welcomeLabel) {
-		
+	public void cssWelcomePage(HBox root, Label welcomeLabel) 
+	{
 		root.styleProperty().set("-fx-border-color: black;");
 		root.setPrefSize(500, 500);
 		welcomeLabel.setFont(Font.font("Cambria", 100));
 		welcomeLabel.setTranslateX(455);
 		welcomeLabel.setPrefSize(500, 500);
-
 	}
-	public void setCssAndScalingForRightBox(TabPane tabPane, TextField mainTextField) {
-		
+	public void setCssAndScalingForRightBox(TabPane tabPane, TextField mainTextField) 
+	{
 		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
 		mainTextField.setFont(Font.font("Cambria", 25));
-
+	}
+	public void setTagBackground(Label lbl) 
+	{
+		System.out.println("in here");
+		lbl.getStylesheets().add(this.getClass().getResource(cssTag).toExternalForm());
+		
 	}
 
 

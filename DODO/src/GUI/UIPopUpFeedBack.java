@@ -76,6 +76,17 @@ public class UIPopUpFeedBack {
 		vbPop.setPrefSize(1380, 70);
 		caret = findCaret(mainTextField);
         screenLoc = findScreenLocation(caret);
-		popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() + 70);
+        if(scene.getWidth()>1900 && scene.getHeight()>900)
+        {
+    		vbPop.setPrefSize(1400, 70);
+
+    		popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() -70);
+
+        }
+        else
+        {
+
+    		popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() + 70);
+        }
 	}
 }

@@ -2,8 +2,10 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.Random;
 
+import Logic.Logic;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -13,18 +15,65 @@ import javafx.scene.paint.Paint;
 
 public class UIMakeTag {
 
+	ArrayList<Integer> tagMapping;
+	ArrayList<String> tagList;
+	UICssScaling ucs = new UICssScaling();
+	ArrayList<Label> taskLblTag;
 
-	
 	public UIMakeTag()
 	{
-		
+		taskLblTag = new ArrayList<Label>();
+		tagMapping = new ArrayList<Integer>();
+		tagList = new ArrayList<String>();
 	}
+
 	public HBox getTag(String Content)
 	{
 		HBox root = new HBox();
 		Label lbl = new Label(Content);
 		root.getChildren().add(lbl);
 		return root;
+	}
+	public void tagMapping(ArrayList<String> categories) 
+	{
+		tagMapping.clear();
+		tagList = categories;
+		if(categories!=null);
+		{
+			for(int x=0;x<categories.size();x++)
+			{
+				
+				tagMapping.add(x);
+			}
+		}
+		
+	}
+	public void MatchTagToCategories(Logic logic ,ArrayList<String> listOfTags)
+	{			
+		tagMapping.clear();
+		for(int x=0;x<logic.getCategories().size();x++)
+		{
+			tagMapping.add(x);
+		}
+	}
+	public ArrayList<Label> assignTagUserData(Logic logic, ArrayList<String> strTag)
+	{
+		for(int x=0;x<logic.getCategories().size();x++)
+		{
+			for(int y=0;y<strTag.size();y++)
+			{
+					if(tagList.size()!=0&& strTag.size()!=0 &&tagList.get(x).equals(strTag.get(y)))
+					{
+						System.out.println("inininininininininininininininininininininininininininininininin");
+						Label lbl = new Label(strTag.get(y));
+						lbl.setUserData("color"+tagMapping.get(x));
+						ucs.setTagBackground(lbl);
+						taskLblTag.add(lbl);
+					}
+			}
+		}		
+		
+		return taskLblTag;
 	}
 	
 }

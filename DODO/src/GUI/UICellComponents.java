@@ -10,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -20,7 +21,7 @@ public class UICellComponents
 	private UICssScaling usc;
 	private Label lblIndex;
 	
-	private ArrayList<Label> lblTag;
+	private ArrayList<Label> lblListTag;
 	
 	private Label lblName;
 	private VBox vbStartAndEnd;
@@ -32,23 +33,24 @@ public class UICellComponents
 	private UIMakeTag makeTag;
 	private HBox hbIndexAndName;
 
-	public UICellComponents(String strIndex,ArrayList<String> listOfTags, String strName, Date startTime,Date endTime,boolean Flag)
+	public UICellComponents(String strIndex,ArrayList<String> strTagging, String strName, Date startTime,Date endTime,boolean Flag)
 	{
 		this.rightBox = rightBox;
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
-		lblTag = new ArrayList<Label>();
-		if(listOfTags.size()!=0)
+		lblListTag = new ArrayList<Label>();
+		if(strTagging.size()!=0)
 		{
-			for(int x=0;x<listOfTags.size();x++)
+			//lblListTag.add(new Label(strTagging));
+			for(int x=0;x<strTagging.size();x++)
 			{
-				lblTag.add(new Label(listOfTags.get(x)));
+				lblListTag.add(new Label(strTagging.get(x)));
 			}
 		}
 		else
 		{
-			lblTag.add(new Label(""));
+			lblListTag.add(new Label(""));
 		}
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
@@ -76,9 +78,11 @@ public class UICellComponents
 			chkFlag.setSelected(false);
 		}
 		toolTip = new Tooltip(strName);
-		usc.setCssAndScalingForCell(cellRoot,lblName,vbStartAndEnd,chkFlag,toolTip);
+		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblName,lblListTag, vbStartAndEnd,chkFlag,toolTip);
 		vbNameAndTag.getChildren().add(hbIndexAndName);
-		vbNameAndTag.getChildren().addAll(lblTag);
+		FlowPane fp = new FlowPane();
+		fp.getChildren().addAll(lblListTag);
+		vbNameAndTag.getChildren().addAll(fp);
 		cellRoot.getChildren().addAll(chkFlag,vbNameAndTag,vbStartAndEnd);
 	}
 	

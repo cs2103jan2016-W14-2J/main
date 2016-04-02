@@ -33,6 +33,9 @@ public class EditParser {
 	private String MESSAGE_EDIT_INPUT_ERROR = "You have entered an invalid command.";
 	private ArrayList<String> editTaskElements;
 	
+	private Date date = new Date();
+	private DateTimeParser dt = new DateTimeParser();
+	
 	public EditParser(String userInput) {
 		executeEditParser(userInput);
 	}
@@ -71,6 +74,7 @@ public class EditParser {
 			parseEditStartTime(userInput);
 			break;
 		case DEADLINED:
+			System.out.println("Debug at DEADLINED " + userInput);
 			parseEditDeadLined(userInput);
 			setEditType(EDIT_TYPE.DEADLINED);
 			break;
@@ -91,7 +95,7 @@ public class EditParser {
 		String temp = userInput.substring(INDEX_OF_LAST_TO, userInput.length());
 		setNewTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_TO)));
 		List<Date> dates = new PrettyTimeParser().parse(temp);
-		setNewEndDate(dates.get(0));
+		setNewEndDate(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 	}
 
 
@@ -107,6 +111,7 @@ public class EditParser {
 
 	private void parseEditDeadLined(String userInput) {
 		System.out.println("Debug at parseEditDeadlined ");
+		
 		String temp = "";
 		INDEX_OF_LAST_ON = userInput.lastIndexOf(KEYWORD_ON);
 		INDEX_OF_LAST_AT = userInput.lastIndexOf(KEYWORD_AT);
@@ -169,7 +174,7 @@ public class EditParser {
 		
 		List<Date> dates = new PrettyTimeParser().parse(temp);
 		if (dates.size() != 0) {
-			setNewEndDate(dates.get(0));
+			setNewEndDate(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 		}
 	}
 
@@ -183,7 +188,7 @@ public class EditParser {
 		System.out.println("Debug at parseEditEventTime :" + dates.get(0) + " " + dates.get(1));
 		if (dates.size() == 2) {
 			setNewStartDate(dates.get(0));
-			setNewEndDate(dates.get(1));
+			setNewEndDate(dt.checkAndSetDefaultEndTime(dates.get(1), date));
 		}
 	}
 
@@ -281,16 +286,7 @@ public class EditParser {
 	private boolean hasTaskName(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		return (dates.size() == 0) ? true : false;
-/*		if (userInput.contains(KEYWORD_AT) || userInput.contains(KEYWORD_BEFORE) ||
-			userInput.contains(KEYWORD_BY) || userInput.contains(KEYWORD_FROM) ||
-			userInput.contains(KEYWORD_ON) || userInput.contains(KEYWORD_TO)) {
-			System.out.println("Debug at hasTaskName " + userInput);
-			return false;
-		}
-		else {
-			return true;
-		}
-*/	}
+	}
 
 
 	private String checkIfValidEditCommandInput(ArrayList<String> editTaskElements) {

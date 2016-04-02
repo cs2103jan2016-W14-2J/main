@@ -30,6 +30,12 @@ public class TestParser {
 		parser = new Parser("submit assignment 1 by tomorrow");
 		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
 		
+		parser = new Parser("take a walk by the beach by 2359hrs");
+		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		
+		parser = new Parser("submit assignment 1 by tomorrow by 2359hrs");
+		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		
 		parser = new Parser("fetch my brother at 2pm");
 		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
 		

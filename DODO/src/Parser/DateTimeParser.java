@@ -1,5 +1,8 @@
 package Parser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -120,30 +123,19 @@ public class DateTimeParser {
 	protected String removeTime (String userInput) {
 		String[] str = userInput.toLowerCase().split("\\s+");
 		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
-		String temp = "";
-		String temp2 = "";
-				
+	
 		for (int i = 0; i < taskItems.size(); i++) {
 			System.out.println("removeTime :" + i + " " + taskItems.get(i));
 			
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
-			
-	/*		if (taskItems.get(i).length() >= 3) {
-				temp = taskItems.get(i).substring(taskItems.get(i).length() - 2);
-				temp2 = taskItems.get(i).substring(taskItems.get(i).length() - 3);
-			}
-	*/		
+	
 			if ((taskItems.get(i).contains(KEYWORD_AM) || taskItems.get(i).contains(KEYWORD_PM) 
 				|| taskItems.get(i).contains(KEYWORD_HR) || taskItems.get(i).contains(KEYWORD_HRS) ) 
 				&& dates.size() != 0) {
 				taskItems.remove(i);
 				System.out.println("removeTime :" + userInput);
 			}
-	/*		else if ((temp.equals(KEYWORD_AM) || temp.equals(KEYWORD_PM)) && taskItems.get(i).length() == 2) {
-				taskItems.remove(i);
-				taskItems.remove(i - 1);
-			}
-	*/	}
+		}
 		userInput = toStringTaskElements(taskItems);
 		System.out.println("removeTime :" + userInput);
 		return userInput;
@@ -197,5 +189,28 @@ public class DateTimeParser {
 			name += taskNameArrayList.get(i) + " "; 
 		}
 		return name.trim();
+	}
+	
+	protected Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
+		Date newDate = date;
+		SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String dateWithoutTime = df.format(date);
+		
+		try {
+			Date dateWithoutDate = sdf.parse(sdf.format(date));
+			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
+
+			if (dateWithoutDate.equals(currentWithoutDate)) {
+				String newDateWithTime = dateWithoutTime + " " + "23:59:59";
+				newDate = sf.parse(newDateWithTime);
+			} 
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return newDate;
+		
 	}
 }

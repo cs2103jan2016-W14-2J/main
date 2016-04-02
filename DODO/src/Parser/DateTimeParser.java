@@ -27,7 +27,6 @@ public class DateTimeParser {
 	private final String KEYWORD_HR = "hr";
 
 	public DateTimeParser () {
-		
 	}
 	
 	protected String removeTheDayAfterTomorrow(String userInput) {
@@ -193,22 +192,27 @@ public class DateTimeParser {
 	}
 	
 	protected Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
-		Date newDate = date;
+		Date newDate = date;		
 		SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		String dateWithoutTime = df.format(date);
 		String newDateWithTime= "";
+		String timeAt6pm = dateWithoutTime + " " + "18:00:00";
 		Calendar cal = Calendar.getInstance();
 		
 		try {
 			Date dateWithoutDate = sdf.parse(sdf.format(date));
 			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
+			Date defaultDeadLineForExecutive = sf.parse(timeAt6pm);
 
-			if (dateWithoutDate.equals(currentWithoutDate)) {
+			if (dateWithoutDate.equals(currentWithoutDate) && currentTime.before(defaultDeadLineForExecutive)) {
+				newDate = defaultDeadLineForExecutive;
+			} 
+			else if (dateWithoutDate.equals(currentWithoutDate) && currentTime.after(defaultDeadLineForExecutive)) {
 				newDateWithTime = dateWithoutTime + " " + "23:59:59";
 				newDate = sf.parse(newDateWithTime);
-			} 
+			}
 			else if (date.before(currentTime)) {
 				cal.setTime(date);
 				cal.add(Calendar.DATE, 1);

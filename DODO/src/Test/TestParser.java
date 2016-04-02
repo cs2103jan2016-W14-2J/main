@@ -275,4 +275,58 @@ public class TestParser {
 		assertEquals(tag3, parser.getTagToDelete().get(2));
 		
 	}
+	
+	@Test
+	public void testEdit() throws Exception {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
+		
+		Parser parser = new Parser("edit 2 meet Hannah at Chong Pang");
+		int taskID = 2;
+		assertEquals(EDIT_TYPE.TASK_NAME, parser.getEditType());
+		assertEquals("meet Hannah at Chong Pang", parser.getName());
+		assertEquals(taskID, parser.getTaskID());
+		
+		parser = new Parser("edit 4 from 5th of May 2016 2359hrs");
+		taskID = 4;
+		String str = "Thu May 05 23:59:00 SGT 2016";
+		Date startTime = dateFormat.parse(str);
+		assertEquals(EDIT_TYPE.START_TIME, parser.getEditType());
+		assertEquals(taskID, parser.getTaskID());
+		assertEquals(startTime, parser.getStartTime());
+		
+		parser = new Parser("edit 2 to 5th of Nov 2016 2359hrs");
+		taskID = 2;
+		str = "Sat Nov 05 23:59:00 SGT 2016";
+		Date endTime = dateFormat.parse(str);
+		assertEquals(EDIT_TYPE.END_TIME, parser.getEditType());
+		assertEquals(taskID, parser.getTaskID());
+		assertEquals(endTime, parser.getEndTime());
+		
+		parser = new Parser("edit 4 by 5th of May 2016 2359hrs");
+		taskID = 4;
+		str = "Thu May 05 23:59:00 SGT 2016";
+		endTime = dateFormat.parse(str);
+		assertEquals(EDIT_TYPE.DEADLINED, parser.getEditType());
+		assertEquals(taskID, parser.getTaskID());
+		assertEquals(startTime, parser.getEndTime());
+		
+		parser = new Parser("edit 10 from 5th of Nov 2016 2359hrs to 12th Dec 2016");
+		taskID = 10;
+		str = "Sat Nov 05 23:59:00 SGT 2016";
+		startTime = dateFormat.parse(str);
+		String str2 = "Mon Dec 12 23:59:00 SGT 2016";
+		endTime = dateFormat.parse(str2);
+		assertEquals(EDIT_TYPE.EVENT_TIME, parser.getEditType());
+		assertEquals(taskID, parser.getTaskID());
+		assertEquals(startTime, parser.getStartTime());
+	//	assertEquals(endTime, parser.getEndTime());
+		
+		parser = new Parser("edit #Singapore to #Melbourne");
+		String oldTag = "Singapore";
+		String newTag = "Melbourne";
+		assertEquals(EDIT_TYPE.TAG, parser.getEditType());
+		assertEquals(oldTag, parser.getOldTag());
+		assertEquals(newTag, parser.getTag().get(0));
+	
+	}
 }

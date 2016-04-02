@@ -31,6 +31,7 @@ public class Parser {
 	private ArrayList<String> tagToDelete;
 	private ArrayList<Integer> indexToDelete;
 	private ArrayList<String> tags;
+	private String oldTag;
 	
 	private ArrayList<Integer> indexOfFlagAndMark;
 	private FLAGANDCOMPLETE_TYPE flagAndCompleteType;
@@ -89,10 +90,12 @@ public class Parser {
 				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTagToDelete(), deleteParser.getIndexToDelete());
 				break;
 			case EDIT:
-				userInput = processUserInput(userInput);
+			//	userInput = processUserInput(userInput);
+				userInput = getUserInputContent(userInput);
 				EditParser editParser = new EditParser(userInput);
 				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),
-								  editParser.getNewTaskName(), editParser.getEditType());
+								  editParser.getNewTaskName(), editParser.getEditType(), editParser.getNewTag(),
+								  editParser.getOldTag());
 				break;
 			case COMPLETE:
 				userInput = getUserInputContent(userInput);
@@ -299,12 +302,15 @@ public class Parser {
 	}
 	
 	//***********************************Accessors for EditParser************************************//
-	private void setEditAttributes(int taskID, Date endTime, Date startTime, String taskName, EDIT_TYPE editType) {
+	private void setEditAttributes(int taskID, Date endTime, Date startTime, String taskName, EDIT_TYPE editType,
+									ArrayList<String> newTag, String oldTag) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.taskName = taskName;
 		this.taskID = taskID;
 		this.editType = editType;
+		this.tags = newTag;
+		this.oldTag = oldTag;
 	}
 	
 	public int getTaskID() {
@@ -313,6 +319,10 @@ public class Parser {
 	
 	public EDIT_TYPE getEditType() {
 		return this.editType;
+	}
+	
+	public String getOldTag() {
+		return this.oldTag;
 	}
 	
 	//**************************** Accessors for Flag/Unflag/CompleteParser ***********************//

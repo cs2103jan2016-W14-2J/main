@@ -19,6 +19,7 @@ public class EditParser {
 	private String KEYWORD_BY = " by ";
 	
 	private String newTaskName = "";
+	private String STRING_HASH_TAG = "#";
 	private int INDEX_OF_LAST_TO = -1;
 	private int INDEX_OF_LAST_AT = -1;
 	private int INDEX_OF_LAST_BEFORE = -1;
@@ -31,6 +32,8 @@ public class EditParser {
 	private Date newEndDate;
 	private EDIT_TYPE editType;
 	private ArrayList<String> editTaskElements;
+	private String oldTag = "";
+	private ArrayList<String> newTag = new ArrayList<String>();
 	
 	private Date date = new Date();
 	private DateTimeParser dt = new DateTimeParser();
@@ -41,12 +44,11 @@ public class EditParser {
 
 	
 	private void executeEditParser(String userInput) {
-		String[] editElements = userInput.replaceAll("[:-]", "").toLowerCase().split("\\s+");
+		String[] editElements = userInput.replaceAll("[:-]", "").split("\\s+");
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
 		newTaskName = checkForAbbreviation(editTaskElements);
-		
-		String[] editElements2 = newTaskName.replaceAll("[:-]", "").toLowerCase().split("\\s+");
-		editTaskElements = new ArrayList<String>(Arrays.asList(editElements2));
+		String[] updatedElements = newTaskName.replaceAll("[:-]", "").split("\\s+");
+		editTaskElements = new ArrayList<String>(Arrays.asList(updatedElements));
 		
 		for (int i = 0; i < editTaskElements.size(); i++) {
 			System.out.println(editTaskElements.get(i));
@@ -82,12 +84,29 @@ public class EditParser {
 			setEditType(EDIT_TYPE.END_TIME);
 			break;
 		case TAG:
+			System.out.println("Debug at TAG " + userInput);
+			parserEditTag(userInput);
+			setEditType(EDIT_TYPE.TAG);
 			break;
 		case INVALID:
 			setEditType(EDIT_TYPE.INVALID);
 			break;
 		}	
 	}
+
+	private void parserEditTag(String userInput) {
+		String[] str = userInput.trim().split("[\\s+]");
+		assert str.length <= 3 && str.length > 0;
+		
+		if (str[0].startsWith(STRING_HASH_TAG) && str[2].startsWith(STRING_HASH_TAG)) {
+			oldTag = str[0].substring(1, str[0].length());
+			newTag.add(str[2].substring(1, str[0].length()));
+		}
+		else {
+			setEditType(EDIT_TYPE.INVALID);
+		}
+	}
+
 
 	private void parseEditEndTime(String userInput) {
 		System.out.println("Debug at parseEditEndTime ");
@@ -199,7 +218,7 @@ public class EditParser {
 
 	private EDIT_TYPE determineEditType(String userInput) {
 		
-		if (hasTaskName(userInput)) {
+		if (hasTaskName(userInput) && !userInput.trim().startsWith(STRING_HASH_TAG)) {
 			/*
 			 * @Description: edits the content of the task name. 
 			 * Example: edit 1 buy sweet
@@ -225,7 +244,8 @@ public class EditParser {
 		 * @Description: edits the deadline of task 
 		 * Example: edit 1 by tomorrow
 		 */
-		else if (hasDeadLined(userInput) && !hasEndTime(userInput) && !hasStartTime(userInput)) {
+		else if (hasDeadLined(userInput) && !hasEndTime(userInput) && !hasStartTime(userInput)
+				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
 			System.out.println("Debug at hasDeadLined true");
 			return EDIT_TYPE.DEADLINED;
 		}
@@ -233,20 +253,25 @@ public class EditParser {
 		 * @ Description: edits the end time of an event
 		 *  Example: edit 1 to 24.07.2016
 		 */
-		else if (!hasDeadLined(userInput) && hasEndTime(userInput) && !hasStartTime(userInput)) {
+		else if (!hasDeadLined(userInput) && hasEndTime(userInput) && !hasStartTime(userInput)
+				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
 			return EDIT_TYPE.END_TIME;
 		}/*
 		 * @ Description: edits the start time of an event
 		 *  Example: edit 1 from 24.07.2016
 		 */
-		else if (!hasDeadLined(userInput) && !hasEndTime(userInput) && hasStartTime(userInput)) {
+		else if (!hasDeadLined(userInput) && !hasEndTime(userInput) && hasStartTime(userInput)
+				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
 			return EDIT_TYPE.START_TIME;
 		}
-		else if (!hasDeadLined(userInput) && hasStartTime(userInput) && hasEndTime(userInput)) {
+		else if (!hasDeadLined(userInput) && hasStartTime(userInput) && hasEndTime(userInput)
+				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
 			System.out.println("Debug @line175 = true");
 			return EDIT_TYPE.EVENT_TIME;
 		}
-		else {
+		else if (userInput.trim().startsWith(STRING_HASH_TAG)) {
+			System.out.println("Debug @line253 = true");
+			return EDIT_TYPE.TAG;
 		}
 		return EDIT_TYPE.INVALID;
 	}
@@ -279,7 +304,8 @@ public class EditParser {
 
 	private boolean hasEndTime(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		return (userInput.contains(KEYWORD_TO) && dates.size() != 0) ? true : false;
+		return (userInput.contains(KEYWORD_TO) && dates.size() != 0
+				&& !userInput.contains(STRING_HASH_TAG)) ? true : false;
 	}
 
 	
@@ -294,10 +320,13 @@ public class EditParser {
 		if (editTaskElements.size() < 2) {
 			setEditType(EDIT_TYPE.INVALID);
 		}
-		else {
+		else if (!editTaskElements.get(0).startsWith(STRING_HASH_TAG)){
 			taskID = Integer.parseInt(editTaskElements.get(0));
 			setTaskID(taskID);
 			editTaskElements.remove(0);
+			temp = toStringTaskElements(editTaskElements);
+		}
+		else if (editTaskElements.get(0).startsWith(STRING_HASH_TAG)) {
 			temp = toStringTaskElements(editTaskElements);
 		}
 		return temp;
@@ -312,13 +341,13 @@ public class EditParser {
 	}
 	
 	private String checkForAbbreviation(ArrayList<String> editTaskElements) {
-		System.out.println("checkForAbbrevation");
 		String name = "";
 		DateTimeParser dt = new DateTimeParser();
 		name = dt.processToday(editTaskElements);
 		name = dt.processTomorrow(editTaskElements);
 		name = dt.processYesterday(editTaskElements);
 		name = dt.processAt(editTaskElements);
+		System.out.println("checkForAbbrevation name :" + name);
 		return name;
 	}
 	
@@ -360,5 +389,13 @@ public class EditParser {
 	
 	public EDIT_TYPE getEditType() {
 		return this.editType;
+	}
+	
+	protected ArrayList<String> getNewTag() {
+		return this.newTag;
+	}
+	
+	protected String getOldTag() {
+		return this.oldTag;
 	}
 }

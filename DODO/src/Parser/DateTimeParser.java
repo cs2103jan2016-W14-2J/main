@@ -192,6 +192,7 @@ public class DateTimeParser {
 		for (int i = 0; i < taskNameArrayList.size(); i++) {
 			name += taskNameArrayList.get(i) + " "; 
 		}
+		System.out.println("toStringTaskElements : " + name);
 		return name.trim();
 	}
 	

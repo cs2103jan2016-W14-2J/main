@@ -27,11 +27,13 @@ public class UICssScaling
 	String cssCellComponents;
 	String cssTabPane;
 	String cssTag;
+	String cssTopBar;
 	public UICssScaling()
 	{
 		cssCellComponents = "cellComponents.css";
 		cssTabPane = "tabPane.css";
 		cssTag = "tagBack.css";
+		cssTopBar = "topBarColor.css";
 	}
 	public void setCssAndScalingForCell(HBox cellRoot,Label lblIndex, Label lblName, ArrayList<Label> lblListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
@@ -45,7 +47,7 @@ public class UICssScaling
 		{
 			lblListTag.get(x).setFont(Font.font ("Verdana", 20));
 			lblListTag.get(x).setId("CellTag");
-			//lblListTag.get(x).styleProperty().set("-fx-border-color: black;");
+			lblListTag.get(x).styleProperty().set("-fx-border-color: black;");
 			lblListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
 		}
 		
@@ -88,11 +90,15 @@ public class UICssScaling
 		chkFlag.styleProperty().set("-fx-border-color: black;");
 		toolTip.styleProperty().set("-fx-border-color: black;");
 	}
-	public void cssLeftBoxComponents(VBox leftBox, PieChart chart, TitledPane titledPane,Label lblCategory, ListView<String> listView)
+	public void cssLeftBoxComponents(Label lblLogo, VBox leftBox, PieChart chart, TitledPane titledPane,Label lblCategory, ListView<String> listView)
 	{
+		lblLogo.setUserData("LOGOLENGTH");
+		lblLogo.setPrefWidth(1000);
+		lblLogo.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
+
 		leftBox.setPrefSize(500, 1800);
 		titledPane.setPrefSize(500, 888);
-		chart.setPrefSize(500, 888);
+		chart.setPrefSize(500, 500);
 		listView.setPrefSize(500, 888);
 		lblCategory.setPrefSize(500, 50);
 		
@@ -100,11 +106,12 @@ public class UICssScaling
 		
 		lblCategory.setAlignment(Pos.CENTER);
 		
-		AlignmentCheck(lblCategory,leftBox);
+		AlignmentCheck(lblCategory,leftBox,lblLogo);
 		
 	}
-	private void AlignmentCheck(Label lblCategory,VBox leftBox)
+	private void AlignmentCheck(Label lblCategory,VBox leftBox, Label lblLogo)
 	{
+		lblLogo.styleProperty().set("-fx-border-color: black;");
 		lblCategory.styleProperty().set("-fx-border-color: black;");
 		leftBox.styleProperty().set("-fx-border-color: black;");
 	}
@@ -124,7 +131,8 @@ public class UICssScaling
 	public void setTagBackground(Label lbl) 
 	{
 		System.out.println("in here");
-		lbl.getStylesheets().add(this.getClass().getResource(cssTag).toExternalForm());
+		lbl.setUserData("test");
+		lbl.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
 		
 	}
 

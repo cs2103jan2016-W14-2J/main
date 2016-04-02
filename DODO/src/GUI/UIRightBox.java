@@ -680,7 +680,7 @@ public class UIRightBox {
 		floatingTasks.clear();
 		completedTasks.clear();
 		overdueTasks.clear();
-		
+		searchTasks.clear();
 		//uiMakeTag.tagMapping(logic.getCategories());
 		testMethod();
 		leftBox.updateTag();

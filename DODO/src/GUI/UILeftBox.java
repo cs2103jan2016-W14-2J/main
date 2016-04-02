@@ -52,6 +52,7 @@ public class UILeftBox {
 
 	private final String CATEGORY_HEADER = "Categories";
 	private final String CHART_HEADER = "Task";
+	private final String LOGO_HEADER = "DODO";
 
 	private VBox leftBox;
 	private UIRightBox rightBox;
@@ -75,6 +76,7 @@ public class UILeftBox {
 	private int intFloatingTasks = 0;
 	private int intOngoingTasks = 0;
 	private UIMakeTag makeTag;
+	private Label lblLogo;
 
 	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
@@ -84,6 +86,7 @@ public class UILeftBox {
 		list = FXCollections.observableArrayList();
 		listData = FXCollections.observableArrayList();
 		titledPane = new TitledPane();
+		lblLogo = new Label(LOGO_HEADER);
 		chart = new PieChart(listData);
 		lblCategory = new Label(CATEGORY_HEADER);
 		tagMap = new ArrayList<String>();
@@ -107,8 +110,8 @@ public class UILeftBox {
 		updateTag();
 		listen.chartListener(chart, rightBox);
 		listData.addAll(floatingData, ongoingData, completedData, overdueData);
-		usc.cssLeftBoxComponents(leftBox, chart, titledPane, lblCategory, listView);
-		leftBox.getChildren().addAll(chart, lblCategory, flowpaneCategory);
+		usc.cssLeftBoxComponents(lblLogo,leftBox, chart, titledPane, lblCategory, listView);
+		leftBox.getChildren().addAll(lblLogo,chart, lblCategory, flowpaneCategory);
 	}
 
 	public void updateLeftBox() {

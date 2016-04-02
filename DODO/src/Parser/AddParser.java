@@ -37,6 +37,7 @@ public class AddParser {
 	
 	private Date startTime;
 	private Date endTime;
+	private DateTimeParser dt = new DateTimeParser();
 	
 	private ArrayList<String> taskItems;
 
@@ -209,7 +210,7 @@ public class AddParser {
 				System.out.println("Test parseEvent : " + dates.get(1));
 				taskName = taskName.substring(0, LAST_POSITION_OF_FROM);
 				setStartTime(dates.get(0));
-				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
 				setTaskName(taskName);
 			}
 			
@@ -266,14 +267,14 @@ public class AddParser {
 			
 			// Example: finish jogging with baby by the beach by tomorrow
 			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0) {
-				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateOneBy.get(0), date));
 				taskName = confirmTaskName + " " + tempTaskName;
 				setTaskName(taskName);
 			}
 			// Example: finish jogging with baby by tomorrow by the beach
 			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0) {
 				System.out.println("TEST test");
-				setEndTime(checkAndSetDefaultEndTime(dateTwoBy.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateTwoBy.get(0), date));
 				taskName = confirmTaskName + " " + contentToAnalyse;
 				setTaskName(taskName);
 			}
@@ -281,7 +282,7 @@ public class AddParser {
 			else if (dateOneBy.size() != 0 && dateTwoBy.size() != 0 && checkForDateTime == true) {
 				String temp = tempTaskName + " " + contentToAnalyse;
 				List<Date> dateFinal = new PrettyTimeParser().parse(temp);
-				setEndTime(checkAndSetDefaultEndTime(dateFinal.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateFinal.get(0), date));
 				setTaskName(confirmTaskName.trim());
 			}
 			// Example: take a walk by the beach
@@ -310,19 +311,19 @@ public class AddParser {
 				// Example: meet buyer by tonight at city hall
 				if (dateByToAt.size()!= 0 && dateAtToEnd.size() == 0) {
 					System.out.println("@line304 :");
-					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dateByToAt.get(0), date));
 					taskName = confirmTaskName + " " + tempTaskName;
 					setTaskName(taskName);
 				}
 				else if (dateByToAt.size() == 0 && dateAtToEnd.size() != 0) {
-					setEndTime(checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
 					taskName = confirmTaskName + " " + contentToAnalyse;
 					setTaskName(taskName);
 				}
 				else if (dateByToAt.size() != 0 && dateAtToEnd.size() != 0 && checkForDateTime == true) {
 					String dateToExtract = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
 					List<Date> dates = new PrettyTimeParser().parse(dateToExtract);
-					setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 					taskName = confirmTaskName;
 					setTaskName(taskName);
 				}
@@ -330,7 +331,7 @@ public class AddParser {
 				else if (checkForDateTime == false && dateAtToEnd.size() != 0) {
 					System.out.println("@line322 :");
 					taskName = confirmTaskName.trim() + " " + tempTaskName.trim();
-					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dateByToAt.get(0), date));
 					setTaskName(taskName);
 				}
 				else {
@@ -350,13 +351,13 @@ public class AddParser {
 				
 				// Example: meet buyer by tonight at city hall
 				if (dateAtToBy.size()!= 0 && dateByToEnd.size() == 0 && checkForDateTime == true) {
-					setEndTime(checkAndSetDefaultEndTime(dateAtToBy.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dateAtToBy.get(0), date));
 					taskName = confirmTaskName + " " + tempTaskName;
 					setTaskName(taskName);
 				}
 				// Example: meet buyer at city hall by tonight
 				else if (dateAtToBy.size() == 0 && dateByToEnd.size() != 0 && checkForDateTime == true) {
-					setEndTime(checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
 					taskName = confirmTaskName + " " + contentToAnalyse;
 					setTaskName(taskName);
 				}
@@ -364,7 +365,7 @@ public class AddParser {
 				else if (dateAtToBy.size() != 0 && dateByToEnd.size() != 0 && checkForDateTime == true) {
 					String dateToExtract = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 					List<Date> dates = new PrettyTimeParser().parse(dateToExtract.replace(" by", ""));
-					setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 					taskName = confirmTaskName;
 					setTaskName(taskName);
 				}
@@ -372,7 +373,7 @@ public class AddParser {
 				else if (checkForDateTime == false && dateAtToBy.size() != 0) {
 					System.out.println("@line363 :");
 					taskName = confirmTaskName.trim() + " " + contentToAnalyse.trim();
-					setEndTime(checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
+					setEndTime(dt.checkAndSetDefaultEndTime(dateByToEnd.get(0), date));
 					setTaskName(taskName);
 				}
 				else {
@@ -394,8 +395,7 @@ public class AddParser {
 			
 			// Example: revise on cs2130t chapter 1 on sunday
 			if (dates.size() != 0) {
-			//	setEndTime(dates.get(0));
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: sleep on the floor
 			else {
@@ -421,15 +421,13 @@ public class AddParser {
 			if (date1.size() == 0 && date2.size() != 0 && checkForDateTime == true) {
 				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 				setTaskName(taskName);
-			//	setEndTime(date2.get(0));
-				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah on 4 april, 2016 at suntec city
 			else if (date1.size() != 0 && date2.size() == 0 && checkForDateTime == true){
 				taskName = taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 				setTaskName(taskName);
-			//	setEndTime(date1.get(0));
-				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah on 4th of April 2016 at 2pm
 			else if (date1.size() != 0 && date2.size() != 0 && checkForDateTime == true) {
@@ -437,12 +435,12 @@ public class AddParser {
 				setTaskName(toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON))));
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
-				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date3.get(0), date));
 			}
 			else if (checkForDateTime == false && date2.size() != 0 && date1.size() != 0) {
 				System.out.println("@line322 :");
 				taskName = taskName.trim() + " " + contentToAnalyse.trim();
-				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date1.get(0), date));
 				setTaskName(taskName);
 			}
 			// Example: sleep on the study bench at the void deck
@@ -470,14 +468,14 @@ public class AddParser {
 				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_ON)));
 				setTaskName(taskName);
 			//	setEndTime(date2.get(0));
-				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date2.get(0), date));
 			}
 			// Example: meet hannah at 7pm on top of the building
 			else if (date1.size() != 0 && date2.size() == 0 && checkForDateTime == true){
 				taskName = taskName + " " + toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 				setTaskName(taskName);
 			//	setEndTime(date1.get(0));
-				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date1.get(0), date));
 			}
 			// Example: meet hannah at 2pm on 4th of April 2016 
 			else if (date1.size() != 0 && date2.size() != 0 && checkForDateTime == true) {
@@ -486,12 +484,12 @@ public class AddParser {
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
 				List<Date> date3 = new PrettyTimeParser().parse(contentToAnalyse);
 			//	setEndTime(date3.get(0));
-				setEndTime(checkAndSetDefaultEndTime(date3.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date3.get(0), date));
 			}
 			// Example: meet hannah at block 2359 on the ground floor.
 			else if (checkForDateTime == false && date2.size() != 0 && date1.size() != 0) {
 				taskName = taskName.trim() + " " + str.trim();
-				setEndTime(checkAndSetDefaultEndTime(date2.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date2.get(0), date));
 				setTaskName(taskName);
 			}
 			// Example: sleep on the study bench at the void deck
@@ -526,13 +524,13 @@ public class AddParser {
 			// Example: meet hannah at the beach at 2359hrs
 			if (dates.size() != 0 && date1.size() == 0) {
 			//	setEndTime(dates.get(0));
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				taskName = confirmTaskName + " " + tempTaskName;
 				setTaskName(taskName);
 			}
 			// Example: meet hannah at 2359hrs at the Padang
 			else if (dates.size() == 0 && date1.size() != 0) {
-				setEndTime(checkAndSetDefaultEndTime(date1.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(date1.get(0), date));
 				taskName = confirmTaskName + " " + contentToAnalyse;
 				setTaskName(taskName);
 			}
@@ -554,12 +552,12 @@ public class AddParser {
 			
 			// Example: jog from yishun to ang mo kio at 7pm
 			if (dateFromToAt.size() == 0 && dateAtToEnd.size() != 0) {
-				setEndTime(checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
 				setTaskName(taskName.trim() + " " + contentToAnalyse.trim());
 			}
 			// Example: jog from 2pm to 8pm at bishan park
 			else if (dateFromToAt.size() != 0 && dateAtToEnd.size() == 0) {
-				setEndTime(checkAndSetDefaultEndTime(dateFromToAt.get(1), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateFromToAt.get(1), date));
 				setStartTime(dateFromToAt.get(0));
 				setTaskName(taskName.trim() + " " + tempTaskName.trim());
 				setTaskType(TASK_TYPE.EVENT);
@@ -579,13 +577,13 @@ public class AddParser {
 			List<Date> dateFromToEnd = new PrettyTimeParser().parse(tempTaskName);
 			// Example: jog at 7pm from yishun to khatib
 			if (dateAtToFrom.size() != 0 && dateFromToEnd.size() == 0) {
-				setEndTime(checkAndSetDefaultEndTime(dateAtToFrom.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateAtToFrom.get(0), date));
 				setTaskName(taskName.trim() + " " + tempTaskName.trim());
 			}
 			else if (dateAtToFrom.size() == 0 && dateFromToEnd.size() != 0) {
 				setTaskName(taskName.trim() + " " + contentToAnalyse);
 				setStartTime(dateFromToEnd.get(0));
-				setEndTime(checkAndSetDefaultEndTime(dateFromToEnd.get(1), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dateFromToEnd.get(1), date));
 				setTaskType(TASK_TYPE.EVENT);
 			}
 		}
@@ -598,13 +596,11 @@ public class AddParser {
 			
 			// Example: submit assignment 1 before monday 2359hrs
 			if (dates.size() != 0 && !contentToAnalyse.contains(" next ")) {
-			//	setEndTime(dates.get(0));
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: submit assignment by next 2 weeks
 			else if (dates.size() != 0 && contentToAnalyse.contains(" next ")) {
-			//	setEndTime(dates.get(1));
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 			// Example: let the kids eat before us.
 			else {
@@ -615,28 +611,6 @@ public class AddParser {
 		return taskName;
 	}
 
-	private Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
-		Date newDate = date;
-		SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		String dateWithoutTime = df.format(date);
-		
-		try {
-			Date dateWithoutDate = sdf.parse(sdf.format(date));
-			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
-
-			if (dateWithoutDate.equals(currentWithoutDate)) {
-				String newDateWithTime = dateWithoutTime + " " + "23:59:59";
-				newDate = sf.parse(newDateWithTime);
-			} 
-		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return newDate;
-		
-	}
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
 		DateTimeParser dt = new DateTimeParser();
@@ -650,16 +624,16 @@ public class AddParser {
 		}
 		else {
 			if (dates.size() == 1 && (!userTask.equals(timeChecker))) {
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				extractDateElement(userTask);
 			}
 			else if (dates.size() == 1 && (userTask.contains("tomorrow")
 					|| userTask.contains("today") || userTask.contains("yesterday"))) {
-				setEndTime(checkAndSetDefaultEndTime(dates.get(0), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				extractDateElement(userTask);
 			}
 			else if (dates.size() > 1){
-				setEndTime(checkAndSetDefaultEndTime(dates.get(1), date));
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
 				setStartTime(dates.get(0));
 				extractDateElement(userTask);
 				setTaskType(TASK_TYPE.EVENT);

@@ -91,7 +91,6 @@ public class FlexiCommand {
 		possibleCommands.put("complete", COMMAND_TYPE.COMPLETE);
 		possibleCommands.put("completes", COMMAND_TYPE.COMPLETE);
 		possibleCommands.put("done", COMMAND_TYPE.COMPLETE);
-		possibleCommands.put("finish", COMMAND_TYPE.COMPLETE);
 		possibleCommands.put("fin", COMMAND_TYPE.COMPLETE);
 		possibleCommands.put("end", COMMAND_TYPE.COMPLETE);
 		return possibleCommands;

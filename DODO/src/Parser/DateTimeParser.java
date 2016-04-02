@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -197,15 +198,23 @@ public class DateTimeParser {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		String dateWithoutTime = df.format(date);
+		String newDateWithTime= "";
+		Calendar cal = Calendar.getInstance();
 		
 		try {
 			Date dateWithoutDate = sdf.parse(sdf.format(date));
 			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
 
 			if (dateWithoutDate.equals(currentWithoutDate)) {
-				String newDateWithTime = dateWithoutTime + " " + "23:59:59";
+				newDateWithTime = dateWithoutTime + " " + "23:59:59";
 				newDate = sf.parse(newDateWithTime);
 			} 
+			else if (date.before(currentTime)) {
+				cal.setTime(date);
+				cal.add(Calendar.DATE, 1);
+				newDateWithTime = sf.format(cal.getTime()); 
+				newDate = sf.parse(newDateWithTime);
+			}
 		}
 		catch (ParseException e) {
 			e.printStackTrace();

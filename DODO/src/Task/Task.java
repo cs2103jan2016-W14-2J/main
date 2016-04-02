@@ -92,6 +92,7 @@ public class Task {
 	}
 
 	public TASK_STATUS getStatus() {
+		System.out.println("=====STATUS===== status: " + status);
 		return this.status;
 	}
 
@@ -198,6 +199,17 @@ public class Task {
 			if (current.equalsIgnoreCase(tag)) return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Task) {
+			Task task = (Task) obj;
+			System.out.println("=====TASK===== task1: " + task.hashCode());
+			System.out.println("=====TASK===== task2: " + this.hashCode());
+			return task.hashCode()==this.hashCode();
+		}
+		else return false;
 	}
 
 	@Override

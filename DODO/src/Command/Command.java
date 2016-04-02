@@ -20,7 +20,7 @@ public abstract class Command {
 	protected ArrayList<Task> results;
 	protected ArrayList<String> categories;
 	protected UI_TAB UIStatus;
-	
+
 	public Command(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
 		this.UIStatus = UIRightBox.getCurrentTab();
 		this.parser = parser;
@@ -31,21 +31,21 @@ public abstract class Command {
 		this.results = data.get(4);
 		this.categories = categories;
 	}
-	
+
 	public abstract String execute();
-	
+
 	public ArrayList<ArrayList<Task>> getData() {
 		return this.compress();
 	}
-	
+
 	public UI_TAB getStatus() {
 		return this.UIStatus;
 	}
-	
+
 	public ArrayList<String> getCategories() {
 		return this.categories;
 	}
-	
+
 	/*********************************INTERNAL METHODS***************************************/
 	protected ArrayList<ArrayList<Task>> compress() {
 		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
@@ -56,7 +56,7 @@ public abstract class Command {
 		tasks.add(results);
 		return tasks;
 	}
-	
+
 	protected ArrayList<Task> combine(ArrayList<ArrayList<Task>> all) {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		for (ArrayList<Task> element: all) {
@@ -64,7 +64,7 @@ public abstract class Command {
 		}
 		return temp;
 	}
-	
+
 	protected ArrayList<Task> getTasks(UI_TAB status) {
 		switch (status) {
 		case ONGOING:
@@ -76,14 +76,14 @@ public abstract class Command {
 		case OVERDUE:
 			return this.overdueTasks;
 		case SEARCH:
-			return this.results;
+			return (ArrayList<Task>) this.results.clone();
 		case ALL:
 			return combine(compress());
 		default:
 			return null;
 		}
 	}
-	
+
 	protected ArrayList<Task> getTasks(TASK_STATUS status) {
 		switch (status) {
 		case ONGOING:
@@ -101,6 +101,7 @@ public abstract class Command {
 
 
 	protected void setTasks(UI_TAB status, ArrayList<Task> list) {
+		System.out.println("======COMMAND===== setTask/status: " + status);
 		switch(status) {
 		case ONGOING:
 			this.ongoingTasks = list;
@@ -122,10 +123,10 @@ public abstract class Command {
 			split(list);
 		}
 	}
-	
-	private void update(ArrayList<Task> oldList) {
-		for (Task task: oldList) {
-			if (!this.results.contains(task)) {
+
+	private void update(ArrayList<Task> list) {
+		for (Task task: this.results) {
+			if (!list.contains(task)) {
 				// task has been deleted
 				TASK_STATUS status = task.getStatus();
 				switch (status) {
@@ -166,7 +167,7 @@ public abstract class Command {
 			}
 		}
 	}
-	
+
 	protected void updateCategories(ArrayList<String> tags) {
 		if (tags==null) return;
 		for (String tag: tags) {
@@ -175,7 +176,7 @@ public abstract class Command {
 			}
 		}
 	}
-	
+
 	protected int indexOf(String key) {
 		int i=0;
 		for (String tag: categories) {

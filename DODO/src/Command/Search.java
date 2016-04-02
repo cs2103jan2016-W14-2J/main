@@ -25,17 +25,19 @@ public class Search extends Command {
 			String searchStr = parser.getSearchByTask();
 			System.out.println("============SEARCH=========== searchStr: " + searchStr);
 			return searchByKeyword(searchStr);
-		case BY_DATE:
-			Date searchDate = parser.getSearchByDate();
+			/*Date searchDate = parser.getSearchByDate();
 			System.out.println("============SEARCH=========== dt: " + searchDate);
-			return "[SEARCH] UNDER DEVELOPMENT";
+			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case BY_TAG:
 			String searchTag = parser.getSearchByTag();
 			return searchByTag(searchTag);
+		case BY_DATE:
+			/*Date searchDate = parser.getSearchByDate();
+			System.out.println("============SEARCH=========== dt: " + searchDate);
+			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case INVALID:
-			return "Invalid search value.";
 		default:
-			return "[SEARCH] INTERNAL ERROR.";
+			return "Invalid search value.";
 		}
 	}
 	
@@ -97,6 +99,9 @@ public class Search extends Command {
 		this.results.addAll(overdueResults);
 		System.out.println(results); // FOR DEBUG
 		this.UIStatus = UI_TAB.SEARCH;
+		if (this.results.size()==0) {
+			return "No tasks with keywords \"" + searchStr +"\" are found.";
+		}
 		return "Search for tasks named \"" + searchStr + "\" completed.";
 	}
 

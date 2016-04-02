@@ -71,7 +71,6 @@ public class Flag extends Command {
 				status += "Task " + (index + INDEX_ADJUSTMENT) + " is absent.\n";
 			}
 		}
-		setTasks(this.UIStatus, tasks);
 		return status;
 	}
 

@@ -39,8 +39,6 @@ public class Search extends Command {
 		}
 	}
 	
-	
-
 	public ArrayList<Task> getSearchResults() {
 		return this.results;
 	}
@@ -69,7 +67,7 @@ public class Search extends Command {
 	}*/
 	
 	private String searchByTag(String searchTag) {
-		if (categories.contains(searchTag)) {
+		if (this.indexOf(searchTag)!=-1) {
 			searchList(this.floatingTasks, searchTag);
 			searchList(this.ongoingTasks, searchTag);
 			searchList(this.completedTasks, searchTag);

@@ -17,12 +17,10 @@ public class Edit extends Command {
 
 	@Override
 	public String execute() {
+		EDIT_TYPE edit_type = parser.getEditType();
 		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
-		EDIT_TYPE edit_type = parser.getEditType(); // parser.getEditType();
-		return edit(index, this.UIStatus, edit_type);
-	}
-
-	private String edit(int index, UI_TAB status, EDIT_TYPE edit_type) {
+		UI_TAB status = this.UIStatus;
+		
 		try {
 			ArrayList<Task> tasks = getTasks(status);
 			System.out.println("=====EDIT===== edit_type: " + edit_type);
@@ -41,6 +39,7 @@ public class Edit extends Command {
 				editEndTime(task, index);
 				return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to from \"" + task.getStart()
 						+ "\" to \"" + task.getEnd() + "\".";
+			case TAG:
 			default:
 				return MESSAGE_INTERNAL_ERROR;
 			}

@@ -17,7 +17,6 @@ public class Logic {
 	private ArrayList<Task> overdueTasks;
 	private ArrayList<Task> floatingTasks;
 	private ArrayList<Task> results;
-	private ArrayList<Task> all;
 	private History history;
 	private UI_TAB status;
 	private ArrayList<String> categories;
@@ -211,6 +210,7 @@ public class Logic {
 		tasks.add(ongoingTasks);
 		tasks.add(completedTasks);
 		tasks.add(overdueTasks);
+		tasks.add(results);
 		return tasks;
 	}
 
@@ -237,6 +237,7 @@ public class Logic {
 		this.ongoingTasks = data.get(1);
 		this.completedTasks = data.get(2);
 		this.overdueTasks = data.get(3);
+		this.results = data.get(4);
 		this.categories = categories;
 		return "Data updated.";
 	}

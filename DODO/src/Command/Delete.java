@@ -41,7 +41,7 @@ public class Delete extends Command {
 	}
 
 	private String deleteAllTags() {
-		this.categories = new ArrayList<String>();
+		this.categories.clear();
 		return "All tags deleted";
 	}
 	
@@ -72,10 +72,13 @@ public class Delete extends Command {
 		String status = "";
 		for (int i=0; i<tags.size(); i++) {
 			String element = tags.get(0);
-			if (!categories.contains(element)) {
+			int index = indexOf(element);
+			if (index==-1) {
 				status += "Tag " + element + " is not found.\n";
 			}
-			categories.remove(element);
+			else {
+				categories.remove(index);
+			}
 			status += "Tag " + element + " is deleted.\n";
 		}
 		return status;

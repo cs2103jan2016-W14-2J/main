@@ -31,7 +31,7 @@ public class Tag extends Command {
 
 	private String tag(ArrayList<String> tags, Task task) {
 		for (String tag: tags) {
-			if (!hasTag(tag)) {
+			if (indexOf(tag)==-1) {
 				this.categories.add(tag);
 			}
 			task.addTag(tag);

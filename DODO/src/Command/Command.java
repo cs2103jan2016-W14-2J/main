@@ -17,6 +17,7 @@ public abstract class Command {
 	protected ArrayList<Task> completedTasks;
 	protected ArrayList<Task> overdueTasks;
 	protected ArrayList<Task> floatingTasks;
+	protected ArrayList<Task> results;
 	protected ArrayList<String> categories;
 	protected UI_TAB UIStatus;
 	
@@ -27,6 +28,7 @@ public abstract class Command {
 		this.ongoingTasks = data.get(1);
 		this.completedTasks = data.get(2);
 		this.overdueTasks = data.get(3);
+		this.results = data.get(4);
 		this.categories = categories;
 	}
 	
@@ -51,6 +53,7 @@ public abstract class Command {
 		tasks.add(ongoingTasks);
 		tasks.add(completedTasks);
 		tasks.add(overdueTasks);
+		tasks.add(results);
 		return tasks;
 	}
 	
@@ -72,12 +75,30 @@ public abstract class Command {
 			return this.completedTasks;
 		case OVERDUE:
 			return this.overdueTasks;
+		case SEARCH:
+			return this.results;
 		case ALL:
 			return combine(compress());
 		default:
 			return null;
 		}
 	}
+	
+	protected ArrayList<Task> getTasks(TASK_STATUS status) {
+		switch (status) {
+		case ONGOING:
+			return this.ongoingTasks;
+		case FLOATING:
+			return this.floatingTasks;
+		case COMPLETED:
+			return this.completedTasks;
+		case OVERDUE:
+			return this.overdueTasks;
+		default:
+			return null;
+		}
+	}
+
 
 	protected void setTasks(UI_TAB status, ArrayList<Task> list) {
 		switch(status) {
@@ -93,11 +114,38 @@ public abstract class Command {
 		case OVERDUE:
 			this.overdueTasks = list;
 			break;
+		case SEARCH:
+			update(list);
+			this.results = list;
+			break;
 		case ALL:
 			split(list);
 		}
 	}
 	
+	private void update(ArrayList<Task> oldList) {
+		for (Task task: oldList) {
+			if (!this.results.contains(task)) {
+				// task has been deleted
+				TASK_STATUS status = task.getStatus();
+				switch (status) {
+				case ONGOING:
+					this.ongoingTasks.remove(task);
+					break;
+				case FLOATING:
+					this.floatingTasks.remove(task);
+					break;
+				case COMPLETED:
+					this.completedTasks.remove(task);
+					break;
+				case OVERDUE:
+					this.overdueTasks.remove(task);
+					break;
+				}
+			}
+		}
+	}
+
 	private void split(ArrayList<Task> all) {
 		this.floatingTasks.clear();
 		this.ongoingTasks.clear();
@@ -122,18 +170,21 @@ public abstract class Command {
 	protected void updateCategories(ArrayList<String> tags) {
 		if (tags==null) return;
 		for (String tag: tags) {
-			if (!hasTag(tag)) {
+			if (indexOf(tag)==-1) {
 				this.categories.add(tag);
 			}
 		}
 	}
 	
-	protected boolean hasTag(String key) {
+	protected int indexOf(String key) {
+		int i=0;
 		for (String tag: categories) {
 			if (key.equalsIgnoreCase(tag)) {
-				return true;
+				return i;
 			}
+			i++;
 		}
-		return false;
+		return -1;
 	}
+
 }

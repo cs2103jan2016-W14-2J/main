@@ -256,8 +256,8 @@ public class AddParser {
 				confirmTaskName = taskName.substring(0, taskName.lastIndexOf(KEYWORD_BY)).trim();
 			}
 			else {
-				tempTaskName = taskName;
-				setTaskName(tempTaskName);
+				confirmTaskName = taskName;
+				setTaskName(confirmTaskName);
 			}
 			checkForDateTime = extractDate(tempTaskName);
 			
@@ -265,22 +265,24 @@ public class AddParser {
 			List<Date> dateTwoBy = new PrettyTimeParser().parse(tempTaskName);
 			
 			// Example: finish jogging with baby by the beach by tomorrow
-			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0 && checkForDateTime == true) {
+			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0) {
 				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
 				taskName = confirmTaskName + " " + tempTaskName;
 				setTaskName(taskName);
 			}
 			// Example: finish jogging with baby by tomorrow by the beach
-			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0 && checkForDateTime == true) {
+			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0) {
 				System.out.println("TEST test");
 				setEndTime(checkAndSetDefaultEndTime(dateTwoBy.get(0), date));
 				taskName = confirmTaskName + " " + contentToAnalyse;
 				setTaskName(taskName);
 			}
-			else if (dateOneBy.size() != 0 && dateTwoBy.size() != 0 && checkForDateTime == false) {
-				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
-				taskName = confirmTaskName + " " + tempTaskName;
-				setTaskName(taskName);
+			// Example: return hannah her stapler by tomorrow by 7.30pm
+			else if (dateOneBy.size() != 0 && dateTwoBy.size() != 0 && checkForDateTime == true) {
+				String temp = tempTaskName + " " + contentToAnalyse;
+				List<Date> dateFinal = new PrettyTimeParser().parse(temp);
+				setEndTime(checkAndSetDefaultEndTime(dateFinal.get(0), date));
+				setTaskName(confirmTaskName.trim());
 			}
 			// Example: take a walk by the beach
 			else {
@@ -306,13 +308,13 @@ public class AddParser {
 				List<Date> dateAtToEnd = new PrettyTimeParser().parse(tempTaskName);
 				
 				// Example: meet buyer by tonight at city hall
-				if (dateByToAt.size()!= 0 && dateAtToEnd.size() == 0 && checkForDateTime == true) {
+				if (dateByToAt.size()!= 0 && dateAtToEnd.size() == 0) {
 					System.out.println("@line304 :");
 					setEndTime(checkAndSetDefaultEndTime(dateByToAt.get(0), date));
 					taskName = confirmTaskName + " " + tempTaskName;
 					setTaskName(taskName);
 				}
-				else if (dateByToAt.size() == 0 && dateAtToEnd.size() != 0 && checkForDateTime == true) {
+				else if (dateByToAt.size() == 0 && dateAtToEnd.size() != 0) {
 					setEndTime(checkAndSetDefaultEndTime(dateAtToEnd.get(0), date));
 					taskName = confirmTaskName + " " + contentToAnalyse;
 					setTaskName(taskName);

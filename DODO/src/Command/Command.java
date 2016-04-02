@@ -187,5 +187,16 @@ public abstract class Command {
 		}
 		return -1;
 	}
+	
+	protected ArrayList<Task> searchTasksbyTag(ArrayList<Task> tasks, String searchTag) {
+		ArrayList<Task> list = new ArrayList<Task>();
+		for (Task task: tasks) {
+			if (task.hasTag(searchTag)) {
+				this.results.add(task);
+				list.add(task);
+			}
+		}
+		return list;
+	}
 
 }

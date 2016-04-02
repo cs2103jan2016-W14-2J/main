@@ -141,7 +141,7 @@ public class Task {
 		}
 		else {
 			if (this.start==null) {
-				// convert to Event
+				// convert to Event from Deadlined/Floating
 				this.type = TASK_TYPE.EVENT;
 			}
 			this.start = start;
@@ -159,8 +159,8 @@ public class Task {
 				// if the task is a floating task
 				this.type = TASK_TYPE.DEADLINED;
 			}
-			this.isOverdue = checkOverdue(end);
 			this.end = end;
+			this.isOverdue = checkOverdue(end);
 		}
 	}
 	

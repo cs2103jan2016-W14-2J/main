@@ -198,6 +198,7 @@ public class Logic {
 	}
 
 	private String execute(Command command, ArrayList<ArrayList<Task>> data) {
+		history.save(cloneData(data));
 		String message = command.execute();
 		this.update(command.getData(), command.getCategories());
 		this.status = command.getStatus();

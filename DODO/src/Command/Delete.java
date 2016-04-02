@@ -36,7 +36,7 @@ public class Delete extends Command {
 		case END_DATE:
 			return convertToFloating(indexes);
 		default:
-			return "INVALID";
+			return "Please enter a valid delete command.";
 		}
 	}
 
@@ -71,13 +71,20 @@ public class Delete extends Command {
 	private String deleteTags(ArrayList<String> tags) {
 		String status = "";
 		for (int i=0; i<tags.size(); i++) {
-			String element = tags.get(0);
+			String element = tags.get(i);
 			int index = indexOf(element);
 			if (index==-1) {
 				status += "Tag " + element + " is not found.\n";
 			}
 			else {
 				categories.remove(index);
+				ArrayList<Task> list = searchTasksbyTag(this.floatingTasks, element);
+				list.addAll(searchTasksbyTag(this.ongoingTasks, element));
+				list.addAll(searchTasksbyTag(this.completedTasks, element));
+				list.addAll(searchTasksbyTag(this.overdueTasks, element));
+				for (Task task: list) {
+					task.removeTag(element);
+				}
 			}
 			status += "Tag " + element + " is deleted.\n";
 		}

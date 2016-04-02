@@ -70,22 +70,14 @@ public class Search extends Command {
 	
 	private String searchByTag(String searchTag) {
 		if (this.indexOf(searchTag)!=-1) {
-			searchList(this.floatingTasks, searchTag);
-			searchList(this.ongoingTasks, searchTag);
-			searchList(this.completedTasks, searchTag);
-			searchList(this.overdueTasks, searchTag);
+			searchTasksbyTag(this.floatingTasks, searchTag);
+			searchTasksbyTag(this.ongoingTasks, searchTag);
+			searchTasksbyTag(this.completedTasks, searchTag);
+			searchTasksbyTag(this.overdueTasks, searchTag);
 			this.UIStatus = UI_TAB.SEARCH;
 			return "Search for tag \"" + searchTag + "\" completed.";
 		}
 		else return "There is no tag called \"" + searchTag + "\"";
-	}
-	
-	private void searchList(ArrayList<Task> tasks, String searchTag) {
-		for (Task task: tasks) {
-			if (task.hasTag(searchTag)) {
-				this.results.add(task);
-			}
-		}
 	}
 
 	private String searchByKeyword(String searchStr) {

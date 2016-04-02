@@ -28,17 +28,13 @@ public class Edit extends Command {
 			switch (edit_type) {
 			case TASK_NAME:
 				return editName(task, index);
-			case DEADLINED:
-				return editDeadlined(task, index);
 			case START_TIME:
 				return editStartTime(task, index);
+			case DEADLINED:
 			case END_TIME:
 				return editEndTime(task, index);
 			case EVENT_TIME:
-				editStartTime(task, index);
-				editEndTime(task, index);
-				return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to from \"" + task.getStart()
-						+ "\" to \"" + task.getEnd() + "\".";
+				return editStartAndEndTime(task);
 			case TAG:
 			default:
 				return MESSAGE_INTERNAL_ERROR;
@@ -54,12 +50,31 @@ public class Edit extends Command {
 			return "Please key in a valid edit command.";
 		}
 	}
+	
+	private String editStartAndEndTime(Task task) {
+		TASK_TYPE type = task.getType();
+		Date newStartTime = parser.getStartTime();
+		Date newEndTime = parser.getEndTime();
+		System.out.println("=====EDIT===== newStartTime: " + newStartTime);
+		System.out.println("=====EDIT===== newEndTime: " + newEndTime);
+		if (newStartTime.after(newEndTime)) {
+			return "Please enter a correct start time or end time.";
+		}
+		task.setStart(newStartTime);
+		task.setEnd(newEndTime);
+		if (type==TASK_TYPE.FLOATING) {
+			convertFromFloating(task);
+		}
+		return "Task " + task + " has been changed to from \"" + task.getStart() 
+		+ "\" to \"" + task.getEnd() + "\".";
+	}
 
 	private String editStartTime(Task task, int index) {
 		TASK_TYPE type = task.getType();
 		Date newStartTime = parser.getStartTime();
+		System.out.println("=====EDIT===== newStartTime: " + newStartTime);
 		if (newStartTime.after(task.getEnd())) {
-			return "Please enter a correct start time or end time.";
+			return "Please enter a correct start time.";
 		}
 		task.setStart(newStartTime);
 		if (type==TASK_TYPE.FLOATING) {
@@ -71,8 +86,9 @@ public class Edit extends Command {
 	private String editEndTime(Task task, int index) {
 		TASK_TYPE type = task.getType();
 		Date newEndTime = parser.getEndTime();
-		if (newEndTime.before(task.getStart())) {
-			return "Please enter a correct start time or end time.";
+		System.out.println("=====EDIT===== newEndTime: " + newEndTime);
+		if (task.getType()==TASK_TYPE.EVENT && newEndTime.before(task.getStart())) {
+			return "Please enter a correct end time.";
 		}
 		task.setEnd(newEndTime);
 		if (type==TASK_TYPE.FLOATING) {
@@ -93,7 +109,7 @@ public class Edit extends Command {
 		}
 	}
 
-	private String editDeadlined(Task task, int index) {
+	/*private String editDeadlined(Task task, int index) {
 		TASK_TYPE type = task.getType();
 		Date newDeadline = parser.getEndTime();
 		task.setEnd(newDeadline);
@@ -101,7 +117,7 @@ public class Edit extends Command {
 			convertFromFloating(task);
 		}
 		return "Task " + (index+INDEX_ADJUSTMENT) + " has been changed to " + "\"" + task.getEnd() + "\".";
-	}
+	}*/
 
 	private String editName(Task task, int index) {
 		String newName = parser.getName();

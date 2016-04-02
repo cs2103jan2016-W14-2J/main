@@ -11,8 +11,10 @@ public class Task {
 	private TASK_TYPE type;
 	private TASK_STATUS status;
 	private String name;
-	private String end;
-	private String start;
+	/*private String end;
+	private String start;*/
+	private Date end;
+	private Date start;
 	private boolean flag;
 	private boolean isOverdue;
 	private ArrayList<String> tags;
@@ -43,7 +45,8 @@ public class Task {
 		this.type = TASK_TYPE.DEADLINED;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
-		this.end = formatter.format(end);
+		/*this.end = formatter.format(end);*/
+		this.end = end;
 		
 		if (tags==null) {
 			this.tags = new ArrayList<String>();
@@ -61,8 +64,10 @@ public class Task {
 		this.type = TASK_TYPE.EVENT;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
-		this.start = formatter.format(start);
-		this.end = formatter.format(end);
+		/*this.start = formatter.format(start);
+		this.end = formatter.format(end);*/
+		this.end = end;
+		this.start = start;
 		
 		if (tags==null) {
 			this.tags = new ArrayList<String>();
@@ -113,25 +118,25 @@ public class Task {
 	}
 
 	public Date getStart() {
-		Date date = null;
+		/*Date date = null;
 		try {
 			date = formatter.parse(this.start);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		return date;
+		}*/
+		return this.start;
 	}
 
 	public Date getEnd() {
-		Date date = null;
+		/*Date date = null;
 		try {
 			date = formatter.parse(this.end);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		return date;
+		}*/
+		return this.end;
 	}
 
 	/***********************************MUTATORS*****************************/
@@ -158,7 +163,7 @@ public class Task {
 				// convert to Event
 				this.type = TASK_TYPE.EVENT;
 			}
-			this.start = formatter.format(start);
+			this.start = start;
 		}
 	}
 
@@ -174,7 +179,7 @@ public class Task {
 				this.type = TASK_TYPE.DEADLINED;
 			}
 			this.isOverdue = checkOverdue(end);
-			this.end = formatter.format(end);
+			this.end = end;
 		}
 	}
 	

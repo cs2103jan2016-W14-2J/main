@@ -86,7 +86,7 @@ public class Storage {
 	private String printToFile(String filename, ArrayList<Task> tasks)  {
 		clearFile(filename);
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")) {
-			GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").setPrettyPrinting();
 			Gson gson = gsonBuilder.create();
 			gson.toJson(tasks, writer);
 		}
@@ -104,7 +104,7 @@ public class Storage {
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
 			br = new BufferedReader(new FileReader(filename));
-			GsonBuilder gsonBuilder = new GsonBuilder();
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
 			Gson gson = gsonBuilder.create();
 			tasks = gson.fromJson(br, new TypeToken<ArrayList<Task>>() {}.getType());
 			br.close();

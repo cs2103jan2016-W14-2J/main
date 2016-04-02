@@ -25,23 +25,27 @@ public class DateTimeParser {
 	private final String KEYWORD_PM = "pm";
 	private final String KEYWORD_HRS = "hrs";
 	private final String KEYWORD_HR = "hr";
-
+	private final String KEYWORD_THE_DAY_AFTER_TOMORROW = " the day after tomorrow";
+	private final String KEYWORD_DAY_AFTER_TOMORROW = " day after tomorrow";
+	private final String KEYWORD_TOMORROW_1 = "tomorrow";
+	private final String KEYWORD_TOMORROW_2 = "tomorrow ";
+	
 	public DateTimeParser () {
 	}
 	
 	protected String removeTheDayAfterTomorrow(String userInput) {
-		if (userInput.contains(" the day after tomorrow")) {
-			userInput = userInput.replace(" the day after tomorrow", "");
+		if (userInput.contains(KEYWORD_THE_DAY_AFTER_TOMORROW)) {
+			userInput = userInput.replace(KEYWORD_THE_DAY_AFTER_TOMORROW, "");
 		}
-		else if (userInput.contains(" day after tomorrow")) {
-			userInput = userInput.replace(" day after tomorrow", "");
+		else if (userInput.contains(KEYWORD_DAY_AFTER_TOMORROW)) {
+			userInput = userInput.replace(KEYWORD_DAY_AFTER_TOMORROW, "");
 		}
 		return userInput.trim();
 	}
 	
 	protected String removeTomorrow(String userInput) {
-		if (userInput.contains("tomorrow") || userInput.contains("tomorrow ")) {
-			userInput = userInput.replace("tomorrow", "");
+		if (userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2)) {
+			userInput = userInput.replace(KEYWORD_TOMORROW_1, "");
 		}
 		return userInput.trim();
 	}

@@ -72,6 +72,7 @@ public class SearchParser {
 	}
 
 	private boolean isSearchTag(String userTask) {
+		assert userTask.split("[\\s+]").length == 1;
 		return (userTask.startsWith(STRING_HASH_TAG)) ? true : false;
 	}
 

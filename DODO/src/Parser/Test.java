@@ -24,7 +24,7 @@ public class Test {
 */
 
 
-			Parser parser = new Parser("edit 1 by tomorrow");
+			Parser parser = new Parser("search #nus");
 		//	Parser parser = new Parser("jog with hannah at orchard from ntu to nus at home");
 		//	Parser parser = new Parser("meet hannah at nus at 7pm");
 		//	Parser parser = new Parser("meet hannah at 7pm at nus");
@@ -40,12 +40,14 @@ public class Test {
 		//	Parser parser = new Parser("meet hannah on thursday at block 2359");
 			System.out.println("command type :" + parser.getCommandType());
 			System.out.println("Task Type :" + parser.getType());
-			System.out.println(parser.getName());
+			System.out.println("Task Name :" + parser.getName());
 			System.out.println(parser.getStartTime());
 			System.out.println(parser.getEndTime());
 			System.out.println(parser.getTag());
 			System.out.println(parser.getEditType());
 			System.out.println(parser.getTagToDelete());
+			System.out.println("Search type : " + parser.getSearchType());
+			System.out.println("Search tag : " + parser.getSearchByTag());
 
 	
 			

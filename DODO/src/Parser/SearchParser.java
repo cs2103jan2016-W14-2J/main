@@ -13,8 +13,7 @@ public class SearchParser {
 	private Date searchByDate;
 	private String PREPOSITION_BY = "by";
 	private String PREPOSITION_BY_WITH_SPACE = "by";
-	private String SYMBOL_OPEN_PARENTHEISIS = "<";
-	private String SYMBOL_CLOSE_PARENTHEISIS = ">";
+	private String STRING_HASH_TAG = "#";
 	
 	public SearchParser(String userTask) {
 		this.userTask = userTask;
@@ -42,8 +41,7 @@ public class SearchParser {
 	}
 
 	private void processByTag(String userTask) {
-		int firstIndex = userTask.trim().lastIndexOf(SYMBOL_CLOSE_PARENTHEISIS);
-		tag = userTask.trim().substring(1, firstIndex);
+		tag = userTask.trim().substring(1, userTask.length());
 		setSearchByTag(tag);
 	}
 
@@ -74,8 +72,7 @@ public class SearchParser {
 	}
 
 	private boolean isSearchTag(String userTask) {
-		return (userTask.startsWith(SYMBOL_OPEN_PARENTHEISIS) && 
-				userTask.endsWith(SYMBOL_CLOSE_PARENTHEISIS)) ? true : false;
+		return (userTask.startsWith(STRING_HASH_TAG)) ? true : false;
 	}
 
 	private boolean isSearchDate(String userTask) {
@@ -84,8 +81,7 @@ public class SearchParser {
 	}
 
 	private boolean isSearchTaskName(String userTask) {
-		return (!userTask.startsWith(SYMBOL_OPEN_PARENTHEISIS) && 
-				!userTask.endsWith(SYMBOL_CLOSE_PARENTHEISIS)) ? true : false;
+		return (!userTask.startsWith(STRING_HASH_TAG)) ? true : false;
 	}
 
 	private String removeBy(String userTask) {

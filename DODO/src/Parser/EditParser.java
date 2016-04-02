@@ -30,7 +30,6 @@ public class EditParser {
 	private Date newStartDate;
 	private Date newEndDate;
 	private EDIT_TYPE editType;
-	private String MESSAGE_EDIT_INPUT_ERROR = "You have entered an invalid command.";
 	private ArrayList<String> editTaskElements;
 	
 	private Date date = new Date();
@@ -82,8 +81,9 @@ public class EditParser {
 			parseEditEndTime(userInput);
 			setEditType(EDIT_TYPE.END_TIME);
 			break;
+		case TAG:
+			break;
 		case INVALID:
-			System.out.println(MESSAGE_EDIT_INPUT_ERROR);
 			setEditType(EDIT_TYPE.INVALID);
 			break;
 		}	

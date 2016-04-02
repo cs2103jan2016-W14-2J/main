@@ -19,7 +19,7 @@ import Parser.*;
  */
 
 public class TestParser {
-/*
+
 	@Test
 	public void testTaskType() throws Exception {
 		
@@ -52,7 +52,7 @@ public class TestParser {
 		assertEquals(TASK_TYPE.FLOATING, parser.getType());
 		
 	}
-	
+/*	
 	@Test
 	public void testFloating() throws Exception{
 		

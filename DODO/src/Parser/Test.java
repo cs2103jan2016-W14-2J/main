@@ -24,7 +24,7 @@ public class Test {
 */
 
 
-			Parser parser = new Parser("delete #nus #german #singapore");
+			Parser parser = new Parser("submit assignment 1 by tomorrow 7pm");
 		//	Parser parser = new Parser("jog with hannah at orchard from ntu to nus at home");
 		//	Parser parser = new Parser("meet hannah at nus at 7pm");
 		//	Parser parser = new Parser("meet hannah at 7pm at nus");

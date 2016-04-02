@@ -259,21 +259,27 @@ public class AddParser {
 				tempTaskName = taskName;
 				setTaskName(tempTaskName);
 			}
+			checkForDateTime = extractDate(tempTaskName);
 			
 			List<Date> dateOneBy = new PrettyTimeParser().parse(contentToAnalyse);
 			List<Date> dateTwoBy = new PrettyTimeParser().parse(tempTaskName);
 			
 			// Example: finish jogging with baby by the beach by tomorrow
-			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0) {
-				System.out.println("TEST test");
+			if (dateOneBy.size() != 0 && dateTwoBy.size() == 0 && checkForDateTime == true) {
 				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
 				taskName = confirmTaskName + " " + tempTaskName;
 				setTaskName(taskName);
 			}
 			// Example: finish jogging with baby by tomorrow by the beach
-			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0) {
+			else if (dateOneBy.size() == 0 && dateTwoBy.size() != 0 && checkForDateTime == true) {
+				System.out.println("TEST test");
 				setEndTime(checkAndSetDefaultEndTime(dateTwoBy.get(0), date));
 				taskName = confirmTaskName + " " + contentToAnalyse;
+				setTaskName(taskName);
+			}
+			else if (dateOneBy.size() != 0 && dateTwoBy.size() != 0 && checkForDateTime == false) {
+				setEndTime(checkAndSetDefaultEndTime(dateOneBy.get(0), date));
+				taskName = confirmTaskName + " " + tempTaskName;
 				setTaskName(taskName);
 			}
 			// Example: take a walk by the beach
@@ -282,7 +288,7 @@ public class AddParser {
 				setTaskName(taskName);
 				setTaskType(TASK_TYPE.FLOATING);
 			}
-	
+			return taskName;
 		}
 		
 		else if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT != -1 && LAST_POSITION_OF_FROM == -1) {

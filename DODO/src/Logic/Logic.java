@@ -32,6 +32,7 @@ public class Logic {
 	}
 
 	public String run(String input) {
+		System.out.println("=====LOGIC====== categories: " + this.categories);
 		this.previous = input;
 		Parser parser;
 		try {
@@ -69,7 +70,11 @@ public class Logic {
 	}
 
 	public ArrayList<String> getCategories() {
-		return this.categories;
+		ArrayList<String> clone = new ArrayList<String>();
+		for (String tag: this.categories) {
+			clone.add(tag);
+		}
+		return clone;
 	}
 	
 	public ArrayList<Task> getAll() {

@@ -44,9 +44,8 @@ public class Add extends Command {
 	}
 	
 	private String addDeadlinedTasks() {
-		String name = parser.getName(); // cannot be null
+		String name = parser.getName();
 		ArrayList<String> tags = parser.getTag();
-		//ArrayList<String> tags = null;
 		Date endDateTime = parser.getEndTime();
 		this.updateCategories(tags);
 		
@@ -64,11 +63,13 @@ public class Add extends Command {
 	}
 	
 	private String addEvent() {
-		String name = parser.getName(); // cannot be null
-		//ArrayList<String> tags = parser.getTags();
-		ArrayList<String> tags = null;
+		String name = parser.getName();
+		ArrayList<String> tags = parser.getTag();
 		Date startDateTime = parser.getStartTime();
 		Date endDateTime = parser.getEndTime();
+		if (startDateTime.after(endDateTime)) {
+			return "Please enter a correct start time or end time.";
+		}
 		this.updateCategories(tags);
 		
 		Task task = new Task(name, tags, startDateTime, endDateTime);

@@ -122,7 +122,7 @@ public abstract class Command {
 	protected void updateCategories(ArrayList<String> tags) {
 		if (tags==null) return;
 		for (String tag: tags) {
-			if (!this.categories.contains(tag)) {
+			if (!hasTag(tag)) {
 				this.categories.add(tag);
 			}
 		}

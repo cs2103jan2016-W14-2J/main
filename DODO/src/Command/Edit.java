@@ -59,6 +59,9 @@ public class Edit extends Command {
 	private String editStartTime(Task task, int index) {
 		TASK_TYPE type = task.getType();
 		Date newStartTime = parser.getStartTime();
+		if (newStartTime.after(task.getEnd())) {
+			return "Please enter a correct start time or end time.";
+		}
 		task.setStart(newStartTime);
 		if (type==TASK_TYPE.FLOATING) {
 			convertFromFloating(task);
@@ -69,6 +72,9 @@ public class Edit extends Command {
 	private String editEndTime(Task task, int index) {
 		TASK_TYPE type = task.getType();
 		Date newEndTime = parser.getEndTime();
+		if (newEndTime.before(task.getStart())) {
+			return "Please enter a correct start time or end time.";
+		}
 		task.setEnd(newEndTime);
 		if (type==TASK_TYPE.FLOATING) {
 			convertFromFloating(task);

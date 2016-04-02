@@ -6,15 +6,11 @@ import java.util.*;
 /* @@author: Lu Yang */
 
 public class Task {
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-
 	private TASK_TYPE type;
 	private TASK_STATUS status;
 	private String name;
-	/*private String end;
-	private String start;*/
-	private Date end;
 	private Date start;
+	private Date end;
 	private boolean flag;
 	private boolean isOverdue;
 	private ArrayList<String> tags;
@@ -64,8 +60,6 @@ public class Task {
 		this.type = TASK_TYPE.EVENT;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
-		/*this.start = formatter.format(start);
-		this.end = formatter.format(end);*/
 		this.end = end;
 		this.start = start;
 		
@@ -118,24 +112,10 @@ public class Task {
 	}
 
 	public Date getStart() {
-		/*Date date = null;
-		try {
-			date = formatter.parse(this.start);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		return this.start;
 	}
 
 	public Date getEnd() {
-		/*Date date = null;
-		try {
-			date = formatter.parse(this.end);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		return this.end;
 	}
 

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
+import Logic.Logic;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
@@ -32,12 +33,12 @@ public class UICellComponents
 	private HBox cellRoot;
 	private UIMakeTag makeTag;
 	private HBox hbIndexAndName;
-	private UIMakeTag umt;
+	private Label lblTagging;
 
-	public UICellComponents(String strIndex,ArrayList<String> strTagging, String strName, Date startTime,Date endTime,boolean Flag)
+	public UICellComponents(Logic logic,String strIndex,ArrayList<String> strTagging, String strName, Date startTime,Date endTime,boolean Flag)
 	{
 		this.rightBox = rightBox;
-		umt = new UIMakeTag();
+		makeTag = new UIMakeTag(logic);
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
@@ -47,7 +48,9 @@ public class UICellComponents
 			//lblListTag.add(new Label(strTagging));
 			for(int x=0;x<strTagging.size();x++)
 			{
-				lblListTag.add(new Label(strTagging.get(x)));
+				lblTagging = new Label(strTagging.get(x));
+				makeTag.assignUserData(lblTagging);
+				lblListTag.add(lblTagging);
 			}
 		}
 		else
@@ -58,7 +61,6 @@ public class UICellComponents
 		vbStartAndEnd = new VBox();
 		hbIndexAndName = new HBox(lblIndex,lblName);
 		VBox vbNameAndTag = new VBox();
-		
 		if(startTime!=null && endTime!=null)
 		{
 			lblStart = new Label(startTime.toString());

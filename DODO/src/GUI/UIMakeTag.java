@@ -15,18 +15,30 @@ import javafx.scene.paint.Paint;
 
 public class UIMakeTag {
 
-	ArrayList<Integer> tagMapping;
-	ArrayList<String> tagList;
-	UICssScaling ucs = new UICssScaling();
-	ArrayList<Label> taskLblTag;
+	private ArrayList<Integer> tagColorIndex;
+	private ArrayList<String> uniqueListCategory;
+	private int numberOfUniqueTag;
+	private Logic logic;
 
-	public UIMakeTag()
+	public UIMakeTag(Logic logic)
 	{
-		taskLblTag = new ArrayList<Label>();
-		tagMapping = new ArrayList<Integer>();
-		tagList = new ArrayList<String>();
+		this.logic = logic;
+		numberOfUniqueTag = logic.getCategories().size();
+		uniqueListCategory = logic.getCategories();
 	}
-
+	public void assignUserData(Label lbl)
+	{
+		//lbl.setUserData(value);
+		numberOfUniqueTag = logic.getCategories().size();
+		for(int x=0;x<numberOfUniqueTag;x++)
+		{
+			if(lbl.getText().equals(logic.getCategories().get(x)))
+			{//+Integer.toString(x)
+				lbl.setId("color"+Integer.toString(x));
+			}
+		}
+	
+	}
 	public HBox getTag(String Content)
 	{
 		HBox root = new HBox();
@@ -34,8 +46,7 @@ public class UIMakeTag {
 		root.getChildren().add(lbl);
 		return root;
 	}
-
-
+	
 	
 }
 

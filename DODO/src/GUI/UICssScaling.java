@@ -26,16 +26,16 @@ public class UICssScaling
 {
 	String cssCellComponents;
 	String cssTabPane;
-	String cssTag;
+	String cssTagBack;
 	String cssTopBar;
 	public UICssScaling()
 	{
 		cssCellComponents = "cellComponents.css";
 		cssTabPane = "tabPane.css";
-		cssTag = "tagBack.css";
+		cssTagBack = "tagBack.css";
 		cssTopBar = "topBarColor.css";
 	}
-	public void setCssAndScalingForCell(HBox cellRoot,Label lblIndex, Label lblName, ArrayList<Label> lblListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
+	public void setCssAndScalingForCell(HBox cellRoot,Label lblIndex, Label lblName, ArrayList<Label> ListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
 		cellRoot.setPrefSize(100, 55);
 		lblName.setPrefSize(800, 500);
@@ -43,12 +43,13 @@ public class UICssScaling
 		vbStartAndEnd.setPrefSize(400, 500);
 		chkFlag.setPrefSize(70, 50);
 		
-		for(int x=0;x<lblListTag.size();x++)
+		for(int x=0;x<ListTag.size();x++)
 		{
-			lblListTag.get(x).setFont(Font.font ("Verdana", 20));
-			lblListTag.get(x).setId("CellTag");
-			lblListTag.get(x).styleProperty().set("-fx-border-color: black;");
-			lblListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
+			ListTag.get(x).getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
+			ListTag.get(x).setFont(Font.font ("Verdana", 20));
+			//lblListTag.get(x).setId("CellTag");
+			//lblListTag.get(x).styleProperty().set("-fx-border-color: black;");
+			ListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
 		}
 		
 		lblIndex.setFont(Font.font ("Verdana", 20));
@@ -58,7 +59,7 @@ public class UICssScaling
 		chkFlag.setAlignment(Pos.CENTER);
 		
 		cellRoot.setId("CellRoot");
-		lblName.setId("CellIndex");
+		lblIndex.setId("CellIndex");
 		lblName.setId("CellName");
 		chkFlag.setId("CellFlag");
 		
@@ -82,7 +83,6 @@ public class UICssScaling
 	}
 	private void AlignmentCheck(HBox cellRoot,Label lblName, Label lblIndex, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
-		cellRoot.styleProperty().set("-fx-border-color: black;");
 		cellRoot.styleProperty().set("-fx-border-color: black;");
 		lblIndex.styleProperty().set("-fx-border-color: black;");
 		lblName.styleProperty().set("-fx-border-color: black;");
@@ -128,14 +128,11 @@ public class UICssScaling
 		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
 		mainTextField.setFont(Font.font("Cambria", 25));
 	}
-	public void setTagBackground(Label lbl) 
+	public void cssTag(Label lblTagging)
 	{
-		System.out.println("in here");
-		lbl.setUserData("test");
-		lbl.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
+		lblTagging.getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
 		
 	}
-
 
 
 

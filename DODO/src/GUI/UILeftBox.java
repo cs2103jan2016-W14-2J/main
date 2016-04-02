@@ -76,7 +76,6 @@ public class UILeftBox {
 	private int intOngoingTasks = 0;
 	private UIMakeTag makeTag;
 	private Label lblLogo;
-
 	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
 		this.logic = logic;
@@ -94,13 +93,12 @@ public class UILeftBox {
 		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
 		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
 		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
-	
+		
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
-		makeTag = new UIMakeTag();
 		flowpaneCategory.setPrefSize(500, 500);
 		
-
+		makeTag = new UIMakeTag(logic);
 	}
 
 	public void build(UIRightBox rightBox) {
@@ -127,24 +125,22 @@ public class UILeftBox {
 	{
 		//System.out.println("127 + ##############################################################################################"+logic.getCategories().size());
 		
-		tagMap =new ArrayList<String>();
 		flowpaneCategory.getChildren().clear();
-		
+		flowpaneCategory.getChildren().removeAll();
 		if(logic.getCategories()!=null)
 		{
-			tagMap = logic.getCategories();
-			/*
-			 * for(int x=0;x<tagMap.size();x++) { if(tagMap.get(x).getName()!=null)
-			 * { list.add(tagMap.get(x).getName()); } } listView = new
-			 * ListView<String>(list);
-			 */
-			for (int x = 0; x < tagMap.size(); x++)
+			for (int x = 0; x < logic.getCategories().size(); x++)
 			{
-				if (tagMap.get(x) != null) 
+				
+				Label lbl = new Label(logic.getCategories().get(x));
+				makeTag.assignUserData(lbl);
+				//HBox root = makeTag.getTag(tagMap.get(x));
+				usc.cssTag(lbl);
+				if(!flowpaneCategory.getChildren().contains(lbl))
 				{
-					HBox root = makeTag.getTag(tagMap.get(x));
-					flowpaneCategory.getChildren().add(root);			
+					flowpaneCategory.getChildren().add(lbl);			
 				}
+				
 			}
 		}
 	}

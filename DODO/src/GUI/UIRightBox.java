@@ -168,7 +168,6 @@ public class UIRightBox {
 		tabPane = new TabPane();
 		mainTextField = new TextField();
 		listen = new UIListener();
-		uiMakeTag = new UIMakeTag();
 		uiPopUpFeedBack = new UIPopUpFeedBack(popUpFeedBack, mainTextField);
 
 	}
@@ -469,36 +468,33 @@ public class UIRightBox {
 								if (item != null) {
 									
 									ArrayList<String> strTagging = item.getTags();
-									/*ArrayList<Label> lblTag = new ArrayList<Label>();
-									uiMakeTag.MatchTagToCategories(logic, logic.getCategories());//match all the categories with a user data
-									lblTag.addAll(uiMakeTag.assignTagUserData(logic,item.getTags()));//apply the user data to each task's tag
-									*/
+									
 									String currentIndex=Integer.toString(this.getIndex() + 1);
 									UICellComponents lsg = null;
 									
 									if (item.getType() == TASK_TYPE.DEADLINED) 
 									{
 										//System.out.println("DeadlinedTask");
-										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), null, item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEnd(), item.getFlag());
 										logger.info("DeadlinedTask");  
 									
 									} 
 									else if (item.getType() == TASK_TYPE.EVENT) 
 									{
 										//System.out.println("in event" + item.getEnd());
-										lsg = new UICellComponents(currentIndex, strTagging, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
 										logger.info("Event");  
 									}
 									else if (item.getType() == TASK_TYPE.FLOATING) 
 									{
 										//System.out.println("in FLOATING Task");
-										lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
+										lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 										logger.info("Task");  
 									}
 									else 
 									{
 											//System.out.println("in search Task");
-											lsg = new UICellComponents(currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
+											lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 											logger.info("search");  
 									}
 									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 

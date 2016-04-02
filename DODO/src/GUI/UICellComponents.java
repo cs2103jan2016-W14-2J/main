@@ -32,10 +32,12 @@ public class UICellComponents
 	private HBox cellRoot;
 	private UIMakeTag makeTag;
 	private HBox hbIndexAndName;
+	private UIMakeTag umt;
 
 	public UICellComponents(String strIndex,ArrayList<String> strTagging, String strName, Date startTime,Date endTime,boolean Flag)
 	{
 		this.rightBox = rightBox;
+		umt = new UIMakeTag();
 		usc = new UICssScaling();
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);

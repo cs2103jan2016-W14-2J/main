@@ -53,7 +53,6 @@ public class UILeftBox {
 	private final String CATEGORY_HEADER = "Categories";
 	private final String CHART_HEADER = "Task";
 	private final String LOGO_HEADER = "DODO";
-
 	private VBox leftBox;
 	private UIRightBox rightBox;
 	private Logic logic;

@@ -34,47 +34,8 @@ public class UIMakeTag {
 		root.getChildren().add(lbl);
 		return root;
 	}
-	public void tagMapping(ArrayList<String> categories) 
-	{
-		tagMapping.clear();
-		tagList = categories;
-		if(categories!=null);
-		{
-			for(int x=0;x<categories.size();x++)
-			{
-				
-				tagMapping.add(x);
-			}
-		}
-		
-	}
-	public void MatchTagToCategories(Logic logic ,ArrayList<String> listOfTags)
-	{			
-		tagMapping.clear();
-		for(int x=0;x<logic.getCategories().size();x++)
-		{
-			tagMapping.add(x);
-		}
-	}
-	public ArrayList<Label> assignTagUserData(Logic logic, ArrayList<String> strTag)
-	{
-		for(int x=0;x<logic.getCategories().size();x++)
-		{
-			for(int y=0;y<strTag.size();y++)
-			{
-					if(tagList.size()!=0&& strTag.size()!=0 &&tagList.get(x).equals(strTag.get(y)))
-					{
-						System.out.println("inininininininininininininininininininininininininininininininin");
-						Label lbl = new Label(strTag.get(y));
-						lbl.setUserData("color"+tagMapping.get(x));
-						ucs.setTagBackground(lbl);
-						taskLblTag.add(lbl);
-					}
-			}
-		}		
-		
-		return taskLblTag;
-	}
+
+
 	
 }
 

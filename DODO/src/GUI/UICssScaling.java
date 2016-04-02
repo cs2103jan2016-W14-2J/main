@@ -92,9 +92,9 @@ public class UICssScaling
 	}
 	public void cssLeftBoxComponents(Label lblLogo, VBox leftBox, PieChart chart, TitledPane titledPane,Label lblCategory, ListView<String> listView)
 	{
-		lblLogo.setUserData("LOGOLENGTH");
+		lblLogo.setUserData("TopBar");
 		lblLogo.setPrefWidth(1000);
-		lblLogo.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
+		lblLogo.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
 
 		leftBox.setPrefSize(500, 1800);
 		titledPane.setPrefSize(500, 888);
@@ -105,7 +105,7 @@ public class UICssScaling
 		lblCategory.setFont(Font.font("Cambria", 25));
 		
 		lblCategory.setAlignment(Pos.CENTER);
-		
+		lblCategory.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
 		AlignmentCheck(lblCategory,leftBox,lblLogo);
 		
 	}

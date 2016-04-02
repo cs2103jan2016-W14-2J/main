@@ -12,12 +12,13 @@ public class DeleteParser {
 	private String STRING_CHECKER_ALL = "all";
 	private String STRING_CHECKER_TO = "to";
 	private String STRING_CHECKER_HYPHEN = "-";
-	private String STRING_CHECKER_OPEN_PARENTHESES = "<";
-	private String STRING_CHECKER_CLOSE_PARENTHESES = ">";
+	private String STRING_HASH_TAG = "#";
 	private String STRING_CHECKER_TAG = "tag";
 	private String STRING_CHECKER_CATEGORY = "category";
 	private String STRING_START_DATE = "start date";
 	private String STRING_END_DATE = "end date";
+	private String STRING_START_INDICATOR = "start";
+	private String STRING_END_INDICATOR = "end";
 	
 	public DeleteParser(String userTask) {
 		this.userTask = userTask;
@@ -65,11 +66,11 @@ public class DeleteParser {
 	}
 
 	private boolean isTaskIndex(String[] str) {
-		return (str[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES)) ? false : true;
+		return (str[0].startsWith(STRING_HASH_TAG)) ? false : true;
 	}
 
 	private void parseDeleteEndDate(String[] str) {
-		if (!str[0].contains("end")) {
+		if (!str[0].contains(STRING_END_INDICATOR)) {
 			indexToDelete.add(Integer.parseInt(str[0]));
 		}
 		else {
@@ -78,7 +79,7 @@ public class DeleteParser {
 	}
 
 	private void parseDeleteStartDate(String[] str) {
-		if (!str[0].contains("start")) {
+		if (!str[0].contains(STRING_START_INDICATOR)) {
 			indexToDelete.add(Integer.parseInt(str[0]));
 		}
 		else {
@@ -103,13 +104,13 @@ public class DeleteParser {
 	
 	private void parseMutipleDeleteTags(String[] str) {
 		for (int i = 0; i < str.length; i++) {
-			tagToDelete.add(str[i].substring(1, str[0].length() - 1));
+			tagToDelete.add(str[i].substring(1, str[i].length()));
 		}
 	}
 
 	
 	private void parseSingleDeleteTag(String[] str) {
-		tagToDelete.add(str[0].substring(1, str[0].length() - 1));
+		tagToDelete.add(str[0].substring(1, str[0].length()));
 	}
 	
 	private void parseSingleDeleteIndex(String[] str) {
@@ -196,8 +197,7 @@ public class DeleteParser {
 	
 	private boolean checkIfDeleteSingleTag(String userTask) {
 		String[] temp = userTask.split(" ");
-		return (temp.length == 1 && temp[0].startsWith(STRING_CHECKER_OPEN_PARENTHESES) 
-				&& temp[0].endsWith(STRING_CHECKER_CLOSE_PARENTHESES)) ? true : false;
+		return (temp.length == 1 && temp[0].startsWith(STRING_HASH_TAG)) ? true : false;
 	}
 	
 	private void setDeleteType(DELETE_TYPE deleteType) {

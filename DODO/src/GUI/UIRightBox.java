@@ -179,7 +179,7 @@ public class UIRightBox {
 		testMethod();
 		
 		tabPane.setPrefSize(tabPaneHeight, tabPaneWidth);
-		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+		//tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		rightBox.getChildren().add(tabPane);
 		
 		mainTextField.setPrefSize(textfieldHeight, textfieldWidth);
@@ -241,9 +241,26 @@ public class UIRightBox {
 				}
 			}
 		});
+		
+		
+		
+		chooseTab();
+		
 	}
 	
 	
+	private void chooseTab() 
+	{
+		if(tabPane.getTabs().contains(tabAll))
+		{
+			tabPane.getSelectionModel().select(tabAll);
+		}		
+		else
+		{
+			tabPane.getSelectionModel().select(tabWelcome);
+
+		}
+	}
 	private void testMethod() 
 	{
 		floatingTasks.addAll(logic.getFloatingTasks());
@@ -467,22 +484,25 @@ public class UIRightBox {
 								super.updateItem(item, empty);
 								if (item != null) {
 									
-									ArrayList<String> strTagging = item.getTags();
-									
+									ArrayList<Category> strTagging = item.getCategories();
+									/*ArrayList<Label> lblTag = new ArrayList<Label>();
+									uiMakeTag.MatchTagToCategories(logic, logic.getCategories());//match all the categories with a user data
+									lblTag.addAll(uiMakeTag.assignTagUserData(logic,item.getTags()));//apply the user data to each task's tag
+									*/
 									String currentIndex=Integer.toString(this.getIndex() + 1);
 									UICellComponents lsg = null;
 									
 									if (item.getType() == TASK_TYPE.DEADLINED) 
 									{
 										//System.out.println("DeadlinedTask");
-										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEndString(), item.getFlag());
 										logger.info("DeadlinedTask");  
 									
 									} 
 									else if (item.getType() == TASK_TYPE.EVENT) 
 									{
 										//System.out.println("in event" + item.getEnd());
-										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), item.getStart(),item.getEnd(), item.getFlag());
+										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), item.getStartString(),item.getEndString(), item.getFlag());
 										logger.info("Event");  
 									}
 									else if (item.getType() == TASK_TYPE.FLOATING) 
@@ -734,11 +754,12 @@ public class UIRightBox {
 	
 	private void setGreetingTab() 
 	{
-		pagination = new Pagination(1, 0);
+		pagination = new Pagination(5, 0);
 		tabWelcome.setUserData(UI_TAB.WELCOME);
 		tabPane.getTabs().add(tabWelcome);
 		tabWelcome.setContent(welcomeHB);
 		uiWelcome.setRoot(welcomeHB,pagination);
+		
 	}
 	
 	public int getOngoingSize() 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import Logic.Logic;
+import Task.Category;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -16,7 +17,7 @@ import javafx.scene.paint.Paint;
 public class UIMakeTag {
 
 	private ArrayList<Integer> tagColorIndex;
-	private ArrayList<String> uniqueListCategory;
+	private ArrayList<Category> uniqueListCategory;
 	private int numberOfUniqueTag;
 	private Logic logic;
 

@@ -132,7 +132,7 @@ public class UILeftBox {
 			for (int x = 0; x < logic.getCategories().size(); x++)
 			{
 				
-				Label lbl = new Label(logic.getCategories().get(x));
+				Label lbl = new Label(logic.getCategories().get(x).getName());
 				makeTag.assignUserData(lbl);
 				//HBox root = makeTag.getTag(tagMap.get(x));
 				usc.cssTag(lbl);

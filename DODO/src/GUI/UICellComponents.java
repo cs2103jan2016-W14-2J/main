@@ -6,6 +6,7 @@ import java.util.Date;
 import org.controlsfx.glyphfont.FontAwesome;
 
 import Logic.Logic;
+import Task.Category;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
@@ -35,7 +36,7 @@ public class UICellComponents
 	private HBox hbIndexAndName;
 	private Label lblTagging;
 
-	public UICellComponents(Logic logic,String strIndex,ArrayList<String> strTagging, String strName, Date startTime,Date endTime,boolean Flag)
+	public UICellComponents(Logic logic,String strIndex,ArrayList<Category> strTagging, String strName, String startString,String endString,boolean Flag)
 	{
 		this.rightBox = rightBox;
 		makeTag = new UIMakeTag(logic);
@@ -48,7 +49,7 @@ public class UICellComponents
 			//lblListTag.add(new Label(strTagging));
 			for(int x=0;x<strTagging.size();x++)
 			{
-				lblTagging = new Label(strTagging.get(x));
+				lblTagging = new Label(strTagging.get(x).getName());
 				makeTag.assignUserData(lblTagging);
 				lblListTag.add(lblTagging);
 			}
@@ -61,15 +62,15 @@ public class UICellComponents
 		vbStartAndEnd = new VBox();
 		hbIndexAndName = new HBox(lblIndex,lblName);
 		VBox vbNameAndTag = new VBox();
-		if(startTime!=null && endTime!=null)
+		if(startString!=null && endString!=null)
 		{
-			lblStart = new Label(startTime.toString());
-			lblEnd = new Label(endTime.toString());
+			lblStart = new Label(startString.toString());
+			lblEnd = new Label(endString.toString());
 			vbStartAndEnd.getChildren().addAll(lblStart,lblEnd);
 		}
-		else if(endTime!=null)
+		else if(endString!=null)
 		{
-			lblEnd = new Label(endTime.toString());
+			lblEnd = new Label(endString.toString());
 			vbStartAndEnd.getChildren().add(lblEnd);
 		}
 		chkFlag = new CheckBox();

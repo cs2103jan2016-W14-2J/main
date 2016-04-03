@@ -18,6 +18,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 /*
  *@author Chiang Jia Feng
  *@Description: All scaling and css will be done here
@@ -84,11 +85,11 @@ public class UICssScaling
 	private void AlignmentCheck(HBox cellRoot,Label lblName, Label lblIndex, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
 		cellRoot.styleProperty().set("-fx-border-color: black;");
-		lblIndex.styleProperty().set("-fx-border-color: black;");
+		/*lblIndex.styleProperty().set("-fx-border-color: black;");
 		lblName.styleProperty().set("-fx-border-color: black;");
 		vbStartAndEnd.styleProperty().set("-fx-border-color: black;");
 		chkFlag.styleProperty().set("-fx-border-color: black;");
-		toolTip.styleProperty().set("-fx-border-color: black;");
+		toolTip.styleProperty().set("-fx-border-color: black;");*/
 	}
 	public void cssLeftBoxComponents(Label lblLogo, VBox leftBox, PieChart chart, TitledPane titledPane,Label lblCategory, ListView<String> listView)
 	{
@@ -131,9 +132,11 @@ public class UICssScaling
 	public void cssTag(Label lblTagging)
 	{
 		lblTagging.getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
+	}
+	public void cssPrimaryStage(Stage primaryStage)
+	{
 		
 	}
-
 
 
 

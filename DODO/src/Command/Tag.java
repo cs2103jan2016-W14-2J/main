@@ -26,7 +26,7 @@ public class Tag extends Command {
 		
 		Task task;
 		try {
-			task = tasks.get(index);
+			task = tasks.get(index-INDEX_ADJUSTMENT);
 		} catch (IndexOutOfBoundsException e) {
 			return MESSAGE_INDEXOUTOFBOUND;
 		}
@@ -40,11 +40,17 @@ public class Tag extends Command {
 		
 		for (String tag: tags) {
 			Category category = this.findCategory(tag);
+			if (category==null) {
+				this.addCategory(tag, task);
+			}
 			// task interchangably add category in class Category
 			if (category.addTask(task)) {
 				successfulTags.add(tag);
 			}
-			else unsuccessfulTags.add(tag);
+			else {
+				// already tagged
+				unsuccessfulTags.add(tag);
+			}
 		}
 		/*if (categories.containsKey(tag)) {
 				Category category = categories.get(tag);

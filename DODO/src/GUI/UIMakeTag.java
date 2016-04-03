@@ -2,6 +2,7 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Insets;
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,6 +19,8 @@ public class UIMakeTag {
 
 	private ArrayList<Integer> tagColorIndex;
 	private ArrayList<Category> uniqueListCategory;
+	private ArrayList <String> ascii = new ArrayList <String> (26);
+	private ArrayList <String> ascii1 = new ArrayList <String> (26);
 	private int numberOfUniqueTag;
 	private Logic logic;
 
@@ -26,18 +29,34 @@ public class UIMakeTag {
 		this.logic = logic;
 		numberOfUniqueTag = logic.getCategories().size();
 		uniqueListCategory = logic.getCategories();
+		for (char c = 'A'; c <= 'Z'; c++)
+		{
+		    ascii.add (String.valueOf (c));
+		}
+		for (char c = 'a'; c <= 'z'; c++)
+		{
+		    ascii1.add (String.valueOf (c));
+		}
 	}
 	public void assignUserData(Label lbl)
 	{
+		
 		//lbl.setUserData(value);
 		numberOfUniqueTag = logic.getCategories().size();
-		for(int x=0;x<numberOfUniqueTag;x++)
+		
+			//if(lbl.getText().equals(logic.getCategories().get(x).getName()))
+		for(int y=0;y<26;y++)
 		{
-			if(lbl.getText().equals(logic.getCategories().get(x)))
+			if(lbl.getText().subSequence(0, 1).equals(ascii.get(y)) || lbl.getText().subSequence(0, 1).equals(ascii1.get(y)) )
 			{//+Integer.toString(x)
-				lbl.setId("color"+Integer.toString(x));
+				lbl.setId("color"+Integer.toString(y));
+				lbl.setUserData("color"+Integer.toString(y));
+				return;
 			}
-		}
+		}	
+			
+
+		
 	
 	}
 	public HBox getTag(String Content)

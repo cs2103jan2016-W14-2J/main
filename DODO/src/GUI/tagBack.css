@@ -1,64 +1,385 @@
 #color0{
-    -fx-background-color:
-        linear-gradient(#f0ff35, #a9ff00),
-        radial-gradient(center 50% -40%, radius 200%, #b8ee36 45%, #80c800 50%);
-    -fx-background-radius: 6, 5;
-    -fx-background-insets: 0, 1;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
-    -fx-text-fill: #395306;
-}
-#color1{
-    -fx-background-color: linear-gradient(#ff5400, #be1d00);
-    -fx-background-radius: 30;
-    -fx-background-insets: 0;
-    -fx-text-fill: white;
-}
-#color2{
-    -fx-background-color: 
-        linear-gradient(#f2f2f2, #d6d6d6),
-        linear-gradient(#fcfcfc 0%, #d9d9d9 20%, #d6d6d6 100%),
-        linear-gradient(#dddddd 0%, #f6f6f6 50%);
-    -fx-background-radius: 8,7,6;
-    -fx-background-insets: 0,1,2;
-    -fx-text-fill: black;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
-#color4{
-    -fx-background-color: 
-        #c3c4c4,
-        linear-gradient(#d6d6d6 50%, white 100%),
-        radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
-    -fx-background-radius: 30;
-    -fx-background-insets: 0,1,1;
-    -fx-text-fill: black;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
-}
-#color3{
-    -fx-background-color: 
-        linear-gradient(#ffd65b, #e68400),
-        linear-gradient(#ffef84, #f2ba44),
-        linear-gradient(#ffea6a, #efaa22),
-        linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
-        linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
-    -fx-background-radius: 30;
-    -fx-background-insets: 0,1,2,3,0;
-    -fx-text-fill: #654b00;
-    -fx-font-weight: bold;
-    -fx-font-size: 14px;
-    -fx-padding: 10 20 10 20;
-}
-#color4{
-    -fx-background-color: 
-        #090a0c,
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+	 -fx-background-color: 
+        #F44336,
+        radial-gradient(center 50% 0%, radius 100%,rgba(0.1,0,255,00), rgba(255,255,255,0));
     -fx-background-radius: 5,4,3,5;
-    -fx-background-insets: 0,1,2,0;
+    -fx-background-insets: 5,5,5,5;
     -fx-text-fill: white;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
     -fx-font-family: "Arial";
-    -fx-text-fill: linear-gradient(white, #d0d0d0);
-    -fx-font-size: 12px;
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
     -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+	
+}
+#color1{
+    -fx-background-color: 
+        #CE3323,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+}
+#color2{
+      -fx-background-color: 
+        #87CEEB,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+}
+#color3{
+      -fx-background-color: 
+        #6FC6FF,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+    
+}
+#color4{
+  -fx-background-color: 
+        #3F51B5,
+        radial-gradient(center 50% 0%, radius 100%,rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+
+}
+#color5{
+    -fx-background-color: 
+        #090a0c,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+
+}
+#color6{
+    -fx-background-color: 
+         #CD6509,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+}
+#color7{
+    -fx-background-color: 
+         #93228D,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+}
+
+#color8{
+    -fx-background-color: 
+         #FFCB00,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+}
+
+#color9{
+    -fx-background-color: 
+         #FF6EB0,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight:900;
+}
+
+#color10{
+    -fx-background-color: 
+         #32B92D,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color11{
+    -fx-background-color: 
+         #6C2082,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color12{
+    -fx-background-color: 
+         #53ADA8,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color13{
+    -fx-background-color: 
+         #F9DC6B,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color14{
+    -fx-background-color: 
+         #E0B669,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color15{
+    -fx-background-color: 
+         #400118,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color16{
+    -fx-background-color: 
+         #A64166,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color17{
+    -fx-background-color: 
+         #DFA4B5,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color18{
+    -fx-background-color: 
+         #D4DEAF,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color19{
+    -fx-background-color: 
+         #665866,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color20{
+    -fx-background-color: 
+         #8F6690,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color21{
+    -fx-background-color: 
+         #B0A4DB,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color22{
+    -fx-background-color: 
+         #C5E3D7,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color23{
+    -fx-background-color: 
+         #DEFFCF,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color24{
+    -fx-background-color: 
+         #586E69,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color25{
+    -fx-background-color: 
+         #63B7A4,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}
+#color26{
+    -fx-background-color: 
+         #EBE664,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
 }

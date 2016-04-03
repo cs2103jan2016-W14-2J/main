@@ -49,6 +49,7 @@ public class UICellComponents
 			//lblListTag.add(new Label(strTagging));
 			for(int x=0;x<strTagging.size();x++)
 			{
+				System.out.println(strTagging.get(x).getName());
 				lblTagging = new Label(strTagging.get(x).getName());
 				makeTag.assignUserData(lblTagging);
 				lblListTag.add(lblTagging);

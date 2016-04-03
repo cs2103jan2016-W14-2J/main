@@ -86,8 +86,8 @@ public class DateTimeParser {
 		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
 		int indexOfNext = taskItems.lastIndexOf("next");
 		int indexOfDays = taskItems.lastIndexOf("days");
-		
-		if (indexOfNext != 0 && (indexOfDays - indexOfNext) == 1  
+
+		if (indexOfNext != 0 && (indexOfDays - indexOfNext) == 2  
 			&& !userInput.contains(" next week")) {
 			
 			taskItems.remove(indexOfDays);
@@ -130,7 +130,7 @@ public class DateTimeParser {
 		String[] temp = userInput.split("[\\s+]");
 		String newTaskName = "";
 		int positionOfWeekday = 0;
-		
+
 		for (int i = 0; i < temp.length; i++) {
 			if (temp[i].contains("next")) {
 				positionOfWeekday = i + 1;

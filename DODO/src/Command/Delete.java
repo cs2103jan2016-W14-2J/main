@@ -53,7 +53,8 @@ public class Delete extends Command {
 		
 		try {
 			for (int i=indexes.size()-1; i>=0; i--) {
-				Task task = tasks.remove(i);
+				int index = indexes.get(i) - INDEX_ADJUSTMENT;
+				Task task = tasks.remove(index);
 				this.deleteCategory(task.getName());
 			}
 		} catch (IndexOutOfBoundsException e) {

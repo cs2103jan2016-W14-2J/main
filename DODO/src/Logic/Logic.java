@@ -53,6 +53,51 @@ public class Logic {
 		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
 		return "Saved successfully";
 	}
+	/***********************************ACCESSORS***********************************************/
+	public ArrayList<Task> getOngoingTasks() {
+		return this.ongoingTasks;
+	}
+
+	public ArrayList<Task> getFloatingTasks() {
+		return this.floatingTasks;
+	}
+
+	public ArrayList<Task> getCompletedTasks() {
+		return this.completedTasks;
+	}
+
+	public ArrayList<Task> getOverdueTasks() {
+		return this.overdueTasks;
+	}
+
+	public ArrayList<Category> getCategories() {
+		ArrayList<Category> categories = new ArrayList<Category>(this.categories.values());
+		return categories;
+	}
+	
+	public ArrayList<Task> getAll() {
+		ArrayList<Task> temp = new ArrayList<Task>();
+		temp.addAll(this.overdueTasks);
+		temp.addAll(this.ongoingTasks);
+		temp.addAll(this.floatingTasks);
+		temp.addAll(this.completedTasks);
+		return temp;
+	}
+	
+	public UI_TAB getStatus() {
+		return this.status;
+	}
+	
+	public ArrayList<Task> getSearchResults() {
+		return this.results;
+	}
+	
+	public String getPreviousCommand() {
+		if (this.previous==null) {
+			return "";
+		}
+		return this.previous;
+	}
 	
 	/***********************************PRIVATE METHODS***********************************************/
 	private String processCommand(Parser parser) {

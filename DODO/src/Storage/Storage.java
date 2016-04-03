@@ -18,23 +18,27 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 public class Storage {
+	private static Storage theOne;
 	private static final String FILENAME_ONGOING_TASKS = "OngoingTasks.txt";
 	private static final String FILENAME_COMPLETED_TASKS = "CompletedTasks.txt";
 	private static final String FILENAME_FLOATING_TASKS = "FloatingTasks.txt";
 	private static final String FILENAME_OVERDUE_TASKS = "OverdueTasks.txt";
 
-	private static final String EMPTY_STRING = "";
-
-	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
-
-	PrintWriter pw;
-	BufferedReader br;
-	String ongoingDirectory;
-	String completedDirectory;
-	String floatingDirectory;
-	String overdueDirectory;
-
-	public Storage(String directory) {
+	private PrintWriter pw;
+	private BufferedReader br;
+	private String ongoingDirectory;
+	private String completedDirectory;
+	private String floatingDirectory;
+	private String overdueDirectory;
+	
+	public static Storage getInstance(String directory) {
+		if (theOne==null) {
+			theOne = new Storage(directory);
+		}
+		return theOne;
+	}
+	
+	private Storage(String directory) {
 		// it cannot create a file in a specific directory for now
 		// it only creates a file in the same directory as the programme
 		ongoingDirectory = directory  + FILENAME_ONGOING_TASKS;
@@ -46,13 +50,7 @@ public class Storage {
 		if (!fileExists(floatingDirectory)) initialiseFile(floatingDirectory);
 		if (!fileExists(overdueDirectory)) initialiseFile(overdueDirectory);
 	}
-
-	private boolean fileExists(String directory) {
-		File file = new File(directory);
-		if (file.exists()) return true;
-		else return false; 
-	}
-
+	
 	public ArrayList<Task> read(TASK_STATUS task_status) {
 		switch (task_status) {
 		case ONGOING:
@@ -81,6 +79,14 @@ public class Storage {
 		default:
 			return "Invalid type of tasks.";
 		}
+	}
+	
+	/******************************INTERNAL***********************************************/
+
+	private boolean fileExists(String directory) {
+		File file = new File(directory);
+		if (file.exists()) return true;
+		else return false; 
 	}
 
 	private String printToFile(String filename, ArrayList<Task> tasks)  {
@@ -229,6 +235,5 @@ public class Storage {
 			}
 			return list;
 		}
-		
 	}*/
 }

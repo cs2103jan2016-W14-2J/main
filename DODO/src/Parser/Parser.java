@@ -131,6 +131,8 @@ public class Parser {
 				SortParser sort = new SortParser(userInput);
 				setSortAttributes(sort.determineSortType(userInput));
 				break;
+			case EXIT:
+				break;
 			case HELP:
 				break;
 			case CHANGE_DIRECTORY:

@@ -8,6 +8,7 @@ import Parser.Parser;
 import Task.*;
 
 public class Sort extends Command {
+	private static final String INVALID_SORT = "Please enter a valid sort command.";
 	private static final DescendingAlphabeticalComparator decendingAlphabeticalComparator = new DescendingAlphabeticalComparator();
 	private static final AscendingAlphaticalComparator ascendingAlphabeticalComparator = new AscendingAlphaticalComparator();
 	private static final DateComparator dateComparator = new DateComparator();
@@ -26,7 +27,7 @@ public class Sort extends Command {
 		case BY_DATE:
 			return sortByDate();
 		default: 
-			return "[SORT] INTERNAL ERROR.";
+			return INVALID_SORT;
 		}
 	}
 

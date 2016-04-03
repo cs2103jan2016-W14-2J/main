@@ -162,9 +162,11 @@ public class Task {
 	}
 	
 	public boolean deleteCategory(String category) {
-		if (this.categories.contains(category)) {
-			categories.remove(category);
-			return true;
+		for (String string: this.categories) {
+			if (string.equalsIgnoreCase(category)) {
+				this.categories.remove(string);
+				return true;
+			}
 		}
 		return false;
 	}

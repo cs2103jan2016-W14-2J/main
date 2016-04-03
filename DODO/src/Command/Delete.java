@@ -91,6 +91,7 @@ public class Delete extends Command {
 			boolean flag = this.deleteCategory(categoryStr);
 			if (flag) successfulDeletions.add(categoryStr);
 			else unsuccessfulDeletions.add(categoryStr);
+			System.out.println("====DELETE/TAG==== categoryStr: " + categoryStr + ", flag: " + flag);
 		}
 		
 		if (unsuccessfulDeletions.size()==0) {

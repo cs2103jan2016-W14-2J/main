@@ -120,6 +120,8 @@ public abstract class Command {
 		return category;
 	}
 	
+	
+	// add task in  category
 	protected boolean addCategory(String categoryStr, Task task) {
 		Category category = this.categories.get(categoryStr.toLowerCase());
 		if (category==null) {
@@ -145,6 +147,7 @@ public abstract class Command {
 				throw new Error("IMPOSSIBLE");
 			}
 		}
+		this.categories.remove(categoryString.toLowerCase());
 		return true;
 	}
 	

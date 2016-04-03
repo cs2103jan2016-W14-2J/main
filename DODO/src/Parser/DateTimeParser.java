@@ -29,7 +29,11 @@ public class DateTimeParser {
 	private final String KEYWORD_DAY_AFTER_TOMORROW = " day after tomorrow";
 	private final String KEYWORD_TOMORROW_1 = "tomorrow";
 	private final String KEYWORD_TOMORROW_2 = "tomorrow ";
-	
+	private final String KEYWORD_YESTERDAY_SHORTFORM = "ytd ";
+	private final String KEYWORD_YESTERDAY = "yesterday";
+	private final String KEYWORD_COMING = "coming";
+	private final String KEYWORD_THIS_COMING = " this coming";
+
 	public DateTimeParser () {
 	}
 	
@@ -51,18 +55,18 @@ public class DateTimeParser {
 	}
 	
 	protected String removeYesterday(String userInput) {
-		if (userInput.contains("yesterday")) {
-			userInput = userInput.replace("yesterday", "");
+		if (userInput.contains(KEYWORD_YESTERDAY)) {
+			userInput = userInput.replace(KEYWORD_YESTERDAY, "");
 		}
-		else if (userInput.contains("ytd")) {
-			userInput = userInput.replace("ytd", "");
+		else if (userInput.contains(KEYWORD_YESTERDAY_SHORTFORM)) {
+			userInput = userInput.replace(KEYWORD_YESTERDAY_SHORTFORM, "");
 		}
 		return userInput.trim();
 	}
 	
 	protected String removeToday(String userInput) {
 		if (userInput.contains("today")) {
-			userInput = userInput.replace(" today", "");
+			userInput = userInput.replace("today", "");
 		}
 		return userInput.trim();
 	}
@@ -71,8 +75,8 @@ public class DateTimeParser {
 		String[] str = userInput.toLowerCase().split("\\s+");
 		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
 		
-		if (userInput.contains(" this coming")) {
-			int index = taskItems.lastIndexOf("coming");
+		if (userInput.contains(KEYWORD_THIS_COMING)) {
+			int index = taskItems.lastIndexOf(KEYWORD_COMING);
 			taskItems.remove(index + 1);
 			taskItems.remove(index);
 			taskItems.remove(index - 1);
@@ -169,8 +173,8 @@ public class DateTimeParser {
 	
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
-			if ((contentToAnalyse.get(i).toLowerCase()).contains("ytd")) {
-				contentToAnalyse.set(i, "yesterday");
+			if ((contentToAnalyse.get(i).toLowerCase()).contains(KEYWORD_YESTERDAY_SHORTFORM)) {
+				contentToAnalyse.set(i, KEYWORD_YESTERDAY);
 			}
 		}
 		return toStringTaskElements(contentToAnalyse);
@@ -251,6 +255,22 @@ public class DateTimeParser {
 			e.printStackTrace();
 		}
 		return newDate;
-		
+	}
+	
+	protected boolean extractDate(String userTask) {
+		String temp = "";
+		DateTimeParser dt = new DateTimeParser();
+		temp = dt.removeTheDayAfterTomorrow(userTask);
+		temp = dt.removeYesterday(temp);
+		temp = dt.removeTomorrow(temp);
+		temp = dt.removeToday(temp);
+		temp = dt.removeThisComingWeekday(temp);
+		temp = dt.removeNextFewDays(temp);
+		temp = dt.removeNextWeek(temp);
+		temp = dt.removeNextWeekday(temp);
+		temp = dt.removeTime(temp);
+		temp = dt.removeDate(temp);
+	
+		return (temp.trim().equals(userTask.trim())) ? false : true;
 	}
 }

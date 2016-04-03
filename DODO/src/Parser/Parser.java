@@ -85,7 +85,6 @@ public class Parser {
 				setDeleteAttributes(deleteParser.getDeleteType(), deleteParser.getTagToDelete(), deleteParser.getIndexToDelete());
 				break;
 			case EDIT:
-			//	userInput = processUserInput(userInput);
 				userInput = getUserInputContent(userInput);
 				EditParser editParser = new EditParser(userInput);
 				setEditAttributes(editParser.getTaskID(), editParser.getEndNewDate(), editParser.getStartNewDate(),

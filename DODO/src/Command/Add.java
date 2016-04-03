@@ -47,6 +47,7 @@ public class Add extends Command {
 		this.floatingTasks.add(task);
 		this.UIStatus = UI_TAB.FLOATING;
 		
+		System.out.println("=====add===== tasks: " + task.getCategories());
 		return String.format(MESSAGE_SUCCESSFUL_ADD, task, this.UIStatus);
 	}
 	

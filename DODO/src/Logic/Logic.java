@@ -51,7 +51,19 @@ public class Logic {
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
 		storage.save(TASK_STATUS.FLOATING, floatingTasks);
 		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
+		storage.saveCategories(this.categories);
 		return "Saved successfully";
+	}
+	
+	public ArrayList<Category> mapCategories(ArrayList<String> categoriesString) {
+		ArrayList<Category> categories = new ArrayList<Category>();
+		for (String categoryString: categoriesString) {
+			Category category = this.categories.get(categoryString.toLowerCase());
+			if (category!=null) {
+				categories.add(category);
+			}
+		}
+		return categories;
 	}
 	/***********************************ACCESSORS***********************************************/
 	public ArrayList<Task> getOngoingTasks() {
@@ -77,10 +89,10 @@ public class Logic {
 	
 	public ArrayList<Task> getAll() {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		temp.addAll(this.overdueTasks);
-		temp.addAll(this.ongoingTasks);
 		temp.addAll(this.floatingTasks);
+		temp.addAll(this.ongoingTasks);
 		temp.addAll(this.completedTasks);
+		temp.addAll(this.overdueTasks);
 		return temp;
 	}
 	
@@ -103,8 +115,7 @@ public class Logic {
 	private String processCommand(Parser parser) {
 		String message = "";
 		COMMAND_TYPE command = parser.getCommandType();
-		ArrayList<ArrayList<Task>> data = compress(this.floatingTasks, this.ongoingTasks, 
-				this.completedTasks, this.overdueTasks, this.results);
+		ArrayList<ArrayList<Task>> data = compress();
 		
 		switch (command) {
 		case ADD:
@@ -114,7 +125,6 @@ public class Logic {
 		case DELETE:
 			Delete delete = new Delete(parser, data, categories);
 			message = execute(delete, data);
-			categories = delete.getCategories();
 			break;
 		case EDIT:
 			Edit edit = new Edit(parser, data, categories);
@@ -188,8 +198,7 @@ public class Logic {
 		return "Data updated.";
 	}
 
-	private ArrayList<ArrayList<Task>> compress(ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
-			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results) {
+	private ArrayList<ArrayList<Task>> compress() {
 		ArrayList<ArrayList<Task>> data = new ArrayList<ArrayList<Task>> ();
 		data.add(floatingTasks);
 		data.add(ongoingTasks);
@@ -239,10 +248,10 @@ public class Logic {
 		completedTasks = storage.read(TASK_STATUS.COMPLETED);
 		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
-		categories = initialiseCategories(ongoingTasks, completedTasks, overdueTasks, floatingTasks);
+		categories = storage.readCategories();
 	}
 	
-	private TreeMap<String, Category> initialiseCategories(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
+	/*private TreeMap<String, Category> initialiseCategories(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
 			ArrayList<Task> overdueTasks, ArrayList<Task> floatingTasks) {
 		TreeMap<String, Category> categories = new TreeMap<String, Category>();
 		categories = loadCategoriesFromList(ongoingTasks, categories);
@@ -255,14 +264,13 @@ public class Logic {
 	private TreeMap<String, Category> loadCategoriesFromList(ArrayList<Task> tasks,
 			TreeMap<String, Category> categories) {
 		for (Task task: tasks) {
-			ArrayList<Category> taskCategories = task.getCategories();
-			for (Category category: taskCategories) {
-				String categoryName = category.getName().toLowerCase();
-				if (!categories.containsKey(categoryName)) {
-					categories.put(categoryName, category);
+			ArrayList<String> taskCategories = task.getCategories();
+			for (String category: taskCategories) {
+				if (!categories.containsKey(category.toLowerCase())) {
+					categories.put(category.toLowerCase(), category);
 				}
 			}
 		}
 		return categories;
-	}
+	}*/
 }

@@ -27,6 +27,7 @@ public abstract class Command {
 
 	public Command(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		this.UIStatus = UIRightBox.getCurrentTab();
+		System.out.println("=====COMMAND===== constructor: " + this.UIStatus);
 		this.parser = parser;
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);
@@ -40,7 +41,7 @@ public abstract class Command {
 
 	/*******************************************ACCESSOR*********************************************/
 	public ArrayList<ArrayList<Task>> getData() {
-		return this.compress(ongoingTasks, completedTasks, floatingTasks, overdueTasks, results);
+		return this.compress(floatingTasks, ongoingTasks, completedTasks, overdueTasks, results);
 	}
 
 	public TreeMap<String, Category> getCategories() {
@@ -63,9 +64,9 @@ public abstract class Command {
 		case OVERDUE:
 			return this.overdueTasks;
 		case SEARCH:
-			return (ArrayList<Task>) this.results.clone();
+			return cloneList(this.results);
 		case ALL:
-			return combine(ongoingTasks, completedTasks, floatingTasks, overdueTasks);
+			return combine(floatingTasks, ongoingTasks, completedTasks, overdueTasks);
 		default:
 			return null;
 		}
@@ -126,7 +127,7 @@ public abstract class Command {
 			this.categories.put(categoryStr.toLowerCase(), category);
 		}
 		category.addTask(task);
-		if (!task.addCategory(category)) {
+		if (!task.addCategory(category.getName())) {
 			return false;
 		}
 		return true;
@@ -139,7 +140,7 @@ public abstract class Command {
 		}
 		ArrayList<Task> taggedTasks = category.getTasks();
 		for (Task task: taggedTasks) {
-			boolean indicator = task.deleteCategory(category);
+			boolean indicator = task.deleteCategory(category.getName());
 			if (indicator==false) {
 				throw new Error("IMPOSSIBLE");
 			}
@@ -223,5 +224,14 @@ public abstract class Command {
 				this.overdueTasks.add(task);
 			}
 		}
+	}
+	
+	private ArrayList<Task> cloneList(ArrayList<Task> original) {
+		ArrayList<Task> newList = new ArrayList<Task>();
+		for (int i=0; i<original.size(); i++) {
+			Task task = new Task(original.get(i));
+			newList.add(task);
+		}
+		return newList;
 	}
 }

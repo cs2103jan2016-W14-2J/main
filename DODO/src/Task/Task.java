@@ -16,7 +16,7 @@ public class Task {
 	private Date end;
 	private boolean flag;
 	private boolean isOverdue;
-	private ArrayList<Category> categories;
+	private ArrayList<String> categories;
 
 	// Default Constructor
 	public Task() {
@@ -29,7 +29,7 @@ public class Task {
 		this.status = TASK_STATUS.FLOATING;
 		this.name = name; // must have
 
-		this.categories = new ArrayList<Category>();
+		this.categories = new ArrayList<String>();
 		this.flag = false;
 		this.isOverdue = false;
 	}
@@ -42,7 +42,7 @@ public class Task {
 		/*this.end = formatter.format(end);*/
 		this.end = end;
 
-		this.categories = new ArrayList<Category>();
+		this.categories = new ArrayList<String>();
 		this.flag = false;;
 		this.isOverdue = checkOverdue(end);
 	}
@@ -55,7 +55,7 @@ public class Task {
 		this.end = end;
 		this.start = start;
 
-		this.categories = new ArrayList<Category>();
+		this.categories = new ArrayList<String>();
 		this.flag = false;
 		this.isOverdue = checkOverdue(end);
 	}
@@ -89,7 +89,7 @@ public class Task {
 		return this.name;
 	}
 
-	public ArrayList<Category> getCategories() {
+	public ArrayList<String> getCategories() {
 		return this.categories;
 	}
 
@@ -157,11 +157,11 @@ public class Task {
 		}
 	}
 
-	public void setCategory(ArrayList<Category> categories) {
+	public void setCategory(ArrayList<String> categories) {
 		this.categories = categories;
 	}
 	
-	public boolean deleteCategory(Category category) {
+	public boolean deleteCategory(String category) {
 		if (this.categories.contains(category)) {
 			categories.remove(category);
 			return true;
@@ -169,7 +169,7 @@ public class Task {
 		return false;
 	}
 	
-	public boolean addCategory(Category category) {
+	public boolean addCategory(String category) {
 		if (this.categories.contains(category)) {
 			return false;
 		}

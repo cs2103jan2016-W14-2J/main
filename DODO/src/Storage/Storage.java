@@ -23,6 +23,7 @@ public class Storage {
 	private static final String FILENAME_COMPLETED_TASKS = "CompletedTasks.txt";
 	private static final String FILENAME_FLOATING_TASKS = "FloatingTasks.txt";
 	private static final String FILENAME_OVERDUE_TASKS = "OverdueTasks.txt";
+	private static final String FILENAME_CATEGORIES = "Categories.txt";
 
 	private PrintWriter pw;
 	private BufferedReader br;
@@ -30,6 +31,7 @@ public class Storage {
 	private String completedDirectory;
 	private String floatingDirectory;
 	private String overdueDirectory;
+	private String categoriesDirectory;
 	
 	public static Storage getInstance(String directory) {
 		if (theOne==null) {
@@ -45,6 +47,8 @@ public class Storage {
 		completedDirectory = directory + FILENAME_COMPLETED_TASKS;
 		floatingDirectory = directory + FILENAME_FLOATING_TASKS;
 		overdueDirectory = directory + FILENAME_OVERDUE_TASKS;
+		categoriesDirectory = directory + FILENAME_CATEGORIES;
+		if (!fileExists(categoriesDirectory)) initialiseFile(categoriesDirectory);
 		if (!fileExists(ongoingDirectory)) initialiseFile(ongoingDirectory);
 		if (!fileExists(completedDirectory)) initialiseFile(completedDirectory);
 		if (!fileExists(floatingDirectory)) initialiseFile(floatingDirectory);
@@ -64,6 +68,42 @@ public class Storage {
 		default:
 			return null;
 		}
+	}
+	
+	public TreeMap<String, Category> readCategories() {
+		 TreeMap<String, Category> categories = new TreeMap<String, Category>();
+		try {
+			br = new BufferedReader(new FileReader(this.categoriesDirectory));
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
+			Gson gson = gsonBuilder.create();
+			categories = gson.fromJson(br, new TypeToken<TreeMap<String, Category>>() {}.getType());
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (categories==null) {
+			System.out.println("[DEBUG/Storage] null");
+			return new TreeMap<String, Category>();
+		}
+		return categories;
+	}
+	
+	public String saveCategories(TreeMap<String, Category> categories)  {
+		clearFile(this.categoriesDirectory);
+		try (Writer writer = new OutputStreamWriter(new FileOutputStream(this.categoriesDirectory), "UTF-8")) {
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").setPrettyPrinting();
+			Gson gson = gsonBuilder.create();
+			gson.toJson(categories, writer);
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "Saving " + this.categoriesDirectory + " is successful. :)";
 	}
 
 	public String save(TASK_STATUS task_status, ArrayList<Task> tasks) {
@@ -106,7 +146,6 @@ public class Storage {
 	}
 
 	private ArrayList<Task> readFromFile(String filename) {
-		System.out.println("[DEBUG] directory :" + filename);
 		ArrayList<Task> tasks = new ArrayList<Task>();
 		try {
 			br = new BufferedReader(new FileReader(filename));

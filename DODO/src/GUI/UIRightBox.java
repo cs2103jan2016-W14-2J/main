@@ -484,7 +484,7 @@ public class UIRightBox {
 								super.updateItem(item, empty);
 								if (item != null) {
 									
-									ArrayList<Category> strTagging = item.getCategories();
+									ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
 									/*ArrayList<Label> lblTag = new ArrayList<Label>();
 									uiMakeTag.MatchTagToCategories(logic, logic.getCategories());//match all the categories with a user data
 									lblTag.addAll(uiMakeTag.assignTagUserData(logic,item.getTags()));//apply the user data to each task's tag

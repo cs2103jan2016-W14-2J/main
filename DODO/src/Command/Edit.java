@@ -31,8 +31,7 @@ public class Edit extends Command {
 		EDIT_TYPE edit_type = parser.getEditType();
 		int index = parser.getTaskID();
 		ArrayList<Task> tasks = this.retrieve(this.UIStatus);
-		String oldTag = parser.getOldTag();
-		String newTag = parser.getTag().get(0);
+		System.out.println("=====EDIT===== edit_type: " + edit_type);
 		try {
 			Task task = tasks.get(index-INDEX_ADJUSTMENT);
 			switch (edit_type) {

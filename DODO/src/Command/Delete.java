@@ -65,7 +65,9 @@ public class Delete extends Command {
 	
 	
 	private String deleteAllTasks() {
-		this.modify(this.UIStatus, new ArrayList<Task>());
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
+		tasks.clear();
+		this.modify(this.UIStatus, tasks);
 		this.UIStatus = UI_TAB.ALL;
 		return String.format(MESSAGE_SUCCESSFUL_DELETE, "all indexes");
 	}

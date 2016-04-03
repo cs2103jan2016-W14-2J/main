@@ -46,6 +46,7 @@ public class Parser {
 	private String sortByAlphabetical;
 	private Date sortByDate;
 	private SORT_TYPE sortType;
+	private String newDirectory = "";
 	
 	public Parser (String userInput) {
 		assert userInput.length() > 0;
@@ -133,6 +134,7 @@ public class Parser {
 			case HELP:
 				break;
 			case CHANGE_DIRECTORY:
+				newDirectory = getUserInputContent(userInput);
 				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
@@ -370,5 +372,10 @@ public class Parser {
 
 	public SORT_TYPE getSortType() {
 		return this.sortType;
+	}
+	
+	//************************************** ChangeDirectory Parser *********************************//
+	public String getNewDirectory() {
+		return this.newDirectory;
 	}
 }

@@ -33,6 +33,9 @@ public class Sort extends Command {
 
 	public String sortByAlphabet(SORT_TYPE type) {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
+		if (tasks.size()==0) {
+			return MESSAGE_EMPTY_LIST;
+		}
 		if (type==SORT_TYPE.BY_DESCENDING) {
 			Collections.sort(tasks, decendingAlphabeticalComparator);
 		}
@@ -44,7 +47,11 @@ public class Sort extends Command {
 	
 	public String sortByDate() {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
+		if (tasks.size()==0) {
+			return MESSAGE_EMPTY_LIST;
+		}
 		Collections.sort(tasks, dateComparator);
+		this.modify(UIStatus, tasks);
 		return "Sorted by Dates.";
 	}
 
@@ -73,14 +80,15 @@ public class Sort extends Command {
 		@Override
 		public int compare(Task a, Task b) {
 			Date aDate = a.getEnd();
-			Date bDate = a.getEnd();
-			if (aDate==null) return -1;
-			if (bDate==null) return 1;
+			Date bDate = b.getEnd();
+			if (aDate==null && bDate==null) return -1;
+			if (aDate==null) return 1;
+			if (bDate==null) return -1;
 			if (aDate.after(bDate)) {
-				return -1;
+				return 1;
 			}
 			else if (aDate.before(bDate)) {
-				return 1;
+				return -1;
 			}
 			else return 0;
 		}

@@ -47,7 +47,7 @@ public class Delete extends Command {
 	private String deleteTask(ArrayList<Integer> indexes) {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		
-		if (tasks.size()==0) {
+		if (tasks==null || tasks.size()==0) {
 			return MESSAGE_EMPTY_LIST;
 		}
 		
@@ -55,10 +55,13 @@ public class Delete extends Command {
 			for (int i=indexes.size()-1; i>=0; i--) {
 				int index = indexes.get(i) - INDEX_ADJUSTMENT;
 				Task task = tasks.remove(index);
-				this.deleteCategory(task.getName());
+				this.deleteTaskInCategory(task);
+				System.out.println("=====DELTE===== categories: " + this.categories);
 			}
 		} catch (IndexOutOfBoundsException e) {
 			return MESSAGE_INDEXOUTOFBOUND;
+		} catch (NullPointerException e) {
+			return MESSAGE_EMPTY_LIST;
 		}
 		
 		this.modify(UIStatus, tasks);

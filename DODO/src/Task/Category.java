@@ -31,6 +31,14 @@ public class Category {
 		return false;
 	}
 	
+	public boolean deleteTask(Task task) {
+		if (tasks.contains(task)) {
+			tasks.remove(task);
+			return true;
+		}
+		return false;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}

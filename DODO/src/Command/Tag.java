@@ -29,6 +29,8 @@ public class Tag extends Command {
 			task = tasks.get(index-INDEX_ADJUSTMENT);
 		} catch (IndexOutOfBoundsException e) {
 			return MESSAGE_INDEXOUTOFBOUND;
+		} catch (NullPointerException e) {
+			return MESSAGE_EMPTY_LIST;
 		}
 
 		return tag(tags, task);
@@ -42,6 +44,7 @@ public class Tag extends Command {
 			Category category = this.findCategory(tag);
 			if (category==null) {
 				this.addCategory(tag, task);
+				category = this.findCategory(tag);
 			}
 			// task interchangably add category in class Category
 			if (category.addTask(task)) {

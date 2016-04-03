@@ -172,8 +172,10 @@ public class Task {
 	}
 	
 	public boolean addCategory(String category) {
-		if (this.categories.contains(category)) {
-			return false;
+		for (String string: this.categories) {
+			if (string.equalsIgnoreCase(category)) {
+				return false;
+			}
 		}
 		this.categories.add(category);
 		return true;

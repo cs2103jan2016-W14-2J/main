@@ -64,7 +64,7 @@ public abstract class Command {
 		case OVERDUE:
 			return this.overdueTasks;
 		case SEARCH:
-			return cloneList(this.results);
+			return (ArrayList<Task>) this.results.clone();
 		case ALL:
 			return combine(floatingTasks, ongoingTasks, completedTasks, overdueTasks);
 		default:
@@ -121,7 +121,7 @@ public abstract class Command {
 	}
 	
 	
-	// add task in  category
+	// add task into category
 	protected boolean addCategory(String categoryStr, Task task) {
 		Category category = this.categories.get(categoryStr.toLowerCase());
 		if (category==null) {
@@ -135,6 +135,7 @@ public abstract class Command {
 		return true;
 	}
 	
+	//delete an entire category
 	protected boolean deleteCategory(String categoryString) {
 		Category category = this.categories.get(categoryString.toLowerCase());
 		if (category==null) {
@@ -151,6 +152,7 @@ public abstract class Command {
 		return true;
 	}
 	
+	//edit an entire category
 	protected boolean editCategory(String oldTag, String newTag) {
 		Category category = this.categories.get(oldTag.toLowerCase());
 		if (category==null) {
@@ -159,6 +161,19 @@ public abstract class Command {
 		category.setName(newTag);
 		this.categories.remove(oldTag.toLowerCase());
 		this.categories.put(newTag.toLowerCase(), category);
+		return true;
+	}
+	
+	protected boolean deleteTaskInCategory(Task task) {
+		ArrayList<String> categoriesString = task.getCategories();
+		for (String categoryString: categoriesString) {
+			Category category = this.categories.get(categoryString.toLowerCase());
+			boolean flag = category.deleteTask(task);
+			System.out.println("====COMMAND/DELETETASKINCATEGORY==== CRITICAL LOGIC ERROR IF FALSE: " + flag);
+			if (category.getTasks().size()==0) {
+				deleteCategory(categoryString);
+			}
+		}
 		return true;
 	}
 	

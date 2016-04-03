@@ -33,16 +33,19 @@ public class Edit extends Command {
 		ArrayList<Task> tasks = this.retrieve(this.UIStatus);
 		System.out.println("=====EDIT===== edit_type: " + edit_type);
 		try {
-			Task task = tasks.get(index-INDEX_ADJUSTMENT);
 			switch (edit_type) {
 			case TASK_NAME:
+				Task task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editName(task);
 			case START_TIME:
+				task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editStartTime(task);
 			case DEADLINED:
 			case END_TIME:
+				task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editEndTime(task);
 			case EVENT_TIME:
+				task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editStartAndEndTime(task);
 			case TAG:
 				return editTag();
@@ -52,6 +55,9 @@ public class Edit extends Command {
 		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
 			return MESSAGE_INDEXOUTOFBOUND;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return MESSAGE_EMPTY_LIST;
 		}
 	}
 	

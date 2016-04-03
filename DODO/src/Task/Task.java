@@ -6,6 +6,9 @@ import java.util.*;
 /* @@author: Lu Yang */
 
 public class Task {
+	private static final SimpleDateFormat datetimeFormater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private static final SimpleDateFormat dateFormater = new SimpleDateFormat("dd/MM/yyyy");
+	private static final SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 	private TASK_TYPE type;
 	private TASK_STATUS status;
 	private String name;
@@ -13,63 +16,46 @@ public class Task {
 	private Date end;
 	private boolean flag;
 	private boolean isOverdue;
-	private ArrayList<String> tags;
+	private ArrayList<Category> categories;
 
 	// Default Constructor
 	public Task() {
-		this(null, null);
+		this("");
 	}
 
 	// Constructor of Floating Tasks
-	public Task(String name, ArrayList<String> tags) {
+	public Task(String name) {
 		this.type = TASK_TYPE.FLOATING;
 		this.status = TASK_STATUS.FLOATING;
 		this.name = name; // must have
-		
-		if (tags==null) {
-			this.tags = new ArrayList<String>();
-		}
-		else {
-			this.tags = tags;
-		}
+
+		this.categories = new ArrayList<Category>();
 		this.flag = false;
 		this.isOverdue = false;
 	}
 
 	// Constructor of Deadlined Tasks
-	public Task(String name, ArrayList<String> tags, Date end) {
+	public Task(String name, Date end) {
 		this.type = TASK_TYPE.DEADLINED;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
 		/*this.end = formatter.format(end);*/
 		this.end = end;
-		
-		if (tags==null) {
-			this.tags = new ArrayList<String>();
-		}
-		else {
-			this.tags = tags;
-		}
-		
+
+		this.categories = new ArrayList<Category>();
 		this.flag = false;;
 		this.isOverdue = checkOverdue(end);
 	}
 
 	// Constructor of Event
-	public Task(String name,  ArrayList<String> tags, Date start, Date end) {
+	public Task(String name, Date start, Date end) {
 		this.type = TASK_TYPE.EVENT;
 		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
 		this.end = end;
 		this.start = start;
-		
-		if (tags==null) {
-			this.tags = new ArrayList<String>();
-		}
-		else {
-			this.tags = tags;
-		}
-		
+
+		this.categories = new ArrayList<Category>();
 		this.flag = false;
 		this.isOverdue = checkOverdue(end);
 	}
@@ -83,7 +69,7 @@ public class Task {
 		this.start = original.start;
 		this.flag = original.flag;
 		this.isOverdue = original.isOverdue;
-		this.tags = original.tags;
+		this.categories = original.categories;
 	}
 
 	/**************************************ACCESSORS**************************/
@@ -92,7 +78,6 @@ public class Task {
 	}
 
 	public TASK_STATUS getStatus() {
-		System.out.println("=====STATUS===== status: " + status);
 		return this.status;
 	}
 
@@ -104,8 +89,8 @@ public class Task {
 		return this.name;
 	}
 
-	public ArrayList<String> getTags() {
-		return this.tags;
+	public ArrayList<Category> getCategories() {
+		return this.categories;
 	}
 
 	public boolean getIsOverdue() {
@@ -114,6 +99,14 @@ public class Task {
 
 	public Date getStart() {
 		return this.start;
+	}
+
+	public String getStartString() {
+		return convertToString(this.start);
+	}
+	
+	public String getEndString() {
+		return convertToString(this.end);
 	}
 
 	public Date getEnd() {
@@ -163,51 +156,32 @@ public class Task {
 			this.isOverdue = checkOverdue(end);
 		}
 	}
-	
-	public void setTags(ArrayList<String> tags) {
-		this.tags = tags;
+
+	public void setCategory(ArrayList<Category> categories) {
+		this.categories = categories;
 	}
 	
-	public boolean addTag(String tag) {
-		if (!this.hasTag(tag)) {
-			tags.add(tag);
+	public boolean deleteCategory(Category category) {
+		if (this.categories.contains(category)) {
+			categories.remove(category);
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean removeTag(String tag) {
-		if (this.hasTag(tag)) {
-			tags.remove(tag);
-			return true;
+	public boolean addCategory(Category category) {
+		if (this.categories.contains(category)) {
+			return false;
 		}
-		return false;
+		this.categories.add(category);
+		return true;
 	}
-	
-	public boolean editTag(String oldTag, String newTag) {
-		if (this.hasTag(oldTag)) {
-			int index = tags.indexOf(oldTag);
-			String tag = tags.remove(index);
-			tags.add(index, newTag);
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean hasTag(String tag) {
-		for (String current: tags) {
-			if (current.equalsIgnoreCase(tag)) return true;
-		}
-		return false;
-	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Task) {
 			Task task = (Task) obj;
-			System.out.println("=====TASK===== task1: " + task.hashCode());
-			System.out.println("=====TASK===== task2: " + this.hashCode());
-			return task.hashCode()==this.hashCode();
+			return task==this;
 		}
 		else return false;
 	}
@@ -216,7 +190,9 @@ public class Task {
 	public String toString() {
 		return this.name;
 	}
-
+	
+	
+	/********************************************INTERNAL*************************************/
 	private boolean checkOverdue(Date end) {
 		Date current = new Date();
 		if  (current.after(end)) {
@@ -226,6 +202,20 @@ public class Task {
 		else {
 			this.status = TASK_STATUS.ONGOING;
 			return false;
+		}
+	}
+
+	private String convertToString(Date date) {
+		if (date==null) {
+			return null;
+		}
+		
+		String timeStr = timeFormatter.format(date);
+		if (timeStr.equals("23:59:59")) {
+			return dateFormater.format(date);
+		}
+		else {
+			return datetimeFormater.format(date);
 		}
 	}
 }

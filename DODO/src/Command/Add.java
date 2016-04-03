@@ -7,12 +7,16 @@ import Task.*;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeMap;
 
 import GUI.UI_TAB;
 
 
-public class Add extends Command {	
-	public Add(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+public class Add extends Command {
+	private static final String MESSAGE_INVALID_ADD = "Please enter a valid add command.";
+	private static final String MESSAGE_SUCCESSFUL_ADD = "Task \"%1$s\" is added to %2$s.";
+	
+	public Add(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		super(parser, data, categories);
 	}
 
@@ -27,39 +31,37 @@ public class Add extends Command {
 		case EVENT:
 			return addEvent();
 		default:
-			return "Invalid type of task.";
+			return MESSAGE_INVALID_ADD;
 		}
 	}
 	
 	private String addFloatingTasks() {
 		String name = parser.getName();
 		ArrayList<String> tags = parser.getTag();
-		//ArrayList<String> tags = null;
-		this.updateCategories(tags);
 		
-		Task task = new Task(name, tags);
+		Task task = new Task(name);
+		for (String tagString: tags) {
+			this.addCategory(tagString, task);
+		}
+		
 		this.floatingTasks.add(task);
 		this.UIStatus = UI_TAB.FLOATING;
-		return "Floating task \"" + name + "\" added to floatingTasks.";
+		
+		return String.format(MESSAGE_SUCCESSFUL_ADD, task, this.UIStatus);
 	}
 	
 	private String addDeadlinedTasks() {
 		String name = parser.getName();
 		ArrayList<String> tags = parser.getTag();
 		Date endDateTime = parser.getEndTime();
-		this.updateCategories(tags);
 		
-		Task task = new Task(name, tags, endDateTime);
-		if (task.getIsOverdue()){
-			overdueTasks.add(task);
-			this.UIStatus = UI_TAB.OVERDUE;
-			return "Deadlined task \"" + name + "\" added to overdueTasks.";
+		Task task = new Task(name, endDateTime);
+		for (String tagString: tags) {
+			this.addCategory(tagString, task);
 		}
-		else {
-			ongoingTasks.add(task);
-			this.UIStatus = UI_TAB.ONGOING;
-			return "Deadlined task \"" + name + "\" added to ongoingTasks.";
-		}
+		
+		checkOverdueTask(task);
+		return String.format(MESSAGE_SUCCESSFUL_ADD, task, this.UIStatus);
 	}
 	
 	private String addEvent() {
@@ -68,21 +70,26 @@ public class Add extends Command {
 		Date startDateTime = parser.getStartTime();
 		Date endDateTime = parser.getEndTime();
 		if (startDateTime.after(endDateTime)) {
-			return "Please enter a correct start time or end time.";
+			return MESSAGE_INVALID_EVENT_TIME;
 		}
-		this.updateCategories(tags);
 		
-		Task task = new Task(name, tags, startDateTime, endDateTime);
+		Task task = new Task(name, startDateTime, endDateTime);
+		for (String tagString: tags) {
+			this.addCategory(tagString, task);
+		}
 		
+		checkOverdueTask(task);	
+		return String.format(MESSAGE_SUCCESSFUL_ADD, task, this.UIStatus);
+	}
+	
+	private void checkOverdueTask(Task task) {
 		if (task.getIsOverdue()) {
 			overdueTasks.add(task);
 			this.UIStatus = UI_TAB.OVERDUE;
-			return "Event \"" + name + "\" added to overdueTasks.";
 		}
 		else {
 			ongoingTasks.add(task);
 			this.UIStatus = UI_TAB.ONGOING;
-			return "Event \"" + name + "\" added to ongoingTasks.";
 		}
 	}
 }

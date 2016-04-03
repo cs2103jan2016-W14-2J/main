@@ -9,22 +9,24 @@ import Parser.Parser;
 import Task.*;
 
 public class Search extends Command {
-	private ArrayList<Task> results;
-
-	public Search(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+	private static final String MESSAGE_INVALID_SEARCH = "Please enter a valid search command.";
+	private static final String MESSAGE_SUCCESSFUL_SEARCH_KEYWORD = "Search keyword \"%1$s\" is successful.";
+	private static final String MESSAGE_SUCCESSFUL_SEARCH_TAG = "Search tag \"%1$s\" is successful.";
+	private static final String MESSAGE_UNSUCCESSFUL_SEARCH_KEYWORD = "There is no task named \"%1$s\".";
+	
+	
+	
+	public Search(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		super(parser, data, categories);
-		this.results = new ArrayList<Task>();
 	}
 
 	@Override
 	public String execute() {
 		SEARCH_TYPE type = parser.getSearchType();
-		System.out.println("============SEARCH=========== type: " + type);
 		switch (type) {
 		case BY_TASK:
-			String searchStr = parser.getSearchByTask();
-			System.out.println("============SEARCH=========== searchStr: " + searchStr);
-			return searchByKeyword(searchStr);
+			String keyword = parser.getSearchByTask();
+			return searchByKeyword(keyword);
 			/*Date searchDate = parser.getSearchByDate();
 			System.out.println("============SEARCH=========== dt: " + searchDate);
 			return "[SEARCH] UNDER DEVELOPMENT";*/
@@ -37,12 +39,8 @@ public class Search extends Command {
 			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case INVALID:
 		default:
-			return "Invalid search value.";
+			return MESSAGE_INVALID_SEARCH;
 		}
-	}
-	
-	public ArrayList<Task> getSearchResults() {
-		return this.results;
 	}
 	
 	/**********************************INTERNAL METHODS***************************************/
@@ -69,42 +67,48 @@ public class Search extends Command {
 	}*/
 	
 	private String searchByTag(String searchTag) {
-		if (this.indexOf(searchTag)!=-1) {
-			searchTasksbyTag(this.floatingTasks, searchTag);
-			searchTasksbyTag(this.ongoingTasks, searchTag);
-			searchTasksbyTag(this.completedTasks, searchTag);
-			searchTasksbyTag(this.overdueTasks, searchTag);
-			this.UIStatus = UI_TAB.SEARCH;
-			return "Search for tag \"" + searchTag + "\" completed.";
+		Category category = this.findCategory(searchTag);
+		if (category==null) {
+			return String.format(MESSAGE_UNSUCCESSFUL_SEARCH_TAG, searchTag);
 		}
-		else return "There is no tag called \"" + searchTag + "\"";
+		results = category.getTasks();
+		return String.format(MESSAGE_SUCCESSFUL_SEARCH_TAG, searchTag);
 	}
 
-	private String searchByKeyword(String searchStr) {
-		ArrayList<Task> floatingResults = searchTasksByKeyword(floatingTasks, searchStr);
-		ArrayList<Task> ongoingResults = searchTasksByKeyword(ongoingTasks, searchStr);
-		ArrayList<Task> completedResults = searchTasksByKeyword(completedTasks, searchStr);
-		ArrayList<Task> overdueResults = searchTasksByKeyword(overdueTasks, searchStr);
+	private String searchByKeyword(String keyword) {
+		if (keyword.length()<2) {
+			return MESSAGE_INVALID_SEARCH;
+		}
+		
+		ArrayList<Task> floatingResults = searchTasksByKeyword(floatingTasks, keyword);
+		ArrayList<Task> ongoingResults = searchTasksByKeyword(ongoingTasks, keyword);
+		ArrayList<Task> completedResults = searchTasksByKeyword(completedTasks, keyword);
+		ArrayList<Task> overdueResults = searchTasksByKeyword(overdueTasks, keyword);
 		this.results.addAll(floatingResults);
 		this.results.addAll(ongoingResults);
 		this.results.addAll(completedResults);
 		this.results.addAll(overdueResults);
-		System.out.println(results); // FOR DEBUG
 		this.UIStatus = UI_TAB.SEARCH;
+		
 		if (this.results.size()==0) {
-			return "No tasks with keywords \"" + searchStr +"\" are found.";
+			return String.format(MESSAGE_UNSUCCESSFUL_SEARCH_KEYWORD, keyword);
 		}
-		return "Search for tasks named \"" + searchStr + "\" completed.";
+		return String.format(MESSAGE_SUCCESSFUL_SEARCH_KEYWORD, keyword);
 	}
 
 	private ArrayList<Task> searchTasksByKeyword(ArrayList<Task> tasks, String searchStr) {
+		searchStr = searchStr.toLowerCase();
+		String[] fragments = searchStr.split(" ");
+		
 		ArrayList<Task> results = new ArrayList<Task>();
-		for (int i=0; i<tasks.size(); i++) {
-			Task task = tasks.get(i);
-			String name = task.getName();
-			if (name.contains(searchStr)){
-				results.add(task);
+		for (Task task: tasks) {
+			String name = task.getName().toLowerCase();
+			
+			boolean search = true;
+			for (String fragment: fragments) {
+				if (!name.contains(fragment)) search = false;
 			}
+			if (search==true) results.add(task);
 		}
 		return results;
 	}

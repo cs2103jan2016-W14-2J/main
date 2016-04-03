@@ -6,20 +6,25 @@ import Parser.*;
 import Storage.*;
 import Task.*;
 import java.util.*;
-
 /* @@author: Lu Yang */
 
 public class Logic {
+	private static final String MESSAGE_SUCCESSFUL_UNDO = "Undo successful.";
+	private static final String MESSAGE_SUCCESSFUL_REDO = "Redo successful.";
+	private static final String MESSAGE_UNSUCCESSFUL_UNDO = "Undo not successful. There is nothing to undo";
+	private static final String MESSAGE_UNSUCCESSFUL_REDO = "Redo not successful. There is nothing to redo";
 	private static Logic theOne; //singleton
 	private Storage storage;
+	
+	/*************************************MEMORY*************************************************/
 	private ArrayList<Task> ongoingTasks;
 	private ArrayList<Task> completedTasks;
 	private ArrayList<Task> overdueTasks;
 	private ArrayList<Task> floatingTasks;
 	private ArrayList<Task> results;
+	private TreeMap<String, Category> categories;
 	private History history;
 	private UI_TAB status;
-	private ArrayList<String> categories;
 	private String previous;
 
 	/*************************************PUBLIC METHODS******************************************/
@@ -31,13 +36,11 @@ public class Logic {
 	}
 
 	public String run(String input) {
-		System.out.println("=====LOGIC====== categories: " + this.categories);
 		this.previous = input;
 		Parser parser;
 		try {
 			parser = new Parser(input);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return "Invalid Command.";
 		}
 		return processCommand(parser);
@@ -50,85 +53,14 @@ public class Logic {
 		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
 		return "Saved successfully";
 	}
-
-	/***********************************ACCESSORS***********************************************/
-	public ArrayList<Task> getOngoingTasks() {
-		return this.ongoingTasks;
-	}
-
-	public ArrayList<Task> getFloatingTasks() {
-		return this.floatingTasks;
-	}
-
-	public ArrayList<Task> getCompletedTasks() {
-		return this.completedTasks;
-	}
-
-	public ArrayList<Task> getOverdueTasks() {
-		return this.overdueTasks;
-	}
-
-	public ArrayList<String> getCategories() {
-		ArrayList<String> clone = new ArrayList<String>();
-		for (String tag: this.categories) {
-			clone.add(tag);
-		}
-		return clone;
-	}
 	
-	public ArrayList<Task> getAll() {
-		ArrayList<Task> temp = new ArrayList<Task>();
-		temp.addAll(this.overdueTasks);
-		temp.addAll(this.ongoingTasks);
-		temp.addAll(this.floatingTasks);
-		temp.addAll(this.completedTasks);
-		return temp;
-	}
-	
-	public UI_TAB getStatus() {
-		return this.status;
-	}
-	
-	public ArrayList<Task> getSearchResults() {
-		return this.results;
-	}
-	
-	public String getPreviousCommand() {
-		if (this.previous==null) {
-			return "";
-		}
-		return this.previous;
-	}
-
 	/***********************************PRIVATE METHODS***********************************************/
-	private Logic(String directory) {
-		storage = new Storage(directory);
-		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
-		completedTasks = storage.read(TASK_STATUS.COMPLETED);
-		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
-		floatingTasks = storage.read(TASK_STATUS.FLOATING);
-		categories = initialiseCategories();
-		results = new ArrayList<Task>();
-		history = new History();
-	}
-	
-	// for testing
-	/*protected Logic() {
-		ongoingTasks = new ArrayList<Task>();
-		completedTasks = new ArrayList<Task>();
-		overdueTasks = new ArrayList<Task>();
-		floatingTasks = new ArrayList<Task>();
-		categories = new TreeMap<String, Category>();
-		results = new ArrayList<Task>();
-		history = new History();
-	}*/
-
-	protected String processCommand(Parser parser) {
+	private String processCommand(Parser parser) {
 		String message = "";
-		
 		COMMAND_TYPE command = parser.getCommandType();
-		ArrayList<ArrayList<Task>> data = compress();
-
+		ArrayList<ArrayList<Task>> data = compress(this.floatingTasks, this.ongoingTasks, 
+				this.completedTasks, this.overdueTasks, this.results);
+		
 		switch (command) {
 		case ADD:
 			Add add = new Add(parser, data, categories);
@@ -164,28 +96,23 @@ public class Logic {
 			break;
 		case UNDO:
 			try {
-				data = history.undo(data);
-				update(data, this.categories);
-				message = "Undone successfully.";
+				update(history.undoData(data), history.undoCategories(this.categories));
+				message = MESSAGE_SUCCESSFUL_UNDO;
 			} catch (EmptyStackException e) {
-				message = "There is nothing to be undone.";
+				message = MESSAGE_UNSUCCESSFUL_UNDO;
 			}
 			break;
 		case REDO:
 			try {
-				data = history.redo();
-				update(data, this.categories);
-				message = "Redone successfully.";
+				update(history.redoData(), history.redoCategories());
+				message = MESSAGE_SUCCESSFUL_REDO;
 			} catch (EmptyStackException e) {
-				message = "There is nothing to be redone.";
+				message = MESSAGE_UNSUCCESSFUL_REDO;
 			}
 			break;
 		case SEARCH:
 			Search search = new Search(parser, data, categories);
-			history.save(cloneData(data));
-			message = search.execute();
-			this.results = search.getSearchResults();
-			this.status = search.getStatus();
+			message = execute(search, data);
 			break;
 		case SORT:
 			Sort sort = new Sort(parser, data, categories);
@@ -196,25 +123,40 @@ public class Logic {
 		}
 		return message;
 	}
-
+	
 	private String execute(Command command, ArrayList<ArrayList<Task>> data) {
-		history.save(cloneData(data));
+		history.save(cloneData(data), cloneCategories(this.categories));
 		String message = command.execute();
 		this.update(command.getData(), command.getCategories());
 		this.status = command.getStatus();
 		return message;
 	}
-
-	private ArrayList<ArrayList<Task>> compress() {
-		ArrayList<ArrayList<Task>> tasks = new ArrayList<ArrayList<Task>>();
-		tasks.add(floatingTasks);
-		tasks.add(ongoingTasks);
-		tasks.add(completedTasks);
-		tasks.add(overdueTasks);
-		tasks.add(results);
-		return tasks;
+	
+	/***************************************DATA MANIPULATION***********************************/
+	private String update(ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
+		this.floatingTasks = data.get(0);
+		this.ongoingTasks = data.get(1);
+		this.completedTasks = data.get(2);
+		this.overdueTasks = data.get(3);
+		this.results = data.get(4);
+		this.categories = categories;
+		return "Data updated.";
 	}
 
+	private ArrayList<ArrayList<Task>> compress(ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results) {
+		ArrayList<ArrayList<Task>> data = new ArrayList<ArrayList<Task>> ();
+		data.add(floatingTasks);
+		data.add(ongoingTasks);
+		data.add(completedTasks);
+		data.add(overdueTasks);
+		data.add(results);
+		return data;
+	}
+	
+	
+	/**********************************CLONE**********************************************************/
+	
 	private ArrayList<Task> cloneList(ArrayList<Task> original) {
 		ArrayList<Task> newList = new ArrayList<Task>();
 		for (int i=0; i<original.size(); i++) {
@@ -232,66 +174,50 @@ public class Logic {
 		}
 		return newData;
 	}
-
-	private String update(ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
-		this.floatingTasks = data.get(0);
-		this.ongoingTasks = data.get(1);
-		this.completedTasks = data.get(2);
-		this.overdueTasks = data.get(3);
-		this.results = data.get(4);
-		this.categories = categories;
-		return "Data updated.";
-	}
 	
-	private ArrayList<String> initialiseCategories() {
-		ArrayList<String> categories = new ArrayList<String>();
-		categories = readCategories(floatingTasks, categories);
-		categories = readCategories(ongoingTasks, categories);
-		categories = readCategories(completedTasks, categories);
-		categories = readCategories(overdueTasks, categories);
-		return categories;
-	}
-	
-	private ArrayList<String> readCategories(ArrayList<Task> tasks, ArrayList<String> categories) {
-		for (Task task: tasks) {
-			ArrayList<String> tags = task.getTags();
-			for (String tag: tags) {
-				if (!hasTag(categories, tag)) {
-					categories.add(tag);
-				}
-			}
+	private TreeMap<String, Category> cloneCategories(TreeMap<String, Category> original) {
+		TreeMap<String, Category> newCategories = new TreeMap<String, Category>();
+		ArrayList<Category> categories = new ArrayList<Category>(original.values());
+		for (Category category: categories) {
+			Category newCategory = new Category(category);
+			newCategories.put(category.getName().toLowerCase(), newCategory);
 		}
-		return categories;
+		return newCategories;
 	}
 	
-	/*private TreeMap<String, Category> readCategories(ArrayList<Task> tasks,
+	/***********************************INITALISE*****************************************************/
+	private Logic(String directory) {
+		storage = Storage.getInstance(directory);
+		results = new ArrayList<Task>();
+		history = new History();
+		ongoingTasks = storage.read(TASK_STATUS.ONGOING);
+		completedTasks = storage.read(TASK_STATUS.COMPLETED);
+		overdueTasks = storage.read(TASK_STATUS.OVERDUE);
+		floatingTasks = storage.read(TASK_STATUS.FLOATING);
+		categories = initialiseCategories(ongoingTasks, completedTasks, overdueTasks, floatingTasks);
+	}
+	
+	private TreeMap<String, Category> initialiseCategories(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
+			ArrayList<Task> overdueTasks, ArrayList<Task> floatingTasks) {
+		TreeMap<String, Category> categories = new TreeMap<String, Category>();
+		categories = loadCategoriesFromList(ongoingTasks, categories);
+		categories = loadCategoriesFromList(floatingTasks, categories);
+		categories = loadCategoriesFromList(completedTasks, categories);
+		categories = loadCategoriesFromList(overdueTasks, categories);
+		return categories;
+	}
+
+	private TreeMap<String, Category> loadCategoriesFromList(ArrayList<Task> tasks,
 			TreeMap<String, Category> categories) {
 		for (Task task: tasks) {
-			if (task.getTag()!=null) {
-				// task is specifically tagged
-				String key = task.getTag();
-				Category category = categories.get(key);
-				if (category!=null) {
-					// category already present
-					category.addTask(task);
+			ArrayList<Category> taskCategories = task.getCategories();
+			for (Category category: taskCategories) {
+				String categoryName = category.getName().toLowerCase();
+				if (!categories.containsKey(categoryName)) {
+					categories.put(categoryName, category);
 				}
-				else {
-					// new category needs to be created
-					TreeMap<String, Task> tasksUnderCategory = new TreeMap<String, Task>();
-					category = new Category(key, tasksUnderCategory);
-				}
-				categories.put(key, category);
 			}
 		}
 		return categories;
-	}*/
-	
-	private boolean hasTag(ArrayList<String> categories, String key) {
-		for (String tag: categories) {
-			if (key.equalsIgnoreCase(tag)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

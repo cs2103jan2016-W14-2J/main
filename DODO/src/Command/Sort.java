@@ -12,7 +12,7 @@ public class Sort extends Command {
 	private static final AscendingAlphaticalComparator ascendingAlphabeticalComparator = new AscendingAlphaticalComparator();
 	private static final DateComparator dateComparator = new DateComparator();
 
-	public Sort(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+	public Sort(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		super(parser, data, categories);
 	}
 
@@ -31,7 +31,7 @@ public class Sort extends Command {
 	}
 
 	public String sortByAlphabet(SORT_TYPE type) {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		if (type==SORT_TYPE.BY_DESCENDING) {
 			Collections.sort(tasks, decendingAlphabeticalComparator);
 		}
@@ -42,7 +42,7 @@ public class Sort extends Command {
 	}
 	
 	public String sortByDate() {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		Collections.sort(tasks, dateComparator);
 		return "Sorted by Dates.";
 	}

@@ -9,7 +9,11 @@ import Parser.*;
 import Task.*;
 
 public class Delete extends Command {
-	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+	private static final String MESSAGE_SUCCESSFUL_DELETE = "Task(s) at \"%1$s\" is/are successfully deleted. ";
+	private static final String MESSAGE_SUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are successfully deleted. ";
+	private static final String MESSAGE_UNSUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are not successfully deleted. ";
+	
+	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		super(parser, data, categories);
 	}
 
@@ -28,7 +32,7 @@ public class Delete extends Command {
 			return deleteAllTasks();
 		case SINGLE_TAG:
 		case MULTIPLE_TAGS:
-			return deleteTags(tags);
+			return deleteCategories(tags);
 		case ALL_TAGS:
 			return deleteAllTags();
 		case START_DATE:
@@ -39,84 +43,81 @@ public class Delete extends Command {
 			return "Please enter a valid delete command.";
 		}
 	}
-
+	
+	private String deleteTask(ArrayList<Integer> indexes) {
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
+		
+		if (tasks.size()==0) {
+			return MESSAGE_EMPTY_LIST;
+		}
+		
+		try {
+			for (int i=indexes.size()-1; i>=0; i--) {
+				tasks.remove(i);
+			}
+		} catch (IndexOutOfBoundsException e) {
+			return MESSAGE_INDEXOUTOFBOUND;
+		}
+		
+		this.modify(UIStatus, tasks);
+		return String.format(MESSAGE_SUCCESSFUL_DELETE, indexes);
+	}
+	
+	
+	private String deleteAllTasks() {
+		this.modify(this.UIStatus, new ArrayList<Task>());
+		this.UIStatus = UI_TAB.ALL;
+		return String.format(MESSAGE_SUCCESSFUL_DELETE, "all indexes");
+	}
+	
+	
 	private String deleteAllTags() {
-		this.categories.clear();
-		return "All tags deleted";
+		for (Category category: new ArrayList<Category>(this.categories.values())) {
+			boolean flag = this.deleteCategory(category.getName());
+		}
+		return  String.format(MESSAGE_SUCCESSFUL_DELETE_TAG, "ALL");
+	}
+	
+	private String deleteCategories(ArrayList<String> categoriesStr) {
+		ArrayList<String> unsuccessfulDeletions = new ArrayList<String>();
+		ArrayList<String> successfulDeletions = new ArrayList<String>();
+		
+		for (String categoryStr: categoriesStr) {
+			boolean flag = this.deleteCategory(categoryStr);
+			if (flag) successfulDeletions.add(categoryStr);
+			else unsuccessfulDeletions.add(categoryStr);
+		}
+		
+		if (unsuccessfulDeletions.size()==0) {
+			return String.format(MESSAGE_SUCCESSFUL_DELETE_TAG, successfulDeletions);
+		}
+		if (successfulDeletions.size()==0) {
+			return String.format(MESSAGE_UNSUCCESSFUL_DELETE_TAG, unsuccessfulDeletions);
+		}
+		return String.format(MESSAGE_SUCCESSFUL_DELETE_TAG, successfulDeletions) + 
+				String.format(MESSAGE_UNSUCCESSFUL_DELETE_TAG, unsuccessfulDeletions);
 	}
 	
 	private String convertToDeadlined(ArrayList<Integer> indexes) {
-		ArrayList<Task> tasks = getTasks(this.UIStatus); 
+		ArrayList<Task> tasks = retrieve(this.UIStatus); 
 		for (Integer index: indexes) {
 			Task task = tasks.get(index- INDEX_ADJUSTMENT);
 			task.setStart(null);
 		}
-		this.setTasks(this.UIStatus, tasks);
+		this.modify(this.UIStatus, tasks);
 		return "Start Time of tasks at " + indexes + " has been removed.";
 	}
 	
 	private String convertToFloating(ArrayList<Integer> indexes) {
-		ArrayList<Task> tasks = getTasks(this.UIStatus); 
+		ArrayList<Task> tasks = retrieve(this.UIStatus); 
 		for (Integer index: indexes) {
 			Task task = tasks.get(index - INDEX_ADJUSTMENT);
 			task.setEnd(null);
 			this.floatingTasks.add(task);
 			tasks.remove(index- INDEX_ADJUSTMENT);
 		}
-		this.setTasks(this.UIStatus, tasks);
+		this.modify(this.UIStatus, tasks);
 		this.UIStatus = UI_TAB.FLOATING;
 		return "Deadline of tasks at " + indexes + " has been removed.";
-	}
-
-	private String deleteTags(ArrayList<String> tags) {
-		String status = "";
-		for (int i=0; i<tags.size(); i++) {
-			String element = tags.get(i);
-			int index = indexOf(element);
-			if (index==-1) {
-				status += "Tag " + element + " is not found.\n";
-			}
-			else {
-				categories.remove(index);
-				ArrayList<Task> list = searchTasksbyTag(this.floatingTasks, element);
-				list.addAll(searchTasksbyTag(this.ongoingTasks, element));
-				list.addAll(searchTasksbyTag(this.completedTasks, element));
-				list.addAll(searchTasksbyTag(this.overdueTasks, element));
-				for (Task task: list) {
-					task.removeTag(element);
-				}
-			}
-			status += "Tag " + element + " is deleted.\n";
-		}
-		return status;
-	}
-
-	public String undo() {
-		return "Undone";
-	}
-
-	private String deleteAllTasks() {
-		setTasks(this.UIStatus, new ArrayList<Task>());
-		return "All tasks in " + this.UIStatus + " are deleted.";
-	}
-
-	private String deleteTask(ArrayList<Integer> indexes) {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
-		if (tasks.size()==0) {
-			return this.UIStatus + " is empty. There is nothing to delete.";
-		}
-		String status = "Task ";
-		try {
-			for (int i=0; i<indexes.size(); i++) {
-				tasks.remove(indexes.get(i)-1-i);
-				status += indexes.get(i) + ", ";
-			}
-			status = status.substring(0, status.length()-2);
-			status += " deleted.";
-			setTasks(this.UIStatus, tasks);
-		} catch (IndexOutOfBoundsException e) {
-			status = "Your index is out of bound.";
-		}
-		return status;
 	}
 }

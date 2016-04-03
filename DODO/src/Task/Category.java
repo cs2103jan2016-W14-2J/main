@@ -6,16 +6,33 @@ import java.util.*;
 
 public class Category {
 	private String name;
-	private TreeMap<String, Task> tasks;
+	private ArrayList<Task> tasks;
 	
-	public Category(String name, TreeMap<String, Task> tasks) {
+	public Category() {
+		this("");
+	}
+	
+	public Category(String name) {
 		this.name = name;
-		this.tasks = tasks;
+		this.tasks = new ArrayList<Task>();
+	}
+	
+	public Category(Category category) {
+		this.name = category.getName();
+		this.tasks = category.getTasks();
 	}
 	
 	/****************************MUTATORS******************************/
-	public void addTask(Task task) {
-		tasks.put(task.getName(), task);
+	public boolean addTask(Task task) {
+		if (!tasks.contains(task)) {
+			tasks.add(task);
+			return task.addCategory(this);
+		}
+		return false;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/****************************ACCESSORS*****************************/
@@ -24,12 +41,11 @@ public class Category {
 	}
 	
 	public ArrayList<Task> getTasks() {
-		ArrayList<Task> list = new ArrayList<Task>(tasks.values());
-		return list;
+		return this.tasks;
 	}
 	
 	@Override
 	public String toString() {
-		return this.name;
+		return "#" + name;
 	}
 }

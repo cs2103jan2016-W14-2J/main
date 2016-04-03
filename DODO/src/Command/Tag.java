@@ -9,32 +9,42 @@ import Task.Category;
 import Task.Task;
 
 public class Tag extends Command {
-
-	public Tag(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+	private static final String MESSAGE_SUCCESSFUL_TAG = 
+			"Task(s) \"%1$s\" is/are successfully tagged by \"%2$s\". ";
+	private static final String MESSAGE_UNSUCCESSFUL_TAG = 
+			"Task(s) \"%1$s\" is/are not successfully tagged by \"%2$s\". ";
+	
+	public Tag(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		super(parser, data, categories);
 	}
 
 	@Override
 	public String execute() {
-		int index = parser.getTaskID()-INDEX_ADJUSTMENT;
+		int index = parser.getTaskID();
 		ArrayList<String> tags = parser.getTag();
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
+		
 		Task task;
 		try {
 			task = tasks.get(index);
 		} catch (IndexOutOfBoundsException e) {
-			return "Your index is out of bound.";
+			return MESSAGE_INDEXOUTOFBOUND;
 		}
 
 		return tag(tags, task);
 	}
 
 	private String tag(ArrayList<String> tags, Task task) {
+		ArrayList<String> unsuccessfulTags = new ArrayList<String>();
+		ArrayList<String> successfulTags = new ArrayList<String>();
+		
 		for (String tag: tags) {
-			if (indexOf(tag)==-1) {
-				this.categories.add(tag);
+			Category category = this.findCategory(tag);
+			// task interchangably add category in class Category
+			if (category.addTask(task)) {
+				successfulTags.add(tag);
 			}
-			task.addTag(tag);
+			else unsuccessfulTags.add(tag);
 		}
 		/*if (categories.containsKey(tag)) {
 				Category category = categories.get(tag);
@@ -47,6 +57,14 @@ public class Tag extends Command {
 				categories.put(tag, category);
 				return "Task " + (index+INDEX_ADJUSTMENT) + " is tagged under the existing Tag "  + "\"" + tag + "\"";
 			}*/
-		return "Your task \"" + task + "\" is successfully tagged by " + tags + ".";
+		if (unsuccessfulTags.size()==0) {
+			return String.format(MESSAGE_SUCCESSFUL_TAG, task, successfulTags);
+		}
+		if (successfulTags.size()==0) {
+			return String.format(MESSAGE_UNSUCCESSFUL_TAG, task, unsuccessfulTags);
+		}
+		return String.format(MESSAGE_SUCCESSFUL_TAG, task, successfulTags) + 
+				String.format(MESSAGE_UNSUCCESSFUL_TAG, task, unsuccessfulTags);
+		
 	}
 }

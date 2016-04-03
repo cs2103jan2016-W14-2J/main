@@ -3,14 +3,16 @@ package Command;
 /* @@author: Lu Yang */
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import Parser.Parser;
+import Task.Category;
 import Task.Task;
 
 public class Flag extends Command {
 	private boolean toFlag;
 
-	public Flag(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories, boolean toFlag) {
+	public Flag(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories, boolean toFlag) {
 		super(parser, data, categories);
 		this.toFlag = toFlag;
 	}
@@ -32,7 +34,7 @@ public class Flag extends Command {
 	}
 
 	private String flagAll() {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
 
 		for (int i=1; i<=tasks.size(); i++) {
@@ -42,7 +44,7 @@ public class Flag extends Command {
 	}
 
 	private String flag(ArrayList<Integer> indexes) {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		String status = "";
 		int index = 0;
 		for (int i=indexes.size()-1; i>=0; i--) {

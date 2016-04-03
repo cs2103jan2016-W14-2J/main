@@ -3,13 +3,14 @@ package Command;
 /* @@author: Lu Yang */
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import Parser.*;
 import Task.*;
 
 public class Complete extends Command {
 
-	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, ArrayList<String> categories) {
+	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		super(parser, data, categories);
 	}
 
@@ -30,7 +31,7 @@ public class Complete extends Command {
 	}
 
 	private String completeAll() {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
 		
 		for (int i=0; i<=tasks.size(); i++) {
@@ -40,7 +41,7 @@ public class Complete extends Command {
 	}
 
 	private String complete(ArrayList<Integer> indexes) {
-		ArrayList<Task> tasks = getTasks(this.UIStatus);
+		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		String status = "";
 		int index = 0;
 		for (int i=indexes.size()-1; i>=0; i--) {
@@ -54,7 +55,7 @@ public class Complete extends Command {
 					task.setComplete();;
 					tasks.remove(index);
 					this.completedTasks.add(task);
-					setTasks(this.UIStatus, tasks);
+					this.modify(this.UIStatus, tasks);
 					status += "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.\n";
 				}
 			} catch (IndexOutOfBoundsException e) {

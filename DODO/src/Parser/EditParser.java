@@ -311,7 +311,9 @@ public class EditParser {
 	
 	private boolean hasTaskName(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		return (dates.size() == 0) ? true : false;
+		DateTimeParser dt = new DateTimeParser();
+		boolean hasDateTime = dt.extractDate(userInput);
+		return (dates.size() == 0 || hasDateTime == false) ? true : false;
 	}
 
 

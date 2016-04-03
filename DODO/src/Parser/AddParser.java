@@ -620,21 +620,16 @@ public class AddParser {
 
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
 		DateTimeParser dt = new DateTimeParser();
-		String timeChecker = dt.removeTime(userTask);
-		
+	//	String timeChecker = dt.removeTime(userTask);
+		boolean hasTimeDateElement = extractDate(userTask);
 		Date date = new Date();
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		System.out.println("TEST parseFloating :" + timeChecker);
+		System.out.println("TEST parseFloating :" + dates.size());
 		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}
 		else {
-			if (dates.size() == 1 && (!userTask.equals(timeChecker))) {
-				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
-				extractDateElement(userTask);
-			}
-			else if (dates.size() == 1 && (userTask.contains("tomorrow")
-					|| userTask.contains("today") || userTask.contains("yesterday"))) {
+			if (dates.size() == 1 && hasTimeDateElement == true) {
 				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				extractDateElement(userTask);
 			}

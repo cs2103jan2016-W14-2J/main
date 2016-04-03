@@ -84,14 +84,17 @@ public class DateTimeParser {
 	protected String removeNextFewDays(String userInput) {
 		String[] str = userInput.toLowerCase().split("\\s+");
 		ArrayList <String> taskItems = new ArrayList<String>(Arrays.asList(str));
-		
-		if (userInput.contains(" next") && !userInput.contains(" next week")) {
-			int index = taskItems.lastIndexOf("next");
-			taskItems.remove(index + 2);
-			taskItems.remove(index + 1);
-			taskItems.remove(index);
-			if (taskItems.get(index - 1).contains("the")) {
-				taskItems.remove(index - 1);
+		int indexOfNext = taskItems.lastIndexOf("next");
+		int indexOfDays = taskItems.lastIndexOf("days");
+
+		if (indexOfNext != 0 && (indexOfDays - indexOfNext) == 2  
+			&& !userInput.contains(" next week")) {
+			
+			taskItems.remove(indexOfDays);
+			taskItems.remove(indexOfNext + 1);
+			taskItems.remove(indexOfNext);
+			if (taskItems.get(indexOfNext - 1).contains("the")) {
+				taskItems.remove(indexOfNext - 1);
 			}
 			userInput = toStringTaskElements(taskItems);
 		}
@@ -122,6 +125,25 @@ public class DateTimeParser {
 			userInput = userInput.replace(" next week", "");
 		}
 		return userInput.trim();
+	}
+	protected String removeNextWeekday(String userInput) {
+		String[] temp = userInput.split("[\\s+]");
+		String newTaskName = "";
+		int positionOfWeekday = 0;
+
+		for (int i = 0; i < temp.length; i++) {
+			if (temp[i].contains("next")) {
+				positionOfWeekday = i + 1;
+				List<Date> dates = new PrettyTimeParser().parse(temp[positionOfWeekday]);
+				if (dates.size() != 0) {
+					temp[i] = "";
+					temp[positionOfWeekday] = "";
+					i++;
+				}
+			}
+			newTaskName += temp[i] + " ";
+		}
+		return newTaskName.trim();
 	}
 	
 	protected String removeTime (String userInput) {

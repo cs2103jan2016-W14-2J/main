@@ -27,9 +27,10 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiUntagCommand();
 		possibleCommands = initiateFlexiSearchCommand();
 		possibleCommands = initiateFlexiSortCommand();
-/*		possibleCommands = initiateFlexiHelpCommand();
-		possibleCommands = initiateFlexiDisplayCommand();
+		possibleCommands = initiateFlexiHelpCommand();
+		possibleCommands = initiateFlexiChangeDirectoryCommand();
 		possibleCommands = initiateFlexiExitCommand();
+/*		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiClearCommand();*/
 		
 	}
@@ -154,15 +155,20 @@ public class FlexiCommand {
 		return possibleCommands;
 	}
 	
-	/*
+	
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
-		possibleCommands.put("help", HELP);
-		possibleCommands.put("helps", HELP);
-		possibleCommands.put("h", HELP);
-		possibleCommands.put("assist", HELP);
+		possibleCommands.put("help", COMMAND_TYPE.HELP);
+		possibleCommands.put("helps", COMMAND_TYPE.HELP);
+		possibleCommands.put("h", COMMAND_TYPE.HELP);
+		possibleCommands.put("assist", COMMAND_TYPE.HELP);
 		return possibleCommands;
 	}
-	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiChangeDirectoryCommand() {
+		possibleCommands.put("cd", COMMAND_TYPE.CHANGE_DIRECTORY);
+		possibleCommands.put("redirect", COMMAND_TYPE.CHANGE_DIRECTORY);
+		return possibleCommands;
+	}
+	/*
 	private HashMap<String, CommandType> initiateFlexiDisplayCommand() {
 		possibleCommands.put("display", DISPLAY);
 		possibleCommands.put("displays", DISPLAY);
@@ -172,19 +178,19 @@ public class FlexiCommand {
 		possibleCommands.put("see", DISPLAY);
 		return possibleCommands;
 	}
-	
-	private HashMap<String, CommandType> initiateFlexiExitCommand() {
-		possibleCommands.put("exit", EXIT);
-		possibleCommands.put("exits", EXIT);
-		possibleCommands.put("quit", EXIT);
-		possibleCommands.put("quits", EXIT);
-		possibleCommands.put("q", EXIT);
-		possibleCommands.put("q!", EXIT);
-		possibleCommands.put("terminate", EXIT);
+	*/
+	private HashMap<String, COMMAND_TYPE> initiateFlexiExitCommand() {
+		possibleCommands.put("exit", COMMAND_TYPE.EXIT);
+		possibleCommands.put("exits", COMMAND_TYPE.EXIT);
+		possibleCommands.put("quit", COMMAND_TYPE.EXIT);
+		possibleCommands.put("quits", COMMAND_TYPE.EXIT);
+		possibleCommands.put("q", COMMAND_TYPE.EXIT);
+		possibleCommands.put("q!", COMMAND_TYPE.EXIT);
+		possibleCommands.put("terminate", COMMAND_TYPE.EXIT);
 		return possibleCommands;
 	}
 	
-	
+	/*
 	private HashMap<String, CommandType> initiateFlexiClearCommand() {
 		possibleCommands.put("clear", CLEAR);
 		possibleCommands.put("clears", CLEAR);

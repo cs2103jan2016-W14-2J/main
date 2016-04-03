@@ -13,9 +13,7 @@ import Task.*;
 
 public class Parser {
 
-	private static String MESSAGE_ERROR_READING_COMMAND_TYPE = "You have entered the wrong command. Kindly enter a valid input.";
-	private HashMap<String, COMMAND_TYPE> possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();	
-	
+	private HashMap<String, COMMAND_TYPE> possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();		
 	private final String MESSAGE_INPUT_ERROR = "You have entered an invalid input.";
 	
 	protected TASK_TYPE taskType;
@@ -46,11 +44,8 @@ public class Parser {
 	private String sortByAlphabetical;
 	private Date sortByDate;
 	private SORT_TYPE sortType;
+	private String newDirectory = "";
 	
-	public Parser() {
-		
-	}
-	// update
 	public Parser (String userInput) {
 		assert userInput.length() > 0;
 		executeCommand(userInput);
@@ -134,8 +129,15 @@ public class Parser {
 				SortParser sort = new SortParser(userInput);
 				setSortAttributes(sort.determineSortType(userInput));
 				break;
-			default:
-				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);
+			case EXIT:
+				break;
+			case HELP:
+				break;
+			case CHANGE_DIRECTORY:
+				newDirectory = getUserInputContent(userInput);
+				break;
+			case INVALID:
+				break;
 		}
 	}
 	
@@ -370,5 +372,10 @@ public class Parser {
 
 	public SORT_TYPE getSortType() {
 		return this.sortType;
+	}
+	
+	//************************************** ChangeDirectory Parser *********************************//
+	public String getNewDirectory() {
+		return this.newDirectory;
 	}
 }

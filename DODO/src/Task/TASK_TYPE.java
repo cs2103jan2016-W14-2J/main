@@ -3,5 +3,5 @@ package Task;
 /* @@author: Lu Yang */
 
 public enum TASK_TYPE {
-	DEADLINED, EVENT, FLOATING;
+	DEADLINED, EVENT, FLOATING, INVALID;
 }

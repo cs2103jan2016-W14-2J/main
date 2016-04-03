@@ -624,7 +624,7 @@ public class AddParser {
 		boolean hasTimeDateElement = extractDate(userTask);
 		Date date = new Date();
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		System.out.println("TEST parseFloating :" + dates.size());
+		System.out.println("TEST parseFloating :" + userTask);
 		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}
@@ -652,7 +652,9 @@ public class AddParser {
 		temp = dt.removeToday(temp);
 		temp = dt.removeThisComingWeekday(temp);
 		temp = dt.removeNextFewDays(temp);
+		System.out.println("TEST extractDateElement :" + temp);
 		temp = dt.removeNextWeek(temp);
+		temp = dt.removeNextWeekday(temp);
 		temp = dt.removeTime(temp);
 		temp = dt.removeDate(temp);
 		setTaskName(extractLastPreposition(temp));
@@ -674,6 +676,7 @@ public class AddParser {
 		temp = dt.removeThisComingWeekday(temp);
 		temp = dt.removeNextFewDays(temp);
 		temp = dt.removeNextWeek(temp);
+		temp = dt.removeNextWeekday(temp);
 		temp = dt.removeTime(temp);
 		temp = dt.removeDate(temp);
 	

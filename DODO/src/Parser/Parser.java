@@ -47,10 +47,6 @@ public class Parser {
 	private Date sortByDate;
 	private SORT_TYPE sortType;
 	
-	public Parser() {
-		
-	}
-	// update
 	public Parser (String userInput) {
 		assert userInput.length() > 0;
 		executeCommand(userInput);
@@ -133,6 +129,10 @@ public class Parser {
 				System.out.println("TEST SORT :" + userInput);
 				SortParser sort = new SortParser(userInput);
 				setSortAttributes(sort.determineSortType(userInput));
+				break;
+			case HELP:
+				break;
+			case CHANGE_DIRECTORY:
 				break;
 			default:
 				System.out.println(MESSAGE_ERROR_READING_COMMAND_TYPE);

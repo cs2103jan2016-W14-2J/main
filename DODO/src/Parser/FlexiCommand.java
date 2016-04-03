@@ -27,8 +27,9 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiUntagCommand();
 		possibleCommands = initiateFlexiSearchCommand();
 		possibleCommands = initiateFlexiSortCommand();
-/*		possibleCommands = initiateFlexiHelpCommand();
-		possibleCommands = initiateFlexiDisplayCommand();
+		possibleCommands = initiateFlexiHelpCommand();
+		possibleCommands = initiateFlexiChangeDirectoryCommand();
+/*		possibleCommands = initiateFlexiDisplayCommand();
 		possibleCommands = initiateFlexiExitCommand();
 		possibleCommands = initiateFlexiClearCommand();*/
 		
@@ -154,15 +155,20 @@ public class FlexiCommand {
 		return possibleCommands;
 	}
 	
-	/*
+	
 	private HashMap<String, COMMAND_TYPE> initiateFlexiHelpCommand() {
-		possibleCommands.put("help", HELP);
-		possibleCommands.put("helps", HELP);
-		possibleCommands.put("h", HELP);
-		possibleCommands.put("assist", HELP);
+		possibleCommands.put("help", COMMAND_TYPE.HELP);
+		possibleCommands.put("helps", COMMAND_TYPE.HELP);
+		possibleCommands.put("h", COMMAND_TYPE.HELP);
+		possibleCommands.put("assist", COMMAND_TYPE.HELP);
 		return possibleCommands;
 	}
-	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiChangeDirectoryCommand() {
+		possibleCommands.put("cd", COMMAND_TYPE.CHANGE_DIRECTORY);
+		possibleCommands.put("redirect", COMMAND_TYPE.CHANGE_DIRECTORY);
+		return possibleCommands;
+	}
+	/*
 	private HashMap<String, CommandType> initiateFlexiDisplayCommand() {
 		possibleCommands.put("display", DISPLAY);
 		possibleCommands.put("displays", DISPLAY);

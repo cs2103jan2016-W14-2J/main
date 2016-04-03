@@ -21,6 +21,7 @@ public class AddParser {
 	private final String KEYWORD_BY = " by ";
 	private final String KEYWORD_AT = " at ";
 	private final String KEYWORD_BEFORE = " before ";
+	private final String KEYWORD_IN = " in ";
 
 	private int LAST_POSITION_OF_FROM = -1;
 	private int LAST_POSITION_OF_TO = -1;
@@ -28,6 +29,7 @@ public class AddParser {
 	private int LAST_POSITION_OF_AT = -1;
 	private int LAST_POSITION_OF_BEFORE = -1;
 	private int LAST_POSITION_OF_BY = -1;
+	private int LAST_POSITION_OF_IN = -1;
 	
 	private String userTask = "";
 	private String taskName = "";
@@ -173,7 +175,8 @@ public class AddParser {
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String taskName) {
 		getKeywordPosition(taskName);
 		return (LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
-			LAST_POSITION_OF_BEFORE != -1 || LAST_POSITION_OF_BY != -1) ? true : false;
+			LAST_POSITION_OF_BEFORE != -1 || LAST_POSITION_OF_BY != -1
+			|| LAST_POSITION_OF_IN != -1) ? true : false;
 	}
 
 	private void getKeywordPosition(String taskName) {
@@ -183,6 +186,7 @@ public class AddParser {
 		LAST_POSITION_OF_BEFORE = temp.lastIndexOf("before");
 		LAST_POSITION_OF_BY = temp.lastIndexOf("by");
 		LAST_POSITION_OF_FROM = temp.lastIndexOf("from");
+		LAST_POSITION_OF_IN = temp.lastIndexOf("in");
 	}
 
 	private ArrayList<String> convertArrayListToLowerCase(String taskName) {
@@ -243,6 +247,7 @@ public class AddParser {
 		getKeywordPosition(taskName);
 		Date date = new Date();
 		boolean checkForDateTime = false;
+		System.out.println("parseDeadline : " + LAST_POSITION_OF_IN);
 		
 		if (LAST_POSITION_OF_BY != -1 && LAST_POSITION_OF_AT == -1) {
 			String tempTaskName = "";
@@ -612,6 +617,18 @@ public class AddParser {
 			else {
 				setTaskName(userTask);
 				setTaskType(TASK_TYPE.FLOATING);
+			}
+		}
+		else if (LAST_POSITION_OF_IN != -1) {
+			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_IN, taskItems.size())));
+			List<Date> dates = new PrettyTimeParser().parse(contentToAnalyse);
+			System.out.println("DEBUG IN:" + dates.size());
+			if ((contentToAnalyse.contains(" days ") || contentToAnalyse.contains(" days' ") 
+				|| contentToAnalyse.contains(" day ")) && (contentToAnalyse.contains(" time") 
+				|| contentToAnalyse.contains(" times")) && dates.size() != 0) {
+				taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_IN)));
+				setTaskName(taskName);
+				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 			}
 		}
 		return taskName;

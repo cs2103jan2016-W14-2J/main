@@ -53,7 +53,8 @@ public class Delete extends Command {
 		
 		try {
 			for (int i=indexes.size()-1; i>=0; i--) {
-				tasks.remove(i);
+				Task task = tasks.remove(i);
+				this.deleteCategory(task.getName());
 			}
 		} catch (IndexOutOfBoundsException e) {
 			return MESSAGE_INDEXOUTOFBOUND;
@@ -66,10 +67,12 @@ public class Delete extends Command {
 	
 	private String deleteAllTasks() {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
-		tasks.clear();
-		this.modify(this.UIStatus, tasks);
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
 		this.UIStatus = UI_TAB.ALL;
-		return String.format(MESSAGE_SUCCESSFUL_DELETE, "all indexes");
+		for (int i=1; i<=tasks.size(); i++) {
+			indexes.add(i);
+		}
+		return deleteTask(indexes);
 	}
 	
 	

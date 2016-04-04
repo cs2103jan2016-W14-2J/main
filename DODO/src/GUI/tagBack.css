@@ -383,3 +383,17 @@
     -fx-padding: 10 10 10 10;
     -fx-font-weight:900;
 }
+#noncolor{
+    -fx-background-color: 
+         #6C7A89,
+        radial-gradient(center 50% 0%, radius 100%, rgba(0.1,0,255,00), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 5,5,5,5;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white);
+    -fx-font-size: 25px;
+    -fx-padding: 10 10 10 10;
+    -fx-font-weight:900;
+}

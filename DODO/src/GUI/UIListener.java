@@ -117,7 +117,6 @@ public class UIListener {
     	Pane pane = new Pane();
     	transparentPo.arrowSizeProperty().set(0);
 
-
     	transparentPo.detachableProperty().set(false);
     	transparentPo.setContentNode(pane);
 		transparentPo.setOpacity(0.6);

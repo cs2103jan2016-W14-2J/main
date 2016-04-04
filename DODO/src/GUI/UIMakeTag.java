@@ -46,7 +46,8 @@ public class UIMakeTag {
 				return;
 			}
 		}	
-			
+		lbl.setId("noncolor");
+		lbl.setUserData("noncolor");
 
 		
 	

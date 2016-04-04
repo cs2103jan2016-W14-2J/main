@@ -29,16 +29,16 @@ public class UIWelcomePage
 			 BorderPane bp = new BorderPane();
 			 bp.setPrefSize(400, 5000);
 			 
-			 ImageView logoImgView = new ImageView();
+			/* ImageView logoImgView = new ImageView();
 			 Image logoImg = new Image(UIWelcomePage.class.getResourceAsStream("logo.png"));
 			 logoImgView.setImage(logoImg);
-			 bp.setCenter(logoImgView);
+			 bp.setCenter(logoImgView);*/
 			 
 			 ImageView logoImgView1 = new ImageView();
-			 Image logoImg1 = new Image(UIWelcomePage.class.getResourceAsStream("Page1.png"));
+			 Image logoImg1 = new Image(UIWelcomePage.class.getResourceAsStream("PAGE2.png"));
 			 logoImgView1.setImage(logoImg1);
-			 bp.setRight(logoImgView1);
-			 BorderPane.setAlignment(logoImgView1, Pos.CENTER_RIGHT);
+			 bp.setCenter(logoImgView1);
+			 BorderPane.setAlignment(logoImgView1, Pos.CENTER);
 			 
 			 box.getChildren().add(bp);
 		 }

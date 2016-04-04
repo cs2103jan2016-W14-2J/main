@@ -754,7 +754,7 @@ public class UIRightBox {
 	
 	private void setGreetingTab() 
 	{
-		pagination = new Pagination(5, 0);
+		pagination = new Pagination(1, 0);
 		tabWelcome.setUserData(UI_TAB.WELCOME);
 		tabPane.getTabs().add(tabWelcome);
 		tabWelcome.setContent(welcomeHB);

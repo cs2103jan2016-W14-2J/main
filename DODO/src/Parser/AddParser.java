@@ -706,8 +706,8 @@ public class AddParser {
 		int lastWordPosition = str.length - 1;
 		
 		if (str[lastWordPosition].contains("at") || 
-			str[lastWordPosition].contains("by") ||
-			str[lastWordPosition].contains("on")) {
+			str[lastWordPosition].contains(KEYWORD_BY) ||
+			str[lastWordPosition].contains(KEYWORD_ON)) {
 			str[lastWordPosition] = "";
 		}
 		for (int i = 0; i < str.length; i++) {

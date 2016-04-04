@@ -1,14 +1,9 @@
 package GUI;
 
 import java.util.ArrayList;
-import java.util.Date;
-
-import org.controlsfx.glyphfont.FontAwesome;
 
 import Logic.Logic;
 import Task.Category;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;

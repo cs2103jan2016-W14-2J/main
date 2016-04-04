@@ -1,48 +1,22 @@
 package GUI;
 
-import Command.*;
-import Logic.*;
-import Parser.*;
-import Storage.*;
-import Task.*;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.TreeMap;
 
-import org.controlsfx.control.HiddenSidesPane;
-
-import com.sun.javafx.scene.control.skin.DatePickerSkin;
-
+import Logic.Logic;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
+import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 /*
  *@author Chiang Jia Feng
@@ -76,6 +50,8 @@ public class UILeftBox {
 	private int intOngoingTasks = 0;
 	private UIMakeTag makeTag;
 	private Label lblLogo;
+	final ScrollPane scroll = new ScrollPane();
+
 	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
 		this.logic = logic;
@@ -97,18 +73,34 @@ public class UILeftBox {
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
 		flowpaneCategory.setPrefSize(500, 500);
-		
+
 		makeTag = new UIMakeTag(logic);
 	}
 
 	public void build(UIRightBox rightBox) {
 		this.rightBox = rightBox;
 		updateChart();
+		updateTagScroll();
 		updateTag();
 		listen.chartListener(chart, rightBox);
 		listData.addAll(floatingData, ongoingData, completedData, overdueData);
 		usc.cssLeftBoxComponents(lblLogo,leftBox, chart, titledPane, lblCategory, listView);
-		leftBox.getChildren().addAll(lblLogo,chart, lblCategory, flowpaneCategory);
+		leftBox.getChildren().addAll(lblLogo,chart, lblCategory, scroll);
+	}
+
+	private void updateTagScroll() 
+	{
+			scroll.setPrefSize(500, 500);
+	        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // Vertical scroll bar
+	        scroll.setContent(flowpaneCategory);
+	        scroll.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+	            @Override
+	            public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
+	            	flowpaneCategory.setPrefWidth(bounds.getWidth());
+	            	flowpaneCategory.setPrefHeight(bounds.getHeight());
+	            }
+	        });		
+	        
 	}
 
 	public void updateLeftBox() {

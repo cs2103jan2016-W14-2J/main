@@ -1,19 +1,11 @@
 package GUI;
 
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.List;
 import java.util.ArrayList;
-import java.util.Random;
 
 import Logic.Logic;
 import Task.Category;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Paint;
 
 public class UIMakeTag {
 

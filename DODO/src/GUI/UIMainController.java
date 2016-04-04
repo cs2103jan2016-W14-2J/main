@@ -1,31 +1,15 @@
 package GUI;
 
-import Command.*;
-import Logic.*;
-import Parser.*;
-import Storage.*;
-import Task.*;
-import javafx.application.Application;
+import Logic.Logic;
 import javafx.concurrent.Task;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Side;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import org.controlsfx.control.MasterDetailPane;
-import org.controlsfx.control.MaskerPane;
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.control.PopOver;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /*
  *@author Chiang Jia Feng

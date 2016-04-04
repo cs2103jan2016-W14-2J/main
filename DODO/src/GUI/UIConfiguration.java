@@ -1,6 +1,5 @@
 package GUI;
 
-import Logic.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import Logic.Logic;
 import javafx.application.Application;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

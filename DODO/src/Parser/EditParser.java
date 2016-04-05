@@ -44,7 +44,7 @@ public class EditParser {
 
 	
 	private void executeEditParser(String userInput) {
-		String[] editElements = userInput.replaceAll("[:-]", "").split("\\s+");
+		String[] editElements = userInput.replaceAll("[:-]", "").split("\\s+]");
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
 		newTaskName = checkForAbbreviation(editTaskElements);
 		String[] updatedElements = newTaskName.replaceAll("[:-]", "").split("\\s+");
@@ -95,7 +95,7 @@ public class EditParser {
 	}
 
 	private void parserEditTag(String userInput) {
-		String[] str = userInput.trim().split("[\\s+]");
+		String[] str = userInput.trim().split("\\s+");
 		assert str.length <= 3 && str.length > 0;
 		
 		if (str[0].startsWith(STRING_HASH_TAG) && str[2].startsWith(STRING_HASH_TAG)) {
@@ -312,7 +312,7 @@ public class EditParser {
 	private boolean hasTaskName(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		DateTimeParser dt = new DateTimeParser();
-		boolean hasDateTime = dt.extractDate(userInput);
+		boolean hasDateTime = dt.hasDateAndTimeElements(userInput);
 		return (dates.size() == 0 || hasDateTime == false) ? true : false;
 	}
 
@@ -344,7 +344,6 @@ public class EditParser {
 	
 	private String checkForAbbreviation(ArrayList<String> editTaskElements) {
 		String name = "";
-		DateTimeParser dt = new DateTimeParser();
 		name = dt.processToday(editTaskElements);
 		name = dt.processTomorrow(editTaskElements);
 		name = dt.processYesterday(editTaskElements);

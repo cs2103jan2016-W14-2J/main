@@ -39,27 +39,32 @@ public class AddParser {
 	
 	private Date startTime;
 	private Date endTime;
-	private DateTimeParser dt = new DateTimeParser();
+	private DateTimeParser dt;
+	private PrettyTimeParser pt;
+	private List<Date> dates;
 	
 	private ArrayList<String> taskItems;
 
+	public AddParser() {
+		pt = new PrettyTimeParser();
+	}
+	
 	public AddParser(String userTask) {
 		this.userTask = userTask;
 		executeAddParser(userTask);
 	}
 	
 	private void executeAddParser(String userTask) {
+		dt = new DateTimeParser();
 		String[] str = userTask.split("\\s+");
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		taskName = checkForAbbreviation(taskItems);
-		taskName = checkForDateElement(taskItems);
-
+		taskName = dt.checkAndConvertDateElement(taskItems);
 		taskType = determineTaskType(taskItems, taskName);
-		System.out.println("At line 53 : " + taskType);
+		
 		switch(taskType) {
 			case DEADLINED:
 				taskName = parseDEADLINED();
-				System.out.println("@line 59 :" + taskName);
 				parseFloating(taskItems, taskName);
 				break;
 			case FLOATING:
@@ -70,45 +75,12 @@ public class AddParser {
 				parseFloating(taskItems, taskName);
 				break;
 			default:
-				System.exit(1);
+				setTaskType(TASK_TYPE.INVALID);
 		}
-		
 	}
 
-	private String checkForDateElement(ArrayList<String> taskItems) {
-		for (int i = 0; i < taskItems.size(); i++) {
-			try {
-				DateFormat srcDf = new SimpleDateFormat("dd/MM/yyyy");
-				Date date = srcDf.parse(taskItems.get(i));
-				DateFormat destDf = new SimpleDateFormat("yyyy/MM/dd");
-				taskItems.set(i, destDf.format(date));
-			}
-			catch (ParseException e) {				
-			}
-			try {
-				DateFormat srcDf = new SimpleDateFormat("dd.MM.yyyy");
-				Date date = srcDf.parse(taskItems.get(i));
-				DateFormat destDf = new SimpleDateFormat("yyyy/MM/dd");
-				taskItems.set(i, destDf.format(date));
-			}
-			catch (ParseException e) {				
-			}
-			
-			try {
-				DateFormat srcDf = new SimpleDateFormat("dd-MM-yyyy");
-				Date date = srcDf.parse(taskItems.get(i));
-				DateFormat destDf = new SimpleDateFormat("yyyy/MM/dd");
-				taskItems.set(i, destDf.format(date));
-			}
-			catch (ParseException e) {				
-			}
-			
-		}
-		return toStringTaskElements(taskItems);
-	}
 	
 	private String checkForAbbreviation(ArrayList<String> taskItems) {
-		System.out.println("checkForAbbrevation");
 		String name = "";
 		DateTimeParser dt = new DateTimeParser();
 		name = dt.processToday(taskItems);
@@ -143,7 +115,7 @@ public class AddParser {
 
 		// add study from <startDate> to <endDate>
 		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_FROM != -1) {
-			if (checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
+			if (dt.checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) {
 				return true;
 			}
 			else {
@@ -152,7 +124,7 @@ public class AddParser {
 			}
 		}
 		else if (LAST_POSITION_OF_FROM > LAST_POSITION_OF_TO) {
-			if (checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, taskName.length())) {
+			if (dt.checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, taskName.length())) {
 				return true;
 			}
 			else {
@@ -163,13 +135,6 @@ public class AddParser {
 		else {
 			return false;
 		}
-	}
-
-	private boolean checkForDateAndTime(String taskName, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
-		String str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
-		System.out.println("Test checkForDateAndTime : " + str);
-		List<Date> dates = new PrettyTimeParser().parse(str);
-		return (dates.size() != 0) ? true : false; 
 	}
 
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String taskName) {
@@ -265,7 +230,7 @@ public class AddParser {
 				confirmTaskName = taskName;
 				setTaskName(confirmTaskName);
 			}
-			checkForDateTime = extractDate(tempTaskName);
+			checkForDateTime = dt.hasDateAndTimeElements(tempTaskName);
 			
 			List<Date> dateOneBy = new PrettyTimeParser().parse(contentToAnalyse);
 			List<Date> dateTwoBy = new PrettyTimeParser().parse(tempTaskName);
@@ -309,7 +274,7 @@ public class AddParser {
 				confirmTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_BY)));
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, LAST_POSITION_OF_AT)));
 				tempTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
-				checkForDateTime = extractDate(tempTaskName);
+				checkForDateTime = dt.hasDateAndTimeElements(tempTaskName);
 				
 				List<Date> dateByToAt = new PrettyTimeParser().parse(contentToAnalyse);
 				List<Date> dateAtToEnd = new PrettyTimeParser().parse(tempTaskName);
@@ -350,7 +315,7 @@ public class AddParser {
 				confirmTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 				contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_BY)));
 				tempTaskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_BY, taskItems.size())));
-				checkForDateTime = extractDate(contentToAnalyse);
+				checkForDateTime = dt.hasDateAndTimeElements(contentToAnalyse);
 				
 				List<Date> dateAtToBy = new PrettyTimeParser().parse(contentToAnalyse);
 				List<Date> dateByToEnd = new PrettyTimeParser().parse(tempTaskName);
@@ -420,7 +385,7 @@ public class AddParser {
 			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, LAST_POSITION_OF_AT)));
 			List<Date> date1 = new PrettyTimeParser().parse(str);
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
-			checkForDateTime = extractDate(contentToAnalyse);
+			checkForDateTime = dt.hasDateAndTimeElements(contentToAnalyse);
 			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
 			
 			// Example: revise on cs2130t at 2pm
@@ -465,7 +430,7 @@ public class AddParser {
 			
 			String str = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, LAST_POSITION_OF_ON)));
 			List<Date> date1 = new PrettyTimeParser().parse(str);
-			checkForDateTime = extractDate(str);
+			checkForDateTime = dt.hasDateAndTimeElements(str);
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_ON, taskItems.size())));
 			List<Date> date2 = new PrettyTimeParser().parse(contentToAnalyse);
 			
@@ -512,7 +477,7 @@ public class AddParser {
 			
 			taskName = toStringTaskElements(new ArrayList<String>(taskItems.subList(0, LAST_POSITION_OF_AT)));
 			contentToAnalyse = toStringTaskElements(new ArrayList<String>(taskItems.subList(LAST_POSITION_OF_AT, taskItems.size())));
-			checkForDateTime = extractDate(contentToAnalyse);
+			checkForDateTime = dt.hasDateAndTimeElements(contentToAnalyse);
 			System.out.println("DEBUG @290:" + taskName);
 			// Example: meet Hannah at 7pm at Jurong East
 			if (taskName.lastIndexOf(KEYWORD_AT) != -1) {
@@ -638,42 +603,31 @@ public class AddParser {
 	private void parseFloating(ArrayList<String> taskItems, String userTask) {
 		DateTimeParser dt = new DateTimeParser();
 	//	String timeChecker = dt.removeTime(userTask);
-		boolean hasTimeDateElement = extractDate(userTask);
+		boolean hasTimeDateElement = dt.hasDateAndTimeElements(userTask);
 		Date date = new Date();
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		System.out.println("TEST parseFloating :" + userTask);
+		System.out.println("TEST parseFloating 123:" + userTask);
 		if (dates.size() == 0) {
 			setTaskName(userTask);
 		}
 		else {
 			if (dates.size() == 1 && hasTimeDateElement == true) {
 				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
-				extractDateElement(userTask);
+				finalVerification(userTask);
 			}
 			else if (dates.size() > 1){
 				setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
 				setStartTime(dates.get(0));
-				extractDateElement(userTask);
+				finalVerification(userTask);
 				setTaskType(TASK_TYPE.EVENT);
 			}
 		}
 	
 	}
 	
-	private void extractDateElement(String userTask) {
+	private void finalVerification(String userTask) {
 		String temp = "";
-		DateTimeParser dt = new DateTimeParser();
-		temp = dt.removeTheDayAfterTomorrow(userTask);
-		temp = dt.removeYesterday(temp);
-		temp = dt.removeTomorrow(temp);
-		temp = dt.removeToday(temp);
-		temp = dt.removeThisComingWeekday(temp);
-		temp = dt.removeNextFewDays(temp);
-		System.out.println("TEST extractDateElement :" + temp);
-		temp = dt.removeNextWeek(temp);
-		temp = dt.removeNextWeekday(temp);
-		temp = dt.removeTime(temp);
-		temp = dt.removeDate(temp);
+		temp = dt.extractDate(userTask);
 		setTaskName(extractLastPreposition(temp));
 		if (temp.trim().equals(userTask.trim())) {
 			setTaskType(TASK_TYPE.FLOATING);
@@ -683,31 +637,14 @@ public class AddParser {
 		}
 	}
 	
-	private boolean extractDate(String userTask) {
-		String temp = "";
-		DateTimeParser dt = new DateTimeParser();
-		temp = dt.removeTheDayAfterTomorrow(userTask);
-		temp = dt.removeYesterday(temp);
-		temp = dt.removeTomorrow(temp);
-		temp = dt.removeToday(temp);
-		temp = dt.removeThisComingWeekday(temp);
-		temp = dt.removeNextFewDays(temp);
-		temp = dt.removeNextWeek(temp);
-		temp = dt.removeNextWeekday(temp);
-		temp = dt.removeTime(temp);
-		temp = dt.removeDate(temp);
-	
-		return (temp.trim().equals(userTask.trim())) ? false : true;
-	}
-	
 	private String extractLastPreposition(String temp) {
 		String[] str = temp.split("[\\s+]");
 		String newStr = "";
 		int lastWordPosition = str.length - 1;
 		
-		if (str[lastWordPosition].contains("at") || 
-			str[lastWordPosition].contains(KEYWORD_BY) ||
-			str[lastWordPosition].contains(KEYWORD_ON)) {
+		if (str[lastWordPosition].toLowerCase().contains(KEYWORD_AT) || 
+			str[lastWordPosition].toLowerCase().contains(KEYWORD_BY) ||
+			str[lastWordPosition].toLowerCase().contains(KEYWORD_ON)) {
 			str[lastWordPosition] = "";
 		}
 		for (int i = 0; i < str.length; i++) {

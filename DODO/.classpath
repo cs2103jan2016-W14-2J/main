@@ -18,6 +18,5 @@
 	<classpathentry kind="lib" path="src/GUI/testfx-junit-4.0.1-alpha.jar"/>
 	<classpathentry kind="lib" path="src/Parser/prettytime-3.0.0.final.jar"/>
 	<classpathentry kind="lib" path="src/Parser/prettytime-nlp-4.0.1.Final.jar"/>
-	<classpathentry kind="lib" path="src/Command/joda-time-2.9.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

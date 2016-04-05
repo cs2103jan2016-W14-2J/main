@@ -41,8 +41,7 @@ public class Parser {
 	private Date searchByDate;
 	private String searchByTag;
 	
-	private String sortByAlphabetical;
-	private Date sortByDate;
+
 	private SORT_TYPE sortType;
 	private String newDirectory = "";
 	
@@ -65,7 +64,7 @@ public class Parser {
 		COMMAND_TYPE commandType = determineCommandType(command);
 		
 		// concatenate add command in front for processing
-		if (commandType == COMMAND_TYPE.ADD && !userInput.toLowerCase().contains(_commandAdd)) {
+		if (commandType == COMMAND_TYPE.ADD) {
 			userInput = _commandAdd + " " + userInput;
 			System.out.println("TEST ADD :" + userInput);
 		}

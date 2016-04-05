@@ -3,8 +3,6 @@ package Test;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -58,24 +56,24 @@ public class TestParser {
 		assertEquals(TASK_TYPE.FLOATING, parser.getType());
 		
 	}
-/*	
+	
 	@Test
 	public void testFloating() throws Exception{
 		
-		Parser parser = new Parser("drive by the beach");
-		assertEquals("drive by the beach", parser.getName());
+		Parser parser = new Parser("Drive by the beach");
+		assertEquals("Drive by the beach", parser.getName());
 		
 		parser = new Parser("fetch my brother from school");
 		assertEquals("fetch my brother from school", parser.getName());
 		
-		parser = new Parser("meet sheena at the school");
-		assertEquals("meet sheena at the school", parser.getName());
+		parser = new Parser("Pick Sheena from the school");
+		assertEquals("Pick Sheena from the school", parser.getName());
 		
-		parser = new Parser("lie on the bed with hannah");
-		assertEquals("lie on the bed with hannah", parser.getName());
+		parser = new Parser("lie on the bed with Hannah");
+		assertEquals("lie on the bed with Hannah", parser.getName());
 		
-		parser = new Parser("lie on the bed with hannah at hotel 81");
-		assertEquals("lie on the bed with hannah at hotel 81", parser.getName());
+		parser = new Parser("lie on the bed with Hannah at hotel 81");
+		assertEquals("lie on the bed with Hannah at hotel 81", parser.getName());
 		
 		parser = new Parser("brush my teeth before bedtime");
 		assertEquals("brush my teeth before bedtime", parser.getName());
@@ -86,14 +84,17 @@ public class TestParser {
 		parser = new Parser("cycle with jun lem from sengkang to nus");
 		assertEquals("cycle with jun lem from sengkang to nus", parser.getName());
 	
-		parser = new Parser("buy slurpee from #7/11#");
-		assertEquals("buy slurpee from #7/11#", parser.getName());
+		parser = new Parser("buy slurpee from |7/11|");
+		assertEquals("buy slurpee from |7/11|", parser.getName());
 		
 		parser = new Parser("dance on the dancefloor at zouk");
 		assertEquals("dance on the dancefloor at zouk", parser.getName());
 		
+		parser = new Parser("Meet Carousell buyer on the ground floor at block 2359");
+		assertEquals("Meet Carousell buyer on the ground floor at block 2359", parser.getName());
+		
 	}
-	
+	/*
 	@Test
 	public void testDeadlined() throws Exception {
 		

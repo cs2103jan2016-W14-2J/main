@@ -15,7 +15,7 @@ public class FlexiCommand {
 	
 	public FlexiCommand() {
 		possibleCommands = new HashMap<String, COMMAND_TYPE>();
-		possibleCommands = initiateFlexiAddCommand();
+//		possibleCommands = initiateFlexiAddCommand();
 		possibleCommands = initiateFlexiDeleteCommand();
 		possibleCommands = initiateFlexiEditCommand();
 		possibleCommands = initiateFlexiCompleteCommand();
@@ -39,7 +39,7 @@ public class FlexiCommand {
 		return possibleCommands;
 	}
 	
-	
+/*	
 	private HashMap<String, COMMAND_TYPE> initiateFlexiAddCommand() {
 		possibleCommands.put("add", COMMAND_TYPE.ADD);
 		possibleCommands.put("+", COMMAND_TYPE.ADD);
@@ -51,7 +51,7 @@ public class FlexiCommand {
 		possibleCommands.put("creat", COMMAND_TYPE.ADD);
 		return possibleCommands;
 	}
-	
+*/	
 	private HashMap<String, COMMAND_TYPE> initiateFlexiDeleteCommand() {
 		possibleCommands.put("d", COMMAND_TYPE.DELETE);
 		possibleCommands.put("delete", COMMAND_TYPE.DELETE);

@@ -156,6 +156,7 @@ public class Logic {
 			break;
 		case UNDO:
 			try {
+				this.update(this.history.undoData(this.compress()), this.history.undoCategories(categories));
 				message = MESSAGE_SUCCESSFUL_UNDO;
 			} catch (EmptyStackException e) {
 				message = MESSAGE_UNSUCCESSFUL_UNDO;
@@ -163,6 +164,7 @@ public class Logic {
 			break;
 		case REDO:
 			try {
+				this.update(this.history.redoData(), this.history.redoCategories());
 				message = MESSAGE_SUCCESSFUL_REDO;
 			} catch (EmptyStackException e) {
 				message = MESSAGE_UNSUCCESSFUL_REDO;
@@ -185,13 +187,14 @@ public class Logic {
 	}
 	
 	private String execute(Command command) {
+		history.save(compress(), cloneCategories(this.categories));
 		String message = command.execute();
 		this.status = command.getStatus();
 		return message;
 	}
 	
 	/***************************************DATA MANIPULATION***********************************/
-	/*private String update(ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
+	private String update(ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);
 		this.completedTasks = data.get(2);
@@ -203,17 +206,16 @@ public class Logic {
 
 	private ArrayList<ArrayList<Task>> compress() {
 		ArrayList<ArrayList<Task>> data = new ArrayList<ArrayList<Task>> ();
-		data.add(floatingTasks);
-		data.add(ongoingTasks);
-		data.add(completedTasks);
-		data.add(overdueTasks);
-		data.add(results);
+		data.add(cloneList(this.floatingTasks));
+		data.add(cloneList(this.ongoingTasks));
+		data.add(cloneList(this.completedTasks));
+		data.add(cloneList(this.overdueTasks));
+		data.add(cloneList(this.results));
 		return data;
-	}*/
+	}
 	
 	
-	/**********************************CLONE**********************************************************/
-	
+	/**********************************FOR UNDO/REDO**********************************************************/
 	private ArrayList<Task> cloneList(ArrayList<Task> original) {
 		ArrayList<Task> newList = new ArrayList<Task>();
 		for (int i=0; i<original.size(); i++) {

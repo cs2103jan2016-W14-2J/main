@@ -33,7 +33,7 @@ public class History {
 	
 	public TreeMap<String, Category> undoCategories(TreeMap<String, Category> categories) {
 		redo_categories.push(categories);
-		return redo_categories.pop();
+		return undo_categories.pop();
 	}
 	
 	public ArrayList<ArrayList<Task>> redoData() {

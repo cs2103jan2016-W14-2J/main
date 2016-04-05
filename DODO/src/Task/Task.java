@@ -15,7 +15,6 @@ public class Task {
 	private Date start;
 	private Date end;
 	private boolean flag;
-	private boolean isOverdue;
 	private ArrayList<String> categories;
 
 	// Default Constructor
@@ -31,33 +30,30 @@ public class Task {
 
 		this.categories = new ArrayList<String>();
 		this.flag = false;
-		this.isOverdue = false;
 	}
 
 	// Constructor of Deadlined Tasks
 	public Task(String name, Date end) {
 		this.type = TASK_TYPE.DEADLINED;
-		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
 		/*this.end = formatter.format(end);*/
 		this.end = end;
+		this.status = checkOverdue(end);
 
 		this.categories = new ArrayList<String>();
 		this.flag = false;;
-		this.isOverdue = checkOverdue(end);
 	}
 
 	// Constructor of Event
 	public Task(String name, Date start, Date end) {
 		this.type = TASK_TYPE.EVENT;
-		this.status =TASK_STATUS.ONGOING;
 		this.name = name;
 		this.end = end;
 		this.start = start;
+		this.status = checkOverdue(end);
 
 		this.categories = new ArrayList<String>();
 		this.flag = false;
-		this.isOverdue = checkOverdue(end);
 	}
 
 	// copy constructor
@@ -68,7 +64,6 @@ public class Task {
 		this.end = original.end;
 		this.start = original.start;
 		this.flag = original.flag;
-		this.isOverdue = original.isOverdue;
 		this.categories = original.categories;
 	}
 
@@ -91,10 +86,6 @@ public class Task {
 
 	public ArrayList<String> getCategories() {
 		return this.categories;
-	}
-
-	public boolean getIsOverdue() {
-		return this.isOverdue;
 	}
 
 	public Date getStart() {
@@ -153,7 +144,7 @@ public class Task {
 				this.type = TASK_TYPE.DEADLINED;
 			}
 			this.end = end;
-			this.isOverdue = checkOverdue(end);
+			this.status = checkOverdue(end);
 		}
 	}
 
@@ -197,15 +188,13 @@ public class Task {
 	
 	
 	/********************************************INTERNAL*************************************/
-	private boolean checkOverdue(Date end) {
+	private TASK_STATUS checkOverdue(Date end) {
 		Date current = new Date();
 		if  (current.after(end)) {
-			this.status = TASK_STATUS.OVERDUE;
-			return true;
+			return TASK_STATUS.OVERDUE;
 		}
 		else {
-			this.status = TASK_STATUS.ONGOING;
-			return false;
+			return TASK_STATUS.ONGOING;
 		}
 	}
 

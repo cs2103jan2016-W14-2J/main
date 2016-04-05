@@ -6,12 +6,16 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.Notifications;
 import org.controlsfx.control.PopOver;
 
 import Logic.Logic;
 import Task.Category;
 import Task.TASK_TYPE;
 import Task.Task;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,13 +36,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
-/*
- *@author Chiang Jia Feng
- *@Description: rightBox (Tabpane and Textfield)
- */
-
+//@@author A0125372L
 public class UIRightBox {
 	private Logger logger; 
 
@@ -50,7 +55,7 @@ public class UIRightBox {
 	private final double titledPaneHeight = 1450;
 	 
 	private final String welcomeTab = "Welcome"; 
-	private final String allTab = "All Tasks";
+	private final String allTab = "All Tasks";	
 	private final String onGoingTab = "Ongoing Tasks";
 	private final String completedTab = "Completed Tasks";
 	private final String overDueTab = "Overdue Tasks";
@@ -159,6 +164,7 @@ public class UIRightBox {
 		listen = new UIListener();
 		uiPopUpFeedBack = new UIPopUpFeedBack(popUpFeedBack, mainTextField);
 
+		
 	}
 	//add list -> add vbtab ->
 	void build(UILeftBox leftBox) 
@@ -238,11 +244,9 @@ public class UIRightBox {
 		overdueVB.getChildren().add(vbOverdueTask);
 		searchVB.getChildren().add(vbSearchTask);
 		
+		 
 		chooseTab();
-		
 	}
-	
-	
 	private void chooseTab() 
 	{
 		if(tabPane.getTabs().contains(tabAll))
@@ -463,7 +467,8 @@ public class UIRightBox {
 								if (item != null) {
 									
 									ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
-									/*ArrayList<Label> lblTag = new ArrayList<Label>();
+									/*
+									ArrayList<Label> lblTag = new ArrayList<Label>();
 									uiMakeTag.MatchTagToCategories(logic, logic.getCategories());//match all the categories with a user data
 									lblTag.addAll(uiMakeTag.assignTagUserData(logic,item.getTags()));//apply the user data to each task's tag
 									*/

@@ -15,10 +15,7 @@ import javafx.application.Application;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-/*
- *@author Chiang Jia Feng
- *@Description: Configuration (detect first entry and )
- */
+//@@author A0125372L
 public class UIConfiguration extends Application 
 {
 	private final String CONFIG_FIRSTLINE_DIRECTORY_UNKNOWN = "DBDIR = EMPTY";

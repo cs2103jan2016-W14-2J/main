@@ -18,10 +18,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-/*
- *@author Chiang Jia Feng
- *@Description: leftBox (Graph, tag categories and calendar)
- */
+//@@author A0125372L
 public class UILeftBox {
 
 	private final String CATEGORY_HEADER = "Categories";

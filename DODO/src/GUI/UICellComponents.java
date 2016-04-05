@@ -11,7 +11,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-
+//@@author A0125372L
 public class UICellComponents
 {
 	private UIRightBox rightBox;
@@ -70,6 +70,7 @@ public class UICellComponents
 			vbStartAndEnd.getChildren().add(lblEnd);
 		}
 		chkFlag = new CheckBox();
+		chkFlag.translateYProperty().set(10);
 		if(Flag)
 		{
 			chkFlag.setSelected(true);

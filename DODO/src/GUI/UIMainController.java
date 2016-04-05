@@ -4,17 +4,17 @@ import Logic.Logic;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-/*
- *@author Chiang Jia Feng
- *@Description: GUI (intialize the root(VBox))
- */
+//@@author A0125372L
 public class UIMainController {
 	
 	private HBox root;
@@ -41,8 +41,9 @@ public class UIMainController {
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
 		
-
+		Stage newStage = new Stage();
 	}
+
 	public void start(Stage primaryStage) 
 	{		
 		primaryStage.sizeToScene();

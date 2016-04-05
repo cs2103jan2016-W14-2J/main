@@ -16,10 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-/*
- *@author Chiang Jia Feng
- *@Description: All scaling and css will be done here
- */
+//@@author A0125372L
 public class UICssScaling 
 {
 	String cssCellComponents;
@@ -35,7 +32,7 @@ public class UICssScaling
 	}
 	public void setCssAndScalingForCell(HBox cellRoot,Label lblIndex, Label lblName, ArrayList<Label> ListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
-		cellRoot.setPrefSize(100, 55);
+		cellRoot.setPrefSize(1000, 100);
 		lblName.setPrefSize(800, 500);
 		lblIndex.setMinSize(100, 55);
 		vbStartAndEnd.setPrefSize(400, 500);

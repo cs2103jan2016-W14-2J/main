@@ -5,7 +5,7 @@ package Command;
 import java.util.*;
 
 import GUI.UI_TAB;
-import Parser.Parser;
+import Parser.*;
 import Task.*;
 
 public class Search extends Command {
@@ -16,25 +16,25 @@ public class Search extends Command {
 	
 	
 	
-	public Search(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Search(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 	@Override
 	public String execute() {
-		SEARCH_TYPE type = parser.getSearchType();
+		SEARCH_TYPE type = cu.getSearchType();
 		switch (type) {
 		case BY_TASK:
-			String keyword = parser.getSearchByTask();
+			String keyword = cu.getSearchByTask();
 			return searchByKeyword(keyword);
-			/*Date searchDate = parser.getSearchByDate();
+			/*Date searchDate = cu.getSearchByDate();
 			System.out.println("============SEARCH=========== dt: " + searchDate);
 			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case BY_TAG:
-			String searchTag = parser.getSearchByTag();
+			String searchTag = cu.getSearchByTag();
 			return searchByTag(searchTag);
 		case BY_DATE:
-			/*Date searchDate = parser.getSearchByDate();
+			/*Date searchDate = cu.getSearchByDate();
 			System.out.println("============SEARCH=========== dt: " + searchDate);
 			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case INVALID:

@@ -17,7 +17,7 @@ public abstract class Command {
 	protected static final String MESSAGE_UNSUCCESSFUL_SEARCH_TAG = "There is no tag named \"%1$s\".";
 
 	protected UI_TAB UIStatus;
-	protected Parser parser;
+	protected CommandUtils cu;
 	protected ArrayList<Task> ongoingTasks;
 	protected ArrayList<Task> completedTasks;
 	protected ArrayList<Task> overdueTasks;
@@ -25,10 +25,10 @@ public abstract class Command {
 	protected ArrayList<Task> results;
 	protected TreeMap<String, Category> categories;
 
-	public Command(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Command(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
 		this.UIStatus = UIRightBox.getCurrentTab();
-		this.parser = parser;
+		this.cu = cu;
 		this.floatingTasks = floatingTasks;
 		this.ongoingTasks = ongoingTasks;
 		this.completedTasks = completedTasks;

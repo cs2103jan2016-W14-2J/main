@@ -17,79 +17,81 @@ public class TestParser {
 	@Test
 	public void testTaskType() throws Exception {
 		
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
 		
-		Parser parser = new Parser("drive by the beach");
-		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		cu = parser.executeCommand(cu, "drive by the beach");
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
-		parser = new Parser("submit assignment 1 by tomorrow");
-		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		cu = parser.executeCommand(cu, "submit assignment 1 by tomorrow");
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("take a walk by the beach by 2359hrs");
-		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		cu = parser.executeCommand(cu, "take a walk by the beach by 2359hrs");
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("submit assignment 1 by tomorrow by 2359hrs");
-		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		cu = parser.executeCommand(cu, "submit assignment 1 by tomorrow by 2359hrs");
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("fetch my brother at 2pm");
-		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		cu = parser.executeCommand(cu, "fetch my brother at 2pm");
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("attend soc camp from 27/6/2016 to 28/6/2016");
-		assertEquals(TASK_TYPE.EVENT, parser.getType());
+		cu = parser.executeCommand(cu, "attend soc camp from 27/6/2016 to 28/6/2016");
+		assertEquals(TASK_TYPE.EVENT, cu.getType());
 		
-		parser = new Parser("jog from school to home");
-		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		cu = parser.executeCommand(cu, "jog from school to home");
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
-		parser = new Parser("bake matcha cheesecake at home");
-		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		cu = parser.executeCommand(cu,"bake matcha cheesecake at home");
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
-		parser = new Parser("piano tuning on sunday");
-		assertEquals(TASK_TYPE.DEADLINED, parser.getType());
+		cu = parser.executeCommand(cu, "piano tuning on sunday");
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("build sandcastle on the road");
-		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		cu = parser.executeCommand(cu,"build sandcastle on the road");
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
-		parser = new Parser("dancing on the dancefloor at zouk");
-		assertEquals(TASK_TYPE.FLOATING, parser.getType());
+		cu = parser.executeCommand(cu, "dancing on the dancefloor at zouk");
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 	}
 	
 	@Test
 	public void testFloating() throws Exception{
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
 		
-		Parser parser = new Parser("Drive by the beach");
-		assertEquals("Drive by the beach", parser.getName());
+		cu = parser.executeCommand(cu,"Drive by the beach");
+		assertEquals("Drive by the beach", cu.getName());
 		
-		parser = new Parser("fetch my brother from school");
-		assertEquals("fetch my brother from school", parser.getName());
+		cu = parser.executeCommand(cu,"fetch my brother from school");
+		assertEquals("fetch my brother from school", cu.getName());
 		
-		parser = new Parser("Pick Sheena from the school");
-		assertEquals("Pick Sheena from the school", parser.getName());
+		cu = parser.executeCommand(cu,"Pick Sheena from the school");
+		assertEquals("Pick Sheena from the school", cu.getName());
 		
-		parser = new Parser("lie on the bed with Hannah");
-		assertEquals("lie on the bed with Hannah", parser.getName());
+		cu = parser.executeCommand(cu,"lie on the bed with Hannah");
+		assertEquals("lie on the bed with Hannah", cu.getName());
 		
-		parser = new Parser("lie on the bed with Hannah at hotel 81");
-		assertEquals("lie on the bed with Hannah at hotel 81", parser.getName());
+		cu = parser.executeCommand(cu,"lie on the bed with Hannah at hotel 81");
+		assertEquals("lie on the bed with Hannah at hotel 81", cu.getName());
 		
-		parser = new Parser("brush my teeth before bedtime");
-		assertEquals("brush my teeth before bedtime", parser.getName());
+		cu = parser.executeCommand(cu,"brush my teeth before bedtime");
+		assertEquals("brush my teeth before bedtime", cu.getName());
 		
-		parser = new Parser("brush my teeth before bedtime");
-		assertEquals("brush my teeth before bedtime", parser.getName());
-		
-		parser = new Parser("cycle with jun lem from sengkang to nus");
-		assertEquals("cycle with jun lem from sengkang to nus", parser.getName());
+		cu = parser.executeCommand(cu,"cycle with jun lem from sengkang to nus");
+		assertEquals("cycle with jun lem from sengkang to nus", cu.getName());
 	
-		parser = new Parser("buy slurpee from |7/11|");
-		assertEquals("buy slurpee from |7/11|", parser.getName());
+		cu = parser.executeCommand(cu,"buy slurpee from |7/11|");
+		assertEquals("buy slurpee from |7/11|", cu.getName());
 		
-		parser = new Parser("dance on the dancefloor at zouk");
-		assertEquals("dance on the dancefloor at zouk", parser.getName());
+		cu = parser.executeCommand(cu,"dance on the dancefloor at zouk");
+		assertEquals("dance on the dancefloor at zouk", cu.getName());
 		
-		parser = new Parser("Meet Carousell buyer on the ground floor at block 2359");
-		assertEquals("Meet Carousell buyer on the ground floor at block 2359", parser.getName());
+		cu = parser.executeCommand(cu,"Meet Carousell buyer on the ground floor at block 2359");
+		assertEquals("Meet Carousell buyer on the ground floor at block 2359", cu.getName());
 		
 	}
+
 	/*
 	@Test
 	public void testDeadlined() throws Exception {
@@ -191,7 +193,7 @@ public class TestParser {
 		assertEquals(expectedEnd, parser.getEndTime());
 	
 	}
-	*/
+	
 	@Test
 	public void testComplete() {
 		Parser parser = new Parser("complete 1");
@@ -221,6 +223,7 @@ public class TestParser {
 		
 		parser = new Parser("flag all");
 		assertEquals(FLAGANDCOMPLETE_TYPE.ALL, parser.getFlagAndCompleteType());
+		
 
 	}
 	
@@ -325,5 +328,5 @@ public class TestParser {
 		assertEquals(oldTag, parser.getOldTag());
 		assertEquals(newTag, parser.getTag().get(0));
 	
-	}
+	}*/
 }

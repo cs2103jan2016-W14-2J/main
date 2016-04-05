@@ -5,50 +5,43 @@ import java.util.ArrayList;
 import Command.*;
 
 public class FlagAndCompleteParser {
-	private String userTaskIndex;
 	private FLAGANDCOMPLETE_TYPE _type;
 	private ArrayList<Integer> taskIndex; 
 	
-	private static String MESSAGE_WRONG_DELETE_COMMAND = "Oops. Please enter a valid range.";
 	
-	
-	public FlagAndCompleteParser(String userTaskIndex) {
-		this.userTaskIndex = userTaskIndex;
+	public FlagAndCompleteParser() {
 		this.taskIndex = new ArrayList<Integer>();
-		executeDeleteParser(userTaskIndex);
 	}
-
-	private void executeDeleteParser(String userTaskIndex) {
-		
+	
+	protected CommandUtils executeFlagCompleteParser(CommandUtils commandUtil, String userTaskIndex) {
+	
 		String[] str = userTaskIndex.trim().replaceAll("[:.,]", " ").toLowerCase().split("\\s+");
+		commandUtil = detemineDeleteType(commandUtil, userTaskIndex.toLowerCase());
+		_type = commandUtil.getFlagAndCompleteType();
 		
-		switch (detemineDeleteType(userTaskIndex.toLowerCase())) {
+		switch (_type) {
 		
 			case SINGLE:
-				parseSingle(str);
-				break;
+				return parseSingle(commandUtil, str);
 			case MULTIPLE:
-				System.out.print("DEBUG @line 33: MULTIPLE");
-				parseMultiple(str);
-				break;
+				return parseMultiple(commandUtil, str);
 			case RANGE:
-				parseRange();
-				break;
+				return parseRange(commandUtil, userTaskIndex);
 			case ALL:
 				break;
 			default:
-				System.out.println(MESSAGE_WRONG_DELETE_COMMAND);
 				break;
 		}
+		return commandUtil;
 	}
 
-	private void parseRange() {
+	private CommandUtils parseRange(CommandUtils commandUtil, String userTaskIndex) {
 		
 		if (userTaskIndex.contains("-")) {
 			userTaskIndex = userTaskIndex.replace("-", " ");
 		}
-		else if (userTaskIndex.contains("to")) {
-			userTaskIndex = userTaskIndex.replace("to", " ");
+		else if (userTaskIndex.contains(" to ")) {
+			userTaskIndex = userTaskIndex.replace(" to ", " ");
 		}
 		
 		String[] temp = userTaskIndex.split("\\s+");
@@ -57,43 +50,43 @@ public class FlagAndCompleteParser {
 			for (int i = Integer.parseInt(temp[0]); i < Integer.parseInt(temp[1]) + 1; i++) {
 				taskIndex.add(i);
 			}
-			setTaskIndex(taskIndex);
 		}
+		commandUtil.setTaskToFlagAndMark(taskIndex);
+		return commandUtil;
 	}
 
-	private void parseMultiple(String[] str) {
+	private CommandUtils parseMultiple(CommandUtils commandUtil, String[] str) {
 		for (int i = 0; i < str.length; i++) {
 			taskIndex.add(Integer.parseInt(str[i]));
 		}
-		setTaskIndex(taskIndex);
+		commandUtil.setTaskToFlagAndMark(taskIndex);
+		return commandUtil;
 	}
 
-	private void parseSingle(String[] str) {
+	private CommandUtils parseSingle(CommandUtils commandUtil, String[] str) {
 		taskIndex.add(Integer.parseInt(str[0]));
-		setTaskIndex(taskIndex);
+		commandUtil.setTaskToFlagAndMark(taskIndex);
+		return commandUtil;
 	}
 
-	private FLAGANDCOMPLETE_TYPE detemineDeleteType(String usertaskIndex) {
+	private CommandUtils detemineDeleteType(CommandUtils commandUtil, String usertaskIndex) {
 
 		if (checkIfSingle(usertaskIndex)) {
-			setFlagCompleteType(FLAGANDCOMPLETE_TYPE.SINGLE);
-			return FLAGANDCOMPLETE_TYPE.SINGLE;
+			commandUtil.setFlagCompleteType(FLAGANDCOMPLETE_TYPE.SINGLE);
 		}
 		else if (checkIfRange(usertaskIndex)) {
-			setFlagCompleteType(FLAGANDCOMPLETE_TYPE.RANGE);
-			return FLAGANDCOMPLETE_TYPE.RANGE;
+			commandUtil.setFlagCompleteType(FLAGANDCOMPLETE_TYPE.RANGE);
 		}
 		else if (checkIfMultiple(usertaskIndex)) {
-			setFlagCompleteType(FLAGANDCOMPLETE_TYPE.MULTIPLE);
-			return FLAGANDCOMPLETE_TYPE.MULTIPLE;
+			commandUtil.setFlagCompleteType(FLAGANDCOMPLETE_TYPE.MULTIPLE);
 		}
 		else if (checkIfAll(usertaskIndex)) {
-			setFlagCompleteType(FLAGANDCOMPLETE_TYPE.ALL);
-			return FLAGANDCOMPLETE_TYPE.ALL;
+			commandUtil.setFlagCompleteType(FLAGANDCOMPLETE_TYPE.ALL);
 		}
 		else {
-			return null;
+			commandUtil.setFlagCompleteType(FLAGANDCOMPLETE_TYPE.INVALID);
 		}
+		return commandUtil;
 	}
 
 	private boolean checkIfAll(String usertaskIndex) {
@@ -112,21 +105,5 @@ public class FlagAndCompleteParser {
 	private boolean checkIfSingle(String usertaskIndex) {
 		return (!checkIfRange(usertaskIndex) && !checkIfMultiple(usertaskIndex)
 				&& !usertaskIndex.contains("all")) ? true : false;
-	}
-	
-	private void setFlagCompleteType(FLAGANDCOMPLETE_TYPE _type) {
-		this._type = _type;
-	}
-	
-	public FLAGANDCOMPLETE_TYPE getFlagCompleteType() {
-		return this._type;
-	}
-	
-	private void setTaskIndex(ArrayList<Integer> taskIndex) {
-		this.taskIndex = taskIndex;
-	}
-	
-	public ArrayList<Integer> getTaskIndex() {
-		return this.taskIndex;
 	}
 }

@@ -8,68 +8,62 @@ import Command.*;
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 public class SearchParser {
-	private String userTask;
 	private String tag;
 	private SEARCH_TYPE searchType;
-	private Date searchByDate;
 	private String PREPOSITION_BY = "by";
 	private String PREPOSITION_BY_WITH_SPACE = "by";
 	private String STRING_HASH_TAG = "#";
-	
-	public SearchParser(String userTask) {
-		this.userTask = userTask;
-		executeSearchParser(userTask);
+
+	public SearchParser() {
 	}
 
-	private void executeSearchParser(String userTask) {
+	protected CommandUtils executeSearchParser(CommandUtils commandUtil, String userTask) {
 		userTask = removeBy(userTask);
+		commandUtil = determineSearchType(commandUtil, userTask);
+		searchType = commandUtil.getSearchType();
 		
-		switch(determineSearchType(userTask)) {
+		switch(searchType) {
 			
 		case BY_DATE:
-			processByDate(userTask);
-			break;
+			return processByDate(commandUtil, userTask);
 		case BY_TASK:
-			break;
+			return commandUtil;
 		case BY_TAG:
-			processByTag(userTask);
-			break;
-		case INVALID:
-			setSearchType(SEARCH_TYPE.INVALID);
+			return processByTag(commandUtil, userTask);
+		default:
+			commandUtil.setSearchType(SEARCH_TYPE.INVALID);
 			break;
 		}
-			
+		return commandUtil;
 	}
 
-	private void processByTag(String userTask) {
+	private CommandUtils processByTag(CommandUtils commandUtil, String userTask) {
 		tag = userTask.trim().substring(1, userTask.length());
-		setSearchByTag(tag);
+		commandUtil.setSearchByTag(tag);
+		return commandUtil;
 	}
 
-	private void processByDate(String userTask) {
+	private CommandUtils processByDate(CommandUtils commandUtil, String userTask) {
 		List<Date> dates = new PrettyTimeParser().parse(userTask);
-		setSearchByDate(dates.get(0));
+		commandUtil.setSearchByDate(dates.get(0));
+		return commandUtil;
 	}
 
-	private SEARCH_TYPE determineSearchType(String userTask) {
+	private CommandUtils determineSearchType(CommandUtils commandUtil, String userTask) {
 		
 		if (isSearchDate(userTask)) {
-			setSearchType(SEARCH_TYPE.BY_DATE);
-			return SEARCH_TYPE.BY_DATE;
+			commandUtil.setSearchType(SEARCH_TYPE.BY_DATE);
 		}
 		else if (isSearchTaskName(userTask)) {
-			setSearchType(SEARCH_TYPE.BY_TASK);
-			return SEARCH_TYPE.BY_TASK;
+			commandUtil.setSearchType(SEARCH_TYPE.BY_TASK);
 		}
 		else if (isSearchTag(userTask)) {
-			setSearchType(SEARCH_TYPE.BY_TAG);
-			return SEARCH_TYPE.BY_TAG;
+			commandUtil.setSearchType(SEARCH_TYPE.BY_TAG);
 		}
 		else {
-			setSearchType(SEARCH_TYPE.INVALID);
-			return SEARCH_TYPE.INVALID;
+			commandUtil.setSearchType(SEARCH_TYPE.INVALID);
 		}
-		
+		return commandUtil;
 	}
 
 	private boolean isSearchTag(String userTask) {
@@ -94,35 +88,6 @@ public class SearchParser {
 		return userTask;
 	}
 	
-	//*********** Setter ************//
-	private void setSearchByDate(Date searchByDate) {
-		this.searchByDate = searchByDate;
-	}
-	
-	private void setSearchType(SEARCH_TYPE searchType) {
-		this.searchType = searchType;
-	}
-	
-	private void setSearchByTag(String tag) {
-		this.tag = tag;
-	}
-	
-	//*********** Getter ************//
-	protected SEARCH_TYPE getSearchType() {
-		return this.searchType;
-	}
-	
-	protected Date getSearchByDate() {
-		return this.searchByDate;
-	}
-	
-	protected String getSearchByTag() {
-		return this.tag;
-	}
-
-	protected String getSearchByTask() {
-		return this.userTask;
-	}
 
 	
 }

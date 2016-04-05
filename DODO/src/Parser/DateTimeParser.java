@@ -31,7 +31,7 @@ public class DateTimeParser {
 	private final String KEYWORD_DAY_AFTER_TOMORROW = " day after tomorrow";
 	private final String KEYWORD_TOMORROW_1 = "tomorrow";
 	private final String KEYWORD_TOMORROW_2 = "tomorrow ";
-	private final String KEYWORD_YESTERDAY_SHORTFORM = "ytd ";
+	private final String KEYWORD_YESTERDAY_SHORTFORM = "ytd";
 	private final String KEYWORD_YESTERDAY = "yesterday";
 	private final String KEYWORD_TODAY = "today";
 	private final String KEYWORD_COMING = "coming";
@@ -208,6 +208,7 @@ public class DateTimeParser {
 	
 	protected String processTomorrow (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
+			System.out.println("Process Tomorrow : " + contentToAnalyse.get(i));
 			if (tomorrowTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
 				contentToAnalyse.set(i, KEYWORD_TOMORROW_1);
 			}
@@ -330,6 +331,15 @@ public class DateTimeParser {
 			
 		}
 		return toStringTaskElements(taskItems);
+	}
+	
+	protected String checkForAbbreviation(ArrayList<String> taskItems) {
+		String name = "";
+		name = processToday(taskItems);
+		name = processTomorrow(taskItems);
+		name = processYesterday(taskItems);
+		name = processAt(taskItems);
+		return name;
 	}
 	
 }

@@ -13,25 +13,26 @@ public class SortParser {
 	private String PREPOSITION_BY = "by";
 	
 	
-	public SortParser(String userTask) {
+	public SortParser() {
 	
 	}
 	
-	protected SORT_TYPE determineSortType(String userTask) {
+	protected CommandUtils determineSortType(CommandUtils commandUtil, String userTask) {
 		userTask = removeBy(userTask.toLowerCase());
 		
 		if (isSortByDate(userTask)) {
-			return SORT_TYPE.BY_DATE;
+			commandUtil.setSortType(SORT_TYPE.BY_DATE);
 		}
 		else if (isSortByAlphabetical(userTask)) {
-			return SORT_TYPE.BY_ASCENDING;
+			commandUtil.setSortType(SORT_TYPE.BY_ASCENDING);
 		}
 		else if (isSortByReverseAlphabetical(userTask)) {
-			return SORT_TYPE.BY_DESCENDING;
+			commandUtil.setSortType(SORT_TYPE.BY_DESCENDING);
 		}
 		else {
-			return SORT_TYPE.INVALID;
+			commandUtil.setSortType(SORT_TYPE.INVALID);
 		}
+		return commandUtil;
 	}
 
 	private boolean isSortByReverseAlphabetical(String userTask) {

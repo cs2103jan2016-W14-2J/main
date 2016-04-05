@@ -16,14 +16,14 @@ public class Add extends Command {
 	private static final String MESSAGE_INVALID_ADD = "Please enter a valid add command.";
 	private static final String MESSAGE_SUCCESSFUL_ADD = "Task \"%1$s\" is added to %2$s.";
 
-	public Add(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Add(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
 	public String execute() {
-		TASK_TYPE type = parser.getType();
+		TASK_TYPE type = cu.getType();
 		switch (type) {
 		case FLOATING:
 			return addFloatingTasks();
@@ -37,8 +37,8 @@ public class Add extends Command {
 	}
 	
 	private String addFloatingTasks() {
-		String name = parser.getName();
-		ArrayList<String> tags = parser.getTag();
+		String name = cu.getName();
+		ArrayList<String> tags = cu.getTag();
 		
 		Task task = new Task(name);
 		for (String tagString: tags) {
@@ -53,9 +53,9 @@ public class Add extends Command {
 	}
 	
 	private String addDeadlinedTasks() {
-		String name = parser.getName();
-		ArrayList<String> tags = parser.getTag();
-		Date endDateTime = parser.getEndTime();
+		String name = cu.getName();
+		ArrayList<String> tags = cu.getTag();
+		Date endDateTime = cu.getEndTime();
 		
 		Task task = new Task(name, endDateTime);
 		for (String tagString: tags) {
@@ -67,10 +67,10 @@ public class Add extends Command {
 	}
 	
 	private String addEvent() {
-		String name = parser.getName();
-		ArrayList<String> tags = parser.getTag();
-		Date startDateTime = parser.getStartTime();
-		Date endDateTime = parser.getEndTime();
+		String name = cu.getName();
+		ArrayList<String> tags = cu.getTag();
+		Date startDateTime = cu.getStartTime();
+		Date endDateTime = cu.getEndTime();
 		if (startDateTime.after(endDateTime)) {
 			return MESSAGE_INVALID_EVENT_TIME;
 		}

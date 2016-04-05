@@ -22,15 +22,15 @@ public class Edit extends Command {
 	private static final String MESSAGE_SUCCESSFUL_EDIT_TAG = 
 			"Tag name \"%1$s\" has been successfully edit to \"%2$s\".";
 
-	public Edit(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Edit(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
 	public String execute() {
-		EDIT_TYPE edit_type = parser.getEditType();
-		int index = parser.getTaskID();
+		EDIT_TYPE edit_type = cu.getEditType();
+		int index = cu.getTaskID();
 		ArrayList<Task> tasks = this.retrieve(this.UIStatus);
 		System.out.println("=====EDIT===== edit_type: " + edit_type);
 		try {
@@ -63,8 +63,8 @@ public class Edit extends Command {
 	}
 	
 	private String editTag() {
-		String oldTag = parser.getOldTag();
-		String newTag = parser.getTag().get(0);
+		String oldTag = cu.getOldTag();
+		String newTag = cu.getTag().get(0);
 		
 		if (this.editCategory(oldTag, newTag)) {
 			return String.format(MESSAGE_SUCCESSFUL_EDIT_TAG, oldTag, newTag);
@@ -75,7 +75,7 @@ public class Edit extends Command {
 	}
 
 	private String editName(Task task) {
-		String newName = parser.getName();
+		String newName = cu.getName();
 		task.setName(newName);
 		
 		return String.format(MESSAGE_SUCCESSFUL_EDIT_NAME, task);
@@ -83,7 +83,7 @@ public class Edit extends Command {
 	
 	private String editStartTime(Task task) {
 		TASK_TYPE oldType = task.getType();
-		Date newStartTime = parser.getStartTime();
+		Date newStartTime = cu.getStartTime();
 		
 		if (newStartTime.after(task.getEnd())) {
 			return MESSAGE_INVALID_START_TIME;
@@ -98,7 +98,7 @@ public class Edit extends Command {
 	
 	private String editEndTime(Task task) {
 		TASK_TYPE oldType = task.getType();
-		Date newEndTime = parser.getEndTime();
+		Date newEndTime = cu.getEndTime();
 		
 		if (task.getType()==TASK_TYPE.EVENT && newEndTime.before(task.getStart())) {
 			return MESSAGE_INVALID_START_TIME;
@@ -114,8 +114,8 @@ public class Edit extends Command {
 	
 	private String editStartAndEndTime(Task task) {
 		TASK_TYPE type = task.getType();
-		Date newStartTime = parser.getStartTime();
-		Date newEndTime = parser.getEndTime();
+		Date newStartTime = cu.getStartTime();
+		Date newEndTime = cu.getEndTime();
 		
 		if (newStartTime.after(newEndTime)) {
 			return MESSAGE_INVALID_EVENT_TIME;

@@ -39,13 +39,14 @@ public class Logic {
 
 	public String run(String input) {
 		this.previous = input;
-		Parser parser;
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
 		try {
-			parser = new Parser(input);
+			cu = parser.executeCommand(cu, input);
 		} catch (Exception e) {
 			return "Invalid Command.";
 		}
-		return processCommand(parser);
+		return processCommand(cu);
 	}
 	
 	public String save() {
@@ -114,44 +115,44 @@ public class Logic {
 	}
 	
 	/***********************************PRIVATE METHODS***********************************************/
-	private String processCommand(Parser parser) {
+	private String processCommand(CommandUtils cu) {
 		String message = "";
-		COMMAND_TYPE command = parser.getCommandType();
+		COMMAND_TYPE command = cu.getCommandType();
 		
 		switch (command) {
 		case ADD:
-			Add add = new Add(parser, this.floatingTasks, this.ongoingTasks, 
+			Add add = new Add(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(add);
 			break;
 		case DELETE:
-			Delete delete = new Delete(parser, this.floatingTasks, this.ongoingTasks, 
+			Delete delete = new Delete(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(delete);
 			break;
 		case EDIT:
-			Edit edit = new Edit(parser, this.floatingTasks, this.ongoingTasks, 
+			Edit edit = new Edit(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(edit);
 			break;
 		case COMPLETE:
-			Complete complete = new Complete(parser, this.floatingTasks, this.ongoingTasks, 
+			Complete complete = new Complete(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(complete);
 			break;
 		case TAG:
-			Tag tag = new Tag(parser, this.floatingTasks, this.ongoingTasks, 
+			Tag tag = new Tag(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(tag);
 			categories = tag.getCategories();
 			break;
 		case FLAG:
-			Flag flag = new Flag(parser, this.floatingTasks, this.ongoingTasks, 
+			Flag flag = new Flag(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories, true);
 			message = execute(flag);
 			break;
 		case UNFLAG:
-			flag = new Flag(parser, this.floatingTasks, this.ongoingTasks, 
+			flag = new Flag(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories, false);
 			message = execute(flag);
 			break;
@@ -172,12 +173,12 @@ public class Logic {
 			}
 			break;
 		case SEARCH:
-			Search search = new Search(parser, this.floatingTasks, this.ongoingTasks, 
+			Search search = new Search(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(search);
 			break;
 		case SORT:
-			Sort sort = new Sort(parser, this.floatingTasks, this.ongoingTasks, 
+			Sort sort = new Sort(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(sort);
 			break;

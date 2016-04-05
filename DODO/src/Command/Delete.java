@@ -14,15 +14,15 @@ public class Delete extends Command {
 	private static final String MESSAGE_SUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are successfully deleted. ";
 	private static final String MESSAGE_UNSUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are not successfully deleted. ";
 	
-	public Delete(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Delete(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	public String execute() {
-		DELETE_TYPE type = parser.getDeleteType();
-		ArrayList<String> tags = parser.getTagToDelete();
-		ArrayList<Integer> indexes = parser.getIndexToDelete();
+		DELETE_TYPE type = cu.getDeleteType();
+		ArrayList<String> tags = cu.getTagToDelete();
+		ArrayList<Integer> indexes = cu.getIndexToDelete();
 
 		// SINGLE_INDEX, SINGLE_TAG, MULTIPLE_INDEXES, MULTIPLE_TAGS, RANGE_INDEXES, ALL_INDEXES, ALL_TAGS;
 		switch (type) {

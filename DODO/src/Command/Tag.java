@@ -4,7 +4,7 @@ package Command;
 
 import java.util.*;
 
-import Parser.Parser;
+import Parser.*;
 import Task.Category;
 import Task.Task;
 
@@ -14,15 +14,15 @@ public class Tag extends Command {
 	private static final String MESSAGE_UNSUCCESSFUL_TAG = 
 			"Task(s) \"%1$s\" is/are not successfully tagged by \"%2$s\". ";
 	
-	public Tag(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Tag(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
 	public String execute() {
-		int index = parser.getTaskID();
-		ArrayList<String> tags = parser.getTag();
+		int index = cu.getTaskID();
+		ArrayList<String> tags = cu.getTag();
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		
 		Task task;

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import Command.*;
 
 public class DeleteParser {
-	private String userTask;
 	private DELETE_TYPE deleteType;
 	private ArrayList<String> tagToDelete; 
 	private ArrayList<Integer> indexToDelete;
@@ -21,148 +20,146 @@ public class DeleteParser {
 	private String STRING_START_INDICATOR = "start";
 	private String STRING_END_INDICATOR = "end";
 	
-	public DeleteParser(String userTask) {
-		this.userTask = userTask;
+	public DeleteParser() {
 		this.tagToDelete = new ArrayList<String>();
 		this.indexToDelete = new ArrayList<Integer>();
-		executeDeleteParser();
 	}
 
-	private void executeDeleteParser() {
+	protected CommandUtils executeDeleteParser(CommandUtils commandUtil, String userTask) {
 		boolean isInteger = false;
 		String[] str = userTask.replaceAll("[:.,]", "").split("\\s+");
 		isInteger = isTaskIndex(str);
+		commandUtil = detemineDeleteType(commandUtil, userTask.toLowerCase(), isInteger);
+		deleteType = commandUtil.getDeleteType();
 		
-		switch (detemineDeleteType(userTask.toLowerCase(), isInteger)) {
+		switch (deleteType) {
 		
 			case SINGLE_INDEX:
-				parseSingleDeleteIndex(str);
-				break;
+				return parseSingleDeleteIndex(commandUtil,str);
 			case SINGLE_TAG:
-				parseSingleDeleteTag(str);
-				break;
+				return parseSingleDeleteTag(commandUtil,str);
 			case MULTIPLE_INDEXES:
-				parseMultipleDeleteIndexes(str);
-				break;
+				return parseMultipleDeleteIndexes(commandUtil,str);
 			case MULTIPLE_TAGS:
-				parseMutipleDeleteTags(str);
-				break;
+				return parseMutipleDeleteTags(commandUtil,str);
 			case RANGE_INDEXES:
-				parseRangeDelete(str);
-				break;
+				return parseRangeDelete(commandUtil, str);
 			case ALL_INDEXES:
 				break;
 			case ALL_TAGS:
 				break;
 			case START_DATE:
-				parseDeleteStartDate(str);
-				break;
+				return parseDeleteStartDate(commandUtil, str);
 			case END_DATE:
-				parseDeleteEndDate(str);
-				break;
+				return parseDeleteEndDate(commandUtil, str);
 			default:
-				setDeleteType(DELETE_TYPE.INVALID);
 				break;
 		}
+		return commandUtil;
 	}
 
 	private boolean isTaskIndex(String[] str) {
 		return (str[0].startsWith(STRING_HASH_TAG)) ? false : true;
 	}
 
-	private void parseDeleteEndDate(String[] str) {
+	private CommandUtils parseDeleteEndDate(CommandUtils commandUtil, String[] str) {
 		if (!str[0].contains(STRING_END_INDICATOR)) {
 			indexToDelete.add(Integer.parseInt(str[0]));
+			commandUtil.setIndexToDelete(indexToDelete);
 		}
 		else {
-			setDeleteType(DELETE_TYPE.INVALID);
+			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
 		}
+		return commandUtil;
 	}
 
-	private void parseDeleteStartDate(String[] str) {
+	private CommandUtils parseDeleteStartDate(CommandUtils commandUtil, String[] str) {
 		if (!str[0].contains(STRING_START_INDICATOR)) {
 			indexToDelete.add(Integer.parseInt(str[0]));
+			commandUtil.setIndexToDelete(indexToDelete);
 		}
 		else {
-			setDeleteType(DELETE_TYPE.INVALID);
+			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
 		}
+		return commandUtil;
 	}
 
-	private void parseRangeDelete(String[] str) {
+	private CommandUtils parseRangeDelete(CommandUtils commandUtil, String[] str) {
 		// Example: delete 1 to 5 / delete 1 - 5
 		if (str.length == 3) {
 			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
 				indexToDelete.add(i);
 			}
 		}
+		commandUtil.setIndexToDelete(indexToDelete);
+		return commandUtil;
 	}
 
-	private void parseMultipleDeleteIndexes(String[] str) {
+	private CommandUtils parseMultipleDeleteIndexes(CommandUtils commandUtil, String[] str) {
 		// Example: delete 1 4 9 14
 		for (int i = 0; i < str.length; i++) {
 			indexToDelete.add(Integer.parseInt(str[i]));
 		}
+		commandUtil.setIndexToDelete(indexToDelete);
+		return commandUtil;
 	}
 	
-	private void parseMutipleDeleteTags(String[] str) {
+	private CommandUtils parseMutipleDeleteTags(CommandUtils commandUtil, String[] str) {
 		// Example: delete #nus #soc #singapore
 		for (int i = 0; i < str.length; i++) {
 			tagToDelete.add(str[i].substring(1, str[i].length()));
 		}
+		commandUtil.setTagToDelete(tagToDelete);
+		return commandUtil;
 	}
 
 	
-	private void parseSingleDeleteTag(String[] str) {
+	private CommandUtils parseSingleDeleteTag(CommandUtils commandUtil, String[] str) {
 		// Example: delete #nus
 		tagToDelete.add(str[0].substring(1, str[0].length()));
+		commandUtil.setTagToDelete(tagToDelete);
+		return commandUtil;
 	}
 	
-	private void parseSingleDeleteIndex(String[] str) {
+	private CommandUtils parseSingleDeleteIndex(CommandUtils commandUtil, String[] str) {
 		indexToDelete.add(Integer.parseInt(str[0]));
+		commandUtil.setIndexToDelete(indexToDelete);
+		return commandUtil;
 	}
 
-	private DELETE_TYPE detemineDeleteType(String userTask, boolean isInteger) {
+	private CommandUtils detemineDeleteType(CommandUtils commandUtil, String userTask, boolean isInteger) {
 
 		if (checkIfDeleteAll(userTask)) {
-			setDeleteType(DELETE_TYPE.ALL_INDEXES);
-			return DELETE_TYPE.ALL_INDEXES;
+			commandUtil.setDeleteType(DELETE_TYPE.ALL_INDEXES);
 		}
 		else if (checkIfDeleteAllTag(userTask)) {
-			setDeleteType(DELETE_TYPE.ALL_TAGS);
-			return DELETE_TYPE.ALL_TAGS;
+			commandUtil.setDeleteType(DELETE_TYPE.ALL_TAGS);
 		}
 		else if (checkIfDeleteSingleIndex(userTask) && isInteger == true){
-			setDeleteType(DELETE_TYPE.SINGLE_INDEX);
-			return DELETE_TYPE.SINGLE_INDEX;
+			commandUtil.setDeleteType(DELETE_TYPE.SINGLE_INDEX);
 		}
 		else if (checkIfDeleteSingleTag(userTask) && isInteger == false) {
-			setDeleteType(DELETE_TYPE.SINGLE_TAG);
-			return DELETE_TYPE.SINGLE_TAG;	
+			commandUtil.setDeleteType(DELETE_TYPE.SINGLE_TAG);	
 		}
 		else if (checkIfDeleteRange(userTask) && isInteger == true) {
-			setDeleteType(DELETE_TYPE.RANGE_INDEXES);
-			return DELETE_TYPE.RANGE_INDEXES;
+			commandUtil.setDeleteType(DELETE_TYPE.RANGE_INDEXES);
 		}
 		else if (checkIfDeleteMultiple(userTask) && isInteger == true) {
-			setDeleteType(DELETE_TYPE.MULTIPLE_INDEXES);
-			return DELETE_TYPE.MULTIPLE_INDEXES;
+			commandUtil.setDeleteType(DELETE_TYPE.MULTIPLE_INDEXES);
 		}
 		else if (checkIfDeleteMultiple(userTask) && isInteger == false) {
-			setDeleteType(DELETE_TYPE.MULTIPLE_TAGS);
-			return DELETE_TYPE.MULTIPLE_TAGS;
+			commandUtil.setDeleteType(DELETE_TYPE.MULTIPLE_TAGS);
 		}
 		else if(checkIfDeleteStartDate(userTask)) {
-			setDeleteType(DELETE_TYPE.START_DATE);
-			return DELETE_TYPE.START_DATE;
+			commandUtil.setDeleteType(DELETE_TYPE.START_DATE);
 		}
 		else if(checkIfDeleteEndDate(userTask)) {
-			setDeleteType(DELETE_TYPE.END_DATE);
-			return DELETE_TYPE.END_DATE;
+			commandUtil.setDeleteType(DELETE_TYPE.END_DATE);
 		}
 		else {
-			setDeleteType(DELETE_TYPE.INVALID);
-			return DELETE_TYPE.INVALID;
+			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
 		}
+		return commandUtil;
 	}
 
 	private boolean checkIfDeleteEndDate(String userTask) {
@@ -203,20 +200,5 @@ public class DeleteParser {
 		String[] temp = userTask.split(" ");
 		return (temp.length == 1 && temp[0].startsWith(STRING_HASH_TAG)) ? true : false;
 	}
-	
-	private void setDeleteType(DELETE_TYPE deleteType) {
-		this.deleteType = deleteType;
-	}
-	
-	public DELETE_TYPE getDeleteType() {
-		return this.deleteType;
-	}
-	
-	public ArrayList<String> getTagToDelete() {
-		return this.tagToDelete;
-	}
-	
-	public ArrayList<Integer> getIndexToDelete() {
-		return this.indexToDelete;
-	}
+
 }

@@ -11,15 +11,15 @@ import Task.*;
 
 public class Complete extends Command {
 
-	public Complete(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Complete(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
 	public String execute() {
-		ArrayList<Integer> indexes= parser.getTaskToFlagAndMark();
-		FLAGANDCOMPLETE_TYPE type = parser.getFlagAndCompleteType();
+		ArrayList<Integer> indexes= cu.getTaskToFlagAndMark();
+		FLAGANDCOMPLETE_TYPE type = cu.getFlagAndCompleteType();
 		switch (type) {
 		case SINGLE:
 		case RANGE:

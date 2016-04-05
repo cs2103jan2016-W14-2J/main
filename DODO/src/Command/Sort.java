@@ -4,7 +4,7 @@ package Command;
 
 import java.util.*;
 
-import Parser.Parser;
+import Parser.*;
 import Task.*;
 
 public class Sort extends Command {
@@ -13,14 +13,14 @@ public class Sort extends Command {
 	private static final AscendingAlphaticalComparator ascendingAlphabeticalComparator = new AscendingAlphaticalComparator();
 	private static final DateComparator dateComparator = new DateComparator();
 
-	public Sort(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+	public Sort(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
+		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
 	public String execute() {
-		SORT_TYPE type = parser.getSortType();
+		SORT_TYPE type = cu.getSortType();
 		switch (type) {
 		case BY_ASCENDING:
 		case BY_DESCENDING:

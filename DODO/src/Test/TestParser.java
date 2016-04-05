@@ -1,3 +1,5 @@
+//@@author: Hao Jie
+
 package Test;
 
 import static org.junit.Assert.assertEquals;
@@ -9,12 +11,6 @@ import java.util.Date;
 import Command.*;
 import Task.*;
 import Parser.*;
-
-/*
- * 
- * 
- * @author: Hao Jie
- */
 
 public class TestParser {
 

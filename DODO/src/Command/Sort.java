@@ -13,8 +13,9 @@ public class Sort extends Command {
 	private static final AscendingAlphaticalComparator ascendingAlphabeticalComparator = new AscendingAlphaticalComparator();
 	private static final DateComparator dateComparator = new DateComparator();
 
-	public Sort(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+	public Sort(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
@@ -51,7 +52,6 @@ public class Sort extends Command {
 			return MESSAGE_EMPTY_LIST;
 		}
 		Collections.sort(tasks, dateComparator);
-		this.modify(UIStatus, tasks);
 		return "Sorted by Dates.";
 	}
 

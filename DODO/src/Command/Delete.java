@@ -13,8 +13,9 @@ public class Delete extends Command {
 	private static final String MESSAGE_SUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are successfully deleted. ";
 	private static final String MESSAGE_UNSUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are not successfully deleted. ";
 	
-	public Delete(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+	public Delete(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	public String execute() {
@@ -55,6 +56,9 @@ public class Delete extends Command {
 			for (int i=indexes.size()-1; i>=0; i--) {
 				int index = indexes.get(i) - INDEX_ADJUSTMENT;
 				Task task = tasks.remove(index);
+				if (this.UIStatus==UI_TAB.SEARCH) {
+					delete(task);
+				}
 				this.deleteTaskInCategory(task);
 				System.out.println("=====DELTE===== categories: " + this.categories);
 			}
@@ -63,11 +67,26 @@ public class Delete extends Command {
 		} catch (NullPointerException e) {
 			return MESSAGE_EMPTY_LIST;
 		}
-		
-		this.modify(UIStatus, tasks);
 		return String.format(MESSAGE_SUCCESSFUL_DELETE, indexes);
 	}
 	
+	private void delete(Task taskToDelete) {
+		TASK_STATUS status = taskToDelete.getStatus();
+		switch (status) {
+		case ONGOING:
+			this.ongoingTasks.remove(taskToDelete);
+			break;
+		case FLOATING:
+			this.floatingTasks.remove(taskToDelete);
+			break;
+		case COMPLETED:
+			this.completedTasks.remove(taskToDelete);
+			break;
+		case OVERDUE:
+			this.overdueTasks.remove(taskToDelete);
+			break;
+		}
+	}
 	
 	private String deleteAllTasks() {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
@@ -114,7 +133,6 @@ public class Delete extends Command {
 			Task task = tasks.get(index- INDEX_ADJUSTMENT);
 			task.setStart(null);
 		}
-		this.modify(this.UIStatus, tasks);
 		return "Start Time of tasks at " + indexes + " has been removed.";
 	}
 	
@@ -122,11 +140,13 @@ public class Delete extends Command {
 		ArrayList<Task> tasks = retrieve(this.UIStatus); 
 		for (Integer index: indexes) {
 			Task task = tasks.get(index - INDEX_ADJUSTMENT);
+			if (this.UIStatus==UI_TAB.SEARCH) {
+				delete(task);
+			}
 			task.setEnd(null);
 			this.floatingTasks.add(task);
 			tasks.remove(index- INDEX_ADJUSTMENT);
 		}
-		this.modify(this.UIStatus, tasks);
 		this.UIStatus = UI_TAB.FLOATING;
 		return "Deadline of tasks at " + indexes + " has been removed.";
 	}

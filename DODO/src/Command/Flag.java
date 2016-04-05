@@ -12,8 +12,9 @@ import Task.Task;
 public class Flag extends Command {
 	private boolean toFlag;
 
-	public Flag(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories, boolean toFlag) {
-		super(parser, data, categories);
+	public Flag(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories, boolean toFlag) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 		this.toFlag = toFlag;
 	}
 

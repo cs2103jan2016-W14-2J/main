@@ -16,10 +16,10 @@ public class Search extends Command {
 	
 	
 	
-	public Search(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+	public Search(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
-
 	@Override
 	public String execute() {
 		SEARCH_TYPE type = parser.getSearchType();

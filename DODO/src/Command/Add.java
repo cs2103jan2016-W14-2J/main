@@ -15,9 +15,10 @@ import GUI.UI_TAB;
 public class Add extends Command {
 	private static final String MESSAGE_INVALID_ADD = "Please enter a valid add command.";
 	private static final String MESSAGE_SUCCESSFUL_ADD = "Task \"%1$s\" is added to %2$s.";
-	
-	public Add(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+
+	public Add(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class Add extends Command {
 		
 		Task task = new Task(name);
 		for (String tagString: tags) {
-			this.addCategory(tagString, task);
+			this.tagTask(tagString, task);
 		}
 		
 		this.floatingTasks.add(task);
@@ -58,7 +59,7 @@ public class Add extends Command {
 		
 		Task task = new Task(name, endDateTime);
 		for (String tagString: tags) {
-			this.addCategory(tagString, task);
+			this.tagTask(tagString, task);
 		}
 		
 		checkOverdueTask(task);
@@ -76,7 +77,7 @@ public class Add extends Command {
 		
 		Task task = new Task(name, startDateTime, endDateTime);
 		for (String tagString: tags) {
-			this.addCategory(tagString, task);
+			this.tagTask(tagString, task);
 		}
 		
 		checkOverdueTask(task);	
@@ -84,11 +85,11 @@ public class Add extends Command {
 	}
 	
 	private void checkOverdueTask(Task task) {
-		if (task.getIsOverdue()) {
+		if (task.getStatus()==TASK_STATUS.OVERDUE) {
 			overdueTasks.add(task);
 			this.UIStatus = UI_TAB.OVERDUE;
 		}
-		else {
+		else if (task.getStatus()==TASK_STATUS.ONGOING) {
 			ongoingTasks.add(task);
 			this.UIStatus = UI_TAB.ONGOING;
 		}

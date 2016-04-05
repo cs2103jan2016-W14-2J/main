@@ -25,24 +25,21 @@ public abstract class Command {
 	protected ArrayList<Task> results;
 	protected TreeMap<String, Category> categories;
 
-	public Command(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
+	public Command(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
 		this.UIStatus = UIRightBox.getCurrentTab();
-		System.out.println("=====COMMAND===== constructor: " + this.UIStatus);
 		this.parser = parser;
-		this.floatingTasks = data.get(0);
-		this.ongoingTasks = data.get(1);
-		this.completedTasks = data.get(2);
-		this.overdueTasks = data.get(3);
-		this.results = data.get(4);
+		this.floatingTasks = floatingTasks;
+		this.ongoingTasks = ongoingTasks;
+		this.completedTasks = completedTasks;
+		this.overdueTasks = overdueTasks;
+		this.results = results;
 		this.categories = categories;
 	}
 
 	public abstract String execute();
 
 	/*******************************************ACCESSOR*********************************************/
-	public ArrayList<ArrayList<Task>> getData() {
-		return this.compress(floatingTasks, ongoingTasks, completedTasks, overdueTasks, results);
-	}
 
 	public TreeMap<String, Category> getCategories() {
 		return this.categories;
@@ -64,7 +61,7 @@ public abstract class Command {
 		case OVERDUE:
 			return this.overdueTasks;
 		case SEARCH:
-			return (ArrayList<Task>) this.results.clone();
+			return this.results;
 		case ALL:
 			return combine(floatingTasks, ongoingTasks, completedTasks, overdueTasks);
 		default:
@@ -72,7 +69,7 @@ public abstract class Command {
 		}
 	}
 
-	protected void modify(UI_TAB status, ArrayList<Task> newList) {
+	/*//protected void modify(UI_TAB status, ArrayList<Task> newList) {
 		switch (status) {
 		case ONGOING:
 			this.ongoingTasks = newList;
@@ -87,7 +84,7 @@ public abstract class Command {
 			this.overdueTasks = newList;
 			break;
 		case SEARCH:
-			compareWithSearchAndUpdate(newList);
+			modifyOnSearch(newList);
 			break;
 		case ALL:
 			splitAllAndUpdate(newList);
@@ -95,7 +92,7 @@ public abstract class Command {
 		default:
 			break;
 		}
-	}
+	}*/
 	
 	/*************************************CATEGORY MANIPULATION********************************/
 	// IDLE
@@ -122,7 +119,7 @@ public abstract class Command {
 	
 	
 	// add task into category
-	protected boolean addCategory(String categoryStr, Task task) {
+	protected boolean tagTask(String categoryStr, Task task) {
 		Category category = this.categories.get(categoryStr.toLowerCase());
 		if (category==null) {
 			category = new Category(categoryStr);
@@ -178,17 +175,6 @@ public abstract class Command {
 	}
 	
 	/*****************************************PRIVATE METHODS***************************************/
-	private ArrayList<ArrayList<Task>> compress(ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
-			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results) {
-		ArrayList<ArrayList<Task>> data = new ArrayList<ArrayList<Task>> ();
-		data.add(floatingTasks);
-		data.add(ongoingTasks);
-		data.add(completedTasks);
-		data.add(overdueTasks);
-		data.add(results);
-		return data;
-	}
-
 	private ArrayList<Task> combine(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
 			ArrayList<Task> floatingTasks, ArrayList<Task> overdueTasks) {
 		ArrayList<Task> combined = new ArrayList<Task>();
@@ -199,7 +185,7 @@ public abstract class Command {
 		return combined;
 	}
 	
-	private void compareWithSearchAndUpdate(ArrayList<Task> newList) {
+	private void modifyOnSearch(ArrayList<Task> newList) {
 		for (Task task: this.results) {
 			if (!newList.contains(task)) {
 				// this task has  been deleted
@@ -244,10 +230,9 @@ public abstract class Command {
 		}
 	}
 	
-	private ArrayList<Task> cloneList(ArrayList<Task> original) {
+	private ArrayList<Task> copyList(ArrayList<Task> original) {
 		ArrayList<Task> newList = new ArrayList<Task>();
-		for (int i=0; i<original.size(); i++) {
-			Task task = new Task(original.get(i));
+		for (Task task: original) {
 			newList.add(task);
 		}
 		return newList;

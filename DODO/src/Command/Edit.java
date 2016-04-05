@@ -22,8 +22,9 @@ public class Edit extends Command {
 	private static final String MESSAGE_SUCCESSFUL_EDIT_TAG = 
 			"Tag name \"%1$s\" has been successfully edit to \"%2$s\".";
 
-	public Edit(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+	public Edit(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
@@ -130,11 +131,11 @@ public class Edit extends Command {
 	
 	private void convertFromFloating(Task task) {
 		this.floatingTasks.remove(task);	
-		if (task.getIsOverdue()==true) {
+		if (task.getStatus()==TASK_STATUS.OVERDUE) {
 			this.overdueTasks.add(task);
 			this.UIStatus = UI_TAB.OVERDUE;
 		}
-		else {
+		else if (task.getStatus()==TASK_STATUS.ONGOING) {
 			this.ongoingTasks.add(task);
 			this.UIStatus = UI_TAB.ONGOING;
 		}

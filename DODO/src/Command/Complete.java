@@ -5,13 +5,15 @@ package Command;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import GUI.UI_TAB;
 import Parser.*;
 import Task.*;
 
 public class Complete extends Command {
 
-	public Complete(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+	public Complete(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
@@ -55,13 +57,13 @@ public class Complete extends Command {
 					task.setComplete();;
 					tasks.remove(index);
 					this.completedTasks.add(task);
-					this.modify(this.UIStatus, tasks);
 					status += "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.\n";
 				}
 			} catch (IndexOutOfBoundsException e) {
 				status += "Task " + (index+INDEX_ADJUSTMENT) + " is absent.\n";
 			}
 		}
+		this.UIStatus = UI_TAB.COMPLETED;
 		return status;
 	}
 }

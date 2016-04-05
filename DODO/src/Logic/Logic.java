@@ -1,6 +1,7 @@
 package Logic;
 
 import Command.*;
+import GUI.UIRightBox;
 import GUI.UI_TAB;
 import Parser.*;
 import Storage.*;
@@ -115,43 +116,46 @@ public class Logic {
 	private String processCommand(Parser parser) {
 		String message = "";
 		COMMAND_TYPE command = parser.getCommandType();
-		ArrayList<ArrayList<Task>> data = compress();
 		
 		switch (command) {
 		case ADD:
-			Add add = new Add(parser, data, categories);
-			message = execute(add, data);
+			Add add = new Add(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(add);
 			break;
 		case DELETE:
-			Delete delete = new Delete(parser, data, categories);
-			message = execute(delete, data);
+			Delete delete = new Delete(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(delete);
 			break;
 		case EDIT:
-			Edit edit = new Edit(parser, data, categories);
-			message = execute(edit, data);
+			Edit edit = new Edit(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(edit);
 			break;
 		case COMPLETE:
-			Complete complete = new Complete(parser, data, categories);
-			message = execute(complete, data);
-			this.status = UI_TAB.COMPLETED;
+			Complete complete = new Complete(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(complete);
 			break;
 		case TAG:
-			Tag tag = new Tag(parser, data, categories);
-			message = execute(tag, data);
+			Tag tag = new Tag(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(tag);
 			categories = tag.getCategories();
-			System.out.println(categories);
 			break;
 		case FLAG:
-			Flag flag = new Flag(parser, data, categories, true);
-			message = execute(flag, data);
+			Flag flag = new Flag(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories, true);
+			message = execute(flag);
 			break;
 		case UNFLAG:
-			flag = new Flag(parser, data, categories, false);
-			message = execute(flag, data);
+			flag = new Flag(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories, false);
+			message = execute(flag);
 			break;
 		case UNDO:
 			try {
-				update(history.undoData(data), history.undoCategories(this.categories));
 				message = MESSAGE_SUCCESSFUL_UNDO;
 			} catch (EmptyStackException e) {
 				message = MESSAGE_UNSUCCESSFUL_UNDO;
@@ -159,19 +163,20 @@ public class Logic {
 			break;
 		case REDO:
 			try {
-				update(history.redoData(), history.redoCategories());
 				message = MESSAGE_SUCCESSFUL_REDO;
 			} catch (EmptyStackException e) {
 				message = MESSAGE_UNSUCCESSFUL_REDO;
 			}
 			break;
 		case SEARCH:
-			Search search = new Search(parser, data, categories);
-			message = execute(search, data);
+			Search search = new Search(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(search);
 			break;
 		case SORT:
-			Sort sort = new Sort(parser, data, categories);
-			message = execute(sort, data);
+			Sort sort = new Sort(parser, this.floatingTasks, this.ongoingTasks, 
+					this.completedTasks, this.overdueTasks, this.results, this.categories);
+			message = execute(sort);
 			break;
 		default:
 			message = "Invalid Command.";
@@ -179,16 +184,14 @@ public class Logic {
 		return message;
 	}
 	
-	private String execute(Command command, ArrayList<ArrayList<Task>> data) {
-		history.save(cloneData(data), cloneCategories(this.categories));
+	private String execute(Command command) {
 		String message = command.execute();
-		this.update(command.getData(), command.getCategories());
 		this.status = command.getStatus();
 		return message;
 	}
 	
 	/***************************************DATA MANIPULATION***********************************/
-	private String update(ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
+	/*private String update(ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		this.floatingTasks = data.get(0);
 		this.ongoingTasks = data.get(1);
 		this.completedTasks = data.get(2);
@@ -206,7 +209,7 @@ public class Logic {
 		data.add(overdueTasks);
 		data.add(results);
 		return data;
-	}
+	}*/
 	
 	
 	/**********************************CLONE**********************************************************/
@@ -218,15 +221,6 @@ public class Logic {
 			newList.add(task);
 		}
 		return newList;
-	}
-
-	private ArrayList<ArrayList<Task>> cloneData(ArrayList<ArrayList<Task>> data) {
-		ArrayList<ArrayList<Task>> newData = new ArrayList<ArrayList<Task>>();
-		for (int i=0; i<data.size(); i++) {
-			ArrayList<Task> copy = cloneList(data.get(i));
-			newData.add(copy);
-		}
-		return newData;
 	}
 	
 	private TreeMap<String, Category> cloneCategories(TreeMap<String, Category> original) {

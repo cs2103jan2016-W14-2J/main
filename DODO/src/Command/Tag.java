@@ -14,8 +14,9 @@ public class Tag extends Command {
 	private static final String MESSAGE_UNSUCCESSFUL_TAG = 
 			"Task(s) \"%1$s\" is/are not successfully tagged by \"%2$s\". ";
 	
-	public Tag(Parser parser, ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
-		super(parser, data, categories);
+	public Tag(Parser parser, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
+		super(parser, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class Tag extends Command {
 		for (String tag: tags) {
 			Category category = this.findCategory(tag);
 			if (category==null) {
-				this.addCategory(tag, task);
+				this.tagTask(tag, task);
 				category = this.findCategory(tag);
 			}
 			// task interchangably add category in class Category

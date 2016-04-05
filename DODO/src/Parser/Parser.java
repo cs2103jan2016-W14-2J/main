@@ -1,3 +1,4 @@
+//@@author A0125552L
 package Parser;
 
 import java.util.ArrayList;
@@ -6,10 +7,6 @@ import java.util.HashMap;
 
 import Command.*;
 import Task.*;
-
-/*
- * @author Pay Hao Jie
- */
 
 public class Parser {
 
@@ -63,18 +60,10 @@ public class Parser {
 		String command = getUserCommand(userInput);
 		COMMAND_TYPE commandType = determineCommandType(command);
 		
-		// concatenate add command in front for processing
-		if (commandType == COMMAND_TYPE.ADD) {
-			userInput = _commandAdd + " " + userInput;
-			System.out.println("TEST ADD :" + userInput);
-		}
-		
-		System.out.println("DEBUG executeCommand @line97" + commandType);
-		
 		switch (commandType) {
 			
 			case ADD:
-				userInput = processUserInput(userInput);
+				userInput = processUserInput(_commandAdd + " " + userInput);
 				AddParser addParser = new AddParser(userInput);
 				setAddAttributes(addParser.getStartTime(), addParser.getEndTime(), addParser.getTaskName(), addParser.getTaskType());
 				break;

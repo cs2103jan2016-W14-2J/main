@@ -77,6 +77,7 @@ public class Edit extends Command {
 	private String editName(Task task) {
 		String newName = parser.getName();
 		task.setName(newName);
+		
 		return String.format(MESSAGE_SUCCESSFUL_EDIT_NAME, task);
 	}
 	
@@ -130,7 +131,7 @@ public class Edit extends Command {
 	}
 	
 	private void convertFromFloating(Task task) {
-		this.floatingTasks.remove(task);	
+		this.floatingTasks.remove(task);
 		if (task.getStatus()==TASK_STATUS.OVERDUE) {
 			this.overdueTasks.add(task);
 			this.UIStatus = UI_TAB.OVERDUE;

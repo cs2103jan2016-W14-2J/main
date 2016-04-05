@@ -47,7 +47,7 @@ public class Delete extends Command {
 	
 	private String deleteTask(ArrayList<Integer> indexes) {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
-		
+		System.out.println("====DELETE====" + tasks);
 		if (tasks==null || tasks.size()==0) {
 			return MESSAGE_EMPTY_LIST;
 		}
@@ -56,8 +56,8 @@ public class Delete extends Command {
 			for (int i=indexes.size()-1; i>=0; i--) {
 				int index = indexes.get(i) - INDEX_ADJUSTMENT;
 				Task task = tasks.remove(index);
-				if (this.UIStatus==UI_TAB.SEARCH) {
-					delete(task);
+				if (this.UIStatus==UI_TAB.SEARCH || this.UIStatus==UI_TAB.ALL) {
+					deleteTaskFromOtherTab(task);
 				}
 				this.deleteTaskInCategory(task);
 				System.out.println("=====DELTE===== categories: " + this.categories);
@@ -70,32 +70,17 @@ public class Delete extends Command {
 		return String.format(MESSAGE_SUCCESSFUL_DELETE, indexes);
 	}
 	
-	private void delete(Task taskToDelete) {
-		TASK_STATUS status = taskToDelete.getStatus();
-		switch (status) {
-		case ONGOING:
-			this.ongoingTasks.remove(taskToDelete);
-			break;
-		case FLOATING:
-			this.floatingTasks.remove(taskToDelete);
-			break;
-		case COMPLETED:
-			this.completedTasks.remove(taskToDelete);
-			break;
-		case OVERDUE:
-			this.overdueTasks.remove(taskToDelete);
-			break;
-		}
-	}
+	
 	
 	private String deleteAllTasks() {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
-		this.UIStatus = UI_TAB.ALL;
 		for (int i=1; i<=tasks.size(); i++) {
 			indexes.add(i);
 		}
-		return deleteTask(indexes);
+		String message = deleteTask(indexes);
+		this.UIStatus = UI_TAB.ALL;
+		return message;
 	}
 	
 	
@@ -140,12 +125,11 @@ public class Delete extends Command {
 		ArrayList<Task> tasks = retrieve(this.UIStatus); 
 		for (Integer index: indexes) {
 			Task task = tasks.get(index - INDEX_ADJUSTMENT);
-			if (this.UIStatus==UI_TAB.SEARCH) {
-				delete(task);
-			}
 			task.setEnd(null);
 			this.floatingTasks.add(task);
-			tasks.remove(index- INDEX_ADJUSTMENT);
+			if (this.UIStatus!=UI_TAB.SEARCH) {
+				tasks.remove(index- INDEX_ADJUSTMENT);
+			}
 		}
 		this.UIStatus = UI_TAB.FLOATING;
 		return "Deadline of tasks at " + indexes + " has been removed.";

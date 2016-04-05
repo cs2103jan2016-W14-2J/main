@@ -63,7 +63,7 @@ public abstract class Command {
 		case SEARCH:
 			return this.results;
 		case ALL:
-			return combine(floatingTasks, ongoingTasks, completedTasks, overdueTasks);
+			return combine(overdueTasks, ongoingTasks, floatingTasks, completedTasks);
 		default:
 			return null;
 		}
@@ -93,6 +93,24 @@ public abstract class Command {
 			break;
 		}
 	}*/
+	
+	protected void deleteTaskFromOtherTab(Task taskToDelete) {
+		TASK_STATUS status = taskToDelete.getStatus();
+		switch (status) {
+		case ONGOING:
+			this.ongoingTasks.remove(taskToDelete);
+			break;
+		case FLOATING:
+			this.floatingTasks.remove(taskToDelete);
+			break;
+		case COMPLETED:
+			this.completedTasks.remove(taskToDelete);
+			break;
+		case OVERDUE:
+			this.overdueTasks.remove(taskToDelete);
+			break;
+		}
+	}
 	
 	/*************************************CATEGORY MANIPULATION********************************/
 	// IDLE
@@ -185,7 +203,7 @@ public abstract class Command {
 		return combined;
 	}
 	
-	private void modifyOnSearch(ArrayList<Task> newList) {
+	/*private void modifyOnSearch(ArrayList<Task> newList) {
 		for (Task task: this.results) {
 			if (!newList.contains(task)) {
 				// this task has  been deleted
@@ -236,5 +254,5 @@ public abstract class Command {
 			newList.add(task);
 		}
 		return newList;
-	}
+	}*/
 }

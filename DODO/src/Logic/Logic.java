@@ -14,6 +14,7 @@ public class Logic {
 	private static final String MESSAGE_SUCCESSFUL_REDO = "Redo successful.";
 	private static final String MESSAGE_UNSUCCESSFUL_UNDO = "Undo not successful. There is nothing to undo";
 	private static final String MESSAGE_UNSUCCESSFUL_REDO = "Redo not successful. There is nothing to redo";
+	private static final String MESSAGE_SWITCH_VIEW = "Successfully switch to %1$s.";
 	private static Logic theOne; //singleton
 	private Storage storage;
 	
@@ -180,6 +181,9 @@ public class Logic {
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(sort);
 			break;
+		case HELP:
+			this.status = UI_TAB.HELP;
+			message = String.format(MESSAGE_SWITCH_VIEW, this.status);
 		default:
 			message = "Invalid Command.";
 		}

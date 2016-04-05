@@ -101,10 +101,6 @@ public class Parser {
 			case UNTAG:
 				setTaskIndex(userInput);
 				break;
-			case UNDO:
-				break;
-			case REDO:
-				break;
 			case SEARCH:
 				userInput = getUserInputContent(userInput);
 				SearchParser search = new SearchParser(userInput);
@@ -112,16 +108,19 @@ public class Parser {
 				break;
 			case SORT:
 				userInput = getUserInputContent(userInput);
-				System.out.println("TEST SORT :" + userInput);
 				SortParser sort = new SortParser(userInput);
 				setSortAttributes(sort.determineSortType(userInput));
+				break;
+			case CHANGE_DIRECTORY:
+				newDirectory = getUserInputContent(userInput);
 				break;
 			case EXIT:
 				break;
 			case HELP:
 				break;
-			case CHANGE_DIRECTORY:
-				newDirectory = getUserInputContent(userInput);
+			case UNDO:
+				break;
+			case REDO:
 				break;
 			case INVALID:
 				break;
@@ -131,12 +130,11 @@ public class Parser {
 	private String processUserInput(String userInput) {
 		String userTask = getUserInputContent(userInput);
 		userTask = checkTaskImportance(userTask);
-		userTask = extractTag(userTask);	
-		return userTask;
+		return extractTag(userTask);	
 	}
 
 	private void checkIfValidUserInput(String userInput) {
-		if (userInput.equals("")) {
+		if (userInput.isEmpty()) {
 			System.out.println(MESSAGE_INPUT_ERROR);
 		}
 	}

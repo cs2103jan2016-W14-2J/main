@@ -24,7 +24,7 @@ public class Test {
 		//	PrettyTimeParser pt = new PrettyTimeParser();
 		//	List<Date> dates = pt.parse(str);
 
-			Parser parser = new Parser("add meet hannah");
+			Parser parser = new Parser("meet hannah");
 		//	Parser parser = new Parser("jog with hannah at orchard from ntu to nus at home");
 		//	Parser parser = new Parser("meet hannah at nus at 7pm");
 		//	Parser parser = new Parser("meet hannah at 7pm at nus");

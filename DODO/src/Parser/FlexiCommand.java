@@ -1,3 +1,5 @@
+//@@author A0125552L
+
 package Parser;
 
 import java.util.HashMap;
@@ -15,7 +17,6 @@ public class FlexiCommand {
 	
 	public FlexiCommand() {
 		possibleCommands = new HashMap<String, COMMAND_TYPE>();
-//		possibleCommands = initiateFlexiAddCommand();
 		possibleCommands = initiateFlexiDeleteCommand();
 		possibleCommands = initiateFlexiEditCommand();
 		possibleCommands = initiateFlexiCompleteCommand();
@@ -30,28 +31,13 @@ public class FlexiCommand {
 		possibleCommands = initiateFlexiHelpCommand();
 		possibleCommands = initiateFlexiChangeDirectoryCommand();
 		possibleCommands = initiateFlexiExitCommand();
-/*		possibleCommands = initiateFlexiDisplayCommand();
-		possibleCommands = initiateFlexiClearCommand();*/
-		
+
 	}
 	
 	public HashMap<String, COMMAND_TYPE> getKeywordsDataBase() {
 		return possibleCommands;
 	}
-	
-/*	
-	private HashMap<String, COMMAND_TYPE> initiateFlexiAddCommand() {
-		possibleCommands.put("add", COMMAND_TYPE.ADD);
-		possibleCommands.put("+", COMMAND_TYPE.ADD);
-		possibleCommands.put("ad", COMMAND_TYPE.ADD);
-		possibleCommands.put("adds", COMMAND_TYPE.ADD);
-		possibleCommands.put("a", COMMAND_TYPE.ADD);
-		possibleCommands.put("create", COMMAND_TYPE.ADD);
-		possibleCommands.put("creates", COMMAND_TYPE.ADD);
-		possibleCommands.put("creat", COMMAND_TYPE.ADD);
-		return possibleCommands;
-	}
-*/	
+
 	private HashMap<String, COMMAND_TYPE> initiateFlexiDeleteCommand() {
 		possibleCommands.put("d", COMMAND_TYPE.DELETE);
 		possibleCommands.put("delete", COMMAND_TYPE.DELETE);
@@ -168,17 +154,7 @@ public class FlexiCommand {
 		possibleCommands.put("redirect", COMMAND_TYPE.CHANGE_DIRECTORY);
 		return possibleCommands;
 	}
-	/*
-	private HashMap<String, CommandType> initiateFlexiDisplayCommand() {
-		possibleCommands.put("display", DISPLAY);
-		possibleCommands.put("displays", DISPLAY);
-		possibleCommands.put("show", DISPLAY);
-		possibleCommands.put("view", DISPLAY);
-		possibleCommands.put("v", DISPLAY);
-		possibleCommands.put("see", DISPLAY);
-		return possibleCommands;
-	}
-	*/
+
 	private HashMap<String, COMMAND_TYPE> initiateFlexiExitCommand() {
 		possibleCommands.put("exit", COMMAND_TYPE.EXIT);
 		possibleCommands.put("exits", COMMAND_TYPE.EXIT);
@@ -189,15 +165,5 @@ public class FlexiCommand {
 		possibleCommands.put("terminate", COMMAND_TYPE.EXIT);
 		return possibleCommands;
 	}
-	
-	/*
-	private HashMap<String, CommandType> initiateFlexiClearCommand() {
-		possibleCommands.put("clear", CLEAR);
-		possibleCommands.put("clears", CLEAR);
-		possibleCommands.put("wipe", CLEAR);
-		possibleCommands.put("wipeout", CLEAR);
-		return possibleCommands;
-	}*/
-	
 	
 }

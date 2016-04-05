@@ -71,7 +71,7 @@ public class Search extends Command {
 		if (category==null) {
 			return String.format(MESSAGE_UNSUCCESSFUL_SEARCH_TAG, searchTag);
 		}
-		results = category.getTasks();
+		this.results.addAll(category.getTasks());
 		this.UIStatus = UI_TAB.SEARCH;
 		return String.format(MESSAGE_SUCCESSFUL_SEARCH_TAG, searchTag);
 	}

@@ -172,14 +172,14 @@ public class Task {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Task) {
 			Task task = (Task) obj;
 			return task==this;
 		}
 		else return false;
-	}
+	}*/
 
 	@Override
 	public String toString() {

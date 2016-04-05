@@ -91,10 +91,10 @@ public class Logic {
 	
 	public ArrayList<Task> getAll() {
 		ArrayList<Task> temp = new ArrayList<Task>();
-		temp.addAll(this.floatingTasks);
-		temp.addAll(this.ongoingTasks);
-		temp.addAll(this.completedTasks);
 		temp.addAll(this.overdueTasks);
+		temp.addAll(this.ongoingTasks);
+		temp.addAll(this.floatingTasks);
+		temp.addAll(this.completedTasks);
 		return temp;
 	}
 	

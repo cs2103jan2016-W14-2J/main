@@ -9,6 +9,7 @@ import Parser.*;
 import Task.*;
 
 public class Delete extends Command {
+	private static final String MESSAGE_INVALID_DELETE = "Please enter a valid delete command.";
 	private static final String MESSAGE_SUCCESSFUL_DELETE = "Task(s) at \"%1$s\" is/are successfully deleted. ";
 	private static final String MESSAGE_SUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are successfully deleted. ";
 	private static final String MESSAGE_UNSUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are not successfully deleted. ";
@@ -41,7 +42,7 @@ public class Delete extends Command {
 		case END_DATE:
 			return convertToFloating(indexes);
 		default:
-			return "Please enter a valid delete command.";
+			return MESSAGE_INVALID_DELETE;
 		}
 	}
 	

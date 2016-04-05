@@ -15,7 +15,7 @@ public abstract class Command {
 	protected static final String MESSAGE_INDEXOUTOFBOUND = "Please enter a valid index.";
 	protected static final String MESSAGE_EMPTY_LIST = "There is no task in this tab. Please add more tasks.";
 	protected static final String MESSAGE_UNSUCCESSFUL_SEARCH_TAG = "There is no tag named \"%1$s\".";
-	
+
 	protected UI_TAB UIStatus;
 	protected Parser parser;
 	protected ArrayList<Task> ongoingTasks;
@@ -93,7 +93,7 @@ public abstract class Command {
 			break;
 		}
 	}*/
-	
+
 	protected void deleteTaskFromOtherTab(Task taskToDelete) {
 		TASK_STATUS status = taskToDelete.getStatus();
 		switch (status) {
@@ -111,14 +111,14 @@ public abstract class Command {
 			break;
 		}
 	}
-	
+
 	/*************************************CATEGORY MANIPULATION********************************/
 	// IDLE
 	/*protected ArrayList<Category> retrieveCategories(ArrayList<String> tags, Task task) {
 		ArrayList<Category> categories = new ArrayList<Category>();
 		for (String tagStr: tags) {
 			Category category = this.categories.get(tagStr.toLowerCase());
-			
+
 			if (category==null) {
 				//tagStr is not present in this.categories
 				category = new Category(tagStr);
@@ -129,13 +129,13 @@ public abstract class Command {
 		}
 		return categories;
 	}*/
-	
+
 	protected Category findCategory(String categoryString) {
 		Category category = this.categories.get(categoryString.toLowerCase());
 		return category;
 	}
-	
-	
+
+
 	// add task into category
 	protected boolean tagTask(String categoryStr, Task task) {
 		Category category = this.categories.get(categoryStr.toLowerCase());
@@ -143,13 +143,11 @@ public abstract class Command {
 			category = new Category(categoryStr);
 			this.categories.put(categoryStr.toLowerCase(), category);
 		}
-		category.addTask(task);
-		if (!task.addCategory(category.getName())) {
-			return false;
-		}
+		boolean flag = category.addTask(task);
+		System.out.println("[DEBUG Command/tagTask] category has " + flag + " been added to this task.");
 		return true;
 	}
-	
+
 	//delete an entire category
 	protected boolean deleteCategory(String categoryString) {
 		Category category = this.categories.get(categoryString.toLowerCase());
@@ -160,38 +158,55 @@ public abstract class Command {
 		for (Task task: taggedTasks) {
 			boolean indicator = task.deleteCategory(category.getName());
 			if (indicator==false) {
-				throw new Error("IMPOSSIBLE");
+				throw new Error("IMPOSSIBLE, this tag must have been added to this task previously.");
 			}
 		}
 		this.categories.remove(categoryString.toLowerCase());
 		return true;
 	}
-	
+
 	//edit an entire category
 	protected boolean editCategory(String oldTag, String newTag) {
 		Category category = this.categories.get(oldTag.toLowerCase());
 		if (category==null) {
 			return false;
 		}
+		
 		category.setName(newTag);
+		ArrayList<Task> taggedTasks = category.getTasks();
+		for (Task task: taggedTasks) {
+			boolean indicator = task.deleteCategory(oldTag);
+			if (indicator==false) {
+				throw new Error("IMPOSSIBLE, this tag must have been added to this task previously.");
+			}
+			task.addCategory(newTag);
+		}
+		
 		this.categories.remove(oldTag.toLowerCase());
 		this.categories.put(newTag.toLowerCase(), category);
 		return true;
 	}
-	
+
+	// this method detaches reference of all categories under this task from this taskd
 	protected boolean deleteTaskInCategory(Task task) {
 		ArrayList<String> categoriesString = task.getCategories();
 		for (String categoryString: categoriesString) {
 			Category category = this.categories.get(categoryString.toLowerCase());
 			boolean flag = category.deleteTask(task);
-			System.out.println("====COMMAND/DELETETASKINCATEGORY==== CRITICAL LOGIC ERROR IF FALSE: " + flag);
+			if (flag==false) {
+				throw new Error("IMPOSSIBLE, this tag must have been added to this task previously.");
+			}
 			if (category.getTasks().size()==0) {
 				deleteCategory(categoryString);
+			}
+			flag = category.deleteTask(task);
+			if (flag==false) {
+				throw new Error("IMPOSSIBLE, this tag must have been added to this category previously.");
 			}
 		}
 		return true;
 	}
-	
+
 	/*****************************************PRIVATE METHODS***************************************/
 	private ArrayList<Task> combine(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
 			ArrayList<Task> floatingTasks, ArrayList<Task> overdueTasks) {
@@ -202,7 +217,7 @@ public abstract class Command {
 		combined.addAll(overdueTasks);
 		return combined;
 	}
-	
+
 	/*private void modifyOnSearch(ArrayList<Task> newList) {
 		for (Task task: this.results) {
 			if (!newList.contains(task)) {
@@ -247,7 +262,7 @@ public abstract class Command {
 			}
 		}
 	}
-	
+
 	private ArrayList<Task> copyList(ArrayList<Task> original) {
 		ArrayList<Task> newList = new ArrayList<Task>();
 		for (Task task: original) {

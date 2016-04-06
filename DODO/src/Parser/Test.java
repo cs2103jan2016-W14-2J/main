@@ -20,11 +20,14 @@ public class Test {
 			System.out.println(parser.getType());
 			System.out.println(parser.getIndexToDelete());
 			
-*/	//		String str = "hello";
-		//	PrettyTimeParser pt = new PrettyTimeParser();
-		//	List<Date> dates = pt.parse(str);
-
-			Parser parser = new Parser("meet hannah");
+	*/		String str = "MEET me tomorrow at 7pm";
+			PrettyTimeParser pt = new PrettyTimeParser();
+			List<Date> dates = pt.parse(str);
+			System.out.println(dates.size());
+			CommandUtils cu = new CommandUtils();
+			Parser parser = new Parser();
+			cu = parser.executeCommand(cu, str);
+		
 		//	Parser parser = new Parser("jog with hannah at orchard from ntu to nus at home");
 		//	Parser parser = new Parser("meet hannah at nus at 7pm");
 		//	Parser parser = new Parser("meet hannah at 7pm at nus");
@@ -38,19 +41,23 @@ public class Test {
 		//	Parser parser = new Parser("meet hannah at block 2359 on 24th of march 2017 ");
 		//	Parser parser = new Parser("meet hannah at block 2359 on 24th of march 2017 7pm");
 		//	Parser parser = new Parser("meet hannah on thursday at block 2359");
-			System.out.println("command type :" + parser.getCommandType());
-			System.out.println("Task Type :" + parser.getType());
-			System.out.println("Task Name :" + parser.getName());
-			System.out.println(parser.getStartTime());
-			System.out.println(parser.getEndTime());
-			System.out.println(parser.getTag());
-			System.out.println("Edit type : " + parser.getEditType());
-			System.out.println(parser.getTagToDelete());
-			System.out.println("Search type : " + parser.getSearchType());
-			System.out.println("Oldtag : " + parser.getTag());
-			System.out.println("TaskID : " + parser.getTaskID());
-			System.out.println("New Directory : " + parser.getNewDirectory());
-	
-			
+			System.out.println("Command type :" + cu.getCommandType());
+			System.out.println("Task Type :" + cu.getType());
+			System.out.println("Task Name :" + cu.getName());
+			System.out.println("Start Time : " + cu.getStartTime());
+			System.out.println("End Time : " +cu.getEndTime());
+			System.out.println("New Tag : " +cu.getTag());
+			System.out.println("Edit type : " + cu.getEditType());
+			System.out.println("Tag to delete : " +cu.getTagToDelete());
+			System.out.println("Search type : " + cu.getSearchType());
+			System.out.println("Oldtag : " + cu.getOldTag());
+			System.out.println("TaskID : " + cu.getTaskID());
+			System.out.println("New Directory : " + cu.getNewDirectory());
+			System.out.println("Sort Type : " + cu.getSortType());
+			System.out.println("Flag and Complete Type : " + cu.getFlagAndCompleteType());
+			System.out.println("Flag and Complete Indexes : " + cu.getTaskToFlagAndMark());
+			System.out.println("Delete Indexes : " + cu.getIndexToDelete());
+			System.out.println("Delete Type : " + cu.getDeleteType());
+			System.out.println("Search Task Result : " + cu.getSearchByTask());
 		}
 }

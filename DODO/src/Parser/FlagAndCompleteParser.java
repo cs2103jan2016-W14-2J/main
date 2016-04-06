@@ -7,7 +7,13 @@ import Command.*;
 public class FlagAndCompleteParser {
 	private FLAGANDCOMPLETE_TYPE _type;
 	private ArrayList<Integer> taskIndex; 
-	
+	private String STRING_SPLITTER = "\\s+";
+	private String KEYWORD_ALL = " all";
+	private String KEYWORD_TO = " to ";
+	private String KEYWORD_DASH = " to ";
+	private String KEYWORD_SPACE = " ";
+	private String PUNCTUATION_REMOVER = "[:.,]";
+	private int SINGLE_INDEX = 1;
 	
 	public FlagAndCompleteParser() {
 		this.taskIndex = new ArrayList<Integer>();
@@ -15,7 +21,7 @@ public class FlagAndCompleteParser {
 	
 	protected CommandUtils executeFlagCompleteParser(CommandUtils commandUtil, String userTaskIndex) {
 	
-		String[] str = userTaskIndex.trim().replaceAll("[:.,]", " ").toLowerCase().split("\\s+");
+		String[] str = userTaskIndex.trim().replaceAll(PUNCTUATION_REMOVER, KEYWORD_SPACE).toLowerCase().split(STRING_SPLITTER);
 		commandUtil = detemineDeleteType(commandUtil, userTaskIndex.toLowerCase());
 		_type = commandUtil.getFlagAndCompleteType();
 		
@@ -37,14 +43,14 @@ public class FlagAndCompleteParser {
 
 	private CommandUtils parseRange(CommandUtils commandUtil, String userTaskIndex) {
 		
-		if (userTaskIndex.contains("-")) {
-			userTaskIndex = userTaskIndex.replace("-", " ");
+		if (userTaskIndex.contains(KEYWORD_DASH)) {
+			userTaskIndex = userTaskIndex.replace(KEYWORD_DASH, KEYWORD_SPACE);
 		}
-		else if (userTaskIndex.contains(" to ")) {
-			userTaskIndex = userTaskIndex.replace(" to ", " ");
+		else if (userTaskIndex.contains(KEYWORD_TO)) {
+			userTaskIndex = userTaskIndex.replace(KEYWORD_TO, KEYWORD_SPACE);
 		}
 		
-		String[] temp = userTaskIndex.split("\\s+");
+		String[] temp = userTaskIndex.split(STRING_SPLITTER);
 		
 		if (temp.length == 2) {
 			for (int i = Integer.parseInt(temp[0]); i < Integer.parseInt(temp[1]) + 1; i++) {
@@ -90,20 +96,20 @@ public class FlagAndCompleteParser {
 	}
 
 	private boolean checkIfAll(String usertaskIndex) {
-		return (usertaskIndex.contains("all")) ? true: false;
+		return (usertaskIndex.contains(KEYWORD_ALL)) ? true: false;
 	}
 
 	private boolean checkIfRange(String usertaskIndex) {
-		return (usertaskIndex.contains("-") || (usertaskIndex.contains("to"))) ? true : false;
+		return (usertaskIndex.contains(KEYWORD_DASH) || (usertaskIndex.contains(KEYWORD_TO))) ? true : false;
 	}
 
 	private boolean checkIfMultiple(String usertaskIndex) {
-		String[] str = usertaskIndex.replaceAll("[,]", " ").toLowerCase().split("\\s+");
-		return (str.length > 1 && !checkIfRange(usertaskIndex)) ? true : false;
+		String[] str = usertaskIndex.replaceAll(PUNCTUATION_REMOVER, KEYWORD_SPACE).toLowerCase().split(STRING_SPLITTER);
+		return (str.length > SINGLE_INDEX && !checkIfRange(usertaskIndex)) ? true : false;
 	}
 
 	private boolean checkIfSingle(String usertaskIndex) {
 		return (!checkIfRange(usertaskIndex) && !checkIfMultiple(usertaskIndex)
-				&& !usertaskIndex.contains("all")) ? true : false;
+				&& !usertaskIndex.contains(KEYWORD_ALL)) ? true : false;
 	}
 }

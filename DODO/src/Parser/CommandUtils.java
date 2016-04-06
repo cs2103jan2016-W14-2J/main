@@ -205,6 +205,10 @@ public class CommandUtils {
 		return this.searchType;
 	}
 	
+	protected void setSearchByTask(String searchByTask) {
+		this.searchByTask = searchByTask;
+	}
+	
 	public String getSearchByTask() {
 		return this.searchByTask.trim();
 	}

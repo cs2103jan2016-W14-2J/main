@@ -58,7 +58,6 @@ public class FlexiCommand {
 		possibleCommands.put("updates", COMMAND_TYPE.EDIT);
 		possibleCommands.put("change", COMMAND_TYPE.EDIT);
 		possibleCommands.put("changes", COMMAND_TYPE.EDIT);
-		possibleCommands.put("correct", COMMAND_TYPE.EDIT);
 		return possibleCommands;
 	}
 	

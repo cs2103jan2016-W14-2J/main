@@ -27,13 +27,18 @@ public class SearchParser {
 		case BY_DATE:
 			return processByDate(commandUtil, userTask);
 		case BY_TASK:
-			return commandUtil;
+			return processByTask(commandUtil, userTask);
 		case BY_TAG:
 			return processByTag(commandUtil, userTask);
 		default:
 			commandUtil.setSearchType(SEARCH_TYPE.INVALID);
 			break;
 		}
+		return commandUtil;
+	}
+
+	private CommandUtils processByTask(CommandUtils commandUtil, String userTask) {
+		commandUtil.setSearchByTask(userTask.trim());
 		return commandUtil;
 	}
 

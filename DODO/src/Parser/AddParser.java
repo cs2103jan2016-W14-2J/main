@@ -136,7 +136,6 @@ public class AddParser {
 		String str = "";
 		Date date = new Date();
 		LAST_POSITION_OF_AT = taskName.lastIndexOf(KEYWORD_AT);
-		System.out.println("DEBUG @line 201:" + LAST_POSITION_OF_AT);
 		
 		// Parse string with "from" ... "to".
 		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_AT == -1) {

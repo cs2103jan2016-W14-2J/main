@@ -579,7 +579,7 @@ public class AddParser {
 				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				commandUtil = finalVerification(taskName, commandUtil);
 			}
-			else if (dates.size() > 1){
+			else if (dates.size() > 1 && hasTimeDateElement == true) {
 				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
 				commandUtil.setStartTime(dates.get(0));
 				commandUtil = finalVerification(taskName, commandUtil);

@@ -1,17 +1,27 @@
 package GUI;
 
+import java.awt.Frame;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+
 import Logic.Logic;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -39,12 +49,18 @@ public class UIConfiguration extends Application
 	private Logic logic;
 	private boolean launch=false;
 	private UIMainController gui;
+	private static JFrame frame = new JFrame("FrameIcon");
+	
 	@Override
-	public void start(Stage primaryStage) 
+	public void start(Stage primaryStage) throws IOException 
 	{
-		this.primaryStage = primaryStage;
+		Image applicationIcon = new Image(getClass().getResourceAsStream("logo.png"));
+		primaryStage.getIcons().add(applicationIcon);
+		
+        this.primaryStage = primaryStage;
 		try 
 		{
+			
 			if(checkConfigFileExist()==true)
 			{
 				System.out.println("config file exist, read config file now");

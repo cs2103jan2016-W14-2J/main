@@ -1,23 +1,4 @@
 /* @@author A0125372L */
-#CellStart {
-    -fx-background-color:
-        linear-gradient(#f0ff35, #a9ff00),
-        radial-gradient(center 50% -40%, radius 200%, #b8ee36 20%, #80c800 0%);
-    -fx-background-radius: 6, 5;
-    -fx-background-insets: 0, 1;
-
-}
-
-#CellEnd {
-
-     -fx-background-color:
-        linear-gradient(#ff5400, #be1d00),
-        radial-gradient(center 50% -40%, radius 200%, #ff5400 20%, #be1d00 0%);
-    -fx-background-radius: 6, 5;
-    -fx-background-insets: 0, 1;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
-}
-
 .check-box>.box {
   -fx-background-insets: 0;
   -fx-background-radius: 0;

@@ -102,7 +102,7 @@ public class UICellComponents
 	public CheckBox getCheckFlag() {
 		return chkFlag;
 	}
-
+	
 
 	
 	//makeTag = new UIMakeTag();

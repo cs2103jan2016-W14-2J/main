@@ -1,17 +1,37 @@
 package GUI;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.annotation.Resource;
+
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.Notifications;
+import org.controlsfx.control.PopOver;
+
 import Logic.Logic;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 //@@author A0125372L
@@ -41,7 +61,8 @@ public class UIMainController {
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
 		
-		Stage newStage = new Stage();
+		
+		
 	}
 
 	public void start(Stage primaryStage) 
@@ -52,10 +73,38 @@ public class UIMainController {
 		setEscCloseForm();
 		listen = new UIListener(root,primaryStage,rightBox,leftBox,logic);
 		listen.assignHelpSheetListener();
-		
-	
 		show();
+
 		
+
+		Timer timer = new Timer();
+
+		Calendar now = Calendar.getInstance();
+		
+		
+		timer.schedule( new TimerTask() {
+		    public void run() {
+				Calendar cal = Calendar.getInstance();
+		    	//System.out.println("in");
+		    	for(int x=0;x<logic.getOngoingTasks().size();x++)
+		    	{
+						if(logic.getOngoingTasks().get(x).getEnd().after(cal.getTime()))
+						{
+							
+							System.out.println("this has not expired " + x);
+							
+						}
+						else
+						{
+							System.out.println("this has expired " + x);
+
+							
+						}
+		    	}
+		    }
+		 }, 0, 60*250);
+		
+	  
 		
 	}
 	public void addLeftAndRightBox() 
@@ -118,6 +167,8 @@ public class UIMainController {
 	          }
 
 			private void startThread(Task<Void> task) {
+               // Notifications.create().title("Task Reminder").text("END").showInformation();
+
 				Thread th = new Thread(task);
 	     	    th.setDaemon(true);
 	     	    th.start();				

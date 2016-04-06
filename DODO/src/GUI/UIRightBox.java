@@ -163,7 +163,6 @@ public class UIRightBox {
 		mainTextField = new TextField();
 		listen = new UIListener();
 		uiPopUpFeedBack = new UIPopUpFeedBack(popUpFeedBack, mainTextField);
-
 		
 	}
 	//add list -> add vbtab ->
@@ -256,7 +255,6 @@ public class UIRightBox {
 		else
 		{
 			tabPane.getSelectionModel().select(tabWelcome);
-
 		}
 	}
 	private void testMethod() 
@@ -376,6 +374,15 @@ public class UIRightBox {
 		{
 			tabPane.getTabs().remove(tabSearch);
 			tabSearch=null;
+		}
+		if(tabPane.getTabs().size()>1)
+		{
+			tabPane.getTabs().remove(tabWelcome);
+			
+		}
+		else if(tabPane.getTabs().size()==0)
+		{
+			tabPane.getTabs().add(tabWelcome);
 		}
 		
 		
@@ -646,6 +653,7 @@ public class UIRightBox {
 	        {		
 				if (ke.getCode().equals(KeyCode.UP))
 				{
+					
 					System.out.println("test");
 					
 					String prevCmd ="";
@@ -654,6 +662,8 @@ public class UIRightBox {
 				}
 				if (ke.getCode().equals(KeyCode.ENTER))
 	            {
+
+
 	            	runCommand();
 	            }	
 	        }
@@ -661,10 +671,16 @@ public class UIRightBox {
 	}
 	protected void runCommand()
 	{		
+		
+
+
+      
+		
+		
+		
 		strFeedBack = logic.run(mainTextField.getText());
 		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
 		currentTask = logic.getStatus();
-		
 		uiPopUpFeedBack.createPopUpFeedBack(strFeedBack,scene);
 		
 		mainTextField.requestFocus();
@@ -711,6 +727,18 @@ public class UIRightBox {
 			tabPane.getSelectionModel().select(null);
 		}
 		leftBox.updateLeftBox();
+		
+		if(tabPane.getTabs().size()>1)
+		{
+			tabPane.getTabs().remove(tabWelcome);
+			
+		}
+		else if(tabPane.getTabs().size()==0)
+		{
+			tabPane.getTabs().add(tabWelcome);
+		}
+		
+		
 	}
 	public static UI_TAB getCurrentTab() 
 	{

@@ -259,13 +259,13 @@ public class DateTimeParser {
 				newDateWithTime = dateWithoutTime + " " + DEFAULT_TIME_1159PM;
 				newDate = sf.parse(newDateWithTime);
 			}
-/*			else if (date.before(currentTime)) {
+			else if (date.before(currentTime)) {
 				cal.setTime(date);
 				cal.add(Calendar.DATE, 1);
 				newDateWithTime = sf.format(cal.getTime()); 
 				newDate = sf.parse(newDateWithTime);
 			}
-*/		}
+		}
 		catch (ParseException e) {
 			e.printStackTrace();
 		}

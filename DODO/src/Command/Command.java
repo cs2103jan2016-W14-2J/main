@@ -199,10 +199,6 @@ public abstract class Command {
 			if (category.getTasks().size()==0) {
 				deleteCategory(categoryString);
 			}
-			flag = category.deleteTask(task);
-			if (flag==false) {
-				throw new Error("IMPOSSIBLE, this tag must have been added to this category previously.");
-			}
 		}
 		return true;
 	}

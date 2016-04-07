@@ -16,6 +16,7 @@ public class FlexiCommand {
 	
 	public FlexiCommand() {
 		possibleCommands = new HashMap<String, COMMAND_TYPE>();
+		possibleCommands = initiateFlexiAddCommand();
 		possibleCommands = initiateFlexiDeleteCommand();
 		possibleCommands = initiateFlexiEditCommand();
 		possibleCommands = initiateFlexiCompleteCommand();
@@ -34,6 +35,18 @@ public class FlexiCommand {
 	}
 	
 	public HashMap<String, COMMAND_TYPE> getKeywordsDataBase() {
+		return possibleCommands;
+	}
+	
+	private HashMap<String, COMMAND_TYPE> initiateFlexiAddCommand() {
+		possibleCommands.put("add", COMMAND_TYPE.ADD);
+		possibleCommands.put("+", COMMAND_TYPE.ADD);
+		possibleCommands.put("ad", COMMAND_TYPE.ADD);
+		possibleCommands.put("adds", COMMAND_TYPE.ADD);
+		possibleCommands.put("a", COMMAND_TYPE.ADD);
+		possibleCommands.put("create", COMMAND_TYPE.ADD);
+		possibleCommands.put("creates", COMMAND_TYPE.ADD);
+		possibleCommands.put("creat", COMMAND_TYPE.ADD);
 		return possibleCommands;
 	}
 

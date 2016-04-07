@@ -93,7 +93,7 @@ public class DateTimeParser {
 	protected String removeTomorrow(String userInput) {
 		if (userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2)) {
 			userInput = userInput.replace(KEYWORD_TOMORROW_1, "");
-			possibleDate = KEYWORD_TOMORROW_1;
+			setDateElements(KEYWORD_TOMORROW_1);
 		}
 		return userInput.trim();
 	}
@@ -326,7 +326,6 @@ public class DateTimeParser {
 		String temp = "";
 		temp = removeTheDayAfterTomorrow(userTask);
 		temp = removeYesterday(temp);
-		System.out.println("Test new deadline : " + temp);
 		temp = removeTomorrow(temp);
 		temp = removeToday(temp);
 		temp = removeThisComingWeekday(temp);
@@ -460,7 +459,9 @@ public class DateTimeParser {
 	protected String getConfirmTaskName() {
 		return this.confirmTaskName;
 	}
-	
+	private void setDateElements(String possibleDate) {
+		this.possibleDate = possibleDate;
+	}
 	protected String getDateElements() {
 		return this.possibleDate;
 	}

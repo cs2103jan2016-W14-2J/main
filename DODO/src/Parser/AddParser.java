@@ -52,7 +52,6 @@ public class AddParser {
 		taskName = dt.checkAndConvertDateElement(taskItems);
 		commandUtil = determineTaskType(commandUtil, taskItems, taskName);
 		taskType = commandUtil.getType();
-		
 		switch(taskType) {
 			case DEADLINED:
 				commandUtil = parseDEADLINED(commandUtil, taskName);
@@ -243,13 +242,12 @@ public class AddParser {
 
 
 	private CommandUtils parseFloating(ArrayList<String> taskItems, String taskName, CommandUtils commandUtil) {
-		DateTimeParser dt = new DateTimeParser();
-	//	String timeChecker = dt.removeTime(userTask);
 		boolean hasTimeDateElement = dt.hasDateAndTimeElements(taskName);
 		Date date = new Date();
 		List<Date> dates = new PrettyTimeParser().parse(taskName);
-		System.out.println("TEST parseFloating 123:" + dates.size());
-		if (dates.size() == 0) {
+		System.out.println("TEST parseFloating 123:" + dt.getDateElements());
+		
+		if (dates.size() == 0 && dt.getDateElements() == null) {
 			commandUtil.setTaskName(taskName);
 		}
 		else {

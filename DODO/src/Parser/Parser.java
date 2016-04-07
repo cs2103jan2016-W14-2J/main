@@ -19,6 +19,7 @@ public class Parser {
 	protected Date endTime;
 	protected int taskID;
 	protected String tag;
+	private String _addCommand = "add ";
 	protected boolean isImportant;
 	
 	private ArrayList<String> tags;
@@ -46,6 +47,9 @@ public class Parser {
 	
 		String command = getUserCommand(userInput);
 		COMMAND_TYPE commandType = determineCommandType(command);
+		if (commandType == COMMAND_TYPE.ADD && !userInput.toLowerCase().contains(_addCommand)) {
+			userInput = _addCommand + " " + userInput;
+		}
 		
 		switch (commandType) {
 			

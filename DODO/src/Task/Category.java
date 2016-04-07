@@ -26,7 +26,9 @@ public class Category {
 	public boolean addTask(Task task) {
 		if (!tasks.contains(task)) {
 			tasks.add(task);
-			return task.addCategory(this.name);
+			boolean flag = task.addCategory(this.name);
+			System.out.println("[DUBUG] task flag: " + flag);
+			return flag;
 		}
 		return false;
 	}

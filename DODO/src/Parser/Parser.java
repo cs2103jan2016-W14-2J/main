@@ -22,7 +22,6 @@ public class Parser {
 	protected boolean isImportant;
 	
 	private ArrayList<String> tags;
-	private String _commandAdd = "add ";
 	private String SYMBOL_HASH_TAG = "#";
 	private String SYMBOL_DASH = "-";
 	private String SYMBOL_EXCLAMATION_MARK = "-";
@@ -51,7 +50,7 @@ public class Parser {
 		switch (commandType) {
 			
 			case ADD:
-				userInput = processUserInput(commandUtil, _commandAdd + " " + userInput);
+				userInput = processUserInput(commandUtil, userInput);
 				AddParser addParser = new AddParser();
 				return addParser.executeAddParser(commandUtil, userInput);
 			case DELETE:
@@ -91,17 +90,7 @@ public class Parser {
 				userInput = getUserInputContent(userInput);
 				SortParser sort = new SortParser();
 				return sort.determineSortType(commandUtil, userInput);
-			case CHANGE_DIRECTORY:
-				break;
-			case EXIT:
-				break;
-			case HELP:
-				break;
-			case UNDO:
-				break;
-			case REDO:
-				break;
-			case INVALID:
+			default:
 				break;
 		}
 		return commandUtil;

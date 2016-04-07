@@ -344,31 +344,39 @@ public class DateTimeParser {
 	
 
 	private String removeHoliday(String userTask) {
-		if (userTask.contains("valetine's day")) {
-			userTask = userTask.replace("valetine's day", "");
+		boolean containsPreposition = false;
+		String[] temp = userTask.split(STRING_SPLITTER);	
+		for (int i = 0; i < temp.length; i++) {
+			if (preposition.contains(temp[i])) {
+				containsPreposition = true;
+			}
+		}
+		
+		if (userTask.contains("valentine's day") && containsPreposition == true) {
+			userTask = userTask.replace("valentine's day", "");
 			possibleDate = "valetine's day ";
 		}
-		else if (userTask.contains("christmas")) {
+		else if (userTask.contains("christmas") && containsPreposition == true) {
 			userTask = userTask.replace("christmas", "");
 			possibleDate = "christmas ";
 		}
-		else if (userTask.contains("new year's")) {
+		else if (userTask.contains("new year's") && containsPreposition == true) {
 			userTask = userTask.replace("new year's", "");
 			possibleDate = "new year's ";
 		}
-		else if (userTask.contains("new year's eve")) {
+		else if (userTask.contains("new year's eve") && containsPreposition == true) {
 			userTask = userTask.replace("new year's eve", "");
 			possibleDate = "new year's eve ";
 		}
-		else if (userTask.contains("halloween")) {
+		else if (userTask.contains("halloween") && containsPreposition == true) {
 			userTask = userTask.replace("halloween", "");
 			possibleDate = "halloween ";
 		}
-		else if (userTask.contains("mother's day")) {
+		else if (userTask.contains("mother's day") && containsPreposition == true) {
 			userTask = userTask.replace("mother's day", "");
 			possibleDate = "mother's day ";
 		}
-		else if (userTask.contains("father's day")) {
+		else if (userTask.contains("father's day") && containsPreposition == true) {
 			userTask = userTask.replace("father's day", "");
 			possibleDate = "father's day ";
 		}

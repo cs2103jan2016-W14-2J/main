@@ -59,8 +59,6 @@ public class Storage {
 		}
 		else {
 			config = UIConfiguration.openDialogBox();
-			pw = new PrintWriter(new BufferedWriter(new FileWriter(config, true)));
-			pw.println(config.getAbsolutePath());
 			directory = config.getAbsolutePath();
 		}
 		// it cannot create a file in a specific directory for now

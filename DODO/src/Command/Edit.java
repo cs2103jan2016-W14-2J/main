@@ -36,16 +36,20 @@ public class Edit extends Command {
 		try {
 			switch (edit_type) {
 			case TASK_NAME:
+				this.lastModifiedIndex = index - INDEX_ADJUSTMENT;
 				Task task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editName(task);
 			case START_TIME:
+				this.lastModifiedIndex = index - INDEX_ADJUSTMENT;
 				task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editStartTime(task);
 			case DEADLINED:
 			case END_TIME:
+				this.lastModifiedIndex = index - INDEX_ADJUSTMENT;
 				task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editEndTime(task);
 			case EVENT_TIME:
+				this.lastModifiedIndex = index - INDEX_ADJUSTMENT;
 				task = tasks.get(index-INDEX_ADJUSTMENT);
 				return editStartAndEndTime(task);
 			case TAG:

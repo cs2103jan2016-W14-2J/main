@@ -28,6 +28,7 @@ public class Tag extends Command {
 		Task task;
 		try {
 			task = tasks.get(index-INDEX_ADJUSTMENT);
+			this.lastModifiedIndex = index - INDEX_ADJUSTMENT;
 		} catch (IndexOutOfBoundsException e) {
 			return MESSAGE_INDEXOUTOFBOUND;
 		} catch (NullPointerException e) {

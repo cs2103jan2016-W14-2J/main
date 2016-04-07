@@ -24,6 +24,7 @@ public abstract class Command {
 	protected ArrayList<Task> floatingTasks;
 	protected ArrayList<Task> results;
 	protected TreeMap<String, Category> categories;
+	protected int lastModifiedIndex;
 
 	public Command(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
@@ -47,6 +48,10 @@ public abstract class Command {
 
 	public UI_TAB getStatus() {
 		return this.UIStatus;
+	}
+	
+	public int getLastModifiedIndex() {
+		return this.lastModifiedIndex;
 	}
 
 	/******************************************INHERIENT METHODS*************************************/

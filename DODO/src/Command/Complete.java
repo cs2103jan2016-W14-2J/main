@@ -59,6 +59,7 @@ public class Complete extends Command {
 					this.completedTasks.add(task);
 					status += "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.\n";
 				}
+				this.lastModifiedIndex = index;
 			} catch (IndexOutOfBoundsException e) {
 				status += "Task " + (index+INDEX_ADJUSTMENT) + " is absent.\n";
 			}

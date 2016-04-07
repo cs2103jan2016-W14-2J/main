@@ -119,6 +119,7 @@ public class Delete extends Command {
 			Task task = tasks.get(index- INDEX_ADJUSTMENT);
 			task.setStart(null);
 		}
+		this.lastModifiedIndex = indexes.get(indexes.size()-1) - INDEX_ADJUSTMENT;
 		return "Start Time of tasks at " + indexes + " has been removed.";
 	}
 	
@@ -133,6 +134,7 @@ public class Delete extends Command {
 			}
 		}
 		this.UIStatus = UI_TAB.FLOATING;
+		this.lastModifiedIndex = this.floatingTasks.size()-1;
 		return "Deadline of tasks at " + indexes + " has been removed.";
 	}
 }

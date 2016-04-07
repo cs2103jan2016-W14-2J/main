@@ -10,6 +10,7 @@ import Task.Category;
 import Task.Task;
 
 public class Flag extends Command {
+	private static final String MESSAGE_INVALID_FLAG = "Please enter a valid flag command.";
 	private boolean toFlag;
 
 	public Flag(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
@@ -30,7 +31,7 @@ public class Flag extends Command {
 		case ALL:
 			return flagAll();
 		default:
-			return "Invalid command.";
+			return MESSAGE_INVALID_FLAG;
 		}
 	}
 
@@ -52,7 +53,6 @@ public class Flag extends Command {
 			try {
 				index = indexes.get(i)-1;
 				Task task = tasks.get(index);
-				boolean existingFlag = task.getFlag();
 				if (toFlag) {
 					if (task.getFlag()) {
 						status += "Task " + (index + INDEX_ADJUSTMENT) + " is already flagged.\n";
@@ -70,6 +70,7 @@ public class Flag extends Command {
 					}
 				}
 				task.setFlag(toFlag);
+				this.lastModifiedIndex = index;
 			} catch (IndexOutOfBoundsException e) {
 				status += "Task " + (index + INDEX_ADJUSTMENT) + " is absent.\n";
 			}

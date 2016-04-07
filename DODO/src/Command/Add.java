@@ -47,6 +47,7 @@ public class Add extends Command {
 		
 		this.floatingTasks.add(task);
 		this.UIStatus = UI_TAB.FLOATING;
+		this.lastModifiedIndex = this.floatingTasks.size()-1;
 		
 		System.out.println("=====add===== tasks: " + task.getCategories());
 		return String.format(MESSAGE_SUCCESSFUL_ADD, task, this.UIStatus);
@@ -88,10 +89,12 @@ public class Add extends Command {
 		if (task.getStatus()==TASK_STATUS.OVERDUE) {
 			overdueTasks.add(task);
 			this.UIStatus = UI_TAB.OVERDUE;
+			this.lastModifiedIndex = this.overdueTasks.size()-1;
 		}
 		else if (task.getStatus()==TASK_STATUS.ONGOING) {
 			ongoingTasks.add(task);
 			this.UIStatus = UI_TAB.ONGOING;
+			this.lastModifiedIndex = this.ongoingTasks.size()-1;
 		}
 	}
 }

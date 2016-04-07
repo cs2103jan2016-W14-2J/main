@@ -21,11 +21,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -606,8 +609,23 @@ public class UIRightBox {
 		
 		
 		int x= listViewLabel.getSelectionModel().getSelectedIndex();
-		VBox vbPop = new VBox();
-		vbPop.setPrefSize(500, 2000);
+		int index = x+1;
+		VBox root = new VBox();
+		HBox hbTitle = new HBox();
+		ScrollPane sp = new ScrollPane();
+		VBox vbBody = new VBox();
+		
+		hbTitle.styleProperty().set("-fx-border-color: black;");
+		vbBody.styleProperty().set("-fx-border-color: black;");
+		String strTitle = "Popup of Index " +index;
+
+		
+		Label titleForPopUp = new Label(strTitle);
+		titleForPopUp.setFont(Font.font("Cambria", 25));
+		hbTitle.getChildren().add(titleForPopUp);
+		hbTitle.setAlignment(Pos.CENTER);
+		
+		root.setPrefSize(500, 500);
 		popUpCell.arrowSizeProperty().set(0);
 		String moreName=null;
 		
@@ -618,31 +636,42 @@ public class UIRightBox {
 		if(getCurrentTab().equals(UI_TAB.ONGOING))
 		{
 			moreName =ongoingTasks.get(x).getName();
+
 		}
 		if(getCurrentTab().equals(UI_TAB.FLOATING))
 		{
 			moreName =floatingTasks.get(x).getName();
+
 		}
 		if(getCurrentTab().equals(UI_TAB.COMPLETED))
 		{
 			moreName =completedTasks.get(x).getName();
+
 		}
 		if(getCurrentTab().equals(UI_TAB.OVERDUE))
 		{
 			moreName = overdueTasks.get(x).getName();
+
 		}
 		if(getCurrentTab().equals(UI_TAB.SEARCH))
 		{
 			moreName = searchTasks.get(x).getName();
+
 		}
 	    Label lbl = new Label(moreName);
+	    lbl.setPrefWidth(470);
 	    lbl.setWrapText(true);
-	    
-	    lbl.setPrefSize(5000, 1000);
-		vbPop.getChildren().add(lbl);
+	    sp.setContent(lbl);
+	    sp.setHbarPolicy(ScrollBarPolicy.NEVER);
+	    sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+
+	    sp.setPrefHeight(1000);
+		vbBody.getChildren().add(sp);
+		vbBody.setPrefHeight(1000);
+		root.getChildren().addAll(hbTitle,vbBody);
 
 		popUpCell.setY(listViewLabel.getHeight());
-	    popUpCell.setContentNode(vbPop);
+	    popUpCell.setContentNode(root);
 	    popUpCell.show(listViewLabel);
 	}
 
@@ -738,12 +767,6 @@ public class UIRightBox {
 	}
 	public static UI_TAB getCurrentTab() 
 	{
-	/*	if(tabPane.getSelectionModel().getSelectedItem()==null )
-		{
-			return UI_TAB.WELCOME;
-		}	
-		System.out.println((UI_TAB) tabPane.getSelectionModel().getSelectedItem().getUserData());
-		*/
 		return (UI_TAB) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
 

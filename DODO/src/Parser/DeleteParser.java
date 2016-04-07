@@ -19,6 +19,8 @@ public class DeleteParser {
 	private String STRING_END_DATE = "end date";
 	private String STRING_START_INDICATOR = "start";
 	private String STRING_END_INDICATOR = "end";
+	private String STRING_SPLITTER = "[\\s+]";
+	private String PUNCTUATION_REMOVER = "[:.,]";
 	
 	public DeleteParser() {
 		this.tagToDelete = new ArrayList<String>();
@@ -27,7 +29,7 @@ public class DeleteParser {
 
 	protected CommandUtils executeDeleteParser(CommandUtils commandUtil, String userTask) {
 		boolean isInteger = false;
-		String[] str = userTask.replaceAll("[:.,]", "").split("\\s+");
+		String[] str = userTask.replaceAll(PUNCTUATION_REMOVER, "").split(STRING_SPLITTER);
 		isInteger = isTaskIndex(str);
 		commandUtil = detemineDeleteType(commandUtil, userTask.toLowerCase(), isInteger);
 		deleteType = commandUtil.getDeleteType();
@@ -186,7 +188,7 @@ public class DeleteParser {
 	}
 
 	private boolean checkIfDeleteMultiple(String userTask) {
-		String[] str = userTask.toLowerCase().split("\\s+");	
+		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);	
 		return (str.length > 1 && !checkIfDeleteRange(userTask) && 
 				!checkIfDeleteEndDate(userTask) &&
 				!checkIfDeleteStartDate(userTask)) ? true : false;

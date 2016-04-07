@@ -27,7 +27,6 @@ public class Parser {
 	private String SYMBOL_DASH = "-";
 	private String SYMBOL_EXCLAMATION_MARK = "!";
 	private CommandUtils commandUtil;
-	private String newDirectory = "";
 	
 	public Parser() {
 		possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();		

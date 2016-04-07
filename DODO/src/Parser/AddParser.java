@@ -185,10 +185,11 @@ public class AddParser {
 		contentToAnalyse = dt.getDateElements() + " ";
 		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
 		extractDateFromTask();
-		return setDeadLine(commandUtil, taskName, date);
+		return setDeadLine(commandUtil, confirmTaskName, date);
 	}
 
-	private CommandUtils setDeadLine(CommandUtils commandUtil, String taskName, Date date) {
+	private CommandUtils setDeadLine(CommandUtils commandUtil, String confirmTaskName, Date date) {
+		System.out.println("setDeadLine : " + confirmTaskName);
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_BY, " "));
 		if (confirmDate.size() == 1) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));

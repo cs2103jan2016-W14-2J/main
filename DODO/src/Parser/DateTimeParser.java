@@ -328,7 +328,8 @@ public class DateTimeParser {
 	
 	protected String extractDate(String userTask) {
 		String temp = "";
-		temp = removeTheDayAfterTomorrow(userTask);
+		temp = removeHoliday(userTask);
+		temp = removeTheDayAfterTomorrow(temp);
 		temp = removeYesterday(temp);
 		temp = removeTomorrow(temp);
 		temp = removeToday(temp);
@@ -343,6 +344,38 @@ public class DateTimeParser {
 		return temp;
 	}
 	
+
+	private String removeHoliday(String userTask) {
+		if (userTask.contains("valetine's day")) {
+			userTask = userTask.replace("valetine's day", "");
+			possibleDate = "valetine's day ";
+		}
+		else if (userTask.contains("christmas")) {
+			userTask = userTask.replace("christmas", "");
+			possibleDate = "christmas ";
+		}
+		else if (userTask.contains("new year's")) {
+			userTask = userTask.replace("new year's", "");
+			possibleDate = "new year's ";
+		}
+		else if (userTask.contains("new year's eve")) {
+			userTask = userTask.replace("new year's eve", "");
+			possibleDate = "new year's eve ";
+		}
+		else if (userTask.contains("halloween")) {
+			userTask = userTask.replace("halloween", "");
+			possibleDate = "halloween ";
+		}
+		else if (userTask.contains("mother's day")) {
+			userTask = userTask.replace("mother's day", "");
+			possibleDate = "mother's day ";
+		}
+		else if (userTask.contains("father's day")) {
+			userTask = userTask.replace("father's day", "");
+			possibleDate = "father's day ";
+		}
+		return userTask;
+	}
 
 	private String removeEnglishDate(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);

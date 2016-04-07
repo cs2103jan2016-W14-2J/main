@@ -58,7 +58,7 @@ public class Storage {
 			}
 		}
 		else {
-			config = UIConfiguration.openDialogueBox();
+			config = UIConfiguration.openDialogBox();
 			pw = new PrintWriter(new BufferedWriter(new FileWriter(config, true)));
 			pw.println(config.getAbsolutePath());
 			directory = config.getAbsolutePath();

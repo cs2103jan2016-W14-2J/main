@@ -36,6 +36,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -133,7 +134,8 @@ public class UIRightBox {
 		usc = new UICssScaling();
 		logger = Logger.getLogger("MyLog"); 
 		tabMap = new boolean[6];
-
+		
+		
 		tabWelcome = new Tab(welcomeTab);
 		tabAll = new Tab(allTab);
 		tabFloating = new Tab(floatingTab);
@@ -671,12 +673,6 @@ public class UIRightBox {
 	}
 	protected void runCommand()
 	{		
-		
-
-
-      
-		
-		
 		
 		strFeedBack = logic.run(mainTextField.getText());
 		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");

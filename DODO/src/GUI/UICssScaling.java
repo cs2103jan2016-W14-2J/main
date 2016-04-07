@@ -41,14 +41,14 @@ public class UICssScaling
 		for(int x=0;x<ListTag.size();x++)
 		{
 			ListTag.get(x).getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
-			ListTag.get(x).setFont(Font.font ("Verdana", 20));
+			ListTag.get(x).setFont(Font.font ("Cambria", 25));
 			//lblListTag.get(x).setId("CellTag");
 			//lblListTag.get(x).styleProperty().set("-fx-border-color: black;");
 			ListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
 		}
 		
-		lblIndex.setFont(Font.font ("Verdana", 20));
-		lblName.setFont(Font.font ("Verdana", 20));
+		lblIndex.setFont(Font.font ("Cambria", 25));
+		lblName.setFont(Font.font ("Cambria", 25));
 		lblName.setAlignment(Pos.CENTER_LEFT);
 		vbStartAndEnd.setAlignment(Pos.CENTER);
 		chkFlag.setAlignment(Pos.CENTER);
@@ -58,11 +58,15 @@ public class UICssScaling
 		lblName.setId("CellName");
 		chkFlag.setId("CellFlag");
 		
+		
+		lblName.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
+		lblIndex.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
+		
 		if(vbStartAndEnd.getChildren().size()==1)
 		{
 			vbStartAndEnd.getChildren().get(0).setId("CellStart");
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Verdana", 20));
+			((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Cambria", 25));
 		}
 		else if(vbStartAndEnd.getChildren().size()==2)
 		{
@@ -70,8 +74,8 @@ public class UICssScaling
 			vbStartAndEnd.getChildren().get(1).setId("CellEnd");
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 			((Label) vbStartAndEnd.getChildren().get(1)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Verdana", 20));
-			((Label) vbStartAndEnd.getChildren().get(1)).setFont(Font.font ("Verdana", 20));
+			((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Cambria", 25));
+			((Label) vbStartAndEnd.getChildren().get(1)).setFont(Font.font ("Cambria", 25));
 		}
 		chkFlag.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		AlignmentCheck(cellRoot, lblName,lblIndex,vbStartAndEnd,chkFlag, toolTip);

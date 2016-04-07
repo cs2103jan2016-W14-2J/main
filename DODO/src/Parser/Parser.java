@@ -90,17 +90,7 @@ public class Parser {
 				userInput = getUserInputContent(userInput);
 				SortParser sort = new SortParser();
 				return sort.determineSortType(commandUtil, userInput);
-			case CHANGE_DIRECTORY:
-				break;
-			case EXIT:
-				break;
-			case HELP:
-				break;
-			case UNDO:
-				break;
-			case REDO:
-				break;
-			case INVALID:
+			default:
 				break;
 		}
 		return commandUtil;

@@ -22,6 +22,13 @@ public class DateTimeParser {
 	private List<String> todayTypes;
 	private List<String> tomorrowTypes;
 	private ArrayList <String> taskItems;
+	private ArrayList<String> dayTypes;
+	private ArrayList<String> monthTypes;
+	private ArrayList<String> preposition;
+	private String confirmTaskName = "";
+	private String possibleDate = "";
+	private final int MAX_DAY_FEB = 29;
+	private final int MAX_DAY = 31;
 	
 	private final String KEYWORD_AM = "am";
 	private final String KEYWORD_PM = "pm";
@@ -42,6 +49,10 @@ public class DateTimeParser {
 	private final String KEYWORD_DAYS = " days";
 	private final String KEYWORD_NEXT = " next ";
 	private final String KEYWORD_NEXT_WEEK = " next week";
+	private final String KEYWORD_ST = "st";
+	private final String KEYWORD_ND = "nd";
+	private final String KEYWORD_RD = "rd";
+	private final String KEYWORD_TH = "th";
 	
 	private final String DEFAULT_TIME_6PM = "18:00:00";
 	private final String DEFAULT_TIME_1159PM = "23:59:59";
@@ -52,18 +63,29 @@ public class DateTimeParser {
 	private final String DATE_FORMAT_WITH_TIME = "dd/MM/yyyy HH:mm:ss";
 	private final String TIME_WITHOUT_DATE_FORMAT = "HH:mm";
 	private final String STRING_SPLITTER = "\\s+";
+	
 
 	public DateTimeParser () {
 		todayTypes = new ArrayList<>(Arrays.asList("tdy"));
 		tomorrowTypes = new ArrayList<>(Arrays.asList("tmr", "tml", "tmrw", "2moro"));
+		dayTypes = new ArrayList<>(Arrays.asList("mon", "monday", "tue", "tues", "tuesday", 
+												 "wed", "wednesday", "thur", "thurs", "thursday", 
+												 "fri", "friday", "sat", "saturday", "sun", "sunday"));
+		monthTypes = new ArrayList<>(Arrays.asList("jan", "january", "feb", "february", "mar",
+												   "march", "apr","april", "may","may", "june","june", 
+												   "jul", "july", "aug", "august", "sept", "september", 
+												   "oct", "october", "nov", "november", "dec", "december"));
+		preposition = new ArrayList<>(Arrays.asList("on", "at", "by", "before", "in"));
 	}
 	
 	protected String removeTheDayAfterTomorrow(String userInput) {
 		if (userInput.contains(KEYWORD_THE_DAY_AFTER_TOMORROW)) {
 			userInput = userInput.replace(KEYWORD_THE_DAY_AFTER_TOMORROW, "");
+			possibleDate = KEYWORD_THE_DAY_AFTER_TOMORROW.trim();
 		}
 		else if (userInput.contains(KEYWORD_DAY_AFTER_TOMORROW)) {
 			userInput = userInput.replace(KEYWORD_DAY_AFTER_TOMORROW, "");
+			possibleDate = KEYWORD_THE_DAY_AFTER_TOMORROW.trim();
 		}
 		return userInput.trim();
 	}
@@ -71,6 +93,7 @@ public class DateTimeParser {
 	protected String removeTomorrow(String userInput) {
 		if (userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2)) {
 			userInput = userInput.replace(KEYWORD_TOMORROW_1, "");
+			possibleDate = KEYWORD_TOMORROW_1;
 		}
 		return userInput.trim();
 	}
@@ -78,9 +101,11 @@ public class DateTimeParser {
 	protected String removeYesterday(String userInput) {
 		if (userInput.contains(KEYWORD_YESTERDAY)) {
 			userInput = userInput.replace(KEYWORD_YESTERDAY, "");
+			possibleDate = KEYWORD_YESTERDAY;
 		}
 		else if (userInput.contains(KEYWORD_YESTERDAY_SHORTFORM)) {
 			userInput = userInput.replace(KEYWORD_YESTERDAY_SHORTFORM, "");
+			possibleDate = KEYWORD_YESTERDAY;
 		}
 		return userInput.trim();
 	}
@@ -88,6 +113,7 @@ public class DateTimeParser {
 	protected String removeToday(String userInput) {
 		if (userInput.contains(KEYWORD_TODAY)) {
 			userInput = userInput.replace(KEYWORD_TODAY, "");
+			possibleDate = KEYWORD_TODAY;
 		}
 		return userInput.trim();
 	}
@@ -102,6 +128,7 @@ public class DateTimeParser {
 			taskItems.remove(index);
 			taskItems.remove(index - 1);
 			userInput = toStringTaskElements(taskItems);
+			possibleDate = taskItems.get(index - 1) + " " + taskItems.get(index) + " " + taskItems.get(index - 1);
 		}
 		return userInput.trim();
 	}
@@ -126,16 +153,16 @@ public class DateTimeParser {
 		return userInput.trim();
 	}
 	
-	protected String removeDate(String userInput) {
+	protected String removeNumericalDate(String userInput) {
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
-		
 		for (int i = 0; i < taskItems.size(); i++) {
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
 			if (dates.size() != 0) {
-				String[] temp = taskItems.get(i).toLowerCase().split(STRING_SPLITTER);
-				// string maybe in 20/12 or 20/12/16 format
-				if (temp.length > 2) {
+				String[] temp = taskItems.get(i).split("[.-/]");
+				System.out.println("removeDate : " + temp.length);
+				if (temp.length >= 2) {
+					possibleDate = taskItems.get(i);
 					taskItems.remove(i);
 				}
 			}
@@ -151,6 +178,24 @@ public class DateTimeParser {
 		}
 		return userInput.trim();
 	}
+	
+	protected String removeWeekday(String userInput) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		String[] temp = userInput.split(STRING_SPLITTER);
+		String newInput = "";
+		if (dates.size() != 0) {
+			for (int i = 0; i < temp.length; i++) {
+				if (dayTypes.contains(temp[i].toLowerCase())) {
+				}
+				else {
+					newInput += temp[i] + " ";
+				}
+			}
+			userInput = newInput.trim();
+		}
+		return userInput;
+	}
+	
 	protected String removeNextWeekday(String userInput) {
 		String[] temp = userInput.split(STRING_SPLITTER);
 		String newTaskName = "";
@@ -174,7 +219,6 @@ public class DateTimeParser {
 	protected String removeTime (String userInput) {
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
-	
 		for (int i = 0; i < taskItems.size(); i++) {
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
 	
@@ -282,17 +326,88 @@ public class DateTimeParser {
 		String temp = "";
 		temp = removeTheDayAfterTomorrow(userTask);
 		temp = removeYesterday(temp);
+		System.out.println("Test new deadline : " + temp);
 		temp = removeTomorrow(temp);
 		temp = removeToday(temp);
 		temp = removeThisComingWeekday(temp);
 		temp = removeNextFewDays(temp);
 		temp = removeNextWeek(temp);
+		temp = removeWeekday(temp);
 		temp = removeNextWeekday(temp);
 		temp = removeTime(temp);
-		temp = removeDate(temp);
+		temp = removeNumericalDate(temp);
+		temp = removeEnglishDate(temp);
 		return temp;
 	}
 	
+
+	private String removeEnglishDate(String userInput) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		String[] temp = userInput.split(STRING_SPLITTER);
+		int positionOfMonth = 0;
+		int positionOfDay = 0;
+		int positionOfYear = 0;
+		String day = "";
+		String month = "";
+		String year = "";
+		boolean containsPreposition = false;
+		
+		for (int i = 0; i < temp.length; i++) {
+			if (monthTypes.contains(temp[i])) {
+				positionOfMonth = i;
+				month = temp[positionOfMonth];
+			}
+			else if (preposition.contains(temp[i])) {
+				containsPreposition = true;
+			}
+		}
+		
+		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false)) {
+			confirmTaskName = userInput;
+			return userInput;
+		}
+		
+		if (positionOfMonth + 1 < temp.length) {
+			if (temp[positionOfMonth + 1].length() == 2 && Integer.parseInt(temp[positionOfMonth + 1]) < 20) {
+				positionOfYear = positionOfMonth + 1;
+				year = temp[positionOfYear];
+			}
+			else if (temp[positionOfMonth + 1].length() == 4 && Integer.parseInt(temp[positionOfMonth + 1]) < 2020) {
+				positionOfYear = positionOfMonth + 1;
+				year = temp[positionOfYear];
+			}
+		}
+		
+		if (positionOfMonth - 1 > 0) {
+			if (temp[positionOfMonth - 1].endsWith(KEYWORD_ST) && temp[positionOfMonth - 1].startsWith("1")) {
+				positionOfDay = positionOfMonth - 1;
+				day = temp[positionOfDay];
+			}
+			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_ND) && temp[positionOfMonth - 1].startsWith("2")) {
+				positionOfDay = positionOfMonth + 1;
+				day = temp[positionOfDay];
+			}
+			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_RD) && temp[positionOfMonth - 1].startsWith("3")) {
+				positionOfDay = positionOfMonth + 1;
+				day = temp[positionOfDay];
+			}
+			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_TH)) {
+				possibleDate = temp[positionOfMonth - 1].replace(KEYWORD_TH, "");
+				if (Integer.parseInt(possibleDate) > 3 && Integer.parseInt(possibleDate) < 32) {
+					positionOfDay = positionOfMonth - 1;
+					day = temp[positionOfDay];
+				}
+			}
+			else if (Integer.parseInt(temp[positionOfMonth - 1]) > 0 && Integer.parseInt(temp[positionOfMonth - 1]) < 32) {
+				positionOfDay = positionOfMonth - 1;
+				day = temp[positionOfDay];
+			}
+		}
+		
+		possibleDate = day + " " + month + " " + year;
+		confirmTaskName = userInput.replace(possibleDate.trim(), "");
+		return confirmTaskName;
+	}
 
 	protected boolean checkForDateAndTime(String taskName, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
 		String str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
@@ -342,4 +457,11 @@ public class DateTimeParser {
 		return name;
 	}
 	
+	protected String getConfirmTaskName() {
+		return this.confirmTaskName;
+	}
+	
+	protected String getDateElements() {
+		return this.possibleDate;
+	}
 }

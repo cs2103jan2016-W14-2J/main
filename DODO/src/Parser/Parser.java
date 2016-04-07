@@ -92,7 +92,6 @@ public class Parser {
 				SortParser sort = new SortParser();
 				return sort.determineSortType(commandUtil, userInput);
 			case CHANGE_DIRECTORY:
-				newDirectory = getUserInputContent(userInput);
 				break;
 			case EXIT:
 				break;

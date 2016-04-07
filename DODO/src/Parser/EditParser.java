@@ -47,7 +47,7 @@ public class EditParser {
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
 		newTaskName = dt.checkForAbbreviation(editTaskElements);
 		System.out.println("ExecuteEditParser : " + newTaskName);
-		String[] updatedElements = newTaskName.replaceAll("[:-]", "").split("\\s+");
+		String[] updatedElements = newTaskName.replaceAll("[:-]", "").split("[\\s+]");
 		editTaskElements = new ArrayList<String>(Arrays.asList(updatedElements));
 		
 		for (int i = 0; i < editTaskElements.size(); i++) {

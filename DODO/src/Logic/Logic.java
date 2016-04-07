@@ -31,9 +31,9 @@ public class Logic {
 	private String previous;
 
 	/*************************************PUBLIC METHODS******************************************/
-	public static Logic getInstance(String directory) {
+	public static Logic getInstance() {
 		if (theOne==null) {
-			theOne = new Logic(directory);
+			theOne = new Logic();
 		}
 		return theOne;
 	}
@@ -45,7 +45,7 @@ public class Logic {
 		try {
 			cu = parser.executeCommand(cu, input);
 		} catch (Exception e) {
-			return "Invalid Command.";
+			return MESSAGE_INVALID_COMMAND;
 		}
 		return processCommand(cu);
 	}
@@ -277,8 +277,8 @@ public class Logic {
 	}
 
 	/***********************************INITALISE*****************************************************/
-	private Logic(String directory) {
-		storage = Storage.getInstance(directory);
+	private Logic() {
+		storage = Storage.getInstance();
 		results = new ArrayList<Task>();
 		history = new History();
 		ongoingTasks = storage.read(TASK_STATUS.ONGOING);

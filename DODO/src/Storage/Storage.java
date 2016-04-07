@@ -24,6 +24,7 @@ public class Storage {
 	private static final String FILENAME_FLOATING_TASKS = "FloatingTasks.txt";
 	private static final String FILENAME_OVERDUE_TASKS = "OverdueTasks.txt";
 	private static final String FILENAME_CATEGORIES = "Categories.txt";
+	private static final String FILENAME_CONFIG = "Config.txt";
 
 	private PrintWriter pw;
 	private BufferedReader br;
@@ -32,15 +33,36 @@ public class Storage {
 	private String floatingDirectory;
 	private String overdueDirectory;
 	private String categoriesDirectory;
+	private File config;
 	
-	public static Storage getInstance(String directory) {
+	public static Storage getInstance() {
 		if (theOne==null) {
-			theOne = new Storage(directory);
+			theOne = new Storage();
 		}
 		return theOne;
 	}
 	
-	private Storage(String directory) {
+	private Storage() {
+		String directory;
+		File config = new File(FILENAME_CONFIG);
+		if (config.exists()) {
+			try {
+				br = new BufferedReader(new FileReader(config));
+				directory = br.readLine();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else {
+			config = UIConfiguration.openDialogueBox();
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(config, true)));
+			pw.println(config.getAbsolutePath());
+			directory = config.getAbsolutePath();
+		}
 		// it cannot create a file in a specific directory for now
 		// it only creates a file in the same directory as the programme
 		ongoingDirectory = directory  + FILENAME_ONGOING_TASKS;
@@ -122,7 +144,6 @@ public class Storage {
 	}
 	
 	/******************************INTERNAL***********************************************/
-
 	private boolean fileExists(String directory) {
 		File file = new File(directory);
 		if (file.exists()) return true;

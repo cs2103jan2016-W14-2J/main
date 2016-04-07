@@ -154,7 +154,7 @@ public class AddParser {
 	}
 
 	private CommandUtils setEventTime(CommandUtils commandUtil, String taskName, Date date) {
-		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse);
+		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_FROM, " "));
 		if (confirmDate.size() == 2) {
 			commandUtil.setStartTime(confirmDate.get(0));
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(1), date));

@@ -66,7 +66,7 @@ public class UICssScaling
 		{
 			vbStartAndEnd.getChildren().get(0).setId("CellStart");
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Cambria", 25));
+			//((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Cambria", 25));
 		}
 		else if(vbStartAndEnd.getChildren().size()==2)
 		{
@@ -74,8 +74,8 @@ public class UICssScaling
 			vbStartAndEnd.getChildren().get(1).setId("CellEnd");
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 			((Label) vbStartAndEnd.getChildren().get(1)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Cambria", 25));
-			((Label) vbStartAndEnd.getChildren().get(1)).setFont(Font.font ("Cambria", 25));
+			//((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font ("Cambria", 25));
+			//((Label) vbStartAndEnd.getChildren().get(1)).setFont(Font.font ("Cambria", 25));
 		}
 		chkFlag.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		AlignmentCheck(cellRoot, lblName,lblIndex,vbStartAndEnd,chkFlag, toolTip);

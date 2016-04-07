@@ -31,6 +31,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
@@ -178,7 +179,7 @@ public class UIRightBox {
 		testMethod();
 		
 		tabPane.setPrefSize(tabPaneHeight, tabPaneWidth);
-		//tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		rightBox.getChildren().add(tabPane);
 		
 		mainTextField.setPrefSize(textfieldHeight, textfieldWidth);
@@ -605,9 +606,7 @@ public class UIRightBox {
 
 
 	private void createDisappearPane(ListView<Task> listViewLabel) 
-	{
-		
-		
+	{		
 		int x= listViewLabel.getSelectionModel().getSelectedIndex();
 		int index = x+1;
 		VBox root = new VBox();
@@ -659,7 +658,7 @@ public class UIRightBox {
 
 		}
 	    Label lbl = new Label(moreName);
-	    lbl.setPrefWidth(470);
+	    lbl.setPrefWidth(465);
 	    lbl.setWrapText(true);
 	    sp.setContent(lbl);
 	    sp.setHbarPolicy(ScrollBarPolicy.NEVER);

@@ -20,6 +20,7 @@ import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
@@ -29,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -81,7 +83,6 @@ public class UIMainController {
 
 		Calendar now = Calendar.getInstance();
 		
-		
 		timer.schedule( new TimerTask() {
 		    public void run() {
 				Calendar cal = Calendar.getInstance();
@@ -92,12 +93,11 @@ public class UIMainController {
 						{
 							
 							System.out.println("this has not expired " + x);
-							
+
 						}
 						else
 						{
 							System.out.println("this has expired " + x);
-
 							
 						}
 		    	}

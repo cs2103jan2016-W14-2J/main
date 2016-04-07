@@ -151,9 +151,9 @@ public class UIListener {
 							
 							pane.setPrefSize(root.getWidth(), root.getHeight());	
 							pane.getChildren().removeAll(listLbl);
-							for(int x=0,y=50;x<numberOfTabs;x++,y+=200)
+							for(int x=0,y=25;x<numberOfTabs;x++,y+=220)
 							{
-								listLbl.get(x).setPrefSize(150, 100);
+								//listLbl.get(x).setPrefSize(150, 100);
 								listLbl.get(x).setFont(Font.font("Cambria", 30));
 								listLbl.get(x).setLayoutX(rightBoxX+y);
 								listLbl.get(x).setLayoutY(rightBoxY);

@@ -1,28 +1,24 @@
 /* @@author A0125372L */
-.check-box>.box {
+.check-box>.box 
+{
   -fx-background-insets: 0;
   -fx-background-radius: 0;
   -fx-background-color: transparent;
-  
 }
-
 .check-box>.box>.mark {
   -fx-background-image: url("star1.png");
   -fx-padding: 30px;
   -fx-height: 40px;
   -fx-width: 40px;
-  
   -fx-background-position: center;
   -fx-background-repeat: stretch;
   -fx-shape: none;
 }
-
 .check-box:selected>.box>.mark{
   -fx-background-color: transparent;
   -fx-padding: 30px;
   -fx-height:40px;
-    -fx-width: 40px;
-  
+  -fx-width: 40px;
   -fx-background-image: url("star2.png");
 }
 .label

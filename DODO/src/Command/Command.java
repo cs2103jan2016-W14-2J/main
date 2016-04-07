@@ -145,7 +145,7 @@ public abstract class Command {
 		}
 		boolean flag = category.addTask(task);
 		System.out.println("[DEBUG Command/tagTask] category has " + flag + " been added to this task.");
-		return true;
+		return flag;
 	}
 
 	//delete an entire category

@@ -42,13 +42,7 @@ public class Tag extends Command {
 		ArrayList<String> successfulTags = new ArrayList<String>();
 		
 		for (String tag: tags) {
-			Category category = this.findCategory(tag);
-			if (category==null) {
-				this.tagTask(tag, task);
-				category = this.findCategory(tag);
-			}
-			// task interchangably add category in class Category
-			if (category.addTask(task)) {
+			if (this.tagTask(tag, task)) {
 				successfulTags.add(tag);
 			}
 			else {

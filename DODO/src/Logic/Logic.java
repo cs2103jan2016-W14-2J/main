@@ -15,9 +15,10 @@ public class Logic {
 	private static final String MESSAGE_UNSUCCESSFUL_UNDO = "Undo not successful. There is nothing to undo";
 	private static final String MESSAGE_UNSUCCESSFUL_REDO = "Redo not successful. There is nothing to redo";
 	private static final String MESSAGE_SWITCH_VIEW = "Successfully switch to %1$s.";
+	private static final String MESSAGE_INVALID_COMMAND = "Please enter a valid command.";
 	private static Logic theOne; //singleton
 	private Storage storage;
-	
+
 	/*************************************MEMORY*************************************************/
 	private ArrayList<Task> ongoingTasks;
 	private ArrayList<Task> completedTasks;
@@ -48,7 +49,7 @@ public class Logic {
 		}
 		return processCommand(cu);
 	}
-	
+
 	public String save() {
 		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
@@ -57,7 +58,7 @@ public class Logic {
 		storage.saveCategories(this.categories);
 		return "Saved successfully";
 	}
-	
+
 	public ArrayList<Category> mapCategories(ArrayList<String> categoriesString) {
 		ArrayList<Category> categories = new ArrayList<Category>();
 		for (String categoryString: categoriesString) {
@@ -67,6 +68,13 @@ public class Logic {
 			}
 		}
 		return categories;
+	}
+
+	public void update() {
+		this.updateList(this.floatingTasks);
+		this.updateList(this.ongoingTasks);
+		this.updateList(this.completedTasks);
+		this.updateList(this.overdueTasks);
 	}
 	/***********************************ACCESSORS***********************************************/
 	public ArrayList<Task> getOngoingTasks() {
@@ -89,7 +97,7 @@ public class Logic {
 		ArrayList<Category> categories = new ArrayList<Category>(this.categories.values());
 		return categories;
 	}
-	
+
 	public ArrayList<Task> getAll() {
 		ArrayList<Task> temp = new ArrayList<Task>();
 		temp.addAll(this.overdueTasks);
@@ -98,27 +106,27 @@ public class Logic {
 		temp.addAll(this.completedTasks);
 		return temp;
 	}
-	
+
 	public UI_TAB getStatus() {
 		return this.status;
 	}
-	
+
 	public ArrayList<Task> getSearchResults() {
 		return this.results;
 	}
-	
+
 	public String getPreviousCommand() {
 		if (this.previous==null) {
 			return "";
 		}
 		return this.previous;
 	}
-	
+
 	/***********************************PRIVATE METHODS***********************************************/
 	private String processCommand(CommandUtils cu) {
 		String message = "";
 		COMMAND_TYPE command = cu.getCommandType();
-		
+
 		switch (command) {
 		case ADD:
 			Add add = new Add(cu, this.floatingTasks, this.ongoingTasks, 
@@ -185,19 +193,33 @@ public class Logic {
 		case HELP:
 			this.status = UI_TAB.HELP;
 			message = String.format(MESSAGE_SWITCH_VIEW, this.status);
+			break;
+		case CHANGE_DIRECTORY:
 		default:
-			message = "Invalid Command.";
+			message = MESSAGE_INVALID_COMMAND;
 		}
 		return message;
 	}
-	
+
 	private String execute(Command command) {
 		history.save(compress(), cloneCategories(this.categories));
 		String message = command.execute();
 		this.status = command.getStatus();
 		return message;
 	}
-	
+
+	private void updateList(ArrayList<Task> list) {
+		for (Task task: list) {
+			boolean updated = task.update();
+			if (updated) {
+				TASK_STATUS newStatus = task.getStatus();
+				list.remove(task);
+				ArrayList<Task> newList = retrieve(newStatus);
+				newList.add(task);
+			}
+		}
+	}
+
 	/***************************************DATA MANIPULATION***********************************/
 	private String update(ArrayList<ArrayList<Task>> data, TreeMap<String, Category> categories) {
 		this.floatingTasks = data.get(0);
@@ -218,8 +240,22 @@ public class Logic {
 		data.add(cloneList(this.results));
 		return data;
 	}
-	
-	
+
+	private ArrayList<Task> retrieve(TASK_STATUS status) {
+		switch (status) {
+		case ONGOING:
+			return this.ongoingTasks;
+		case FLOATING:
+			return this.floatingTasks;
+		case COMPLETED:
+			return this.completedTasks;
+		case OVERDUE:
+			return this.overdueTasks;
+		default:
+			return null;
+		}
+	}
+
 	/**********************************FOR UNDO/REDO**********************************************************/
 	private ArrayList<Task> cloneList(ArrayList<Task> original) {
 		ArrayList<Task> newList = new ArrayList<Task>();
@@ -229,7 +265,7 @@ public class Logic {
 		}
 		return newList;
 	}
-	
+
 	private TreeMap<String, Category> cloneCategories(TreeMap<String, Category> original) {
 		TreeMap<String, Category> newCategories = new TreeMap<String, Category>();
 		ArrayList<Category> categories = new ArrayList<Category>(original.values());
@@ -239,7 +275,7 @@ public class Logic {
 		}
 		return newCategories;
 	}
-	
+
 	/***********************************INITALISE*****************************************************/
 	private Logic(String directory) {
 		storage = Storage.getInstance(directory);
@@ -251,7 +287,7 @@ public class Logic {
 		floatingTasks = storage.read(TASK_STATUS.FLOATING);
 		categories = storage.readCategories();
 	}
-	
+
 	/*private TreeMap<String, Category> initialiseCategories(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
 			ArrayList<Task> overdueTasks, ArrayList<Task> floatingTasks) {
 		TreeMap<String, Category> categories = new TreeMap<String, Category>();

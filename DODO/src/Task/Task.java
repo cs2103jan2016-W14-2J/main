@@ -186,6 +186,24 @@ public class Task {
 		return this.name;
 	}
 	
+	public boolean update() {
+		switch (this.status) {
+		case ONGOING:
+			TASK_STATUS newStatus = this.checkOverdue(this.end);
+			if (newStatus==TASK_STATUS.OVERDUE) {
+				this.status = newStatus;
+				return true;
+			}
+		case OVERDUE:
+			newStatus = this.checkOverdue(this.end);
+			if (newStatus==TASK_STATUS.ONGOING) {
+				this.status = newStatus;
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	/********************************************INTERNAL*************************************/
 	private TASK_STATUS checkOverdue(Date end) {

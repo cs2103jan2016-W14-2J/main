@@ -18,7 +18,8 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 public class Storage {
-	private static Storage theOne;
+	private static final String MESSAGE_INVALID_TASK_STATUS = "Task status \"%1$s\" is invalid.";
+	private static final String MESSAGE_SUCCESSFUL_FILE_SAVE = "%1$s is successfully saved.";
 	private static final String FILENAME_ONGOING_TASKS = "OngoingTasks.txt";
 	private static final String FILENAME_COMPLETED_TASKS = "CompletedTasks.txt";
 	private static final String FILENAME_FLOATING_TASKS = "FloatingTasks.txt";
@@ -26,145 +27,89 @@ public class Storage {
 	private static final String FILENAME_CATEGORIES = "Categories.txt";
 	private static final String FILENAME_CONFIG = "Config.txt";
 
+	private static Storage theOne;
 	private PrintWriter pw;
 	private BufferedReader br;
-	private String ongoingDirectory;
+	/*private String ongoingDirectory;
 	private String completedDirectory;
 	private String floatingDirectory;
 	private String overdueDirectory;
-	private String categoriesDirectory;
-	private File config;
-	
+	private String categoriesDirectory;*/
+	private File floating;
+	private File ongoing;
+	private File completed;
+	private File overdue;
+	private File categories;
+	private String folderDirectory;
+
 	public static Storage getInstance() {
 		if (theOne==null) {
 			theOne = new Storage();
 		}
 		return theOne;
 	}
-	
+
 	private Storage() {
-		String directory = null;
-		File config = new File(FILENAME_CONFIG);
-		if (config.exists()) {
-			try {
-				br = new BufferedReader(new FileReader(config));
-				directory = br.readLine();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else {
-			File folder = UIConfiguration.openDialogBox();
-			try {
-				pw = new PrintWriter(new BufferedWriter(new FileWriter(FILENAME_CONFIG, true)));
-				String path = folder.getAbsolutePath() + "/";
-				System.out.println("=====Storage===== path: " + path);
-				pw.println(path);
-				pw.flush();
-				pw.close();
-				directory = path;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		// it cannot create a file in a specific directory for now
-		// it only creates a file in the same directory as the programme
-		ongoingDirectory = directory  + FILENAME_ONGOING_TASKS;
-		completedDirectory = directory + FILENAME_COMPLETED_TASKS;
-		floatingDirectory = directory + FILENAME_FLOATING_TASKS;
-		overdueDirectory = directory + FILENAME_OVERDUE_TASKS;
-		categoriesDirectory = directory + FILENAME_CATEGORIES;
-		if (!fileExists(categoriesDirectory)) initialiseFile(categoriesDirectory);
-		if (!fileExists(ongoingDirectory)) initialiseFile(ongoingDirectory);
-		if (!fileExists(completedDirectory)) initialiseFile(completedDirectory);
-		if (!fileExists(floatingDirectory)) initialiseFile(floatingDirectory);
-		if (!fileExists(overdueDirectory)) initialiseFile(overdueDirectory);
+		this.folderDirectory = this.configDirectory();	
+		this.intialise(this.folderDirectory);
 	}
-	
+
 	public ArrayList<Task> read(TASK_STATUS task_status) {
 		switch (task_status) {
 		case ONGOING:
-			return readFromFile(ongoingDirectory);
+			return readFromFile(this.ongoing);
 		case COMPLETED:
-			return readFromFile(completedDirectory);
+			return readFromFile(this.completed);
 		case FLOATING:
-			return readFromFile(floatingDirectory);
+			return readFromFile(this.floating);
 		case OVERDUE:
-			return readFromFile(overdueDirectory);
+			return readFromFile(this.overdue);
 		default:
 			return null;
 		}
-	}
-	
-	public TreeMap<String, Category> readCategories() {
-		 TreeMap<String, Category> categories = new TreeMap<String, Category>();
-		try {
-			br = new BufferedReader(new FileReader(this.categoriesDirectory));
-			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
-			Gson gson = gsonBuilder.create();
-			categories = gson.fromJson(br, new TypeToken<TreeMap<String, Category>>() {}.getType());
-			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (categories==null) {
-			System.out.println("[DEBUG/Storage] null");
-			return new TreeMap<String, Category>();
-		}
-		return categories;
-	}
-	
-	public String saveCategories(TreeMap<String, Category> categories)  {
-		clearFile(this.categoriesDirectory);
-		try (Writer writer = new OutputStreamWriter(new FileOutputStream(this.categoriesDirectory), "UTF-8")) {
-			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").setPrettyPrinting();
-			Gson gson = gsonBuilder.create();
-			gson.toJson(categories, writer);
-		}
-		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "Saving " + this.categoriesDirectory + " is successful. :)";
 	}
 
 	public String save(TASK_STATUS task_status, ArrayList<Task> tasks) {
 		switch (task_status) {
 		case ONGOING:
-			return printToFile(ongoingDirectory, tasks);
+			return printToFile(this.ongoing, tasks);
 		case COMPLETED:
-			return printToFile(completedDirectory, tasks);
+			return printToFile(this.completed, tasks);
 		case FLOATING:
-			return printToFile(floatingDirectory, tasks);
+			return printToFile(this.floating, tasks);
 		case OVERDUE:
-			return printToFile(overdueDirectory, tasks);
+			return printToFile(this.overdue, tasks);
 		default:
-			return "Invalid type of tasks.";
+			return MESSAGE_INVALID_TASK_STATUS;
 		}
 	}
-	
-	/******************************INTERNAL***********************************************/
-	private boolean fileExists(String directory) {
-		File file = new File(directory);
-		if (file.exists()) return true;
-		else return false; 
+
+	public TreeMap<String, Category> readCategories() {
+		TreeMap<String, Category> categories = new TreeMap<String, Category>();
+		try {
+			br = new BufferedReader(new FileReader(this.categories));
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
+			Gson gson = gsonBuilder.create();
+			categories = gson.fromJson(br, new TypeToken<TreeMap<String, Category>>() {}.getType());
+			br.close();
+			if (categories==null) {
+				categories = new TreeMap<String, Category>();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return categories;
 	}
 
-	private String printToFile(String filename, ArrayList<Task> tasks)  {
-		clearFile(filename);
-		try (Writer writer = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")) {
+	public String saveCategories(TreeMap<String, Category> categories)  {
+		this.categories.delete();
+		try (Writer writer = new OutputStreamWriter(new FileOutputStream(this.categories), "UTF-8")) {
 			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").setPrettyPrinting();
 			Gson gson = gsonBuilder.create();
-			gson.toJson(tasks, writer);
+			gson.toJson(categories, writer);
+			writer.close();
 		}
 		catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -172,44 +117,118 @@ public class Storage {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "Saving " + filename + " is successful. :)";
+		return String.format(MESSAGE_SUCCESSFUL_FILE_SAVE, this.categories);
 	}
 
-	private ArrayList<Task> readFromFile(String filename) {
-		ArrayList<Task> tasks = new ArrayList<Task>();
+	public void redirect() {
+		this.floating.delete();
+		this.ongoing.delete();
+		this.completed.delete();
+		this.overdue.delete();
+		this.categories.delete();
+		File oldDirectory = new File(this.folderDirectory);
+		oldDirectory.delete();
+		String newDirectory = saveConfig();
+		intialise(newDirectory);
+	}
+	/******************************INTERNAL***********************************************/
+	private void intialise(String directory) {
+		this.overdue = new File(directory + FILENAME_OVERDUE_TASKS);
+		this.ongoing = new File(directory  + FILENAME_ONGOING_TASKS);
+		this.floating = new File(directory + FILENAME_FLOATING_TASKS); 
+		this.completed = new File(directory + FILENAME_COMPLETED_TASKS);
+		this.categories = new File(directory + FILENAME_CATEGORIES);
+
+		if (!this.categories.exists()) initialiseFile(this.categories);
+		if (!this.ongoing.exists()) initialiseFile(this.ongoing);
+		if (!this.completed.exists()) initialiseFile(this.completed);
+		if (!this.floating.exists()) initialiseFile(this.floating);
+		if (!this.overdue.exists()) initialiseFile(this.overdue);
+	}
+	
+	private String configDirectory() {
+		File config = new File(FILENAME_CONFIG);
+		String directory = null;
+		if (config.exists()) {
+			directory = readConfig(config);
+		} 
+		else {
+			directory = saveConfig();
+		}
+		return directory;
+	}
+
+	private String saveConfig() {
+		String directory = null;
 		try {
-			br = new BufferedReader(new FileReader(filename));
-			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
-			Gson gson = gsonBuilder.create();
-			tasks = gson.fromJson(br, new TypeToken<ArrayList<Task>>() {}.getType());
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(FILENAME_CONFIG, false)));
+			File folder = UIConfiguration.openDialogBox();
+			directory = folder.getAbsolutePath() + "/";
+			pw.println(directory);
+			pw.flush();
+			pw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return directory;
+	}
+
+	private String readConfig(File config) {
+		String directory = null;
+		try {
+			br = new BufferedReader(new FileReader(config));
+			directory = br.readLine();
 			br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("[DEBUG/Storage.java] readFromFile: " + filename);
-		if (tasks==null) {
-			System.out.println("[DEBUG/Storage] null");
-			return new ArrayList<Task>();
+		return directory;
+
+	}
+
+	private String printToFile(File file, ArrayList<Task> tasks)  {
+		file.delete();
+		try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").setPrettyPrinting();
+			Gson gson = gsonBuilder.create();
+			gson.toJson(tasks, writer);
+			writer.close();
+		}
+		catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return String.format(MESSAGE_SUCCESSFUL_FILE_SAVE, file);
+	}
+
+	private ArrayList<Task> readFromFile(File file) {
+		ArrayList<Task> tasks = new ArrayList<Task>();
+		try {
+			br = new BufferedReader(new FileReader(file));
+			GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
+			Gson gson = gsonBuilder.create();
+			tasks = gson.fromJson(br, new TypeToken<ArrayList<Task>>() {}.getType());
+			if (tasks==null) {
+				tasks = new ArrayList<Task>();
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return tasks;
 	}
 
-	private void initialiseFile(String filename) {
+	private void initialiseFile(File file) {
 		try {
-			pw = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)));
+			pw = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
 			pw.print("");
 			pw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void clearFile(String filename) {
-		try {
-			pw = new PrintWriter(new BufferedWriter(new FileWriter(filename, false)));
-			pw.print("");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -230,19 +249,19 @@ public class Storage {
 			return new Date(json.getAsJsonPrimitive().getAsString());
 		}
 	}*/
-	
+
 	/*public class CustomSerializer implements JsonSerializer<ArrayList<Task>> {
 		private static TreeMap<String, Class> map = new TreeMap<String, Class>();
-		
+
 		@Override 
 		public JsonElement serialize(ArrayList<Task> src, Type typeOfSrc, JsonSerializationContext context) {
 			JsonArray ja = new JsonArray();
 			for (Task task: src) {
-				
+
 			}
 		}
 	}*/
-	
+
 	/*public class CustomDeserializer implements JsonDeserializer<ArrayList<Task>> {
 		@Override
 		public ArrayList<Task> deserialize(JsonElement json, Type typeofT, JsonDeserializationContext context)
@@ -264,7 +283,7 @@ public class Storage {
 						tag = jsonObj.get("tag").getAsString();
 					} catch (NullPointerException e) {
 					}
-					
+
 					Date endDateTime = null;
 					try {
 						endDateTime = formatter.parse(endDateTimeStr);

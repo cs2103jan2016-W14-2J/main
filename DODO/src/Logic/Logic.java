@@ -195,6 +195,8 @@ public class Logic {
 			message = String.format(MESSAGE_SWITCH_VIEW, this.status);
 			break;
 		case CHANGE_DIRECTORY:
+			message = this.redirect();
+			break;
 		default:
 			message = MESSAGE_INVALID_COMMAND;
 		}
@@ -218,6 +220,11 @@ public class Logic {
 				newList.add(task);
 			}
 		}
+	}
+	
+	private String redirect() {
+		this.storage.redirect();
+		return this.save();
 	}
 
 	/***************************************DATA MANIPULATION***********************************/

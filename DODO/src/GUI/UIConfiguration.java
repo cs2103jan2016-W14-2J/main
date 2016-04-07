@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import Logic.Logic;
 import javafx.application.Application;
 import javafx.scene.image.Image;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -58,38 +59,7 @@ public class UIConfiguration extends Application
 		primaryStage.getIcons().add(applicationIcon);
 		
         this.primaryStage = primaryStage;
-		try 
-		{
-			
-			if(checkConfigFileExist()==true)
-			{
-				System.out.println("config file exist, read config file now");
-				listOfConfigs.addAll(readConfigFile());
-				System.out.println("check content of listOfConfigs");
-				System.out.println(listOfConfigs);
-				updateParaFromList();
-				checkConfigsContent();
-				System.out.println("yohoooooooooooooooooooooooooooooooooooo" + strDBdir.replace(strDBname, ""));
-				String directory = strDBdir.replace(strDBname, "");
-				System.out.println("directory is here " + directory );
-				logic = Logic.getInstance(directory);
-
-			}
-			else if(checkConfigFileExist()==false)
-			{
-				System.out.println("config file and db file dont exist creating one NOW!");
-				createConfigFile();
-				createDbFile();
-				updateConfig();
-				String directory = strDBdir.replace(strDBname, "");
-				System.out.println("[GUI/Configuration] directory: " + directory);
-				logic = Logic.getInstance(directory);
-			}
-		} 
-		catch(Exception e) 
-		{
-			System.out.println(e);
-		}
+        logic = Logic.getInstance();
 		gui = new UIMainController(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
@@ -231,7 +201,17 @@ public class UIConfiguration extends Application
 		launch(args);
 	}
 
-
-	
+	public static File openDialogBox()
+	{
+		  DirectoryChooser directoryChooser = new DirectoryChooser();
+          File selectedDirectory = directoryChooser.showDialog(new Stage());
+           
+          if(selectedDirectory == null){
+              return null;
+          }else{
+              return selectedDirectory;
+          }		
+		
+	}
 	
 }

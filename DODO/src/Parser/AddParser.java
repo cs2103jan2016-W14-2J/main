@@ -308,19 +308,5 @@ public class AddParser {
 		}
 		return newStr.trim();
 	}
-
-	/*
-	 * @param: an arraylist of task elements.
-	 * @description: concatenate the content of a task input together
-	 * @return: a string of task name.
-	 */
-	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
-		String name = "";
-		for (int i = 0; i < taskNameArrayList.size(); i++) {
-			name += taskNameArrayList.get(i) + " "; 
-		}
-		return name.trim();
-	}
-
 	
 }

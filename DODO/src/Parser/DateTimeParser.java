@@ -234,6 +234,115 @@ public class DateTimeParser {
 		return userInput;
 	}
 	
+	private String removeHoliday(String userTask) {
+		boolean containsPreposition = false;
+		String[] temp = userTask.split(STRING_SPLITTER);	
+		for (int i = 0; i < temp.length; i++) {
+			if (preposition.contains(temp[i])) {
+				containsPreposition = true;
+			}
+		}
+		
+		if (userTask.contains("valentine's day") && containsPreposition == true) {
+			userTask = userTask.replace("valentine's day", "");
+			possibleDate = "valetine's day ";
+		}
+		else if (userTask.contains("christmas") && containsPreposition == true) {
+			userTask = userTask.replace("christmas", "");
+			possibleDate = "christmas ";
+		}
+		else if (userTask.contains("new year's") && containsPreposition == true) {
+			userTask = userTask.replace("new year's", "");
+			possibleDate = "new year's ";
+		}
+		else if (userTask.contains("new year's eve") && containsPreposition == true) {
+			userTask = userTask.replace("new year's eve", "");
+			possibleDate = "new year's eve ";
+		}
+		else if (userTask.contains("halloween") && containsPreposition == true) {
+			userTask = userTask.replace("halloween", "");
+			possibleDate = "halloween ";
+		}
+		else if (userTask.contains("mother's day") && containsPreposition == true) {
+			userTask = userTask.replace("mother's day", "");
+			possibleDate = "mother's day ";
+		}
+		else if (userTask.contains("father's day") && containsPreposition == true) {
+			userTask = userTask.replace("father's day", "");
+			possibleDate = "father's day ";
+		}
+		return userTask;
+	}
+	
+	protected String removeEnglishDate(String userInput) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		String[] temp = userInput.split(STRING_SPLITTER);
+		int positionOfMonth = 0;
+		int positionOfDay = 0;
+		int positionOfYear = 0;
+		String day = "";
+		String month = "";
+		String year = "";
+		boolean containsPreposition = false;
+		
+		for (int i = 0; i < temp.length; i++) {
+			if (monthTypes.contains(temp[i])) {
+				positionOfMonth = i;
+				month = temp[positionOfMonth];
+			}
+			else if (preposition.contains(temp[i])) {
+				containsPreposition = true;
+			}
+		}
+		
+		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false)) {
+			confirmTaskName = userInput;
+			return userInput;
+		}
+		
+		if (positionOfMonth + 1 < temp.length) {
+			if (temp[positionOfMonth + 1].length() == 2 && Integer.parseInt(temp[positionOfMonth + 1]) < 20) {
+				positionOfYear = positionOfMonth + 1;
+				year = temp[positionOfYear];
+			}
+			else if (temp[positionOfMonth + 1].length() == 4 && Integer.parseInt(temp[positionOfMonth + 1]) < 2020) {
+				positionOfYear = positionOfMonth + 1;
+				year = temp[positionOfYear];
+			}
+		}
+		
+		if (positionOfMonth - 1 > 0) {
+			if (temp[positionOfMonth - 1].endsWith(KEYWORD_ST) && temp[positionOfMonth - 1].startsWith("1")) {
+				positionOfDay = positionOfMonth - 1;
+				day = temp[positionOfDay];
+			}
+			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_ND) && temp[positionOfMonth - 1].startsWith("2")) {
+				positionOfDay = positionOfMonth + 1;
+				day = temp[positionOfDay];
+			}
+			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_RD) && temp[positionOfMonth - 1].startsWith("3")) {
+				positionOfDay = positionOfMonth + 1;
+				day = temp[positionOfDay];
+			}
+			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_TH)) {
+				possibleDate = temp[positionOfMonth - 1].replace(KEYWORD_TH, "");
+				if (Integer.parseInt(possibleDate) > 3 && Integer.parseInt(possibleDate) < 32) {
+					positionOfDay = positionOfMonth - 1;
+					day = temp[positionOfDay];
+				}
+			}
+			else if (Integer.parseInt(temp[positionOfMonth - 1]) > 0 && Integer.parseInt(temp[positionOfMonth - 1]) < 32) {
+				positionOfDay = positionOfMonth - 1;
+				day = temp[positionOfDay];
+			}
+		}
+		
+		possibleDate = day + " " + month + " " + year;
+		confirmTaskName = userInput.replace(possibleDate.trim(), "");
+		return confirmTaskName;
+	}
+
+	
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if ((contentToAnalyse.get(i).toLowerCase()).contains(KEYWORD_YESTERDAY_SHORTFORM)) {
@@ -342,114 +451,6 @@ public class DateTimeParser {
 		return temp;
 	}
 	
-
-	private String removeHoliday(String userTask) {
-		boolean containsPreposition = false;
-		String[] temp = userTask.split(STRING_SPLITTER);	
-		for (int i = 0; i < temp.length; i++) {
-			if (preposition.contains(temp[i])) {
-				containsPreposition = true;
-			}
-		}
-		
-		if (userTask.contains("valentine's day") && containsPreposition == true) {
-			userTask = userTask.replace("valentine's day", "");
-			possibleDate = "valetine's day ";
-		}
-		else if (userTask.contains("christmas") && containsPreposition == true) {
-			userTask = userTask.replace("christmas", "");
-			possibleDate = "christmas ";
-		}
-		else if (userTask.contains("new year's") && containsPreposition == true) {
-			userTask = userTask.replace("new year's", "");
-			possibleDate = "new year's ";
-		}
-		else if (userTask.contains("new year's eve") && containsPreposition == true) {
-			userTask = userTask.replace("new year's eve", "");
-			possibleDate = "new year's eve ";
-		}
-		else if (userTask.contains("halloween") && containsPreposition == true) {
-			userTask = userTask.replace("halloween", "");
-			possibleDate = "halloween ";
-		}
-		else if (userTask.contains("mother's day") && containsPreposition == true) {
-			userTask = userTask.replace("mother's day", "");
-			possibleDate = "mother's day ";
-		}
-		else if (userTask.contains("father's day") && containsPreposition == true) {
-			userTask = userTask.replace("father's day", "");
-			possibleDate = "father's day ";
-		}
-		return userTask;
-	}
-
-	private String removeEnglishDate(String userInput) {
-		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		String[] temp = userInput.split(STRING_SPLITTER);
-		int positionOfMonth = 0;
-		int positionOfDay = 0;
-		int positionOfYear = 0;
-		String day = "";
-		String month = "";
-		String year = "";
-		boolean containsPreposition = false;
-		
-		for (int i = 0; i < temp.length; i++) {
-			if (monthTypes.contains(temp[i])) {
-				positionOfMonth = i;
-				month = temp[positionOfMonth];
-			}
-			else if (preposition.contains(temp[i])) {
-				containsPreposition = true;
-			}
-		}
-		
-		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false)) {
-			confirmTaskName = userInput;
-			return userInput;
-		}
-		
-		if (positionOfMonth + 1 < temp.length) {
-			if (temp[positionOfMonth + 1].length() == 2 && Integer.parseInt(temp[positionOfMonth + 1]) < 20) {
-				positionOfYear = positionOfMonth + 1;
-				year = temp[positionOfYear];
-			}
-			else if (temp[positionOfMonth + 1].length() == 4 && Integer.parseInt(temp[positionOfMonth + 1]) < 2020) {
-				positionOfYear = positionOfMonth + 1;
-				year = temp[positionOfYear];
-			}
-		}
-		
-		if (positionOfMonth - 1 > 0) {
-			if (temp[positionOfMonth - 1].endsWith(KEYWORD_ST) && temp[positionOfMonth - 1].startsWith("1")) {
-				positionOfDay = positionOfMonth - 1;
-				day = temp[positionOfDay];
-			}
-			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_ND) && temp[positionOfMonth - 1].startsWith("2")) {
-				positionOfDay = positionOfMonth + 1;
-				day = temp[positionOfDay];
-			}
-			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_RD) && temp[positionOfMonth - 1].startsWith("3")) {
-				positionOfDay = positionOfMonth + 1;
-				day = temp[positionOfDay];
-			}
-			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_TH)) {
-				possibleDate = temp[positionOfMonth - 1].replace(KEYWORD_TH, "");
-				if (Integer.parseInt(possibleDate) > 3 && Integer.parseInt(possibleDate) < 32) {
-					positionOfDay = positionOfMonth - 1;
-					day = temp[positionOfDay];
-				}
-			}
-			else if (Integer.parseInt(temp[positionOfMonth - 1]) > 0 && Integer.parseInt(temp[positionOfMonth - 1]) < 32) {
-				positionOfDay = positionOfMonth - 1;
-				day = temp[positionOfDay];
-			}
-		}
-		
-		possibleDate = day + " " + month + " " + year;
-		confirmTaskName = userInput.replace(possibleDate.trim(), "");
-		return confirmTaskName;
-	}
 
 	protected boolean checkForDateAndTime(String taskName, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
 		String str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());

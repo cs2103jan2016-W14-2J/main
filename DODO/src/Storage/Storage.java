@@ -61,16 +61,16 @@ public class Storage {
 			File folder = UIConfiguration.openDialogBox();
 			try {
 				pw = new PrintWriter(new BufferedWriter(new FileWriter(FILENAME_CONFIG, true)));
-				String path = folder.getAbsolutePath();
+				String path = folder.getAbsolutePath() + "/";
 				System.out.println("=====Storage===== path: " + path);
 				pw.println(path);
 				pw.flush();
 				pw.close();
+				directory = path;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			directory = folder.getAbsolutePath() + "/";
 		}
 		// it cannot create a file in a specific directory for now
 		// it only creates a file in the same directory as the programme

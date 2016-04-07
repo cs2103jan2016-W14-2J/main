@@ -46,8 +46,9 @@ public class DateTimeParser {
 	private final String KEYWORD_AT_1 = "at";
 	private final String KEYWORD_AT_2 = "@";
 	private final String KEYWORD_THE = " the ";
-	private final String KEYWORD_DAYS = " days";
+	private final String KEYWORD_DAYS = "days";
 	private final String KEYWORD_NEXT = " next ";
+	private final String KEYWORD_NEXT_1 = "next";
 	private final String KEYWORD_NEXT_WEEK = " next week";
 	private final String KEYWORD_ST = "st";
 	private final String KEYWORD_ND = "nd";
@@ -134,18 +135,21 @@ public class DateTimeParser {
 	}
 	
 	protected String removeNextFewDays(String userInput) {
+
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
-		int indexOfNext = taskItems.lastIndexOf(KEYWORD_NEXT);
+		int indexOfNext = taskItems.lastIndexOf(KEYWORD_NEXT_1);
 		int indexOfDays = taskItems.lastIndexOf(KEYWORD_DAYS);
 
 		if (indexOfNext != 0 && (indexOfDays - indexOfNext) == 2  
 			&& !userInput.contains(KEYWORD_NEXT_WEEK)) {
-			
+			possibleDate = taskItems.get(indexOfNext) + " " + taskItems.get(indexOfNext + 1) 
+							+ " " + taskItems.get(indexOfDays);
 			taskItems.remove(indexOfDays);
 			taskItems.remove(indexOfNext + 1);
 			taskItems.remove(indexOfNext);
 			if (taskItems.get(indexOfNext - 1).contains(KEYWORD_THE)) {
+				possibleDate = "the " + possibleDate;
 				taskItems.remove(indexOfNext - 1);
 			}
 			userInput = toStringTaskElements(taskItems);

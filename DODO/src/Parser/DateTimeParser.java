@@ -27,8 +27,6 @@ public class DateTimeParser {
 	private ArrayList<String> preposition;
 	private String confirmTaskName = "";
 	private String possibleDate = "";
-	private final int MAX_DAY_FEB = 29;
-	private final int MAX_DAY = 31;
 	
 	private final String KEYWORD_AM = "am";
 	private final String KEYWORD_PM = "pm";

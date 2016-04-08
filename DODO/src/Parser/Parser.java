@@ -146,7 +146,8 @@ public class Parser {
 	private String checkTaskImportance(CommandUtils commandUtil, String userInput) {
 		String[] temp = userInput.split("\\s+");
 		int positionOfImportance = temp.length;
-		if (temp[positionOfImportance - 1].contains(SYMBOL_EXCLAMATION_MARK)) {
+		if (temp[positionOfImportance - 1].contains(SYMBOL_EXCLAMATION_MARK) 
+			&& temp[positionOfImportance - 1].length() == 1) {
 			userInput = userInput.replace(SYMBOL_EXCLAMATION_MARK, "");
 			commandUtil.setTaskImportance(true);
 		}

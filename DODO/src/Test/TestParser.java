@@ -247,40 +247,51 @@ public class TestParser {
 		assertEquals(TASK_TYPE.EVENT, cu.getType());
 
 	}
-/*	
+	
 	@Test
 	public void testComplete() {
-		Parser parser = new Parser("complete 1");
-		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, parser.getFlagAndCompleteType());
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
 		
-		parser = new Parser("complete 1, 6, 9");
-		assertEquals(FLAGANDCOMPLETE_TYPE.MULTIPLE, parser.getFlagAndCompleteType());
+		cu = parser.executeCommand(cu, "complete 1");
+		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, cu.getFlagAndCompleteType());
 		
-		parser = new Parser("complete 1 to 9");
-		assertEquals(FLAGANDCOMPLETE_TYPE.RANGE, parser.getFlagAndCompleteType());
+		cu = parser.executeCommand(cu,"complete 1, 6, 9");
+		assertEquals(FLAGANDCOMPLETE_TYPE.MULTIPLE, cu.getFlagAndCompleteType());
 		
-		parser = new Parser("complete all");
-		assertEquals(FLAGANDCOMPLETE_TYPE.ALL, parser.getFlagAndCompleteType());
+		cu = parser.executeCommand(cu,"complete 1 to 9");
+		assertEquals(FLAGANDCOMPLETE_TYPE.RANGE, cu.getFlagAndCompleteType());
+		
+		cu = parser.executeCommand(cu,"complete all");
+		assertEquals(FLAGANDCOMPLETE_TYPE.ALL, cu.getFlagAndCompleteType());
 
 	}
 
 	@Test
 	public void testFlag() {
-		Parser parser = new Parser("flag 1");
-		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, parser.getFlagAndCompleteType());
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
+	
+		cu = parser.executeCommand(cu,"flag 1");
+		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, cu.getFlagAndCompleteType());
 		
-		parser = new Parser("flag 1, 6, 9");
-		assertEquals(FLAGANDCOMPLETE_TYPE.MULTIPLE, parser.getFlagAndCompleteType());
+		cu = parser.executeCommand(cu, "flag 1, 6, 9");
+		assertEquals(FLAGANDCOMPLETE_TYPE.MULTIPLE, cu.getFlagAndCompleteType());
 		
-		parser = new Parser("flag 1 to 9");
-		assertEquals(FLAGANDCOMPLETE_TYPE.RANGE, parser.getFlagAndCompleteType());
+		cu = parser.executeCommand(cu, "flag 1 to 9");
+		assertEquals(FLAGANDCOMPLETE_TYPE.RANGE, cu.getFlagAndCompleteType());
 		
-		parser = new Parser("flag all");
-		assertEquals(FLAGANDCOMPLETE_TYPE.ALL, parser.getFlagAndCompleteType());
+		cu = parser.executeCommand(cu, "flag all");
+		assertEquals(FLAGANDCOMPLETE_TYPE.ALL, cu.getFlagAndCompleteType());
 		
+		cu = parser.executeCommand(cu,"Meet Mr Norman for Advertising Pitch !");
+		assertEquals(true, cu.getImportance());
+		
+		cu = parser.executeCommand(cu,"I love you!!!!");
+		assertEquals(false, cu.getImportance());
 
 	}
-	
+/*	
 	@Test
 	public void testDelete() {
 		Parser parser = new Parser("delete 1");

@@ -128,8 +128,9 @@ public class Storage {
 		this.categories.delete();
 		File oldDirectory = new File(this.folderDirectory);
 		oldDirectory.delete();
-		String newDirectory = saveConfig();
-		intialise(newDirectory);
+		this.folderDirectory = saveConfig();
+		
+		intialise(this.folderDirectory);
 	}
 	/******************************INTERNAL***********************************************/
 	private void intialise(String directory) {

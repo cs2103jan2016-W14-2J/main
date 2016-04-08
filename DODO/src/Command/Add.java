@@ -39,8 +39,10 @@ public class Add extends Command {
 	private String addFloatingTasks() {
 		String name = cu.getName();
 		ArrayList<String> tags = cu.getTag();
+		boolean important = cu.getImportance();
 		
 		Task task = new Task(name);
+		task.setFlag(important);
 		for (String tagString: tags) {
 			this.tagTask(tagString, task);
 		}
@@ -57,8 +59,10 @@ public class Add extends Command {
 		String name = cu.getName();
 		ArrayList<String> tags = cu.getTag();
 		Date endDateTime = cu.getEndTime();
+		boolean important = cu.getImportance();
 		
 		Task task = new Task(name, endDateTime);
+		task.setFlag(important);
 		for (String tagString: tags) {
 			this.tagTask(tagString, task);
 		}
@@ -72,11 +76,14 @@ public class Add extends Command {
 		ArrayList<String> tags = cu.getTag();
 		Date startDateTime = cu.getStartTime();
 		Date endDateTime = cu.getEndTime();
+		boolean important = cu.getImportance();
+		
 		if (startDateTime.after(endDateTime)) {
 			return MESSAGE_INVALID_EVENT_TIME;
 		}
 		
 		Task task = new Task(name, startDateTime, endDateTime);
+		task.setFlag(important);
 		for (String tagString: tags) {
 			this.tagTask(tagString, task);
 		}

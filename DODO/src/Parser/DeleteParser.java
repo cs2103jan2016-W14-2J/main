@@ -109,7 +109,9 @@ public class DeleteParser {
 	private CommandUtils parseMutipleDeleteTags(CommandUtils commandUtil, String[] str) {
 		// Example: delete #nus #soc #singapore
 		for (int i = 0; i < str.length; i++) {
-			tagToDelete.add(str[i].substring(1, str[i].length()));
+			if (!str[i].contains(STRING_CHECKER_HYPHEN)) {
+				tagToDelete.add(str[i].substring(1, str[i].length()));
+			}
 		}
 		commandUtil.setTagToDelete(tagToDelete);
 		return commandUtil;
@@ -118,8 +120,10 @@ public class DeleteParser {
 	
 	private CommandUtils parseSingleDeleteTag(CommandUtils commandUtil, String[] str) {
 		// Example: delete #nus
-		tagToDelete.add(str[0].substring(1, str[0].length()));
-		commandUtil.setTagToDelete(tagToDelete);
+		if (!str[0].contains(STRING_CHECKER_HYPHEN)) {
+			tagToDelete.add(str[0].substring(1, str[0].length()));
+			commandUtil.setTagToDelete(tagToDelete);
+		}
 		return commandUtil;
 	}
 	
@@ -183,7 +187,8 @@ public class DeleteParser {
 	}
 
 	private boolean checkIfDeleteRange(String userTask) {
-		return (userTask.contains(STRING_CHECKER_HYPHEN) || (userTask.contains(STRING_CHECKER_TO))) 
+		return ((userTask.contains(STRING_CHECKER_HYPHEN) && !userTask.contains(STRING_HASH_TAG))
+				|| (userTask.contains(STRING_CHECKER_TO))) 
 				? true : false;
 	}
 
@@ -200,7 +205,8 @@ public class DeleteParser {
 	
 	private boolean checkIfDeleteSingleTag(String userTask) {
 		String[] temp = userTask.split(" ");
-		return (temp.length == 1 && temp[0].startsWith(STRING_HASH_TAG)) ? true : false;
+		return (temp.length == 1 && temp[0].startsWith(STRING_HASH_TAG) 
+				&& !temp[0].contains(STRING_CHECKER_HYPHEN)) ? true : false;
 	}
 
 }

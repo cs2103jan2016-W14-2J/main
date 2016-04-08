@@ -291,56 +291,74 @@ public class TestParser {
 		assertEquals(false, cu.getImportance());
 
 	}
-/*	
+	
 	@Test
 	public void testDelete() {
-		Parser parser = new Parser("delete 1");
-		Integer single_delete = 1;
-		assertEquals(DELETE_TYPE.SINGLE_INDEX, parser.getDeleteType());
-		assertEquals( single_delete, parser.getIndexToDelete().get(0));
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
 		
-		parser = new Parser("delete 1, 6, 9");
+		cu = parser.executeCommand(cu,"delete 1");
+		Integer single_delete = 1;
+		assertEquals(DELETE_TYPE.SINGLE_INDEX, cu.getDeleteType());
+		assertEquals( single_delete, cu.getIndexToDelete().get(0));
+		
+		cu = parser.executeCommand(cu,"delete 1, 6, 9");
 		Integer delete1 = 1;
 		Integer delete2 = 6;
 		Integer delete3 = 9;
-		assertEquals(DELETE_TYPE.MULTIPLE_INDEXES, parser.getDeleteType());
-		assertEquals(delete1, parser.getIndexToDelete().get(0));
-		assertEquals(delete2, parser.getIndexToDelete().get(1));
-		assertEquals(delete3, parser.getIndexToDelete().get(2));
+		assertEquals(DELETE_TYPE.MULTIPLE_INDEXES, cu.getDeleteType());
+		assertEquals(delete1, cu.getIndexToDelete().get(0));
+		assertEquals(delete2, cu.getIndexToDelete().get(1));
+		assertEquals(delete3, cu.getIndexToDelete().get(2));
 		
-		parser = new Parser("delete 1 to 4");
+		cu = parser.executeCommand(cu,"delete 1 to 4");
 		delete1 = 1;
 		delete2 = 2;
 		delete3 = 3;
 		Integer delete4 = 4;
-		assertEquals(DELETE_TYPE.RANGE_INDEXES, parser.getDeleteType());
-		assertEquals(delete1, parser.getIndexToDelete().get(0));
-		assertEquals(delete2, parser.getIndexToDelete().get(1));
-		assertEquals(delete3, parser.getIndexToDelete().get(2));
-		assertEquals(delete4, parser.getIndexToDelete().get(3));
+		assertEquals(DELETE_TYPE.RANGE_INDEXES, cu.getDeleteType());
+		assertEquals(delete1, cu.getIndexToDelete().get(0));
+		assertEquals(delete2, cu.getIndexToDelete().get(1));
+		assertEquals(delete3, cu.getIndexToDelete().get(2));
+		assertEquals(delete4, cu.getIndexToDelete().get(3));
 		
-		parser = new Parser("delete all");
-		assertEquals(DELETE_TYPE.ALL_INDEXES, parser.getDeleteType());
+		cu = parser.executeCommand(cu,"delete all");
+		assertEquals(DELETE_TYPE.ALL_INDEXES, cu.getDeleteType());
 		
-		parser = new Parser("delete all tags");
-		assertEquals(DELETE_TYPE.ALL_TAGS, parser.getDeleteType());
+		cu = parser.executeCommand(cu,"delete all tags");
+		assertEquals(DELETE_TYPE.ALL_TAGS, cu.getDeleteType());
 		
-		parser = new Parser("delete #nus");
+		cu = parser.executeCommand(cu,"delete #nus");
 		String single_tag = "nus";
-		assertEquals(DELETE_TYPE.SINGLE_TAG, parser.getDeleteType());
-		assertEquals( single_tag, parser.getTagToDelete().get(0));
+		assertEquals(DELETE_TYPE.SINGLE_TAG, cu.getDeleteType());
+		assertEquals( single_tag, cu.getTagToDelete().get(0));
 
-		parser = new Parser("delete #nus #singapore #SoC");
+		cu = parser.executeCommand(cu,"delete #nus #singapore #SoC");
 		String tag1 = "nus";
 		String tag2 = "singapore";
 		String tag3 = "SoC";
-		assertEquals(DELETE_TYPE.MULTIPLE_TAGS, parser.getDeleteType());
-		assertEquals(tag1, parser.getTagToDelete().get(0));
-		assertEquals(tag2, parser.getTagToDelete().get(1));
-		assertEquals(tag3, parser.getTagToDelete().get(2));
+		assertEquals(DELETE_TYPE.MULTIPLE_TAGS, cu.getDeleteType());
+		assertEquals(tag1, cu.getTagToDelete().get(0));
+		assertEquals(tag2, cu.getTagToDelete().get(1));
+		assertEquals(tag3, cu.getTagToDelete().get(2));
+		
+		cu = parser.executeCommand(cu,"delete #11-11");
+		assertEquals(DELETE_TYPE.INVALID, cu.getDeleteType());
+		
+		cu = parser.executeCommand(cu,"delete #hello #11-11 #adele ");
+		assertEquals(DELETE_TYPE.MULTIPLE_TAGS, cu.getDeleteType());
+		assertEquals("hello", cu.getTagToDelete().get(0));
+		assertEquals("adele", cu.getTagToDelete().get(1));
+		
+		cu = parser.executeCommand(cu,"delete 1 start date");
+		assertEquals(DELETE_TYPE.START_DATE, cu.getDeleteType());
+		
+		cu = parser.executeCommand(cu,"delete 10 end date");
+		assertEquals(DELETE_TYPE.END_DATE, cu.getDeleteType());
+		
 		
 	}
-	
+/*	
 	@Test
 	public void testEdit() throws Exception {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");

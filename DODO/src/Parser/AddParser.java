@@ -156,7 +156,7 @@ public class AddParser {
 	private CommandUtils setEventTime(CommandUtils commandUtil, String taskName, Date date) {
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_FROM, " "));
 		if (confirmDate.size() == 2) {
-			commandUtil.setStartTime(confirmDate.get(0));
+			commandUtil.setStartTime(dt.checkAndSetDefaultStartTime(confirmDate.get(0), date));
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(1), date));
 			commandUtil.setTaskName(confirmTaskName.trim());
 		}
@@ -211,9 +211,10 @@ public class AddParser {
 	private void extractDateFromTask() {
 		for (int i = 0; i < str.size(); i++) {
 			List<Date> dates = new PrettyTimeParser().parse(str.get(i));
+			System.out.println("Test str size : " + str.get(i));
 			if (dates.size() != 0 && dt.hasDateAndTimeElements(str.get(i)) == true) {
 		//	if (dates.size() != 0) {
-				System.out.println("Test str size : " + str.get(i));
+				System.out.println("Test str size pass: " + str.get(i));
 				contentToAnalyse += str.get(i) + " ";
 			}
 			else {
@@ -225,6 +226,7 @@ public class AddParser {
 
 	private ArrayList<String> extractInputWithPreposition(int currentPosition, String contentOfPreposition,
 			ArrayList<String> str) {
+		
 		for (int i = 0; i < inputElements.size(); ) {
 			contentOfPreposition += inputElements.get(currentPosition) + " ";
 			inputElements.remove(currentPosition);

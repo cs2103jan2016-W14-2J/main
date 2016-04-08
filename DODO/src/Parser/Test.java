@@ -20,10 +20,11 @@ public class Test {
 			System.out.println(parser.getType());
 			System.out.println(parser.getIndexToDelete());
 			
-	*/		String str = "MEET me tomorrow at 7pm";
+	*/		String str = "Employees review at 7pm from 05/12/16 to 06.12.16";
 			PrettyTimeParser pt = new PrettyTimeParser();
 			List<Date> dates = pt.parse(str);
 			System.out.println(dates.size());
+			System.out.println(dates.get(0));
 			CommandUtils cu = new CommandUtils();
 			Parser parser = new Parser();
 			cu = parser.executeCommand(cu, str);
@@ -42,6 +43,7 @@ public class Test {
 		//	Parser parser = new Parser("meet hannah at block 2359 on 24th of march 2017 7pm");
 		//	Parser parser = new Parser("meet hannah on thursday at block 2359");
 			System.out.println("Command type :" + cu.getCommandType());
+			System.out.println("Task Type :" + cu.getFlagAndCompleteType());
 			System.out.println("Task Type :" + cu.getType());
 			System.out.println("Task Name :" + cu.getName());
 			System.out.println("Start Time : " + cu.getStartTime());
@@ -59,5 +61,6 @@ public class Test {
 			System.out.println("Delete Indexes : " + cu.getIndexToDelete());
 			System.out.println("Delete Type : " + cu.getDeleteType());
 			System.out.println("Search Task Result : " + cu.getSearchByTask());
+			System.out.println("Importance Result : " + cu.getImportance());
 		}
 }

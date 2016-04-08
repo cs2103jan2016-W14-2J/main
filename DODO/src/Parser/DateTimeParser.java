@@ -74,7 +74,7 @@ public class DateTimeParser {
 												   "march", "apr","april", "may","may", "june","june", 
 												   "jul", "july", "aug", "august", "sept", "september", 
 												   "oct", "october", "nov", "november", "dec", "december"));
-		preposition = new ArrayList<>(Arrays.asList("on", "at", "by", "before", "in"));
+		preposition = new ArrayList<>(Arrays.asList("on", "at", "by", "before", "in", "from" , "to"));
 	}
 	
 	protected String removeTheDayAfterTomorrow(String userInput) {
@@ -282,6 +282,7 @@ public class DateTimeParser {
 	
 	protected String removeEnglishDate(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		System.out.println("CONFIRMTASKNAME #32 : " + dates.size());
 		String[] temp = userInput.split(STRING_SPLITTER);
 		int positionOfMonth = 0;
 		int positionOfDay = 0;
@@ -304,7 +305,8 @@ public class DateTimeParser {
 		}
 	
 		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false || containsMonth == false)) {
-			confirmTaskName = userInput;
+			System.out.println("CONFIRMTASKNAME : " + userInput);
+			//		confirmTaskName = userInput;
 			return userInput;
 		}
 		
@@ -435,6 +437,41 @@ public class DateTimeParser {
 		}
 		return newDate;
 	}
+	protected Date checkAndSetDefaultStartTime(Date date, Date currentTime) {
+		Date newDate = date;		
+		SimpleDateFormat sf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
+		SimpleDateFormat sdf = new SimpleDateFormat(TIME_WITHOUT_DATE_FORMAT);
+		DateFormat df = new SimpleDateFormat(DATE_FORMAT_1);
+		String dateWithoutTime = df.format(date);
+		String newDateWithTime= "";
+		String timeAt12am = dateWithoutTime + " " + "00:00:00";
+		Calendar cal = Calendar.getInstance();
+		
+		try {
+			Date dateWithoutDate = sdf.parse(sdf.format(date));
+			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
+			Date defaultStartTime = sf.parse(timeAt12am);
+			System.out.println("DefaultstartTime : " + defaultStartTime);
+			if (dateWithoutDate.equals(currentWithoutDate) && currentTime.before(date)) {
+				System.out.println("DefaultstartTime : " + defaultStartTime);
+				newDate = defaultStartTime;
+			} 
+	/*		else if (dateWithoutDate.equals(currentWithoutDate) && currentTime.after(defaultStartTime)) {
+				newDateWithTime = dateWithoutTime + " " + DEFAULT_TIME_1159PM;
+				newDate = sf.parse(newDateWithTime);
+			}
+			else if (date.before(currentTime)) {
+				cal.setTime(date);
+				cal.add(Calendar.DATE, 1);
+				newDateWithTime = sf.format(cal.getTime()); 
+				newDate = sf.parse(newDateWithTime);
+			}
+	*/	}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return newDate;
+	}
 	
 	protected boolean hasDateAndTimeElements(String userTask) {
 		String temp = "";
@@ -452,6 +489,7 @@ public class DateTimeParser {
 		temp = removeThisComingWeekday(temp);
 		temp = removeNextFewDays(temp);
 		temp = removeNextWeek(temp);
+		System.out.println("extractDate2 : " + userTask);
 		temp = removeWeekday(temp);
 		temp = removeNextWeekday(temp);
 		temp = removeTime(temp);

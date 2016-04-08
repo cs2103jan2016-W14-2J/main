@@ -199,38 +199,43 @@ public class TestParser {
 	public void testEvent() throws Exception {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
-		Parser parser = new Parser("study cs2103t from 01.04.2016 2pm to 05.04.2016");
-		String endDate = "Tue Apr 05 14:00:00 SGT 2016";
-		String startDate = "Fri Apr 01 14:00:00 SGT 2016";
-		Date expectedStart = dateFormat.parse(startDate);
-		Date expectedEnd = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getStartTime());
-		assertEquals(expectedEnd, parser.getEndTime());
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
+		String startDate = "";
+		String endDate = "";
+		Date expectedStart;
+		Date expectedEnd; 
 		
-		parser = new Parser("serve the nation from 1 jan to 4 feb");
-		startDate = "Sun Jan 01 23:59:00 SGT 2017";
-		endDate = "Sat Feb 04 23:59:00 SGT 2017";
+		cu = parser.executeCommand(cu, "Hackathon from 01.05.2016 2pm to 05.05.2016 7pm");
+		startDate = "Sun May 01 14:00:00 SGT 2016";
+		endDate = "Thu May 05 19:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(startDate);
 		expectedEnd = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getStartTime());
-		assertEquals(expectedEnd, parser.getEndTime());
+		assertEquals(expectedStart, cu.getStartTime());
+		assertEquals(expectedEnd, cu.getEndTime());
+		assertEquals("Hackathon", cu.getName());
+		assertEquals(TASK_TYPE.EVENT, cu.getType());
 		
-		parser = new Parser("soc sports camp from 20 march 2016 to 22 march 2016");
-		endDate = "Wed Mar 22 23:59:00 SGT 2017";
-		startDate = "Mon Mar 20 23:59:00 SGT 2017";
+		cu = parser.executeCommand(cu, "serve the nation from 24th Aug 2017 to 29th Oct 2017");
+		startDate = "Thu Aug 24 00:00:00 SGT 2017";
+		endDate = "Sun Oct 29 18:00:00 SGT 2017";
 		expectedStart = dateFormat.parse(startDate);
 		expectedEnd = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getStartTime());
-		assertEquals(expectedEnd, parser.getEndTime());
+		assertEquals(expectedStart, cu.getStartTime());
+		assertEquals(expectedEnd, cu.getEndTime());
+		assertEquals("serve the nation", cu.getName());
+		assertEquals(TASK_TYPE.EVENT, cu.getType());
 		
-		parser = new Parser("attend photoshop refresher course from tomorrow to saturday");
-		endDate = "Sat Mar 26 23:59:00 SGT 2016";
-		startDate = "Thu Mar 24 23:59:00 SGT 2016";
+		cu = parser.executeCommand(cu, "Employees review at 7pm from 05/12/16 to 06.12.16");
+		startDate = "Mon Dec 05 19:00:00 SGT 2016";
+		endDate = "Tue Dec 06 19:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(startDate);
 		expectedEnd = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getStartTime());
-		assertEquals(expectedEnd, parser.getEndTime());
-	
+		assertEquals(expectedStart, cu.getStartTime());
+		assertEquals(expectedEnd, cu.getEndTime());
+		assertEquals("Employees review", cu.getName());
+		assertEquals(TASK_TYPE.EVENT, cu.getType());
+
 	}
 /*	
 	@Test

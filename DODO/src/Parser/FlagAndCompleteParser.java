@@ -10,8 +10,8 @@ public class FlagAndCompleteParser {
 	private String STRING_SPLITTER = "\\s+";
 	private String KEYWORD_ALL = "all";
 	private String KEYWORD_TO = " to ";
-	private String KEYWORD_DASH = " to ";
-	private String KEYWORD_SPACE = " ";
+	private String KEYWORD_DASH = " - ";
+	private String KEYWORD_SPACE = " "; 
 	private String PUNCTUATION_REMOVER = "[:.,]";
 	private int SINGLE_INDEX = 1;
 	

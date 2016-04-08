@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,7 +15,9 @@ import Task.*;
 import Parser.*;
 
 public class TestParser {
-
+	CommandUtils cu = new CommandUtils();
+	Parser parser = new Parser();
+	
 	@Test
 	/**
 	 * Test to ensure that the user inputs has been correctly assigned 
@@ -23,9 +26,6 @@ public class TestParser {
 	 * 
 	 */
 	public void testTaskType() throws Exception {
-		
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
 		
 		cu = parser.executeCommand(cu, "drive by the beach");
 		assertEquals(TASK_TYPE.FLOATING, cu.getType());
@@ -64,9 +64,6 @@ public class TestParser {
 	
 	@Test
 	public void testFloating() throws Exception{
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
-		
 		cu = parser.executeCommand(cu,"Drive by the beach");
 		assertEquals("Drive by the beach", cu.getName());
 		assertEquals(TASK_TYPE.FLOATING, cu.getType());
@@ -131,8 +128,6 @@ public class TestParser {
 	public void testDeadlined() throws Exception {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
 		String endDate = "";
 		
 		/*
@@ -199,8 +194,6 @@ public class TestParser {
 	public void testEvent() throws Exception {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
 		String startDate = "";
 		String endDate = "";
 		Date expectedStart;
@@ -250,9 +243,6 @@ public class TestParser {
 	
 	@Test
 	public void testComplete() {
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
-		
 		cu = parser.executeCommand(cu, "complete 1");
 		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, cu.getFlagAndCompleteType());
 		
@@ -262,6 +252,9 @@ public class TestParser {
 		cu = parser.executeCommand(cu,"complete 1 to 9");
 		assertEquals(FLAGANDCOMPLETE_TYPE.RANGE, cu.getFlagAndCompleteType());
 		
+		cu = parser.executeCommand(cu,"complete 1 - 100");
+		assertEquals(FLAGANDCOMPLETE_TYPE.RANGE, cu.getFlagAndCompleteType());
+		
 		cu = parser.executeCommand(cu,"complete all");
 		assertEquals(FLAGANDCOMPLETE_TYPE.ALL, cu.getFlagAndCompleteType());
 
@@ -269,9 +262,7 @@ public class TestParser {
 
 	@Test
 	public void testFlag() {
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
-	
+
 		cu = parser.executeCommand(cu,"flag 1");
 		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, cu.getFlagAndCompleteType());
 		
@@ -294,9 +285,7 @@ public class TestParser {
 	
 	@Test
 	public void testDelete() {
-		CommandUtils cu = new CommandUtils();
-		Parser parser = new Parser();
-		
+
 		cu = parser.executeCommand(cu,"delete 1");
 		Integer single_delete = 1;
 		assertEquals(DELETE_TYPE.SINGLE_INDEX, cu.getDeleteType());
@@ -358,58 +347,73 @@ public class TestParser {
 		
 		
 	}
-/*	
+	
 	@Test
 	public void testEdit() throws Exception {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
 		
-		Parser parser = new Parser("edit 2 meet Hannah at Chong Pang");
+		cu = parser.executeCommand(cu, "edit 2 meet Hannah at Chong Pang");
 		int taskID = 2;
-		assertEquals(EDIT_TYPE.TASK_NAME, parser.getEditType());
-		assertEquals("meet Hannah at Chong Pang", parser.getName());
-		assertEquals(taskID, parser.getTaskID());
+		assertEquals(EDIT_TYPE.TASK_NAME, cu.getEditType());
+		assertEquals("meet Hannah at Chong Pang", cu.getName());
+		assertEquals(taskID, cu.getTaskID());
 		
-		parser = new Parser("edit 4 from 5th of May 2016 2359hrs");
+		cu = parser.executeCommand(cu,"edit 4 from 5th May 2016 2359hrs");
 		taskID = 4;
 		String str = "Thu May 05 23:59:00 SGT 2016";
 		Date startTime = dateFormat.parse(str);
-		assertEquals(EDIT_TYPE.START_TIME, parser.getEditType());
-		assertEquals(taskID, parser.getTaskID());
-		assertEquals(startTime, parser.getStartTime());
+		assertEquals(EDIT_TYPE.START_TIME, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals(startTime, cu.getStartTime());
 		
-		parser = new Parser("edit 2 to 5th of Nov 2016 2359hrs");
+		cu = parser.executeCommand(cu, "edit 2 to 5th Nov 2016 2359hrs");
 		taskID = 2;
 		str = "Sat Nov 05 23:59:00 SGT 2016";
 		Date endTime = dateFormat.parse(str);
-		assertEquals(EDIT_TYPE.END_TIME, parser.getEditType());
-		assertEquals(taskID, parser.getTaskID());
-		assertEquals(endTime, parser.getEndTime());
+		assertEquals(EDIT_TYPE.END_TIME, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals(endTime, cu.getEndTime());
 		
-		parser = new Parser("edit 4 by 5th of May 2016 2359hrs");
+		cu = parser.executeCommand(cu, "edit 4 by 5th May 2016 2359hrs");
 		taskID = 4;
 		str = "Thu May 05 23:59:00 SGT 2016";
 		endTime = dateFormat.parse(str);
-		assertEquals(EDIT_TYPE.DEADLINED, parser.getEditType());
-		assertEquals(taskID, parser.getTaskID());
-		assertEquals(startTime, parser.getEndTime());
+		assertEquals(EDIT_TYPE.DEADLINED, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals(startTime, cu.getEndTime());
 		
-		parser = new Parser("edit 10 from 5th of Nov 2016 2359hrs to 12th Dec 2016");
+		cu = parser.executeCommand(cu, "edit 10 from 5th Nov 2016 2359hrs to 12th Dec 2016");
 		taskID = 10;
 		str = "Sat Nov 05 23:59:00 SGT 2016";
 		startTime = dateFormat.parse(str);
 		String str2 = "Mon Dec 12 23:59:00 SGT 2016";
 		endTime = dateFormat.parse(str2);
-		assertEquals(EDIT_TYPE.EVENT_TIME, parser.getEditType());
-		assertEquals(taskID, parser.getTaskID());
-		assertEquals(startTime, parser.getStartTime());
-	//	assertEquals(endTime, parser.getEndTime());
+		assertEquals(EDIT_TYPE.EVENT_TIME, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals(startTime, cu.getStartTime());
+		assertEquals(endTime, cu.getEndTime());
 		
-		parser = new Parser("edit #Singapore to #Melbourne");
+		cu = parser.executeCommand(cu, "edit #Singapore to #Melbourne");
 		String oldTag = "Singapore";
 		String newTag = "Melbourne";
-		assertEquals(EDIT_TYPE.TAG, parser.getEditType());
-		assertEquals(oldTag, parser.getOldTag());
-		assertEquals(newTag, parser.getTag().get(0));
+		assertEquals(EDIT_TYPE.TAG, cu.getEditType());
+		assertEquals(oldTag, cu.getOldTag());
+		assertEquals(newTag, cu.getTag().get(0));
 	
-	}*/
+	}
+	
+	@Test
+	public void testSearch() throws Exception {
+
+		cu = parser.executeCommand(cu, "search #Assignment");
+		assertEquals(SEARCH_TYPE.BY_TAG, cu.getSearchType());
+		assertEquals("Assignment", cu.getSearchByTag());
+		
+		cu = parser.executeCommand(cu, "search CS2103T");
+		assertEquals(SEARCH_TYPE.BY_TASK, cu.getSearchType());
+		assertEquals("CS2103T", cu.getSearchByTask());
+		
+		cu = parser.executeCommand(cu, "search 17/07/2016");
+		assertEquals(SEARCH_TYPE.BY_DATE, cu.getSearchType());
+	}
 }

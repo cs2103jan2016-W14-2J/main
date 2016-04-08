@@ -416,4 +416,29 @@ public class TestParser {
 		cu = parser.executeCommand(cu, "search 17/07/2016");
 		assertEquals(SEARCH_TYPE.BY_DATE, cu.getSearchType());
 	}
+	
+	@Test
+	public void testSort() throws Exception {
+
+		cu = parser.executeCommand(cu, "sort by abc");
+		assertEquals(SORT_TYPE.BY_ASCENDING, cu.getSortType());
+		
+		cu = parser.executeCommand(cu, "sort by ABC");
+		assertEquals(SORT_TYPE.BY_ASCENDING, cu.getSortType());
+		
+		cu = parser.executeCommand(cu, "sort by cba");
+		assertEquals(SORT_TYPE.BY_DESCENDING, cu.getSortType());
+		
+		cu = parser.executeCommand(cu, "sort by CBA");
+		assertEquals(SORT_TYPE.BY_DESCENDING, cu.getSortType());
+		
+		cu = parser.executeCommand(cu, "sort by date");
+		assertEquals(SORT_TYPE.BY_DATE, cu.getSortType());
+		
+		cu = parser.executeCommand(cu, "sort by 123");
+		assertEquals(SORT_TYPE.BY_ASCENDING, cu.getSortType());
+		
+		cu = parser.executeCommand(cu, "sort by 321");
+		assertEquals(SORT_TYPE.BY_DESCENDING, cu.getSortType());
+	}
 }

@@ -508,6 +508,7 @@ public class DateTimeParser {
 	
 	protected String checkAndConvertDateElement(ArrayList<String> taskItems) {
 		DateFormat destDf = new SimpleDateFormat(DATE_FORMAT_2);
+		int year = Calendar.getInstance().get(Calendar.YEAR);
 		
 		for (int i = 0; i < taskItems.size(); i++) {
 			
@@ -530,6 +531,36 @@ public class DateTimeParser {
 			try {
 				DateFormat srcDf = new SimpleDateFormat(DATE_FORMAT_4);
 				Date date = srcDf.parse(taskItems.get(i));
+				taskItems.set(i, destDf.format(date));
+			}
+			catch (ParseException e) {				
+			}
+			try {
+				DateFormat srcDf = new SimpleDateFormat("dd.MM.yyyy");
+				String temp = taskItems.get(i) + "." + year;
+				System.out.println("eunice : " + temp);
+				Date date = srcDf.parse(temp);
+				System.out.println("eunice : " + date);
+				taskItems.set(i, destDf.format(date));
+			}
+			catch (ParseException e) {				
+			}
+			try {
+				DateFormat srcDf = new SimpleDateFormat("dd/MM/yyyy");
+				String temp = taskItems.get(i) + "/" + year;
+				System.out.println("eunice : " + temp);
+				Date date = srcDf.parse(temp);
+				System.out.println("eunice : " + date);
+				taskItems.set(i, destDf.format(date));
+			}
+			catch (ParseException e) {				
+			}
+			try {
+				DateFormat srcDf = new SimpleDateFormat("dd-MM-yyyy");
+				String temp = taskItems.get(i) + "-" + year;
+				System.out.println("eunice : " + temp);
+				Date date = srcDf.parse(temp);
+				System.out.println("eunice : " + date);
 				taskItems.set(i, destDf.format(date));
 			}
 			catch (ParseException e) {				

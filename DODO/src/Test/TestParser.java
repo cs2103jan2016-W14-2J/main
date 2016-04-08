@@ -509,4 +509,22 @@ public class TestParser {
 		assertEquals("Work", cu.getTag().get(0));
 		
 	}
+	
+	@Test
+	public void testCommands() throws Exception {
+		cu = parser.executeCommand(cu, "undo");
+		assertEquals(COMMAND_TYPE.UNDO, cu.getCommandType());
+		
+		cu = parser.executeCommand(cu, "redo");
+		assertEquals(COMMAND_TYPE.REDO, cu.getCommandType());
+		
+		cu = parser.executeCommand(cu, "RedIrEct");
+		assertEquals(COMMAND_TYPE.CHANGE_DIRECTORY, cu.getCommandType());
+		
+		cu = parser.executeCommand(cu, "EXIT");
+		assertEquals(COMMAND_TYPE.EXIT, cu.getCommandType());
+		
+		cu = parser.executeCommand(cu, "helP");
+		assertEquals(COMMAND_TYPE.HELP, cu.getCommandType());
+	}
 }

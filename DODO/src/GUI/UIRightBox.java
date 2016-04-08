@@ -585,13 +585,19 @@ public class UIRightBox {
 										ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
 
 										UICellComponents lsg = null;
-										String currentIndex=Integer.toString(intIndexAllTabCell.get(this.getIndex())  + 1);
+										String currentIndex;
+										if(typeOfTask.equals(UI_TAB.ALL))
+										{
+											currentIndex=Integer.toString(intIndexAllTabCell.get(this.getIndex())  + 1);
+										}
+										else
+										{
+											currentIndex=Integer.toString(this.getIndex()  + 1);
+
+										}
 
 										if (item.getType() == TASK_TYPE.DEADLINED) 
 										{
-											
-										
-											
 											//System.out.println("DeadlinedTask");
 											lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEndString(), item.getFlag());
 											logger.info("DeadlinedTask");  

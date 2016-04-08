@@ -10,7 +10,7 @@ import java.util.List;
 import java.text.ParseException;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
-
+import org.ocpsoft.prettytime.shade.org.apache.commons.lang.time.DateUtils;
 
 import Command.*;
 import Task.*;
@@ -189,10 +189,13 @@ public class AddParser {
 	}
 
 	private CommandUtils setDeadLine(CommandUtils commandUtil, String confirmTaskName, Date date) {
-		System.out.println("setDeadLine : " + confirmTaskName);
+		System.out.println("setDeadLine : " + contentToAnalyse);
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_BY, " "));
-		if (confirmDate.size() == 1) {
+		if (confirmDate.size() == 1 && !contentToAnalyse.contains("0000hrs")) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));
+		}
+		else if (confirmDate.size() == 1 && contentToAnalyse.contains("0000hrs")) {
+			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(DateUtils.addDays(confirmDate.get(0), 1), date));
 		}
 		else if (confirmDate.size() == 2) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(1), date));

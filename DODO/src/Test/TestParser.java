@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import Command.*;
@@ -15,6 +16,12 @@ import Parser.*;
 public class TestParser {
 
 	@Test
+	/**
+	 * Test to ensure that the user inputs has been correctly assigned 
+	 * the task type.
+	 * The title should be the whole user input.
+	 * 
+	 */
 	public void testTaskType() throws Exception {
 		
 		CommandUtils cu = new CommandUtils();
@@ -62,63 +69,95 @@ public class TestParser {
 		
 		cu = parser.executeCommand(cu,"Drive by the beach");
 		assertEquals("Drive by the beach", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"fetch my brother from school");
 		assertEquals("fetch my brother from school", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Pick Sheena from the school");
 		assertEquals("Pick Sheena from the school", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Set up PA system on the stage with Hannah");
 		assertEquals("Set up PA system on the stage with Hannah", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"lie on the bed with Hannah at hotel 81");
 		assertEquals("lie on the bed with Hannah at hotel 81", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"brush my teeth before bedtime");
 		assertEquals("brush my teeth before bedtime", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"cycle with jun lem from sengkang to nus");
 		assertEquals("cycle with jun lem from sengkang to nus", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 	
-		cu = parser.executeCommand(cu,"buy slurpee from |7/11|");
-		assertEquals("buy slurpee from |7/11|", cu.getName());
+		cu = parser.executeCommand(cu,"buy slurpee from \"7/11\"");
+		assertEquals("buy slurpee from \"7/11\"", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"dance on the dancefloor at zouk");
 		assertEquals("dance on the dancefloor at zouk", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Meet Carousell buyer on the ground floor at block 2359");
 		assertEquals("Meet Carousell buyer on the ground floor at block 2359", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
-		cu = parser.executeCommand(cu,"Watch |the day after tomorrow|");
-		assertEquals("Watch |the day after tomorrow|", cu.getName());
+		cu = parser.executeCommand(cu,"Watch \"the day after tomorrow\"");
+		assertEquals("Watch \"the day after tomorrow\"", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Submit CS2103T Assignment 1 to Prof Henry Chia at his office");
 		assertEquals("Submit CS2103T Assignment 1 to Prof Henry Chia at his office", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Keep the dough in the dark before it gets mouldy");
 		assertEquals("Keep the dough in the dark before it gets mouldy", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
-		cu = parser.executeCommand(cu,"read my favourite storybook by |June| Tan");
-		assertEquals("read my favourite storybook by |June| Tan", cu.getName());
+		cu = parser.executeCommand(cu,"read my favourite storybook by \"June\" Tan");
+		assertEquals("read my favourite storybook by \"June\" Tan", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 	}
 
-/*	
+	
 	@Test
+	
 	public void testDeadlined() throws Exception {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
-		Parser parser = new Parser("drive baby howard home by tomorrow");
-		String endDate = "Thu Mar 31 23:59:59 SGT 2016";
+		CommandUtils cu = new CommandUtils();
+		Parser parser = new Parser();
+		String endDate = "";
+		
+		/*
+		 * When user enters an invalid date in the month of Feb, the program will
+		 * return the difference of input date with the last day of Feb and add it
+		 * to the last day of Feb.
+		 * 
+		 * Example: Last day of Feb 2017 is 28th Feb 2017.
+		 * 			31st Feb - 28th Feb = 3 days.
+		 * 			28th Feb + 3 days = 3rd March 2017.
+		 */
+		cu = parser.executeCommand(cu, "drive baby howard home by 31st Feb 2017");
+		endDate = "Fri Mar 03 18:00:00 SGT 2017";
 		Date expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("drive baby howard home", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("watch movie at 2400hrs");
-		endDate = "";
+		cu = parser.executeCommand(cu, "Deadline for COE bidding at 2400hrs on 27/06/2016");
+		endDate = "Tue Jun 28 00:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-		
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("Deadline for COE bidding", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
+/*		
 		parser = new Parser("watch movie on 0 feb 2017");
 		endDate = "Tue Jan 31 23:59:00 SGT 2017";
 		expectedStart = dateFormat.parse(endDate);
@@ -164,10 +203,10 @@ public class TestParser {
 		endDate = "Thu Mar 24 17:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
-	
+	*/
 	
 	}
-
+/*
 	@Test
 	public void testEvent() throws Exception {
 		

@@ -292,7 +292,7 @@ public class DateTimeParser {
 		boolean containsPreposition = false;
 		
 		for (int i = 0; i < temp.length; i++) {
-			if (monthTypes.contains(temp[i])) {
+			if (monthTypes.contains(temp[i].toLowerCase())) {
 				positionOfMonth = i;
 				month = temp[positionOfMonth];
 			}
@@ -300,7 +300,7 @@ public class DateTimeParser {
 				containsPreposition = true;
 			}
 		}
-		
+	
 		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false)) {
 			confirmTaskName = userInput;
 			return userInput;
@@ -318,7 +318,8 @@ public class DateTimeParser {
 		}
 		
 		if (positionOfMonth - 1 > 0) {
-			if (temp[positionOfMonth - 1].endsWith(KEYWORD_ST) && temp[positionOfMonth - 1].startsWith("1")) {
+			if (temp[positionOfMonth - 1].endsWith(KEYWORD_ST) && (temp[positionOfMonth - 1].startsWith("1")
+				|| temp[positionOfMonth - 1].startsWith("31"))) {
 				positionOfDay = positionOfMonth - 1;
 				day = temp[positionOfDay];
 			}
@@ -503,9 +504,20 @@ public class DateTimeParser {
 		name = processTomorrow(taskItems);
 		name = processYesterday(taskItems);
 		name = processAt(taskItems);
+		name = proccess2400hrs(taskItems);
 		return name;
 	}
 	
+	private String proccess2400hrs(ArrayList<String> taskItems) {
+		for (int i = 0; i < taskItems.size(); i++) {
+			if (taskItems.get(i).contains("2400hrs")) {
+				taskItems.set(i, "0000hrs");
+			}
+		}
+		return toStringTaskElements(taskItems);
+	}
+	
+
 	protected String getConfirmTaskName() {
 		return this.confirmTaskName;
 	}

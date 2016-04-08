@@ -69,8 +69,8 @@ public class TestParser {
 		cu = parser.executeCommand(cu,"Pick Sheena from the school");
 		assertEquals("Pick Sheena from the school", cu.getName());
 		
-		cu = parser.executeCommand(cu,"lie on the bed with Hannah");
-		assertEquals("lie on the bed with Hannah", cu.getName());
+		cu = parser.executeCommand(cu,"Set up PA system on the stage with Hannah");
+		assertEquals("Set up PA system on the stage with Hannah", cu.getName());
 		
 		cu = parser.executeCommand(cu,"lie on the bed with Hannah at hotel 81");
 		assertEquals("lie on the bed with Hannah at hotel 81", cu.getName());
@@ -92,6 +92,15 @@ public class TestParser {
 		
 		cu = parser.executeCommand(cu,"Watch |the day after tomorrow|");
 		assertEquals("Watch |the day after tomorrow|", cu.getName());
+		
+		cu = parser.executeCommand(cu,"Submit CS2103T Assignment 1 to Prof Henry Chia at his office");
+		assertEquals("Submit CS2103T Assignment 1 to Prof Henry Chia at his office", cu.getName());
+		
+		cu = parser.executeCommand(cu,"Keep the dough in the dark before it gets mouldy");
+		assertEquals("Keep the dough in the dark before it gets mouldy", cu.getName());
+		
+		cu = parser.executeCommand(cu,"read my favourite storybook by |June| Tan");
+		assertEquals("read my favourite storybook by |June| Tan", cu.getName());
 		
 	}
 

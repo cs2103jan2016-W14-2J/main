@@ -65,6 +65,7 @@ public class TestParser {
 	@Test
 	public void testFloating() throws Exception{
 		cu = parser.executeCommand(cu,"Drive by the beach");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
 		assertEquals("Drive by the beach", cu.getName());
 		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
@@ -140,6 +141,7 @@ public class TestParser {
 		 * 			28th Feb + 3 days = 3rd March 2017.
 		 */
 		cu = parser.executeCommand(cu, "drive baby howard home by 31st Feb 2017");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
 		endDate = "Fri Mar 03 18:00:00 SGT 2017";
 		Date expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, cu.getEndTime());
@@ -200,6 +202,7 @@ public class TestParser {
 		Date expectedEnd; 
 		
 		cu = parser.executeCommand(cu, "Hackathon from 01.05.2016 2pm to 05.05.2016 7pm");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
 		startDate = "Sun May 01 14:00:00 SGT 2016";
 		endDate = "Thu May 05 19:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(startDate);
@@ -244,6 +247,7 @@ public class TestParser {
 	@Test
 	public void testComplete() {
 		cu = parser.executeCommand(cu, "complete 1");
+		assertEquals(COMMAND_TYPE.COMPLETE, cu.getCommandType());
 		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, cu.getFlagAndCompleteType());
 		
 		cu = parser.executeCommand(cu,"complete 1, 6, 9");
@@ -264,6 +268,7 @@ public class TestParser {
 	public void testFlag() {
 
 		cu = parser.executeCommand(cu,"flag 1");
+		assertEquals(COMMAND_TYPE.FLAG, cu.getCommandType());
 		assertEquals(FLAGANDCOMPLETE_TYPE.SINGLE, cu.getFlagAndCompleteType());
 		
 		cu = parser.executeCommand(cu, "flag 1, 6, 9");
@@ -287,6 +292,7 @@ public class TestParser {
 	public void testDelete() {
 
 		cu = parser.executeCommand(cu,"delete 1");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		Integer single_delete = 1;
 		assertEquals(DELETE_TYPE.SINGLE_INDEX, cu.getDeleteType());
 		assertEquals( single_delete, cu.getIndexToDelete().get(0));
@@ -301,6 +307,7 @@ public class TestParser {
 		assertEquals(delete3, cu.getIndexToDelete().get(2));
 		
 		cu = parser.executeCommand(cu,"delete 1 to 4");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		delete1 = 1;
 		delete2 = 2;
 		delete3 = 3;
@@ -312,12 +319,15 @@ public class TestParser {
 		assertEquals(delete4, cu.getIndexToDelete().get(3));
 		
 		cu = parser.executeCommand(cu,"delete all");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(DELETE_TYPE.ALL_INDEXES, cu.getDeleteType());
 		
 		cu = parser.executeCommand(cu,"delete all tags");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(DELETE_TYPE.ALL_TAGS, cu.getDeleteType());
 		
 		cu = parser.executeCommand(cu,"delete #nus");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		String single_tag = "nus";
 		assertEquals(DELETE_TYPE.SINGLE_TAG, cu.getDeleteType());
 		assertEquals( single_tag, cu.getTagToDelete().get(0));
@@ -327,22 +337,27 @@ public class TestParser {
 		String tag2 = "singapore";
 		String tag3 = "SoC";
 		assertEquals(DELETE_TYPE.MULTIPLE_TAGS, cu.getDeleteType());
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(tag1, cu.getTagToDelete().get(0));
 		assertEquals(tag2, cu.getTagToDelete().get(1));
 		assertEquals(tag3, cu.getTagToDelete().get(2));
 		
 		cu = parser.executeCommand(cu,"delete #11-11");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(DELETE_TYPE.INVALID, cu.getDeleteType());
 		
 		cu = parser.executeCommand(cu,"delete #hello #11-11 #adele ");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(DELETE_TYPE.MULTIPLE_TAGS, cu.getDeleteType());
 		assertEquals("hello", cu.getTagToDelete().get(0));
 		assertEquals("adele", cu.getTagToDelete().get(1));
 		
 		cu = parser.executeCommand(cu,"delete 1 start date");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(DELETE_TYPE.START_DATE, cu.getDeleteType());
 		
 		cu = parser.executeCommand(cu,"delete 10 end date");
+		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
 		assertEquals(DELETE_TYPE.END_DATE, cu.getDeleteType());
 		
 		
@@ -353,12 +368,14 @@ public class TestParser {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
 		
 		cu = parser.executeCommand(cu, "edit 2 meet Hannah at Chong Pang");
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
 		int taskID = 2;
 		assertEquals(EDIT_TYPE.TASK_NAME, cu.getEditType());
 		assertEquals("meet Hannah at Chong Pang", cu.getName());
 		assertEquals(taskID, cu.getTaskID());
 		
 		cu = parser.executeCommand(cu,"edit 4 from 5th May 2016 2359hrs");
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
 		taskID = 4;
 		String str = "Thu May 05 23:59:00 SGT 2016";
 		Date startTime = dateFormat.parse(str);
@@ -367,6 +384,7 @@ public class TestParser {
 		assertEquals(startTime, cu.getStartTime());
 		
 		cu = parser.executeCommand(cu, "edit 2 to 5th Nov 2016 2359hrs");
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
 		taskID = 2;
 		str = "Sat Nov 05 23:59:00 SGT 2016";
 		Date endTime = dateFormat.parse(str);
@@ -375,6 +393,7 @@ public class TestParser {
 		assertEquals(endTime, cu.getEndTime());
 		
 		cu = parser.executeCommand(cu, "edit 4 by 5th May 2016 2359hrs");
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
 		taskID = 4;
 		str = "Thu May 05 23:59:00 SGT 2016";
 		endTime = dateFormat.parse(str);
@@ -383,6 +402,7 @@ public class TestParser {
 		assertEquals(startTime, cu.getEndTime());
 		
 		cu = parser.executeCommand(cu, "edit 10 from 5th Nov 2016 2359hrs to 12th Dec 2016");
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
 		taskID = 10;
 		str = "Sat Nov 05 23:59:00 SGT 2016";
 		startTime = dateFormat.parse(str);
@@ -394,6 +414,7 @@ public class TestParser {
 		assertEquals(endTime, cu.getEndTime());
 		
 		cu = parser.executeCommand(cu, "edit #Singapore to #Melbourne");
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
 		String oldTag = "Singapore";
 		String newTag = "Melbourne";
 		assertEquals(EDIT_TYPE.TAG, cu.getEditType());
@@ -406,14 +427,17 @@ public class TestParser {
 	public void testSearch() throws Exception {
 
 		cu = parser.executeCommand(cu, "search #Assignment");
+		assertEquals(COMMAND_TYPE.SEARCH, cu.getCommandType());
 		assertEquals(SEARCH_TYPE.BY_TAG, cu.getSearchType());
 		assertEquals("Assignment", cu.getSearchByTag());
 		
 		cu = parser.executeCommand(cu, "search CS2103T");
+		assertEquals(COMMAND_TYPE.SEARCH, cu.getCommandType());
 		assertEquals(SEARCH_TYPE.BY_TASK, cu.getSearchType());
 		assertEquals("CS2103T", cu.getSearchByTask());
 		
 		cu = parser.executeCommand(cu, "search 17/07/2016");
+		assertEquals(COMMAND_TYPE.SEARCH, cu.getCommandType());
 		assertEquals(SEARCH_TYPE.BY_DATE, cu.getSearchType());
 	}
 	
@@ -421,24 +445,68 @@ public class TestParser {
 	public void testSort() throws Exception {
 
 		cu = parser.executeCommand(cu, "sort by abc");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_ASCENDING, cu.getSortType());
 		
 		cu = parser.executeCommand(cu, "sort by ABC");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_ASCENDING, cu.getSortType());
 		
 		cu = parser.executeCommand(cu, "sort by cba");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_DESCENDING, cu.getSortType());
 		
 		cu = parser.executeCommand(cu, "sort by CBA");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_DESCENDING, cu.getSortType());
 		
 		cu = parser.executeCommand(cu, "sort by date");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_DATE, cu.getSortType());
 		
 		cu = parser.executeCommand(cu, "sort by 123");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_ASCENDING, cu.getSortType());
 		
 		cu = parser.executeCommand(cu, "sort by 321");
+		assertEquals(COMMAND_TYPE.SORT, cu.getCommandType());
 		assertEquals(SORT_TYPE.BY_DESCENDING, cu.getSortType());
+	}
+	
+	@Test
+	public void testTag() throws Exception {
+		int index = 1;
+		cu = parser.executeCommand(cu, "tag 1 #HomeAlone");
+		assertEquals(COMMAND_TYPE.TAG, cu.getCommandType());
+		assertEquals(index, cu.getTaskID());
+		assertEquals("HomeAlone", cu.getTag().get(0));
+		
+		cu = parser.executeCommand(cu, "tag 123 #This #is #HOME #truLy #SG50");
+		index = 123;
+		assertEquals(COMMAND_TYPE.TAG, cu.getCommandType());
+		assertEquals(index, cu.getTaskID());
+		assertEquals("This", cu.getTag().get(0));
+		assertEquals("is", cu.getTag().get(1));
+		assertEquals("HOME", cu.getTag().get(2));
+		assertEquals("truLy", cu.getTag().get(3));
+		assertEquals("SG50", cu.getTag().get(4));
+		
+		cu = parser.executeCommand(cu, "Procurement meeting at seminar room #Logistic #Planning");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
+		assertEquals("Procurement meeting at seminar room", cu.getName());
+		assertEquals("Logistic", cu.getTag().get(0));
+		assertEquals("Planning", cu.getTag().get(1));
+		
+		cu = parser.executeCommand(cu, "#dance #crewz Final rehearsal");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
+		assertEquals("Final rehearsal", cu.getName());
+		assertEquals("dance", cu.getTag().get(0));
+		assertEquals("crewz", cu.getTag().get(1));
+		
+		cu = parser.executeCommand(cu, "distribute 1000 flyers #Work to block 2359 #10-11");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
+		assertEquals("distribute 1000 flyers to block 2359 #10-11", cu.getName());
+		assertEquals("Work", cu.getTag().get(0));
+		
 	}
 }

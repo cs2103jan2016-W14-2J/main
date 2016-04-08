@@ -226,6 +226,16 @@ public class TestParser {
 		assertEquals("serve the nation", cu.getName());
 		assertEquals(TASK_TYPE.EVENT, cu.getType());
 		
+		cu = parser.executeCommand(cu, "Dinner by the beach before sunset at Jumbo from 09/09/16 to 09.09.16");
+		startDate = "Fri Sep 09 00:00:00 SGT 2016";
+		endDate = "Fri Sep 09 18:00:00 SGT 2016";
+		expectedStart = dateFormat.parse(startDate);
+		expectedEnd = dateFormat.parse(endDate);
+		assertEquals(expectedStart, cu.getStartTime());
+		assertEquals(expectedEnd, cu.getEndTime());
+		assertEquals("Dinner by the beach before sunset at Jumbo", cu.getName());
+		assertEquals(TASK_TYPE.EVENT, cu.getType());
+		
 		cu = parser.executeCommand(cu, "Employees review at 7pm from 05/12/16 to 06.12.16");
 		startDate = "Mon Dec 05 19:00:00 SGT 2016";
 		endDate = "Tue Dec 06 19:00:00 SGT 2016";

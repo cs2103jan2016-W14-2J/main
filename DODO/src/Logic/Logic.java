@@ -29,6 +29,7 @@ public class Logic {
 	private History history;
 	private UI_TAB status;
 	private String previous;
+	private int lastModifiedIndex;
 
 	/*************************************PUBLIC METHODS******************************************/
 	public static Logic getInstance() {
@@ -121,6 +122,10 @@ public class Logic {
 		}
 		return this.previous;
 	}
+	
+	public int getLastModifiedIndex() {
+		return this.getLastModifiedIndex();
+	}
 
 	/***********************************PRIVATE METHODS***********************************************/
 	private String processCommand(CommandUtils cu) {
@@ -207,6 +212,7 @@ public class Logic {
 		history.save(compress(), cloneCategories(this.categories));
 		String message = command.execute();
 		this.status = command.getStatus();
+		this.lastModifiedIndex = command.getLastModifiedIndex();
 		return message;
 	}
 

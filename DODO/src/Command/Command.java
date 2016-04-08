@@ -209,7 +209,7 @@ public abstract class Command {
 	}
 
 	/*****************************************PRIVATE METHODS***************************************/
-	private ArrayList<Task> combine(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
+	/*private ArrayList<Task> combine(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
 			ArrayList<Task> floatingTasks, ArrayList<Task> overdueTasks) {
 		ArrayList<Task> combined = new ArrayList<Task>();
 		combined.addAll(floatingTasks);
@@ -217,6 +217,16 @@ public abstract class Command {
 		combined.addAll(completedTasks);
 		combined.addAll(overdueTasks);
 		return combined;
+	}*/
+	
+	private ArrayList<Task> combine(ArrayList<Task> overdueTasks, ArrayList<Task> ongoingTasks,
+			ArrayList<Task> floatingTasks, ArrayList<Task> completedTasks) {
+		ArrayList<Task> all = new ArrayList<Task>();
+		all.addAll(overdueTasks);
+		all.addAll(ongoingTasks);
+		all.addAll(floatingTasks);
+		all.addAll(completedTasks);
+		return all;
 	}
 
 	/*private void modifyOnSearch(ArrayList<Task> newList) {

@@ -78,11 +78,13 @@ public class DateTimeParser {
 	}
 	
 	protected String removeTheDayAfterTomorrow(String userInput) {
-		if (userInput.contains(KEYWORD_THE_DAY_AFTER_TOMORROW)) {
+		System.out.println("removeTheDayAfterTomorrow : " + userInput);
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		if (userInput.contains(KEYWORD_THE_DAY_AFTER_TOMORROW) && dates.size() != 0) {
 			userInput = userInput.replace(KEYWORD_THE_DAY_AFTER_TOMORROW, "");
 			possibleDate = KEYWORD_THE_DAY_AFTER_TOMORROW.trim();
 		}
-		else if (userInput.contains(KEYWORD_DAY_AFTER_TOMORROW)) {
+		else if (userInput.contains(KEYWORD_DAY_AFTER_TOMORROW) && dates.size() != 0) {
 			userInput = userInput.replace(KEYWORD_DAY_AFTER_TOMORROW, "");
 			possibleDate = KEYWORD_THE_DAY_AFTER_TOMORROW.trim();
 		}
@@ -90,7 +92,9 @@ public class DateTimeParser {
 	}
 	
 	protected String removeTomorrow(String userInput) {
-		if (userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2)) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		if ((userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2))
+			&& dates.size() != 0) {
 			userInput = userInput.replace(KEYWORD_TOMORROW_1, "");
 			setDateElements(KEYWORD_TOMORROW_1);
 		}
@@ -98,7 +102,8 @@ public class DateTimeParser {
 	}
 	
 	protected String removeYesterday(String userInput) {
-		if (userInput.contains(KEYWORD_YESTERDAY)) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		if (userInput.contains(KEYWORD_YESTERDAY) && dates.size() == 0) {
 			userInput = userInput.replace(KEYWORD_YESTERDAY, "");
 			possibleDate = KEYWORD_YESTERDAY;
 		}
@@ -110,7 +115,8 @@ public class DateTimeParser {
 	}
 	
 	protected String removeToday(String userInput) {
-		if (userInput.contains(KEYWORD_TODAY)) {
+		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		if (userInput.contains(KEYWORD_TODAY) && dates.size() != 0) {
 			userInput = userInput.replace(KEYWORD_TODAY, "");
 			possibleDate = KEYWORD_TODAY;
 		}

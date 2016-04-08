@@ -90,9 +90,12 @@ public class TestParser {
 		cu = parser.executeCommand(cu,"Meet Carousell buyer on the ground floor at block 2359");
 		assertEquals("Meet Carousell buyer on the ground floor at block 2359", cu.getName());
 		
+		cu = parser.executeCommand(cu,"Watch |the day after tomorrow|");
+		assertEquals("Watch |the day after tomorrow|", cu.getName());
+		
 	}
 
-	/*
+/*	
 	@Test
 	public void testDeadlined() throws Exception {
 		

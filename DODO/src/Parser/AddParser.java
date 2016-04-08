@@ -143,11 +143,11 @@ public class AddParser {
 		str = new ArrayList<String>();
 		String[] elements = taskName.split("[\\s+]");
 		inputElements = new ArrayList<String>(Arrays.asList(elements));
+		preposition.add(KEYWORD_FROM);
+		preposition.add(KEYWORD_TO);
 		confirmTaskName = getPossibleTaskName(currentPosition, confirmTaskName, inputElements);
 		confirmTaskName = dt.extractDate(confirmTaskName) + " ";
 		contentToAnalyse = dt.getDateElements() + " ";
-		preposition.add(KEYWORD_FROM);
-		preposition.add(KEYWORD_TO);
 		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
 		extractDateFromTask();
 		return setEventTime(commandUtil, taskName, date);

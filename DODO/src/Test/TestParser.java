@@ -157,13 +157,15 @@ public class TestParser {
 		assertEquals(expectedStart, cu.getEndTime());
 		assertEquals("Deadline for COE bidding", cu.getName());
 		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
-/*		
-		parser = new Parser("watch movie on 0 feb 2017");
-		endDate = "Tue Jan 31 23:59:00 SGT 2017";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
 		
-		parser = new Parser("submit assignment 1 by thursday");
+		cu = parser.executeCommand(cu, "watch movie on 0 feb 2017");
+		endDate = "Wed Feb 01 00:00:00 SGT 2017";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("watch movie", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
+/*		
+		parser = new Parser("submit assignment 1 by last thursday of Nov 2016");
 		endDate = "Thu Mar 24 23:59:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
@@ -172,13 +174,15 @@ public class TestParser {
 		endDate = "Fri May 27 23:59:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());
-		
-		parser = new Parser("meeting with boss on 27 march 2016 at 2pm");
-		endDate = "Sun Mar 27 14:00:00 SGT 2016";
+*/		
+		cu = parser.executeCommand(cu, "meeting with boss on 27 MAY 2016 at 2pm");
+		endDate = "Fri May 27 14:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("meeting with boss", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
-		parser = new Parser("fetch mum from airport on this coming friday");
+/*		parser = new Parser("fetch mum from airport on this coming friday");
 		endDate = "Fri Mar 25 23:59:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, parser.getEndTime());

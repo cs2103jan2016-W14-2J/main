@@ -601,71 +601,20 @@ public class UIRightBox {
 											//System.out.println("DeadlinedTask");
 											lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEndString(), item.getFlag());
 											logger.info("DeadlinedTask");  
-											lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
-											{
-											    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-											        if(oldValue ==false)
-											        {
-											        	
-											        	setTextFieldAndEnter("flag "+ currentIndex);
-											        	//System.out.println("flag ");
-											        }
-											        else if(oldValue==true) 
-											        {
-											        	setTextFieldAndEnter("unflag "+ currentIndex);
-											        //	System.out.println("unflag ");
-											        }
-											        
-											    }
-											});
-										
 										} 
 										else if (item.getType() == TASK_TYPE.EVENT) 
 										{
 											//System.out.println("in event" + item.getEnd());
 											lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), item.getStartString(),item.getEndString(), item.getFlag());
 											logger.info("Event");  
-											lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
-											{
-											    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-											        if(oldValue ==false)
-											        {
-											        	
-											        	setTextFieldAndEnter("flag "+ currentIndex);
-											        	//System.out.println("flag ");
-											        }
-											        else if(oldValue==true) 
-											        {
-											        	setTextFieldAndEnter("unflag "+ currentIndex);
-											        //	System.out.println("unflag ");
-											        }
-											        
-											    }
-											});
+											
 										}
 										else if (item.getType() == TASK_TYPE.FLOATING) 
 										{
-
 											//System.out.println("in FLOATING Task");
 											lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 											logger.info("Task");  
-											lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
-											{
-											    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-											        if(oldValue ==false)
-											        {
-											        	
-											        	setTextFieldAndEnter("flag "+ currentIndex);
-											        	//System.out.println("flag ");
-											        }
-											        else if(oldValue==true) 
-											        {
-											        	setTextFieldAndEnter("unflag "+ currentIndex);
-											        //	System.out.println("unflag ");
-											        }
-											        
-											    }
-											});
+											
 										}
 										/*else 
 										{
@@ -673,7 +622,23 @@ public class UIRightBox {
 												lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 												logger.info("search");  
 										}*/
-										
+										lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
+										{
+										    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+										        if(oldValue ==false)
+										        {
+										        	
+										        	setTextFieldAndEnter("flag "+ currentIndex);
+										        	//System.out.println("flag ");
+										        }
+										        else if(oldValue==true) 
+										        {
+										        	setTextFieldAndEnter("unflag "+ currentIndex);
+										        //	System.out.println("unflag ");
+										        }
+										        
+										    }
+										});
 										
 										setTooltip(lsg.getToolTip());
 
@@ -702,21 +667,7 @@ public class UIRightBox {
 						}
 					}
 				});
-				listViewLabel.setOnMouseClicked(new EventHandler<MouseEvent>()
-				{
-					@Override
-					public void handle(MouseEvent me) {
-							if(listViewLabel.getSelectionModel().getSelectedIndex()==-1)
-							{
-								mainTextField.setText("");
-							}
-							else
-							{
-								int indexToEdit = listViewLabel.getSelectionModel().getSelectedIndex()+1;
-								mainTextField.setText("edit " + indexToEdit);
-							}
-					}
-				});
+				
 				
 				
 				

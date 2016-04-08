@@ -50,6 +50,7 @@ public class UIMainController {
 	private String strDBdir = "";
 	private String strDBname = "";
 	private UIListener listen;
+	private Timer timer;
 	public UIMainController(Logic logic)
 	{
 		this.logic = logic;
@@ -59,6 +60,8 @@ public class UIMainController {
 		
 		leftBox = new UILeftBox(this.logic,this.root,scene);
 		rightBox = new UIRightBox(this.logic,this.root,scene);
+		
+		timer = new Timer();
 		
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
@@ -79,7 +82,7 @@ public class UIMainController {
 
 		
 
-		Timer timer = new Timer();
+		
 
 		Calendar now = Calendar.getInstance();
 		
@@ -158,7 +161,9 @@ public class UIMainController {
 	     	         @Override protected Void call() throws Exception 
 	     	         {
 	     	        	 assert(logic.save()!=null); 
+	     	        	 timer.cancel();
 	     	        	 logic.save();
+	     	        	 
 	     	        	 return null;
 	     	         }
 	     	     };

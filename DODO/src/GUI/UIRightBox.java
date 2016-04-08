@@ -267,11 +267,15 @@ public class UIRightBox {
 	private int intAllOngoingHashCode=0;
 	private int intAllFloatingHashCode=0;
 	private int intAllCompletedHashCode=0;
+	private ArrayList<Integer> intIndexAllTabCell = new ArrayList<Integer>();
+	ArrayList<Integer> intHashCode = new ArrayList<Integer>();
 
 	private ArrayList<Task> getAll()
 	{
-		
+		intIndexAllTabCell.clear();
+		intHashCode.clear();
 		ArrayList<Task> allTask = new ArrayList<Task>();
+		
 		Task stubTask1 = new Task();
 		intAllOverdueHashCode = stubTask1.hashCode();
 		allTask.add(stubTask1); //add title for overdueTasks
@@ -298,6 +302,41 @@ public class UIRightBox {
 		System.out.println(intAllFloatingHashCode);
 		System.out.println(intAllCompletedHashCode);
 
+		for(int x=0,y=0;x<allTask.size();x++,y++)
+		{
+			int currentHashCode = allTask.get(x).hashCode();
+			if(intAllOverdueHashCode ==currentHashCode)
+			{
+				intIndexAllTabCell.add(0);
+				y--;
+			}
+			else if(intAllOngoingHashCode ==currentHashCode)
+			{
+				intIndexAllTabCell.add(0);
+				y--;
+			}
+			else if(intAllFloatingHashCode ==currentHashCode)
+			{
+				intIndexAllTabCell.add(0);
+				y--;
+			}
+			else if(intAllCompletedHashCode ==currentHashCode)
+			{
+				intIndexAllTabCell.add(0);
+				y--;
+			}
+			else
+			{
+				intIndexAllTabCell.add(y);
+				intHashCode.add(currentHashCode);
+			}
+			
+		}
+		
+		System.out.println(intIndexAllTabCell);
+		System.out.println(intHashCode);
+		
+		
 		
 		return allTask;
 	}
@@ -504,8 +543,6 @@ public class UIRightBox {
 		spTask.setPrefSize(titledPaneHeight, titledPaneWidth);		
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
 
-
-		
 		new Thread(new Runnable() 
 		{
 			@Override
@@ -517,79 +554,127 @@ public class UIRightBox {
 							@Override
 							public void updateItem(Task item, boolean empty) {
 								super.updateItem(item, empty);
-								
-								
+
 								if (item != null) {
-									ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
+									if(intAllCompletedHashCode==item.hashCode()||intAllOverdueHashCode==item.hashCode() || intAllOngoingHashCode==item.hashCode() ||intAllFloatingHashCode==item.hashCode() )
+									{
+										if(intAllOverdueHashCode==item.hashCode())
+										{
+											String strFloat = "Over-Due Tasks (" + logic.getOverdueTasks().size()+")"; 
+											setGraphic(new Label(strFloat));
+										}
+										else if(intAllOngoingHashCode==item.hashCode())
+										{
+											String strFloat = "On-Going Tasks (" + logic.getOngoingTasks().size()+")"; 
+											setGraphic(new Label(strFloat));
+										}
+										else if(intAllFloatingHashCode==item.hashCode())
+										{
+											String strFloat = "Floating Tasks (" + logic.getFloatingTasks().size()+")"; 
+											setGraphic(new Label(strFloat));
+										}
+										else if(intAllCompletedHashCode==item.hashCode())
+										{
+											String strFloat = "Completed Tasks (" + logic.getCompletedTasks().size()+")"; 
+											setGraphic(new Label(strFloat));
+										}
+										
+									}
+									else
+									{
+										ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
 
-									String currentIndex=Integer.toString(this.getIndex() + 1);
-									UICellComponents lsg = null;
-									
-									if (item.getType() == TASK_TYPE.DEADLINED) 
-									{
-										//System.out.println("DeadlinedTask");
-										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEndString(), item.getFlag());
-										logger.info("DeadlinedTask");  
-									
-									} 
-									else if (item.getType() == TASK_TYPE.EVENT) 
-									{
-										//System.out.println("in event" + item.getEnd());
-										lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), item.getStartString(),item.getEndString(), item.getFlag());
-										logger.info("Event");  
-									}
-									else if (item.getType() == TASK_TYPE.FLOATING) 
-									{
-										//System.out.println("in FLOATING Task");
-										lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
-										logger.info("Task");  
-									}
-									/*else 
-									{
-											//System.out.println("in search Task");
+										UICellComponents lsg = null;
+										String currentIndex=Integer.toString(intIndexAllTabCell.get(this.getIndex())  + 1);
+
+										if (item.getType() == TASK_TYPE.DEADLINED) 
+										{
+											
+										
+											
+											//System.out.println("DeadlinedTask");
+											lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), null, item.getEndString(), item.getFlag());
+											logger.info("DeadlinedTask");  
+											lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
+											{
+											    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+											        if(oldValue ==false)
+											        {
+											        	
+											        	setTextFieldAndEnter("flag "+ currentIndex);
+											        	//System.out.println("flag ");
+											        }
+											        else if(oldValue==true) 
+											        {
+											        	setTextFieldAndEnter("unflag "+ currentIndex);
+											        //	System.out.println("unflag ");
+											        }
+											        
+											    }
+											});
+										
+										} 
+										else if (item.getType() == TASK_TYPE.EVENT) 
+										{
+											//System.out.println("in event" + item.getEnd());
+											lsg = new UICellComponents(logic,currentIndex, strTagging, item.getName(), item.getStartString(),item.getEndString(), item.getFlag());
+											logger.info("Event");  
+											lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
+											{
+											    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+											        if(oldValue ==false)
+											        {
+											        	
+											        	setTextFieldAndEnter("flag "+ currentIndex);
+											        	//System.out.println("flag ");
+											        }
+											        else if(oldValue==true) 
+											        {
+											        	setTextFieldAndEnter("unflag "+ currentIndex);
+											        //	System.out.println("unflag ");
+											        }
+											        
+											    }
+											});
+										}
+										else if (item.getType() == TASK_TYPE.FLOATING) 
+										{
+
+											//System.out.println("in FLOATING Task");
 											lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
-											logger.info("search");  
-									}*/
-									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
-									{
-									    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-									        if(oldValue ==false)
-									        {
-									        	setTextFieldAndEnter("flag "+ currentIndex);
-									        	//System.out.println("flag ");
-									        }
-									        else if(oldValue==true) 
-									        {
-									        	setTextFieldAndEnter("unflag "+ currentIndex);
-									        //	System.out.println("unflag ");
-									        }
-									        
-									    }
-									});
-									
-									setTooltip(lsg.getToolTip());
+											logger.info("Task");  
+											lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
+											{
+											    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+											        if(oldValue ==false)
+											        {
+											        	
+											        	setTextFieldAndEnter("flag "+ currentIndex);
+											        	//System.out.println("flag ");
+											        }
+											        else if(oldValue==true) 
+											        {
+											        	setTextFieldAndEnter("unflag "+ currentIndex);
+											        //	System.out.println("unflag ");
+											        }
+											        
+											    }
+											});
+										}
+										/*else 
+										{
+												//System.out.println("in search Task");
+												lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
+												logger.info("search");  
+										}*/
+										
+										
+										setTooltip(lsg.getToolTip());
 
-									setGraphic(lsg.getCellRoot());
-									if(intAllOverdueHashCode==item.hashCode())
-									{
-										String strFloat = "Over-Due Tasks (" + logic.getOverdueTasks().size()+")"; 
-										setGraphic(new Label(strFloat));
+										setGraphic(lsg.getCellRoot());
 									}
-									else if(intAllOngoingHashCode==item.hashCode())
-									{
-										String strFloat = "On-Going Tasks (" + logic.getOngoingTasks().size()+")"; 
-										setGraphic(new Label(strFloat));
-									}
-									else if(intAllFloatingHashCode==item.hashCode())
-									{
-										String strFloat = "Floating Tasks (" + logic.getFloatingTasks().size()+")"; 
-										setGraphic(new Label(strFloat));
-									}
-									else if(intAllCompletedHashCode==item.hashCode())
-									{
-										String strFloat = "Completed Tasks (" + logic.getCompletedTasks().size()+")"; 
-										setGraphic(new Label(strFloat));
-									}
+									
+									
 
 								}
 							}

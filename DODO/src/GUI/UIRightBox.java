@@ -1,6 +1,7 @@
 package GUI;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -127,7 +128,7 @@ public class UIRightBox {
 	private VBox overdueVB;
 	private VBox searchVB;
 	
-	
+	private Boolean[] boolMap = new Boolean[5];
 	
 	public UIRightBox(Logic logic, HBox root, Scene scene)
 	{
@@ -138,7 +139,6 @@ public class UIRightBox {
 		usc = new UICssScaling();
 		logger = Logger.getLogger("MyLog"); 
 		tabMap = new boolean[6];
-		
 		
 		tabWelcome = new Tab(welcomeTab);
 		tabAll = new Tab(allTab);
@@ -263,6 +263,44 @@ public class UIRightBox {
 			tabPane.getSelectionModel().select(tabWelcome);
 		}
 	}
+	private int intAllOverdueHashCode=0;
+	private int intAllOngoingHashCode=0;
+	private int intAllFloatingHashCode=0;
+	private int intAllCompletedHashCode=0;
+
+	private ArrayList<Task> getAll()
+	{
+		
+		ArrayList<Task> allTask = new ArrayList<Task>();
+		Task stubTask1 = new Task();
+		intAllOverdueHashCode = stubTask1.hashCode();
+		allTask.add(stubTask1); //add title for overdueTasks
+		allTask.addAll(overdueTasks);
+		
+		Task stubTask2 = new Task();
+		intAllOngoingHashCode = stubTask2.hashCode();
+		allTask.add(stubTask2);// add title for ongoingTasks
+		allTask.addAll(ongoingTasks);
+		
+		Task stubTask3 = new Task();
+		intAllFloatingHashCode = stubTask3.hashCode();
+		allTask.add(stubTask3);// add title for floatingTasks
+		allTask.addAll(floatingTasks);
+		
+		Task stubTask4 = new Task();
+		intAllCompletedHashCode = stubTask4.hashCode();
+		allTask.add(stubTask4);// add title for completedTasks
+		allTask.addAll(completedTasks);
+		
+
+		System.out.println(intAllOverdueHashCode);
+		System.out.println(intAllOngoingHashCode);
+		System.out.println(intAllFloatingHashCode);
+		System.out.println(intAllCompletedHashCode);
+
+		
+		return allTask;
+	}
 	private void testMethod() 
 	{
 		floatingTasks.addAll(logic.getFloatingTasks());
@@ -270,7 +308,8 @@ public class UIRightBox {
 		completedTasks.addAll(logic.getCompletedTasks());
 		overdueTasks.addAll(logic.getOverdueTasks());
 		searchTasks.addAll(logic.getSearchResults());
-		allTasks.addAll(logic.getAll());
+		allTasks.addAll(getAll());
+		//allTasks.addAll(logic.getAll());
 
 		//tabPane.getTabs().clear();
 		updateTabMap();
@@ -460,12 +499,13 @@ public class UIRightBox {
 		
 	}
 
-
 	private void addListToTitledPane(StackPane spTask, ObservableList<Task> listTask, UI_TAB typeOfTask) {
-		
+		//WELCOME, ALL, FLOATING, ONGOING, COMPLETED, OVERDUE, SEARCH, HELP;
 		spTask.setPrefSize(titledPaneHeight, titledPaneWidth);		
-		
 		final ListView<Task> listViewLabel = new ListView<Task>(listTask);
+
+
+		
 		new Thread(new Runnable() 
 		{
 			@Override
@@ -477,14 +517,11 @@ public class UIRightBox {
 							@Override
 							public void updateItem(Task item, boolean empty) {
 								super.updateItem(item, empty);
+								
+								
 								if (item != null) {
-									
 									ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
-									/*
-									ArrayList<Label> lblTag = new ArrayList<Label>();
-									uiMakeTag.MatchTagToCategories(logic, logic.getCategories());//match all the categories with a user data
-									lblTag.addAll(uiMakeTag.assignTagUserData(logic,item.getTags()));//apply the user data to each task's tag
-									*/
+
 									String currentIndex=Integer.toString(this.getIndex() + 1);
 									UICellComponents lsg = null;
 									
@@ -507,12 +544,12 @@ public class UIRightBox {
 										lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 										logger.info("Task");  
 									}
-									else 
+									/*else 
 									{
 											//System.out.println("in search Task");
 											lsg = new UICellComponents(logic,currentIndex, strTagging ,item.getName(), null, null, item.getFlag());
 											logger.info("search");  
-									}
+									}*/
 									lsg.getCheckFlag().selectedProperty().addListener(new ChangeListener<Boolean>() 
 									{
 									    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -531,7 +568,29 @@ public class UIRightBox {
 									});
 									
 									setTooltip(lsg.getToolTip());
+
 									setGraphic(lsg.getCellRoot());
+									if(intAllOverdueHashCode==item.hashCode())
+									{
+										String strFloat = "Over-Due Tasks (" + logic.getOverdueTasks().size()+")"; 
+										setGraphic(new Label(strFloat));
+									}
+									else if(intAllOngoingHashCode==item.hashCode())
+									{
+										String strFloat = "On-Going Tasks (" + logic.getOngoingTasks().size()+")"; 
+										setGraphic(new Label(strFloat));
+									}
+									else if(intAllFloatingHashCode==item.hashCode())
+									{
+										String strFloat = "Floating Tasks (" + logic.getFloatingTasks().size()+")"; 
+										setGraphic(new Label(strFloat));
+									}
+									else if(intAllCompletedHashCode==item.hashCode())
+									{
+										String strFloat = "Completed Tasks (" + logic.getCompletedTasks().size()+")"; 
+										setGraphic(new Label(strFloat));
+									}
+
 								}
 							}
 						};

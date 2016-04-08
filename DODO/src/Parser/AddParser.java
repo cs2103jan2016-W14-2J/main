@@ -16,8 +16,8 @@ import Command.*;
 import Task.*;
 
 public class AddParser {
-	private final String KEYWORD_FROM = "from ";
-	private final String KEYWORD_TO = " to ";
+	private final String KEYWORD_FROM = "from";
+	private final String KEYWORD_TO = "to";
 	private final String KEYWORD_ON = " on ";
 	private final String KEYWORD_BY = " by ";
 	private final String KEYWORD_AT = " at ";
@@ -32,13 +32,15 @@ public class AddParser {
 	private int LAST_POSITION_OF_BY = -1;
 	private int LAST_POSITION_OF_IN = -1;
 	
-	private String userTask = "";
+	private String confirmTaskName = "";
 	private String taskName = "";
 	private String contentToAnalyse;
 	private TASK_TYPE taskType;
 	private DateTimeParser dt;
 	private ArrayList<String> taskItems;
 	private ArrayList<String> preposition;
+	private ArrayList<String> inputElements;
+	private ArrayList<String> str;
 
 	public AddParser() {
 		dt = new DateTimeParser();
@@ -106,9 +108,10 @@ public class AddParser {
 
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String taskName) {
 		getKeywordPosition(taskName);
-		return (LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
+		return ((LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
 			LAST_POSITION_OF_BEFORE != -1 || LAST_POSITION_OF_BY != -1
-			|| LAST_POSITION_OF_IN != -1) ? true : false;
+			|| LAST_POSITION_OF_IN != -1) && (LAST_POSITION_OF_FROM == -1
+			&& LAST_POSITION_OF_TO == -1)) ? true : false;
 	}
 
 	private void getKeywordPosition(String taskName) {
@@ -118,6 +121,7 @@ public class AddParser {
 		LAST_POSITION_OF_BEFORE = temp.lastIndexOf("before");
 		LAST_POSITION_OF_BY = temp.lastIndexOf("by");
 		LAST_POSITION_OF_FROM = temp.lastIndexOf("from");
+		LAST_POSITION_OF_TO = temp.lastIndexOf("to");
 		LAST_POSITION_OF_IN = temp.lastIndexOf("in");
 	}
 
@@ -133,74 +137,90 @@ public class AddParser {
 	
 
 	private CommandUtils parseEVENT(CommandUtils commandUtil, String taskName) {
-		String newTaskName = taskName;
-		String str = "";
 		Date date = new Date();
-		LAST_POSITION_OF_AT = taskName.lastIndexOf(KEYWORD_AT);
-		
-		// Parse string with "from" ... "to".
-		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_AT == -1) {
-			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
-			List<Date> dates = new PrettyTimeParser().parse(str);
-			if (dates.size() == 2) {
-				System.out.println("Test parseEvent : " + dates.get(1));
-				taskName = taskName.substring(0, LAST_POSITION_OF_FROM);
-				commandUtil.setStartTime(dates.get(0));
-				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
-				commandUtil.setTaskName(taskName);
-			}
-			
-			else if (dates.size() == 1) {
-				taskName = taskName.substring(0, LAST_POSITION_OF_FROM);
-				commandUtil.setStartTime(dates.get(0));
-				commandUtil.setTaskName(taskName);
-			}
-			else if (dates.size() == 0) {
-				System.out.println("DEBUG @line 201 : hello" );
-				commandUtil.setTaskName(newTaskName);
-			}
-			
+		int currentPosition = 0;
+		String contentOfPreposition = "";
+		str = new ArrayList<String>();
+		String[] elements = taskName.split("[\\s+]");
+		inputElements = new ArrayList<String>(Arrays.asList(elements));
+		preposition.add(KEYWORD_FROM);
+		preposition.add(KEYWORD_TO);
+		confirmTaskName = getPossibleTaskName(currentPosition, confirmTaskName, inputElements);
+		confirmTaskName = dt.extractDate(confirmTaskName) + " ";
+		contentToAnalyse = dt.getDateElements() + " ";
+		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
+		extractDateFromTask();
+		return setEventTime(commandUtil, taskName, date);
+	}
+
+	private CommandUtils setEventTime(CommandUtils commandUtil, String taskName, Date date) {
+		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_FROM, " "));
+		if (confirmDate.size() == 2) {
+			commandUtil.setStartTime(confirmDate.get(0));
+			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(1), date));
+			commandUtil.setTaskName(confirmTaskName.trim());
 		}
-		else if (taskName.toLowerCase().lastIndexOf(KEYWORD_TO) < taskName.toLowerCase().lastIndexOf(KEYWORD_FROM)
-				&& LAST_POSITION_OF_AT == -1) {
-			str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
-			List<Date> dates = new PrettyTimeParser().parse(str);
-			
-			if (dates.size() == 1) {
-				taskName = taskName.substring(0, taskName.toLowerCase().lastIndexOf(KEYWORD_FROM));
-				commandUtil.setStartTime(dates.get(0));
-				commandUtil.setTaskName(taskName);
-			}
+		else if (confirmDate.size() == 1) {
+			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));
+			commandUtil.setTaskName(confirmTaskName.trim());
+		}
+		else {
+			commandUtil.setTaskType(TASK_TYPE.FLOATING);
+			commandUtil.setTaskType(TASK_TYPE.FLOATING);
 		}
 		return commandUtil;
 	}
 
-	
 	private CommandUtils parseDEADLINED(CommandUtils commandUtil, String taskName) {
 		System.out.println("Test new deadline parsing");
 		Date date = new Date();
 		int currentPosition = 0;
-		String confirmTaskName = "";
-		String contentToAnalyse = "";
 		String contentOfPreposition = "";
-		ArrayList<String> str = new ArrayList<String>();
+		str = new ArrayList<String>();
 		String[] elements = taskName.split("[\\s+]");
-		ArrayList<String> inputElements = new ArrayList<String>(Arrays.asList(elements));
+		inputElements = new ArrayList<String>(Arrays.asList(elements));
 		
-		for (int i = 0; i < inputElements.size(); i++) {
-			if (!preposition.contains(inputElements.get(currentPosition))) {
-				confirmTaskName += inputElements.get(currentPosition) + " "; 
-				inputElements.remove(currentPosition);
-			}
-			else {
-				break;
-			}
-		}
-		System.out.println("Test new deadline parsing confirmDate : " + confirmTaskName);
+		confirmTaskName = getPossibleTaskName(currentPosition, confirmTaskName, inputElements);
 		confirmTaskName = dt.extractDate(confirmTaskName) + " ";
 		contentToAnalyse = dt.getDateElements() + " ";
-		System.out.println("Test new deadline parsing confirmDate : " + confirmTaskName);
-		
+		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
+		extractDateFromTask();
+		return setDeadLine(commandUtil, confirmTaskName, date);
+	}
+
+	private CommandUtils setDeadLine(CommandUtils commandUtil, String confirmTaskName, Date date) {
+		System.out.println("setDeadLine : " + confirmTaskName);
+		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_BY, " "));
+		if (confirmDate.size() == 1) {
+			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));
+		}
+		else if (confirmDate.size() == 2) {
+			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(1), date));
+		}
+		commandUtil.setTaskName(confirmTaskName.trim());
+		if (confirmTaskName.trim().equals(taskName)) {
+			commandUtil.setTaskType(TASK_TYPE.FLOATING);
+		}
+		return commandUtil;
+	}
+
+	private void extractDateFromTask() {
+		for (int i = 0; i < str.size(); i++) {
+			List<Date> dates = new PrettyTimeParser().parse(str.get(i));
+			if (dates.size() != 0 && dt.hasDateAndTimeElements(str.get(i)) == true) {
+		//	if (dates.size() != 0) {
+				System.out.println("Test str size : " + str.get(i));
+				contentToAnalyse += str.get(i) + " ";
+			}
+			else {
+				System.out.println("Test str size fail : " + str.get(i));
+				confirmTaskName += str.get(i) + " ";
+			}
+		}
+	}
+
+	private ArrayList<String> extractInputWithPreposition(int currentPosition, String contentOfPreposition,
+			ArrayList<String> str) {
 		for (int i = 0; i < inputElements.size(); ) {
 			contentOfPreposition += inputElements.get(currentPosition) + " ";
 			inputElements.remove(currentPosition);
@@ -216,28 +236,20 @@ public class AddParser {
 			str.add(contentOfPreposition.trim());
 			contentOfPreposition = "";
 		}
-		for (int i = 0; i < str.size(); i++) {
-			List<Date> dates = new PrettyTimeParser().parse(str.get(i));
-			if (dates.size() != 0 && dt.hasDateAndTimeElements(str.get(i)) == true) {
-		//	if (dates.size() != 0) {
-				System.out.println("Test str size : " + str.get(i));
-				contentToAnalyse += str.get(i) + " ";
+		return str;
+	}
+
+	private String getPossibleTaskName(int currentPosition, String confirmTaskName, ArrayList<String> inputElements) {
+		for (int i = 0; i < inputElements.size(); i++) {
+			if (!preposition.contains(inputElements.get(currentPosition))) {
+				confirmTaskName += inputElements.get(currentPosition) + " "; 
+				inputElements.remove(currentPosition);
 			}
 			else {
-				System.out.println("Test str size fail : " + str.get(i));
-				confirmTaskName += str.get(i) + " ";
+				break;
 			}
 		}
-		
-		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse);
-		if (confirmDate.size() != 0) {
-			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));
-		}
-		commandUtil.setTaskName(confirmTaskName.trim());
-		if (confirmTaskName.trim().equals(taskName)) {
-			commandUtil.setTaskType(TASK_TYPE.FLOATING);
-		}
-		return commandUtil;
+		return confirmTaskName;
 	}
 
 
@@ -296,19 +308,5 @@ public class AddParser {
 		}
 		return newStr.trim();
 	}
-
-	/*
-	 * @param: an arraylist of task elements.
-	 * @description: concatenate the content of a task input together
-	 * @return: a string of task name.
-	 */
-	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
-		String name = "";
-		for (int i = 0; i < taskNameArrayList.size(); i++) {
-			name += taskNameArrayList.get(i) + " "; 
-		}
-		return name.trim();
-	}
-
 	
 }

@@ -25,9 +25,8 @@ public class Parser {
 	private ArrayList<String> tags;
 	private String SYMBOL_HASH_TAG = "#";
 	private String SYMBOL_DASH = "-";
-	private String SYMBOL_EXCLAMATION_MARK = "-";
+	private String SYMBOL_EXCLAMATION_MARK = "!";
 	private CommandUtils commandUtil;
-	private String newDirectory = "";
 	
 	public Parser() {
 		possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();		
@@ -144,8 +143,8 @@ public class Parser {
 	}
 	
 	private String checkTaskImportance(CommandUtils commandUtil, String userInput) {
-		if (userInput.substring(userInput.length() - 1).equals(SYMBOL_EXCLAMATION_MARK)) {
-			userInput = userInput.replace(userInput.substring(userInput.length() - 1), "");
+		if (userInput.trim().endsWith(SYMBOL_EXCLAMATION_MARK)) {
+			userInput = userInput.replace(SYMBOL_EXCLAMATION_MARK, "");
 			commandUtil.setTaskImportance(true);
 		}
 		else {

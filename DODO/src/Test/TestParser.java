@@ -164,53 +164,37 @@ public class TestParser {
 		assertEquals(expectedStart, cu.getEndTime());
 		assertEquals("watch movie", cu.getName());
 		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
-/*		
-		parser = new Parser("submit assignment 1 by last thursday of Nov 2016");
-		endDate = "Thu Mar 24 23:59:00 SGT 2016";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
 		
-		parser = new Parser("submit assignment 1 by 27.5 feb 2017");
-		endDate = "Fri May 27 23:59:00 SGT 2016";
+		cu = parser.executeCommand(cu, "submit assignment 1 before 1st June at 2359hrs");
+		endDate = "Wed Jun 01 23:59:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-*/		
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("submit assignment 1", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
+		
+		cu = parser.executeCommand(cu,"Take out my meringue cake from the oven at 13.45pm");
+		endDate = "Sat Apr 09 13:45:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("Take out my meringue cake from the oven", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
+		
+		cu = parser.executeCommand(cu,"Check in luggage at counter 7 at 23.45am");
+		endDate = "Sat Apr 09 23:45:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("Check in luggage at counter 7", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
+		
 		cu = parser.executeCommand(cu, "meeting with boss on 27 MAY 2016 at 2pm");
 		endDate = "Fri May 27 14:00:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, cu.getEndTime());
 		assertEquals("meeting with boss", cu.getName());
 		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
-		
-/*		parser = new Parser("fetch mum from airport on this coming friday");
-		endDate = "Fri Mar 25 23:59:00 SGT 2016";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-	
-		parser = new Parser("collect graduation certification on the day after tml");
-		endDate = "Fri Mar 25 23:59:00 SGT 2016";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-		
-		parser = new Parser("meet girlfriend on 29/03/16");
-		endDate = "Tue Mar 29 23:59:00 SGT 2016";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-		
-		parser = new Parser("tuition at 2:35pm");
-		endDate = "Wed Mar 23 14:35:00 SGT 2016";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-		
-	
-		parser = new Parser("watch movie tomorrow at 5pm");
-		endDate = "Thu Mar 24 17:00:00 SGT 2016";
-		expectedStart = dateFormat.parse(endDate);
-		assertEquals(expectedStart, parser.getEndTime());
-	*/
 	
 	}
-/*
+
 	@Test
 	public void testEvent() throws Exception {
 		
@@ -248,7 +232,7 @@ public class TestParser {
 		assertEquals(expectedEnd, parser.getEndTime());
 	
 	}
-	
+/*	
 	@Test
 	public void testComplete() {
 		Parser parser = new Parser("complete 1");

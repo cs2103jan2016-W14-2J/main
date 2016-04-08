@@ -70,6 +70,7 @@ public class Parser {
 				FlagAndCompleteParser completeParser = new FlagAndCompleteParser();
 				return completeParser.executeFlagCompleteParser(commandUtil, userInput);
 			case FLAG:
+				System.out.println("FLAG: " + userInput);
 				userInput = getUserInputContent(userInput);
 				FlagAndCompleteParser flagParser = new FlagAndCompleteParser();
 				return flagParser.executeFlagCompleteParser(commandUtil, userInput);

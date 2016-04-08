@@ -163,6 +163,7 @@ public class AddParser {
 		else if (confirmDate.size() == 1) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));
 			commandUtil.setTaskName(confirmTaskName.trim());
+			commandUtil.setTaskType(TASK_TYPE.DEADLINED);
 		}
 		else {
 			commandUtil.setTaskType(TASK_TYPE.FLOATING);

@@ -168,7 +168,7 @@ public class DateTimeParser {
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
 			if (dates.size() != 0) {
 				String[] temp = taskItems.get(i).split("[.-/]");
-				System.out.println("removeDate : " + temp.length);
+				System.out.println("removeDate : " + taskItems.get(i));
 				if (temp.length >= 2) {
 					possibleDate = taskItems.get(i);
 					taskItems.remove(i);
@@ -290,18 +290,20 @@ public class DateTimeParser {
 		String month = "";
 		String year = "";
 		boolean containsPreposition = false;
+		boolean containsMonth = false;
 		
 		for (int i = 0; i < temp.length; i++) {
 			if (monthTypes.contains(temp[i].toLowerCase())) {
 				positionOfMonth = i;
 				month = temp[positionOfMonth];
+				containsMonth = true;
 			}
 			else if (preposition.contains(temp[i])) {
 				containsPreposition = true;
 			}
 		}
 	
-		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false)) {
+		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false || containsMonth == false)) {
 			confirmTaskName = userInput;
 			return userInput;
 		}
@@ -455,6 +457,7 @@ public class DateTimeParser {
 		temp = removeTime(temp);
 		temp = removeNumericalDate(temp);
 		temp = removeEnglishDate(temp);
+		System.out.println("extractDate2 : " + userTask);
 		return temp;
 	}
 	

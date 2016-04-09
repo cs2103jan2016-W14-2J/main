@@ -300,9 +300,9 @@ public class TestParser {
 	@Test
 	public void testDelete() {
 
-		cu = parser.executeCommand(cu,"delete 1");
+		cu = parser.executeCommand(cu,"delete 123");
 		assertEquals(COMMAND_TYPE.DELETE, cu.getCommandType());
-		Integer single_delete = 1;
+		Integer single_delete = 123;
 		assertEquals(DELETE_TYPE.SINGLE_INDEX, cu.getDeleteType());
 		assertEquals( single_delete, cu.getIndexToDelete().get(0));
 		

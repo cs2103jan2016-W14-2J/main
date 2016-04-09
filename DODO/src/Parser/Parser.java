@@ -61,16 +61,21 @@ public class Parser {
 	private final String LOGGER_MESSAGE_EXTRACT_TAG = "Parser Class: Processing user input in extractTag method.";
 	
 	public Parser() {
+		
 		possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();
 		logger = Logger.getLogger("Parser");
 	}
 	
 	/*
-	 *Returns the command type.
-	 *@param userInput
-	 *@return command type in enum format. 
+	 * This method analyses the command type of an input and extract the
+	 * information of the input.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and userInput {@code String}
+	 * 
+	 * @return {@code CommandUtils} with attributes of the command set to 
+	 * CommandUtils object.
+	 * 
 	 */
-	
 	public CommandUtils executeCommand(CommandUtils commandUtil, String userInput) {
 		
 		assert userInput.length() > 0;
@@ -80,7 +85,7 @@ public class Parser {
 		checkIfValidUserInput(userInput.trim());
 		String command = getUserCommand(userInput);
 		COMMAND_TYPE commandType = determineCommandType(command);
-		userInput = verifyIfAddCommand(userInput, commandType);
+		userInput = appendsAddToCommand(userInput, commandType);
 		
 		switch (commandType) {
 			
@@ -150,9 +155,19 @@ public class Parser {
 		
 		return commandUtil;
 	}
-
-	private String verifyIfAddCommand(String userInput, COMMAND_TYPE commandType) {
+	
+	/*
+	 * This method appends a string Add to every add command.
+	 * 
+	 * @param userInput {@code String} and commandType {@code COMMAND_TYPE}
+	 * 
+	 * @return {@code String} with Add string appended in front.
+	 * 			
+	 * 
+	 */
+	private String appendsAddToCommand(String userInput, COMMAND_TYPE commandType) {
 		
+		assert (userInput != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_VERIFY_ADD_COMMAND);	
 		
 		if (commandType == COMMAND_TYPE.ADD && !userInput.toLowerCase().contains(_addCommand)) {
@@ -162,14 +177,31 @@ public class Parser {
 		return userInput;
 	}
 	
+	/*
+	 * This method extract taggings and flag from userInput
+	 * 
+	 * @param userInput {@code String} and commandUtil {@code CommandUtils}
+	 * 
+	 * @return {@code String} with tags and flag removed from userInput
+	 * 			
+	 * 
+	 */
 	private String processUserInput(CommandUtils commandUtil, String userInput) {
 		
+		assert (userInput != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_USER_INPUT);
+		
 		String userTask = getUserInputContent(userInput);
 		userTask = checkTaskImportance(commandUtil, userTask);
 	
 		return extractTag(commandUtil, userTask);	
 	}
+	
+	/*
+	 * This method checks if user has entered a valid input.
+	 * Set COMMAND_TYPE as invalid if input is empty.
+	 * 
+	 */
 
 	private void checkIfValidUserInput(String userInput) {
 		
@@ -180,15 +212,26 @@ public class Parser {
 		}
 		
 	}
+	
+	/*
+	 * This method analyse the command type that a user has entered.
+	 * 
+	 * @param userInput {@code String}
+	 * 
+	 * @return {@code COMMAND_TYPE}
+	 * 			
+	 * 
+	 */
 
 	public COMMAND_TYPE determineCommandType(String commandType) {
 		
+		assert (commandType != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_DETERMINE_COMMAND_TYPE);
 		
 		FlexiCommand flexiCommand = new FlexiCommand();
 		possibleCommandErrors = flexiCommand.getKeywordsDataBase();
 
-		if(possibleCommandErrors.containsKey(commandType)) {
+		if (possibleCommandErrors.containsKey(commandType)) {
 			this.command = possibleCommandErrors.get(commandType);
 		}
 		else {
@@ -200,28 +243,55 @@ public class Parser {
 	}
 	
 	/*
-	 * Returns the command type of the string
-	 * @param userInput
-	 * @return command type of the string
+	 * This method extract the command type that a user has entered.
+	 * 
+	 * @param userInput {@code String}
+	 * 
+	 * @return {@code COMMAND_TYPE} with task content removed.
+	 * 			
+	 * 
 	 */
+
 	private String getUserCommand(String userInput) {
 		
+		assert (userInput != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_GET_USER_COMMAND);
 		String[] temp = userInput.split(STRING_SPLITTER, 2);
 		
 		return temp[POSITION_OF_COMMAND].toLowerCase();
 	}
 	
+	/*
+	 * This method analyses the command type that a user has entered.
+	 * 
+	 * @param userInput {@code String}
+	 * 
+	 * @return {@code String} with COMMAND_TYPE extracted.
+	 * 			
+	 * 
+	 */
+
 	private String getUserInputContent(String userInput) {
 		
+		assert (userInput != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_GET_USER_INPUT);
 		String[] temp = userInput.split(STRING_SPLITTER, 2);
 		
 		return temp[POSITION_OF_TASK_CONTENT];
 	}
 	
+	/*
+	 * This method checks and extracts the flag from userInput.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and userInput {@code String}
+	 * 
+	 * @return {@code String} with flagging removed from userInput.
+	 * 			
+	 */
+	
 	private String checkTaskImportance(CommandUtils commandUtil, String userInput) {
 		
+		assert (userInput != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IMPORTANCE);
 		
 		String[] temp = userInput.split(STRING_SPLITTER);
@@ -241,19 +311,31 @@ public class Parser {
 		return userInput;
 	}
 	
-	private String extractTag(CommandUtils commandUtil, String userTask) {
+	/*
+	 * This method checks and extracts tag(s) from userInput.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and user {@code String}
+	 * 
+	 * @return {@code String} with tag(s) removed from userInput.
+	 * 			
+	 */
+	
+	private String extractTag(CommandUtils commandUtil, String userInput) {
 		
+		assert (userInput != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_EXTRACT_TAG);
 		
 		tags = new ArrayList<String>();
-		String[] str = userTask.split(STRING_SPLITTER);
+		String[] str = userInput.split(STRING_SPLITTER);
 		String temp = "";
 		
 		for (int i = 0; i < str.length; i++) {
 			
 			if (str[i].contains(SYMBOL_HASH_TAG) && !str[i].contains(SYMBOL_DASH)) {
+				
 				tags.add(str[i].replace(SYMBOL_HASH_TAG, SYMBOL_EMPTY).trim());
 				str[i] = SYMBOL_EMPTY;
+			
 			}
 			else {
 				temp += str[i] + SYMBOL_SPACING;

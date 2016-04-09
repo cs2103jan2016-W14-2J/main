@@ -30,6 +30,12 @@ public class Parser {
 	private final String SYMBOL_HASH_TAG = "#";
 	private final String SYMBOL_DASH = "-";
 	private final String SYMBOL_EXCLAMATION_MARK = "!";
+	private final String SYMBOL_SPACING = " ";
+	private final String SYMBOL_EMPTY = "";
+	private final String STRING_SPLITTER = "\\s+";
+	
+	private final int POSITION_OF_TASK_CONTENT = 1;
+	private final int POSITION_OF_COMMAND = 0;
 	
 	// Logging messages for processing commands.
 	private final String LOGGER_MESSAGE_ADD_COMMAND = "Processing Add Command.";
@@ -44,10 +50,18 @@ public class Parser {
 	private final String LOGGER_MESSAGE_SORT_COMMAND = "Processing Sort Command.";
 	
 	// Logging messages for processing methods.
-	private final String
+	private final String LOGGER_MESSAGE_EXECUTE_COMMAND = "Parser Class: Processing user input in executeCommand method.";
+	private final String LOGGER_MESSAGE_VERIFY_ADD_COMMAND = "Parser Class: Processing user input in verifyIfAddCommand method.";
+	private final String LOGGER_MESSAGE_PROCESS_USER_INPUT = "Parser Class: Processing user input in processUserInput method.";
+	private final String LOGGER_MESSAGE_CHECK_IF_VALID_INPUT = "Parser Class: Processing user input in checkIfValidUserInput method.";
+	private final String LOGGER_MESSAGE_DETERMINE_COMMAND_TYPE = "Parser Class: Processing user input in determineCommandType method.";
+	private final String LOGGER_MESSAGE_GET_USER_COMMAND = "Parser Class: Processing user input in getUserCommand method.";
+	private final String LOGGER_MESSAGE_GET_USER_INPUT = "Parser Class: Processing user input in getUserInput method.";
+	private final String LOGGER_MESSAGE_CHECK_IMPORTANCE = "Parser Class: Processing user input in checkTaskImportance method.";
+	private final String LOGGER_MESSAGE_EXTRACT_TAG = "Parser Class: Processing user input in extractTag method.";
 	
 	public Parser() {
-		possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();	
+		possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();
 		logger = Logger.getLogger("Parser");
 	}
 	
@@ -60,7 +74,7 @@ public class Parser {
 	public CommandUtils executeCommand(CommandUtils commandUtil, String userInput) {
 		
 		assert userInput.length() > 0;
-		logger.log(Level.INFO, "Processing user input in Parser class.");
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXECUTE_COMMAND);
 		
 		this.commandUtil = commandUtil;
 		checkIfValidUserInput(userInput.trim());
@@ -139,39 +153,50 @@ public class Parser {
 
 	private String verifyIfAddCommand(String userInput, COMMAND_TYPE commandType) {
 		
-		logger.log(Level.INFO, LOGGER_MESSAGE_SORT_COMMAND);	
+		logger.log(Level.INFO, LOGGER_MESSAGE_VERIFY_ADD_COMMAND);	
+		
 		if (commandType == COMMAND_TYPE.ADD && !userInput.toLowerCase().contains(_addCommand)) {
-			userInput = _addCommand + " " + userInput;
+			userInput = _addCommand + SYMBOL_SPACING + userInput;
 		}
+		
 		return userInput;
 	}
 	
 	private String processUserInput(CommandUtils commandUtil, String userInput) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_USER_INPUT);
 		String userTask = getUserInputContent(userInput);
 		userTask = checkTaskImportance(commandUtil, userTask);
+	
 		return extractTag(commandUtil, userTask);	
 	}
 
 	private void checkIfValidUserInput(String userInput) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IF_VALID_INPUT);
+		
 		if (userInput.isEmpty()) {
 			commandUtil.setCommandType(COMMAND_TYPE.INVALID);
 		}
+		
 	}
 
 	public COMMAND_TYPE determineCommandType(String commandType) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_DETERMINE_COMMAND_TYPE);
+		
 		FlexiCommand flexiCommand = new FlexiCommand();
 		possibleCommandErrors = flexiCommand.getKeywordsDataBase();
 
 		if(possibleCommandErrors.containsKey(commandType)) {
 			this.command = possibleCommandErrors.get(commandType);
-			commandUtil.setCommandType(this.command);
-			return command;
 		}
 		else {
 			this.command = COMMAND_TYPE.ADD;
-			commandUtil.setCommandType(this.command);
-			return command;
 		}
+		
+		commandUtil.setCommandType(this.command);
+		return command;
 	}
 	
 	/*
@@ -180,42 +205,61 @@ public class Parser {
 	 * @return command type of the string
 	 */
 	private String getUserCommand(String userInput) {
-		String[] temp = userInput.split("\\s+", 2);
-		return temp[0].toLowerCase();
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_GET_USER_COMMAND);
+		String[] temp = userInput.split(STRING_SPLITTER, 2);
+		
+		return temp[POSITION_OF_COMMAND].toLowerCase();
 	}
 	
 	private String getUserInputContent(String userInput) {
-		String[] temp = userInput.split("\\s+", 2);
-		return temp[1];
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_GET_USER_INPUT);
+		String[] temp = userInput.split(STRING_SPLITTER, 2);
+		
+		return temp[POSITION_OF_TASK_CONTENT];
 	}
 	
 	private String checkTaskImportance(CommandUtils commandUtil, String userInput) {
-		String[] temp = userInput.split("\\s+");
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IMPORTANCE);
+		
+		String[] temp = userInput.split(STRING_SPLITTER);
 		int positionOfImportance = temp.length;
+		
 		if (temp[positionOfImportance - 1].contains(SYMBOL_EXCLAMATION_MARK) 
 			&& temp[positionOfImportance - 1].length() == 1) {
-			userInput = userInput.replace(SYMBOL_EXCLAMATION_MARK, "");
+			
+			userInput = userInput.replace(SYMBOL_EXCLAMATION_MARK, SYMBOL_EMPTY);
 			commandUtil.setTaskImportance(true);
+		
 		}
 		else {
 			commandUtil.setTaskImportance(false);
 		}
+		
 		return userInput;
 	}
 	
 	private String extractTag(CommandUtils commandUtil, String userTask) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXTRACT_TAG);
+		
 		tags = new ArrayList<String>();
-		String[] str = userTask.split("[\\s+]");
+		String[] str = userTask.split(STRING_SPLITTER);
 		String temp = "";
+		
 		for (int i = 0; i < str.length; i++) {
+			
 			if (str[i].contains(SYMBOL_HASH_TAG) && !str[i].contains(SYMBOL_DASH)) {
-				tags.add(str[i].replace(SYMBOL_HASH_TAG, "").trim());
-				str[i] = " ";
+				tags.add(str[i].replace(SYMBOL_HASH_TAG, SYMBOL_EMPTY).trim());
+				str[i] = SYMBOL_EMPTY;
 			}
 			else {
-				temp += str[i] + " ";
+				temp += str[i] + SYMBOL_SPACING;
 			}
 		}
+		
 		commandUtil.setTaskTag(tags);
 		return temp.trim();
 	}

@@ -124,7 +124,7 @@ public class Logic {
 	}
 	
 	public int getLastModifiedIndex() {
-		return this.getLastModifiedIndex();
+		return this.lastModifiedIndex;
 	}
 
 	/***********************************PRIVATE METHODS***********************************************/

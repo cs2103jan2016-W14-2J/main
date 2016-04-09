@@ -28,6 +28,7 @@ public class DeleteParser {
 	}
 
 	protected CommandUtils executeDeleteParser(CommandUtils commandUtil, String userTask) {
+		System.out.println("userTask : " + userTask);
 		boolean isInteger = false;
 		String[] str = userTask.replaceAll(PUNCTUATION_REMOVER, "").split(STRING_SPLITTER);
 		isInteger = isTaskIndex(str);
@@ -200,7 +201,8 @@ public class DeleteParser {
 	}
 
 	private boolean checkIfDeleteSingleIndex(String userTask) {
-		return (userTask.length() == 1 && !userTask.contains(STRING_CHECKER_ALL)) ? true : false;
+		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);	
+		return (str.length == 1 && !userTask.contains(STRING_CHECKER_ALL)) ? true : false;
 	}
 	
 	private boolean checkIfDeleteSingleTag(String userTask) {

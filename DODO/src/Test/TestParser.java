@@ -170,7 +170,7 @@ public class TestParser {
 		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Take out my meringue cake from the oven at 13.45pm");
-		endDate = "Sat Apr 09 13:45:00 SGT 2016";
+		endDate = "Sat Apr 10 13:45:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, cu.getEndTime());
 		assertEquals("Take out my meringue cake from the oven", cu.getName());
@@ -190,6 +190,14 @@ public class TestParser {
 		assertEquals("meeting with boss", cu.getName());
 		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 	
+		cu = parser.executeCommand(cu, "Purchase rugby 7 tickets on 28/07");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
+		endDate = "Thu Jul 28 18:00:00 SGT 2016";
+		expectedStart = dateFormat.parse(endDate);
+		assertEquals(expectedStart, cu.getEndTime());
+		assertEquals("Purchase rugby 7 tickets", cu.getName());
+		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
+
 	}
 
 	@Test
@@ -241,6 +249,7 @@ public class TestParser {
 		assertEquals(expectedEnd, cu.getEndTime());
 		assertEquals("Employees review", cu.getName());
 		assertEquals(TASK_TYPE.EVENT, cu.getType());
+		
 
 	}
 	

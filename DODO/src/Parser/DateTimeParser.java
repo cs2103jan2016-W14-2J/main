@@ -489,13 +489,11 @@ public class DateTimeParser {
 		temp = removeThisComingWeekday(temp);
 		temp = removeNextFewDays(temp);
 		temp = removeNextWeek(temp);
-		System.out.println("extractDate2 : " + userTask);
 		temp = removeWeekday(temp);
 		temp = removeNextWeekday(temp);
 		temp = removeTime(temp);
 		temp = removeNumericalDate(temp);
 		temp = removeEnglishDate(temp);
-		System.out.println("extractDate2 : " + userTask);
 		return temp;
 	}
 	
@@ -508,8 +506,7 @@ public class DateTimeParser {
 	
 	protected String checkAndConvertDateElement(ArrayList<String> taskItems) {
 		DateFormat destDf = new SimpleDateFormat(DATE_FORMAT_2);
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		
+	
 		for (int i = 0; i < taskItems.size(); i++) {
 			
 			try {
@@ -535,37 +532,6 @@ public class DateTimeParser {
 			}
 			catch (ParseException e) {				
 			}
-			try {
-				DateFormat srcDf = new SimpleDateFormat("dd.MM.yyyy");
-				String temp = taskItems.get(i) + "." + year;
-				System.out.println("eunice : " + temp);
-				Date date = srcDf.parse(temp);
-				System.out.println("eunice : " + date);
-				taskItems.set(i, destDf.format(date));
-			}
-			catch (ParseException e) {				
-			}
-			try {
-				DateFormat srcDf = new SimpleDateFormat("dd/MM/yyyy");
-				String temp = taskItems.get(i) + "/" + year;
-				System.out.println("eunice : " + temp);
-				Date date = srcDf.parse(temp);
-				System.out.println("eunice : " + date);
-				taskItems.set(i, destDf.format(date));
-			}
-			catch (ParseException e) {				
-			}
-			try {
-				DateFormat srcDf = new SimpleDateFormat("dd-MM-yyyy");
-				String temp = taskItems.get(i) + "-" + year;
-				System.out.println("eunice : " + temp);
-				Date date = srcDf.parse(temp);
-				System.out.println("eunice : " + date);
-				taskItems.set(i, destDf.format(date));
-			}
-			catch (ParseException e) {				
-			}
-			
 		}
 		return toStringTaskElements(taskItems);
 	}
@@ -576,11 +542,33 @@ public class DateTimeParser {
 		name = processTomorrow(taskItems);
 		name = processYesterday(taskItems);
 		name = processAt(taskItems);
-		name = proccess2400hrs(taskItems);
+		name = process2400hrs(taskItems);
+		name = processNumericalDate(taskItems);
 		return name;
 	}
 	
-	private String proccess2400hrs(ArrayList<String> taskItems) {
+	private String processNumericalDate(ArrayList<String> taskItems) {
+		String temp = toStringTaskElements(taskItems);
+		String[] str;
+		List<Date> dates = new PrettyTimeParser().parse(temp);
+		if (dates.size() != 0) {
+			for (int i = 0; i < taskItems.size(); i++) {
+				str = taskItems.get(i).split("[./-]");
+				
+				if (!taskItems.get(i).contains("#") && !taskItems.get(i).toLowerCase().contains("am") 
+					&& !taskItems.get(i).toLowerCase().contains("pm")) {
+					if (str.length == 2 && Integer.parseInt(str[0]) < 32 && Integer.parseInt(str[1]) < 13) {
+						int year = Calendar.getInstance().get(Calendar.YEAR);
+						String newDate = str[0] + "/" + str[1] + "/" + year;
+						taskItems.set(i, newDate);
+					}
+				}
+			}
+		}
+		return toStringTaskElements(taskItems);
+	}
+
+	private String process2400hrs(ArrayList<String> taskItems) {
 		for (int i = 0; i < taskItems.size(); i++) {
 			if (taskItems.get(i).contains("2400hrs")) {
 				taskItems.set(i, "0000hrs");

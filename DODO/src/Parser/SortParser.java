@@ -38,6 +38,15 @@ public class SortParser {
 		logger = LoggerFile.getLogger();
 	}
 	
+	/*
+	 * This method process the Sort command.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and userTask {@code String}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
 	protected CommandUtils determineSortType(CommandUtils commandUtil, String userTask) {
 		
 		assert (userTask != null);
@@ -63,7 +72,16 @@ public class SortParser {
 		}
 		return commandUtil;
 	}
-
+	
+	/*
+	 * This method checks if it is a sort by descending order type.
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 	private boolean isSortByReverseAlphabetical(String userTask) {
 		
 		assert(userTask != null);
@@ -75,7 +93,16 @@ public class SortParser {
 				stringSplit[POSITION_OF_INPUT].trim().contains(REVERSE_NUMERICAL_ORDER)) ? true : false;
 	
 	}
-
+	
+	/*
+	 * This method checks if it is a sort by ascending order type.
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 	private boolean isSortByAlphabetical(String userTask) {
 		
 		assert(userTask != null);
@@ -88,6 +115,15 @@ public class SortParser {
 	
 	}
 
+	/*
+	 * This method checks if it is a sort by date type.
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 	private boolean isSortByDate(String userTask) {
 		
 		assert(userTask != null);
@@ -98,7 +134,16 @@ public class SortParser {
 		return (stringSplit[POSITION_OF_INPUT].trim().contains(DATE_ORDER)) ? true : false;
 	
 	}
-
+	
+	/*
+	 * This method removes the "by" after sort command
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code String} with the "by after sort command removed.
+	 * 			
+	 * 
+	 */
 	private String removeBy(String userTask) {
 		
 		assert(userTask != null);

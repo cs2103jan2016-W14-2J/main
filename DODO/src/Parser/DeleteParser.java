@@ -418,10 +418,13 @@ public class DeleteParser {
 	 */
 	
 	private boolean checkIfDeleteMultiple(String userTask) {
+		
 		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);	
+		
 		return (str.length > 1 && !checkIfDeleteRange(userTask) && 
 				!checkIfDeleteEndDate(userTask) &&
 				!checkIfDeleteStartDate(userTask)) ? true : false;
+	
 	}
 	
 
@@ -436,8 +439,11 @@ public class DeleteParser {
 	 */
 
 	private boolean checkIfDeleteSingleIndex(String userTask) {
+		
 		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);	
+		
 		return (str.length == 1 && !userTask.contains(STRING_CHECKER_ALL)) ? true : false;
+	
 	}
 	
 
@@ -451,9 +457,12 @@ public class DeleteParser {
 	 * 
 	 */
 	private boolean checkIfDeleteSingleTag(String userTask) {
+		
 		String[] temp = userTask.split(STRING_SPLITTER);
+		
 		return (temp.length == 1 && temp[FIRST_ELEMENT].startsWith(STRING_HASH_TAG) 
 				&& !temp[FIRST_ELEMENT].contains(STRING_CHECKER_HYPHEN)) ? true : false;
+	
 	}
 
 }

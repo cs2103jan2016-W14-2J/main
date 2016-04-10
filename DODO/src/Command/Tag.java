@@ -43,6 +43,7 @@ public class Tag extends Command {
 		ArrayList<String> successfulTags = new ArrayList<String>();
 		
 		for (String tag: tags) {
+			if (tag == null || tag.equals("")) continue;
 			if (this.tagTask(tag, task)) {
 				successfulTags.add(tag);
 			}

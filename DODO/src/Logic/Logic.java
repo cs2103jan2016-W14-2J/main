@@ -162,6 +162,7 @@ public class Logic {
 	private String processCommand(CommandUtils cu) {
 		String message = "";
 		COMMAND_TYPE command = cu.getCommandType();
+		System.out.println("=====COMMAND===== command: " + command);
 		System.out.println(command);
 
 		switch (command) {
@@ -257,6 +258,7 @@ public class Logic {
 				list.remove(task);
 				ArrayList<Task> newList = retrieve(newStatus);
 				newList.add(task);
+				System.out.println("=====LOGIC===== update: " + updated);
 			}
 		}
 	}

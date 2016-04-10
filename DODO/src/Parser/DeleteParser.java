@@ -19,7 +19,8 @@ public class DeleteParser {
 	private String STRING_END_DATE = "end date";
 	private String STRING_START_INDICATOR = "start";
 	private String STRING_END_INDICATOR = "end";
-	private String STRING_SPLITTER = "[\\s+]";
+	private String STRING_SPLITTER = "\\s+";
+	private String STRING_EMPTY = "";
 	private String PUNCTUATION_REMOVER = "[:.,]";
 	
 	public DeleteParser() {
@@ -28,9 +29,9 @@ public class DeleteParser {
 	}
 
 	protected CommandUtils executeDeleteParser(CommandUtils commandUtil, String userTask) {
-		System.out.println("userTask : " + userTask);
+		
 		boolean isInteger = false;
-		String[] str = userTask.replaceAll(PUNCTUATION_REMOVER, "").split(STRING_SPLITTER);
+		String[] str = userTask.replaceAll(PUNCTUATION_REMOVER, STRING_EMPTY).split(STRING_SPLITTER);
 		isInteger = isTaskIndex(str);
 		commandUtil = detemineDeleteType(commandUtil, userTask.toLowerCase(), isInteger);
 		deleteType = commandUtil.getDeleteType();

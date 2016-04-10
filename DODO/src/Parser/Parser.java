@@ -87,7 +87,7 @@ public class Parser {
 		this.commandUtil = commandUtil;
 		checkIfValidUserInput(userInput.trim());
 		String command = getUserCommand(userInput);
-		COMMAND_TYPE commandType = determineCommandType(command);
+		COMMAND_TYPE commandType = determineCommandType(command, userInput.trim());
 		userInput = appendsAddToCommand(userInput, commandType);
 		
 		switch (commandType) {
@@ -96,7 +96,7 @@ public class Parser {
 				logger.log(Level.INFO, LOGGER_MESSAGE_ADD_COMMAND);
 				userInput = processUserInput(commandUtil, userInput);
 				AddParser addParser = new AddParser();
-				return addParser.executeAddParser(commandUtil, userInput);
+				return addParser.executeAddParser(commandUtil, userInput.trim());
 				
 			case DELETE:
 				logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_COMMAND);
@@ -210,8 +210,8 @@ public class Parser {
 	private void checkIfValidUserInput(String userInput) {
 		
 		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IF_VALID_INPUT);
-		
-		if (userInput.isEmpty()) {
+
+		if (userInput.replaceAll(" ", "").length() == 0) {
 			commandUtil.setCommandType(COMMAND_TYPE.INVALID);
 		}
 		
@@ -227,7 +227,7 @@ public class Parser {
 	 * 
 	 */
 
-	public COMMAND_TYPE determineCommandType(String commandType) {
+	public COMMAND_TYPE determineCommandType(String commandType, String userInput) {
 		
 		assert (commandType != null);
 		logger.log(Level.INFO, LOGGER_MESSAGE_DETERMINE_COMMAND_TYPE);
@@ -235,10 +235,10 @@ public class Parser {
 		FlexiCommand flexiCommand = new FlexiCommand();
 		possibleCommandErrors = flexiCommand.getKeywordsDataBase();
 
-		if (possibleCommandErrors.containsKey(commandType)) {
+		if (possibleCommandErrors.containsKey(commandType) ) {
 			this.command = possibleCommandErrors.get(commandType);
 		}
-		else if (commandType.replaceAll(" ", "").length() == 0) {
+		else if (userInput.replaceAll(" ", "").length() == 0) {
 			this.command = COMMAND_TYPE.INVALID;
 		}
 		else {

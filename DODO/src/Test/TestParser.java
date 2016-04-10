@@ -441,6 +441,27 @@ public class TestParser {
 		assertEquals(EDIT_TYPE.TAG, cu.getEditType());
 		assertEquals(oldTag, cu.getOldTag());
 		assertEquals(newTag, cu.getTag().get(0));
+		
+		cu = parser.executeCommand(cu, "edit 123 Meet Hao Jie tomorrow");
+		taskID = 123;
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
+		assertEquals(EDIT_TYPE.DEADLINED, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals("Meet Hao Jie", cu.getName());
+		
+		cu = parser.executeCommand(cu, "edit 923 4.36pm submit V0.5 proposal");
+		taskID = 923;
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
+		assertEquals(EDIT_TYPE.DEADLINED, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals("submit V0.5 proposal", cu.getName());
+	
+		cu = parser.executeCommand(cu, "edit 01 study by the beach on monday at school");
+		taskID = 1;
+		assertEquals(COMMAND_TYPE.EDIT, cu.getCommandType());
+		assertEquals(EDIT_TYPE.DEADLINED, cu.getEditType());
+		assertEquals(taskID, cu.getTaskID());
+		assertEquals("study by the beach at school", cu.getName());
 	
 	}
 	

@@ -28,15 +28,11 @@ public class EditParser {
 	private static final String STRING_SPLITTER = "\\s+";
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_SPACING = " ";
-	private static final int NUM_MAX_DATE_ELEMENTS = 2;
 	private static final int NUM_NO_DATE_ELEMENT = 0;
+	private static final int NUM_FIRST_ELEMENT = 0;
 	
 	private String newTaskName = "";
 	private int INDEX_OF_LAST_TO = -1;
-	private int INDEX_OF_LAST_AT = -1;
-	private int INDEX_OF_LAST_BEFORE = -1;
-	private int INDEX_OF_LAST_ON = -1;
-	private int INDEX_OF_LAST_BY = -1;
 	private int INDEX_OF_LAST_FROM = -1;
 	
 	private EDIT_TYPE editType;
@@ -69,8 +65,6 @@ public class EditParser {
 	
 	protected CommandUtils executeEditParser(CommandUtils commandUtil, String userInput) {
 		
-		commandUtil = ap.executeAddParser(commandUtil, userInput);
-		
 		String[] editElements = userInput.replaceAll(PUNCTUATION_REMOVER, STRING_EMPTY).split(STRING_SPLITTER);
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
 		newTaskName = dt.checkForAbbreviation(editTaskElements);
@@ -79,6 +73,7 @@ public class EditParser {
 		editTaskElements = new ArrayList<String>(Arrays.asList(updatedElements));
 		
 		userInput = extractTaskID(commandUtil, editTaskElements);
+		commandUtil = ap.executeAddParser(commandUtil, userInput);
 		commandUtil = determineEditType(commandUtil, userInput);
 		editType = commandUtil.getEditType();
 		
@@ -137,8 +132,8 @@ public class EditParser {
 		assert (str.length <= 3 && str.length > 0);
 		
 		if (str[0].startsWith(STRING_HASH_TAG) && str[2].startsWith(STRING_HASH_TAG)) {
-			commandUtil.setOldTag(str[0].substring(1, str[0].length()));
-			newTag.add(str[2].substring(1, str[0].length()));
+			commandUtil.setOldTag(str[NUM_FIRST_ELEMENT].substring(1, str[NUM_FIRST_ELEMENT].length()));
+			newTag.add(str[2].substring(1, str[NUM_FIRST_ELEMENT].length()));
 			commandUtil.setTaskTag(newTag);
 		}
 		else {
@@ -163,7 +158,7 @@ public class EditParser {
 		
 		commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_TO)));
 		List<Date> dates = new PrettyTimeParser().parse(temp);
-		commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
+		commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(NUM_FIRST_ELEMENT), date));
 		
 		return commandUtil;
 	}
@@ -185,7 +180,7 @@ public class EditParser {
 		
 		commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_FROM)));
 		List<Date> dates = new PrettyTimeParser().parse(temp);
-		commandUtil.setStartTime(dates.get(0));
+		commandUtil.setStartTime(dates.get(NUM_FIRST_ELEMENT));
 		
 		return commandUtil;
 	}
@@ -200,91 +195,9 @@ public class EditParser {
 	 * 
 	 */
 	private CommandUtils parseEditDeadLined(CommandUtils commandUtil, String userInput) {
-		
+		System.out.println("parseEditDeadlined : " + userInput);
 		AddParser ap = new AddParser();
 		commandUtil = ap.executeAddParser(commandUtil, userInput);
-
-		/*
-		String temp = "";
-		INDEX_OF_LAST_ON = userInput.lastIndexOf(KEYWORD_ON);
-		INDEX_OF_LAST_AT = userInput.lastIndexOf(KEYWORD_AT);
-		
-		if (userInput.lastIndexOf(KEYWORD_BY) != -1 && userInput.lastIndexOf(KEYWORD_AT) == -1) {
-		
-			INDEX_OF_LAST_BY = userInput.lastIndexOf(KEYWORD_BY);
-			commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_BY)));
-			temp = userInput.substring(INDEX_OF_LAST_BY, userInput.length());
-		
-		}
-		else if (userInput.lastIndexOf(KEYWORD_ON) != -1 && userInput.lastIndexOf(KEYWORD_AT) == -1) {
-		
-			INDEX_OF_LAST_ON = userInput.lastIndexOf(KEYWORD_ON);
-			commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_ON)));
-			temp = userInput.substring(INDEX_OF_LAST_ON, userInput.length());
-		
-		}
-		else if (userInput.lastIndexOf(KEYWORD_AT) != -1 && userInput.lastIndexOf(KEYWORD_ON) == -1) {
-		
-			INDEX_OF_LAST_AT = userInput.lastIndexOf(KEYWORD_AT);
-			commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_AT)));
-			temp = userInput.substring(INDEX_OF_LAST_AT, userInput.length());
-		
-		}
-		
-		else if (INDEX_OF_LAST_ON != -1 && INDEX_OF_LAST_ON < INDEX_OF_LAST_AT) {
-			
-			commandUtil.setTaskName(userInput.substring(0, INDEX_OF_LAST_ON));
-			temp = userInput.substring(INDEX_OF_LAST_ON, INDEX_OF_LAST_AT);
-			String temp2 = userInput.substring(INDEX_OF_LAST_AT, userInput.length());
-			
-			List<Date> dateTemp = new PrettyTimeParser().parse(temp);
-			List<Date> dateTemp2 = new PrettyTimeParser().parse(temp2);
-			
-			if (dateTemp.size() == NUM_NO_DATE_ELEMENT && dateTemp2.size() != NUM_NO_DATE_ELEMENT) {
-			
-				commandUtil.setTaskName(newTaskName + STRING_SPACING + temp.trim());
-				temp = temp2;
-			
-			}
-			else if (dateTemp.size() != NUM_NO_DATE_ELEMENT && dateTemp2.size() == NUM_NO_DATE_ELEMENT) {
-				commandUtil.setTaskName(newTaskName + STRING_SPACING + temp2.trim());
-			}
-			
-		}
-		else if (INDEX_OF_LAST_AT != -1 && INDEX_OF_LAST_ON > INDEX_OF_LAST_AT) {
-			
-			commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_AT)));
-			temp = userInput.substring(INDEX_OF_LAST_AT, INDEX_OF_LAST_ON);
-			String temp2 = userInput.substring(INDEX_OF_LAST_ON, userInput.length());
-			
-			List<Date> dateTemp = new PrettyTimeParser().parse(temp);
-			List<Date> dateTemp2 = new PrettyTimeParser().parse(temp2);
-			
-			if (dateTemp.size() == NUM_NO_DATE_ELEMENT && dateTemp2.size() != NUM_NO_DATE_ELEMENT) {
-			
-				commandUtil.setTaskName(newTaskName + STRING_SPACING + temp.trim());
-				temp = temp2;
-			
-			}
-			else if (dateTemp.size() != 0 && dateTemp2.size() == 0) {
-				commandUtil.setTaskName(newTaskName + STRING_SPACING + temp2.trim());
-			}
-			
-		}
-			
-		else if (userInput.lastIndexOf(KEYWORD_BEFORE) != -1) {
-			
-			INDEX_OF_LAST_BEFORE = userInput.lastIndexOf(KEYWORD_BEFORE);
-			commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_BEFORE)));
-			temp = userInput.substring(INDEX_OF_LAST_BEFORE, userInput.length());
-		}
-		
-		List<Date> dates = new PrettyTimeParser().parse(temp);
-		
-		if (dates.size() != NUM_NO_DATE_ELEMENT) {
-			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
-		}
-		*/
 		return commandUtil;
 	}
 
@@ -298,17 +211,8 @@ public class EditParser {
 	 * 
 	 */
 	private CommandUtils parseEditEventTime(CommandUtils commandUtil, String userInput) {
-	
-		INDEX_OF_LAST_FROM = userInput.lastIndexOf(KEYWORD_FROM);
-		commandUtil.setTaskName(userInput.substring(0, userInput.lastIndexOf(KEYWORD_FROM)));
-		String temp = userInput.substring(INDEX_OF_LAST_FROM, userInput.length());
-		List<Date> dates = new PrettyTimeParser().parse(temp);
-
-		if (dates.size() == NUM_MAX_DATE_ELEMENTS) {
-			commandUtil.setStartTime(dates.get(0));
-			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
-		}
-		return commandUtil;
+		AddParser ap = new AddParser();
+		return ap.executeAddParser(commandUtil, userInput);
 	}
 	
 	/*
@@ -320,11 +224,9 @@ public class EditParser {
 	 * 			
 	 * 
 	 */
-	private CommandUtils parseEditTaskName(CommandUtils commandUtil, String userTask) {
-		
-		commandUtil.setTaskName(userTask.trim());
-		
-		return commandUtil;
+	private CommandUtils parseEditTaskName(CommandUtils commandUtil, String userInput) {
+		AddParser ap = new AddParser();
+		return ap.executeAddParser(commandUtil, userInput);
 	}
 
 	/*
@@ -363,7 +265,6 @@ public class EditParser {
 		 */
 		else if (!hasDeadLined(userInput) && !hasEndTime(userInput) && hasStartTime(userInput)
 				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
-			
 			commandUtil.setEditType(EDIT_TYPE.START_TIME);
 		}
 		/*
@@ -379,6 +280,10 @@ public class EditParser {
 		 */
 		else if (userInput.trim().startsWith(STRING_HASH_TAG)) {
 			commandUtil.setEditType(EDIT_TYPE.TAG);
+		}
+		else if (commandUtil.getType() == TASK_TYPE.DEADLINED && !hasDeadLined(userInput) && hasEndTime(userInput) 
+				&& !hasStartTime(userInput) && !userInput.trim().startsWith(STRING_HASH_TAG)) {
+			commandUtil.setEditType(EDIT_TYPE.DEADLINED);
 		}
 		else {
 			commandUtil.setEditType(EDIT_TYPE.INVALID);
@@ -444,24 +349,6 @@ public class EditParser {
 	}
 
 	/*
-	 * This method checks if input contains task name.
-	 * 
-	 * @param userInput {@code String}
-	 * 
-	 * @return {@code boolean} 
-	 * 			
-	 * 
-	 */
-	private boolean hasTaskName(String userInput) {
-		
-		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		DateTimeParser dt = new DateTimeParser();
-		boolean hasDateTime = dt.hasDateAndTimeElements(userInput);
-		
-		return (dates.size() == NUM_NO_DATE_ELEMENT || hasDateTime == false) ? true : false;
-	}
-
-	/*
 	 * This method extracts the task index.
 	 * 
 	 * @param commandUtil {@code CommandUtils} and editTaskElements {@code ArrayList<String>}
@@ -477,13 +364,13 @@ public class EditParser {
 		if (editTaskElements.size() < 2) {
 			return temp;
 		}
-		else if (!editTaskElements.get(0).startsWith(STRING_HASH_TAG)){
+		else if (!editTaskElements.get(NUM_FIRST_ELEMENT).startsWith(STRING_HASH_TAG)){
 		
-			commandUtil.setTaskID(editTaskElements.get(0));
-			editTaskElements.remove(0);
+			commandUtil.setTaskID(editTaskElements.get(NUM_FIRST_ELEMENT));
+			editTaskElements.remove(NUM_FIRST_ELEMENT);
 			temp = toStringTaskElements(editTaskElements);
 		}
-		else if (editTaskElements.get(0).startsWith(STRING_HASH_TAG)) {
+		else if (editTaskElements.get(NUM_FIRST_ELEMENT).startsWith(STRING_HASH_TAG)) {
 			
 			temp = toStringTaskElements(editTaskElements);
 		}

@@ -126,7 +126,7 @@ public class AddParser {
 	/*
 	 * This method analyses and determines the task type of a user input.
 	 * 
-	 * @param commandUtil {@code CommandUtils}, taskItems {@code ArrayList<String>}
+	 * @param commandUtil {@code CommandUtils}, taskItems {@code List<E>}
 	 * 		  and taskName {@code String}
 	 * 
 	 * @return {@code CommandUtils} with the task type set to CommandUtils object.
@@ -181,7 +181,7 @@ public class AddParser {
 	/*
 	 * This method analyses and verifies if a user input is a floating task.
 	 * 
-	 * @param taskItems {@code ArrayList<String>} and taskName {@code String}
+	 * @param taskItems {@code List<E>} and taskName {@code String}
 	 * 
 	 * @return {@code boolean} 
 	 * 
@@ -195,7 +195,7 @@ public class AddParser {
 	/*
 	 * This method analyses and verifies if a user input is a deadlined task.
 	 * 
-	 * @param taskItems {@code ArrayList<String>} and taskName {@code String}
+	 * @param taskItems {@code List<E>} and taskName {@code String}
 	 * 
 	 * @return {@code boolean} 
 	 * 
@@ -259,6 +259,7 @@ public class AddParser {
 		confirmTaskName = getPossibleTaskName(currentPosition, confirmTaskName, inputElements);
 		confirmTaskName = dt.extractDate(confirmTaskName) + STRING_SPACING;
 		contentToAnalyse = dt.getDateElements() + STRING_SPACING;
+		System.out.println("parseDeadline : " + contentToAnalyse);
 		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
 		
 		extractDateFromTask();
@@ -267,9 +268,9 @@ public class AddParser {
 	
 	/*
 	 * This method verifies if the user input contains end time and extract
-	 * the task name.
+	 * the task name accordingly.
 	 * 
-	 * @param taskItems {@code ArrayList<String>}, commandUtil {@code CommandUtils} 
+	 * @param taskItems {@code List<E>}, commandUtil {@code CommandUtils} 
 	 * 		  and taskName {@code String}
 	 * 
 	 * @return {@code CommandUtils} 
@@ -292,13 +293,16 @@ public class AddParser {
 				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				commandUtil = finalVerification(taskName, commandUtil);	
 			}
-			// Example: 
+			
+			// Example: Hackathon today to 05.05.16
 			else if (dates.size() > 1 && hasTimeDateElement == true) {
 				
 				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));
 				commandUtil.setStartTime(dates.get(0));
-				commandUtil = finalVerification(taskName, commandUtil);
+				commandUtil.setTaskType(TASK_TYPE.EVENT);
 			}
+			
+			// Meet Hannah at Hackathon
 			else if (hasTimeDateElement == false) {
 				commandUtil.setTaskName(taskName);	
 			}
@@ -306,6 +310,15 @@ public class AddParser {
 		
 		return commandUtil;
 	}
+	
+	/*
+	 * This method identifies the position of the prepositions in a user input
+	 * 
+	 * @param taskName {@code String}
+	 * 
+	 * @return {} 
+	 * 
+	 */
 	
 	private void getKeywordPosition(String taskName) {
 		
@@ -320,7 +333,15 @@ public class AddParser {
 		LAST_POSITION_OF_IN = temp.lastIndexOf(KEYWORD_IN);
 	
 	}
-
+	
+	/*
+	 * This method converts elements in an arraylist to lowercase.
+	 * 
+	 * @param taskName {@code String}
+	 * 
+	 * @return {@code List<E>} with all string in lowercase. 
+	 * 
+	 */
 	private ArrayList<String> convertArrayListToLowerCase(String taskName) {
 		
 		String[] str = taskName.toLowerCase().split(STRING_SPLITTER);
@@ -328,8 +349,18 @@ public class AddParser {
 		
 		return temp;
 	}
-
-
+	
+	/*
+	 * This method extracts the time elements from an event task and set to CommandUtils
+	 * object.
+	 * 
+	 * @param commandUtil {@code CommandUtils} , taskName {@code String} 
+	 * 		  and date {@code Date}
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
+	
 	private CommandUtils setEventTime(CommandUtils commandUtil, String taskName, Date date) {
 		
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_FROM, STRING_SPACING));
@@ -349,22 +380,33 @@ public class AddParser {
 		else {
 		
 			commandUtil.setTaskType(TASK_TYPE.FLOATING);
-			commandUtil.setTaskType(TASK_TYPE.FLOATING);
 		}
 		
 		return commandUtil;
 	
 	}
-
+	
+	/*
+	 * This method extracts the time elements from an event task and set to CommandUtils
+	 * object.
+	 * 
+	 * @param commandUtil {@code CommandUtils} , confirmTaskName {@code String} 
+	 * 		  and date {@code Date}
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
 
 	private CommandUtils setDeadLine(CommandUtils commandUtil, String confirmTaskName, Date date) {
 		
 		System.out.println("setDeadLine : " + contentToAnalyse);
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_BY, STRING_SPACING));
 		
+		// Example: Meeting with boss at 6.30pm
 		if (confirmDate.size() == 1 && !contentToAnalyse.contains(STRING_MIDNIGHT_TIME)) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(0), date));
 		}
+		// Example: submit proposal to boss at 2400hrs.
 		else if (confirmDate.size() == 1 && contentToAnalyse.contains(STRING_MIDNIGHT_TIME)) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(DateUtils.addDays(confirmDate.get(0), 1), date));
 		}
@@ -381,7 +423,15 @@ public class AddParser {
 		return commandUtil;
 	
 	}
-
+	
+	/*
+	 * This method extracts the time elements from a task 
+	 * 
+	 * @param {}
+	 * 
+	 * @return {} 
+	 * 
+	 */
 	private void extractDateFromTask() {
 		
 		for (int i = 0; i < str.size(); i++) {
@@ -397,7 +447,17 @@ public class AddParser {
 			}
 		}
 	}
-
+	
+	/*
+	 * This method extracts string starting from a preposition to the string 
+	 * before the next preposition or the end of the user input.
+	 * 
+	 * @param currentPosition {@code int} , contentOfPreposition {@code String} 
+	 * 		  and str {@code List<E>}
+	 * 
+	 * @return {@code List<E>}  
+	 * 
+	 */
 	private ArrayList<String> extractInputWithPreposition(int currentPosition, String contentOfPreposition,
 			ArrayList<String> str) {
 		
@@ -424,6 +484,17 @@ public class AddParser {
 		
 		return str;
 	}
+	
+	/*
+	 * This method extracts possible task name from the user input
+	 * object.
+	 * 
+	 * @param currentPosition {@code int} , confirmTaskName {@code String} 
+	 * 		  and inputElements {@code List<E>}
+	 * 
+	 * @return {@code String} with preposition and possible date elements removed. 
+	 * 
+	 */
 
 	private String getPossibleTaskName(int currentPosition, String confirmTaskName, ArrayList<String> inputElements) {
 		
@@ -440,7 +511,15 @@ public class AddParser {
 		return confirmTaskName;
 	}
 
-
+	/*
+	 * This method verifies if a floating task consists of date element.
+	 * Example: tomorrow meet boss for meeting.
+	 * 
+	 * @param userTask {@code String} and commandUtil {@code CommandUtils}
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
 	
 	private CommandUtils finalVerification(String userTask, CommandUtils commandUtil) {
 
@@ -457,9 +536,19 @@ public class AddParser {
 		return commandUtil;
 	}
 	
-	private String extractLastPreposition(String temp) {
+	/*
+	 * This method checks if the last string in the task name consists of
+	 * preposition and removes it if there is.
+	 * 
+	 * @param finalTaskName {@code String} 
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
+
+	private String extractLastPreposition(String finalTaskName) {
 		
-		String[] str = temp.split(STRING_SPLITTER);
+		String[] str = finalTaskName.split(STRING_SPLITTER);
 		String newStr = STRING_EMPTY;
 		int lastWordPosition = str.length - 1;
 		
@@ -470,6 +559,15 @@ public class AddParser {
 		return toStringArray(str, newStr).trim();
 	}
 
+	/*
+	 * This method concatenates string array into string.
+	 * 
+	 * @param str {@code String[]} and newStr {@code String} 
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
+
 	private String toStringArray(String[] str, String newStr) {
 		
 		for (int i = 0; i < str.length; i++) {
@@ -478,6 +576,16 @@ public class AddParser {
 		
 		return newStr;
 	}
+	
+	/*
+	 * This method checks if a string contains a preposition word 
+	 * as its last word.
+	 * 
+	 * @param str {@code String[]} and lastWordPosition {@code int} 
+	 * 
+	 * @return {@code boolean} 
+	 * 
+	 */
 	
 	private boolean isLastWordPreposition (String[] str, int lastWordPosition) {
 		

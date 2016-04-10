@@ -233,6 +233,7 @@ public class DateTimeParser {
 			if ((taskItems.get(i).toLowerCase().contains(KEYWORD_AM) || taskItems.get(i).toLowerCase().contains(KEYWORD_PM) 
 				|| taskItems.get(i).toLowerCase().contains(KEYWORD_HR) || taskItems.get(i).toLowerCase().contains(KEYWORD_HRS) ) 
 				&& dates.size() != 0) {
+				possibleDate = taskItems.get(i);
 				taskItems.remove(i);
 			}
 		}

@@ -28,6 +28,16 @@ public class DeleteParser {
 		this.indexToDelete = new ArrayList<Integer>();
 	}
 
+	/*
+	 * This method executes the parsing of deletion.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and userTask {@code String}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
 	protected CommandUtils executeDeleteParser(CommandUtils commandUtil, String userTask) {
 		
 		boolean isInteger = false;
@@ -35,6 +45,21 @@ public class DeleteParser {
 		isInteger = isTaskIndex(str);
 		commandUtil = detemineDeleteType(commandUtil, userTask.toLowerCase(), isInteger);
 		deleteType = commandUtil.getDeleteType();
+		
+		return processDeleteType(commandUtil, str);
+	}
+
+	/*
+	 * This method directs the 
+	 * 
+	 * @param commandUtil {@code CommandUtils} and userTask {@code String}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
+	private CommandUtils processDeleteType(CommandUtils commandUtil, String[] str) {
 		
 		switch (deleteType) {
 		

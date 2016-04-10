@@ -485,11 +485,11 @@ public class TestParser {
 	@Test
 	public void testTag() throws Exception {
 		int index = 1;
-	/*	cu = parser.executeCommand(cu, "tag 1 #HomeAlone");
+		cu = parser.executeCommand(cu, "tag 1 #HomeAlone");
 		assertEquals(COMMAND_TYPE.TAG, cu.getCommandType());
 		assertEquals(index, cu.getTaskID());
 		assertEquals("HomeAlone", cu.getTag().get(0));
-		*/
+		
 		cu = parser.executeCommand(cu, "tag 123 #This #is #HOME #truLy #SG50");
 		index = 123;
 		assertEquals(COMMAND_TYPE.TAG, cu.getCommandType());
@@ -516,6 +516,16 @@ public class TestParser {
 		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
 		assertEquals("distribute 1000 flyers to block 2359 #10-11", cu.getName());
 		assertEquals("Work", cu.getTag().get(0));
+		
+		cu = parser.executeCommand(cu, "Visit grandma #family # love");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
+		assertEquals("Visit grandma # love", cu.getName());
+		assertEquals("family", cu.getTag().get(0));
+		
+		cu = parser.executeCommand(cu, "Just want to have fun at the playground #####7#####");
+		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
+		assertEquals("Just want to have fun at the playground", cu.getName());
+		assertEquals("####7#####", cu.getTag().get(0));
 		
 	}
 	

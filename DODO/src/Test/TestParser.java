@@ -63,6 +63,14 @@ public class TestParser {
 	}
 	
 	@Test
+	public void testCommandType() throws Exception {
+		
+		cu = parser.executeCommand(cu, "        ");
+		assertEquals(COMMAND_TYPE.INVALID, cu.getCommandType());
+		
+	}
+	
+	@Test
 	public void testFloating() throws Exception{
 		cu = parser.executeCommand(cu,"Drive by the beach");
 		assertEquals(COMMAND_TYPE.ADD, cu.getCommandType());
@@ -119,6 +127,10 @@ public class TestParser {
 		
 		cu = parser.executeCommand(cu,"read my favourite storybook by \"June\" Tan");
 		assertEquals("read my favourite storybook by \"June\" Tan", cu.getName());
+		assertEquals(TASK_TYPE.FLOATING, cu.getType());
+		
+		cu = parser.executeCommand(cu,"     buy mee sua from cofeeshop     ");
+		assertEquals("buy mee sua from cofeeshop", cu.getName());
 		assertEquals(TASK_TYPE.FLOATING, cu.getType());
 		
 	}

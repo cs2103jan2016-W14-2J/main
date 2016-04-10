@@ -8,6 +8,7 @@ import java.util.logging.*;
 
 import Command.*;
 import Task.*;
+import Logger.*;
 
 public class Parser {
 
@@ -63,7 +64,7 @@ public class Parser {
 	public Parser() {
 		
 		possibleCommandErrors = new HashMap<String, COMMAND_TYPE>();
-		logger = Logger.getLogger("Parser");
+		logger = LoggerFile.getLogger();
 	}
 	
 	/*

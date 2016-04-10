@@ -189,7 +189,7 @@ public class TestParser {
 		assertEquals(TASK_TYPE.DEADLINED, cu.getType());
 		
 		cu = parser.executeCommand(cu,"Check in luggage at counter 7 at 23.45am");
-		endDate = "Sun Apr 10 23:45:00 SGT 2016";
+		endDate = "Mon Apr 11 23:45:00 SGT 2016";
 		expectedStart = dateFormat.parse(endDate);
 		assertEquals(expectedStart, cu.getEndTime());
 		assertEquals("Check in luggage at counter 7", cu.getName());

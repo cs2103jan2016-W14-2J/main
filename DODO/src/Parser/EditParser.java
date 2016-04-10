@@ -18,6 +18,7 @@ public class EditParser {
 	
 	private static Logger logger;
 	
+	// Constants
 	private static final String KEYWORD_TO = " to ";
 	private static final String KEYWORD_FROM = " from ";
 	private static final String KEYWORD_AT = " at ";

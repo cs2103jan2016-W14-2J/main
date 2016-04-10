@@ -50,9 +50,9 @@ public class DeleteParser {
 	}
 
 	/*
-	 * This method directs the 
+	 * This method process the input based on deletion type.
 	 * 
-	 * @param commandUtil {@code CommandUtils} and userTask {@code String}
+	 * @param commandUtil {@code CommandUtils} and userTask {@code String[]}
 	 * 
 	 * @return {@code CommandUtils}
 	 * 			
@@ -86,80 +86,18 @@ public class DeleteParser {
 		}
 		return commandUtil;
 	}
-
-	private boolean isTaskIndex(String[] str) {
-		return (str[0].startsWith(STRING_HASH_TAG)) ? false : true;
-	}
-
-	private CommandUtils parseDeleteEndDate(CommandUtils commandUtil, String[] str) {
-		if (!str[0].contains(STRING_END_INDICATOR)) {
-			indexToDelete.add(Integer.parseInt(str[0]));
-			commandUtil.setIndexToDelete(indexToDelete);
-		}
-		else {
-			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
-		}
-		return commandUtil;
-	}
-
-	private CommandUtils parseDeleteStartDate(CommandUtils commandUtil, String[] str) {
-		if (!str[0].contains(STRING_START_INDICATOR)) {
-			indexToDelete.add(Integer.parseInt(str[0]));
-			commandUtil.setIndexToDelete(indexToDelete);
-		}
-		else {
-			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
-		}
-		return commandUtil;
-	}
-
-	private CommandUtils parseRangeDelete(CommandUtils commandUtil, String[] str) {
-		// Example: delete 1 to 5 / delete 1 - 5
-		if (str.length == 3) {
-			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
-				indexToDelete.add(i);
-			}
-		}
-		commandUtil.setIndexToDelete(indexToDelete);
-		return commandUtil;
-	}
-
-	private CommandUtils parseMultipleDeleteIndexes(CommandUtils commandUtil, String[] str) {
-		// Example: delete 1 4 9 14
-		for (int i = 0; i < str.length; i++) {
-			indexToDelete.add(Integer.parseInt(str[i]));
-		}
-		commandUtil.setIndexToDelete(indexToDelete);
-		return commandUtil;
-	}
 	
-	private CommandUtils parseMutipleDeleteTags(CommandUtils commandUtil, String[] str) {
-		// Example: delete #nus #soc #singapore
-		for (int i = 0; i < str.length; i++) {
-			if (!str[i].contains(STRING_CHECKER_HYPHEN)) {
-				tagToDelete.add(str[i].substring(1, str[i].length()));
-			}
-		}
-		commandUtil.setTagToDelete(tagToDelete);
-		return commandUtil;
-	}
 
-	
-	private CommandUtils parseSingleDeleteTag(CommandUtils commandUtil, String[] str) {
-		// Example: delete #nus
-		if (!str[0].contains(STRING_CHECKER_HYPHEN)) {
-			tagToDelete.add(str[0].substring(1, str[0].length()));
-			commandUtil.setTagToDelete(tagToDelete);
-		}
-		return commandUtil;
-	}
-	
-	private CommandUtils parseSingleDeleteIndex(CommandUtils commandUtil, String[] str) {
-		indexToDelete.add(Integer.parseInt(str[0]));
-		commandUtil.setIndexToDelete(indexToDelete);
-		return commandUtil;
-	}
-
+	/*
+	 * This method determines the type of deletion.
+	 * 
+	 * @param commandUtil {@code CommandUtils}, userTask {@code String}
+	 * 		  and isInteger {@code boolean}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
 	private CommandUtils detemineDeleteType(CommandUtils commandUtil, String userTask, boolean isInteger) {
 
 		if (checkIfDeleteAll(userTask)) {
@@ -195,42 +133,273 @@ public class DeleteParser {
 		return commandUtil;
 	}
 
+	/*
+	 * This method checks if it is deleting tag(s) or index(es)
+	 * 
+	 * @param str {@code String[]}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
+	private boolean isTaskIndex(String[] str) {
+		return (str[0].startsWith(STRING_HASH_TAG)) ? false : true;
+	}
+
+	/*
+	 * This method checks if it is deleting tag(s) or index(es)
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	private CommandUtils parseDeleteEndDate(CommandUtils commandUtil, String[] str) {
+		if (!str[0].contains(STRING_END_INDICATOR)) {
+			indexToDelete.add(Integer.parseInt(str[0]));
+			commandUtil.setIndexToDelete(indexToDelete);
+		}
+		else {
+			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
+		}
+		return commandUtil;
+	}
+
+	/*
+	 * This method processes the deletion of start date
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
+	private CommandUtils parseDeleteStartDate(CommandUtils commandUtil, String[] str) {
+		if (!str[0].contains(STRING_START_INDICATOR)) {
+			indexToDelete.add(Integer.parseInt(str[0]));
+			commandUtil.setIndexToDelete(indexToDelete);
+		}
+		else {
+			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
+		}
+		return commandUtil;
+	}
+
+	/*
+	 * This method processes the deletion of a range of indexes
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
+	private CommandUtils parseRangeDelete(CommandUtils commandUtil, String[] str) {
+		// Example: delete 1 to 5 / delete 1 - 5
+		if (str.length == 3) {
+			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
+				indexToDelete.add(i);
+			}
+		}
+		commandUtil.setIndexToDelete(indexToDelete);
+		return commandUtil;
+	}
+
+	/*
+	 * This method processes the deletion of multiple indexes
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
+	private CommandUtils parseMultipleDeleteIndexes(CommandUtils commandUtil, String[] str) {
+		// Example: delete 1 4 9 14
+		for (int i = 0; i < str.length; i++) {
+			indexToDelete.add(Integer.parseInt(str[i]));
+		}
+		commandUtil.setIndexToDelete(indexToDelete);
+		return commandUtil;
+	}
+	
+	/*
+	 * This method processes the deletion of multiple tags.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
+	private CommandUtils parseMutipleDeleteTags(CommandUtils commandUtil, String[] str) {
+		// Example: delete #nus #soc #singapore
+		for (int i = 0; i < str.length; i++) {
+			if (!str[i].contains(STRING_CHECKER_HYPHEN)) {
+				tagToDelete.add(str[i].substring(1, str[i].length()));
+			}
+		}
+		commandUtil.setTagToDelete(tagToDelete);
+		return commandUtil;
+	}
+
+	/*
+	 * This method processes deletion of a single tag
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	
+	private CommandUtils parseSingleDeleteTag(CommandUtils commandUtil, String[] str) {
+		// Example: delete #nus
+		if (!str[0].contains(STRING_CHECKER_HYPHEN)) {
+			tagToDelete.add(str[0].substring(1, str[0].length()));
+			commandUtil.setTagToDelete(tagToDelete);
+		}
+		return commandUtil;
+	}
+	
+	/*
+	 * This method processes deletion of a single index
+	 * 
+	 * @param commandUtil {@code CommandUtils} and str {@code String[]}
+	 * 
+	 * @return {@code CommandUtils}
+	 * 			
+	 * 
+	 */
+	private CommandUtils parseSingleDeleteIndex(CommandUtils commandUtil, String[] str) {
+		indexToDelete.add(Integer.parseInt(str[0]));
+		commandUtil.setIndexToDelete(indexToDelete);
+		return commandUtil;
+	}
+
+	/*
+	 * This method checks if it is deleting an end date of a task.
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
+	
 	private boolean checkIfDeleteEndDate(String userTask) {
 		return (userTask.contains(STRING_END_DATE)) ? true : false;
 	}
-
+	
+	/*
+	 * This method checks if it is deleting a start date of a task.
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
+	
 	private boolean checkIfDeleteStartDate(String userTask) {
 		return (userTask.contains(STRING_START_DATE)) ? true : false;
 	}
 
+	/*
+	 * This method checks if it is deleting all tags
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
+	
 	private boolean checkIfDeleteAllTag(String userTask) {
 		return (userTask.contains(STRING_CHECKER_ALL) && (userTask.contains(STRING_CHECKER_TAG) 
 				|| userTask.contains(STRING_CHECKER_CATEGORY))) ? true : false;
 	}
 
+
+	/*
+	 * This method checks if it is deleting all indexes
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 	private boolean checkIfDeleteAll(String userTask) {
 		return (userTask.contains(STRING_CHECKER_ALL) && !(userTask.contains(STRING_CHECKER_TAG) 
 				|| userTask.contains(STRING_CHECKER_CATEGORY))) ? true : false;
 	}
 
+
+	/*
+	 * This method checks if it is deleting a range of indexes or tags
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 	private boolean checkIfDeleteRange(String userTask) {
 		return ((userTask.contains(STRING_CHECKER_HYPHEN) && !userTask.contains(STRING_HASH_TAG))
 				|| (userTask.contains(STRING_CHECKER_TO))) 
 				? true : false;
 	}
 
+
+	/*
+	 * This method checks if it is deleting multiple tags or indexes
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
+	
 	private boolean checkIfDeleteMultiple(String userTask) {
 		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);	
 		return (str.length > 1 && !checkIfDeleteRange(userTask) && 
 				!checkIfDeleteEndDate(userTask) &&
 				!checkIfDeleteStartDate(userTask)) ? true : false;
 	}
+	
+
+	/*
+	 * This method checks if it is deleting single indexes
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 
 	private boolean checkIfDeleteSingleIndex(String userTask) {
 		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);	
 		return (str.length == 1 && !userTask.contains(STRING_CHECKER_ALL)) ? true : false;
 	}
 	
+
+	/*
+	 * This method checks if it is deleting single tag.
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code boolean}
+	 * 			
+	 * 
+	 */
 	private boolean checkIfDeleteSingleTag(String userTask) {
 		String[] temp = userTask.split(" ");
 		return (temp.length == 1 && temp[0].startsWith(STRING_HASH_TAG) 

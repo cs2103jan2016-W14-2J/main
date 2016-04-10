@@ -89,6 +89,19 @@ public class UICellComponents
 	}
 	
 	
+	public UICellComponents(HBox hbLblTitle, Label lblTitle, String strTitle) 
+	{
+		lblTitle.setText(strTitle);	
+		hbLblTitle.setPrefSize(1000,50);
+		lblTitle.setPrefSize(1500,50);
+		lblTitle.setMaxSize(1500, 50);
+		//usc.setCssAndScalingForCell(hbLblTitle,lblTitle);
+
+		
+		
+	}
+
+
 	public Tooltip getToolTip()
 	{
 		return toolTip;

@@ -75,7 +75,6 @@ public class UIMainController {
 		primaryStage.sizeToScene();
 		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
-		setEscCloseForm();
 		listen = new UIListener(root,primaryStage,rightBox,leftBox,logic);
 		listen.assignHelpSheetListener();
 		show();
@@ -84,28 +83,41 @@ public class UIMainController {
 
 		
 
-		Calendar now = Calendar.getInstance();
+		Calendar now = Calendar.getInstance();	
 		
-		timer.schedule( new TimerTask() {
+	/*	timer.schedule( new TimerTask() {
 		    public void run() {
-				Calendar cal = Calendar.getInstance();
-		    	//System.out.println("in");
-		    	for(int x=0;x<logic.getOngoingTasks().size();x++)
-		    	{
-						if(logic.getOngoingTasks().get(x).getEnd().after(cal.getTime()))
-						{
-							
-							System.out.println("this has not expired " + x);
+		    	Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() 
+                    {
+                    	Calendar cal = Calendar.getInstance();
+                		logic.update();
+                		rightBox.testMethod();
+                		try {
+                			Thread.sleep(1000);
+                		} catch (Exception e) {
+                			e.printStackTrace();
+                		}
 
-						}
-						else
-						{
-							System.out.println("this has expired " + x);
-							
-						}
-		    	}
+                    	for(int x=0;x<logic.getOngoingTasks().size();x++)
+                    	{
+                				if(logic.getOngoingTasks().get(x).getEnd().after(cal.getTime()))
+                				{
+                					final Popup popup = new Popup(); popup.setX(300); popup.setY(200);
+                				    popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
+                					System.out.println("this has not expired " + x);
+                				}
+                				else
+                				{
+                					System.out.println("this has expired " + x);
+                				}
+                    	}
+                        
+                    }
+                });
 		    }
-		 }, 0, 60*250);
+		 }, 0, 60*500);*/
 		
 	  
 		
@@ -145,56 +157,8 @@ public class UIMainController {
 		primaryStage.show();
 	}
 
-	public void setEscCloseForm() 
-	{
-		saveBeforeClose(primaryStage);
-		escListener(primaryStage);
-		primaryStage.close();
-	}
-	private void saveBeforeClose(Stage primaryStage) 
-	{
-		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
-		{
-	          public void handle(WindowEvent we) 
-	          {
-	        	  Task<Void> task = new Task<Void>() {
-	     	         @Override protected Void call() throws Exception 
-	     	         {
-	     	        	 assert(logic.save()!=null); 
-	     	        	 timer.cancel();
-	     	        	 logic.save();
-	     	        	 
-	     	        	 return null;
-	     	         }
-	     	     };
-	     	    startThread(task);
-	          //  System.out.println("Stage is closing");
-	          }
+	
 
-			private void startThread(Task<Void> task) {
-               // Notifications.create().title("Task Reminder").text("END").showInformation();
-
-				Thread th = new Thread(task);
-	     	    th.setDaemon(true);
-	     	    th.start();				
-			}
-	      });    		
-	}
-	private void escListener(Stage primaryStage) 
-	{
-		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
-		{
-		        @Override
-		        public void handle(KeyEvent t) {
-		          if(t.getCode()==KeyCode.ESCAPE)
-		          {
-	     	          logic.save();
-		        	  primaryStage.close();
-		          }
-		         
-		        }
-		    });			
-	}
 	public void setDBname(String strDBname) {
 		this.strDBname = strDBname;
 	}

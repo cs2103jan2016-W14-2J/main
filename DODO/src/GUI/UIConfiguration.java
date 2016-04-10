@@ -21,26 +21,22 @@ import javax.swing.JFrame;
 
 import Logic.Logic;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 //@@author A0125372L
 public class UIConfiguration extends Application 
 {
-	private final String CONFIG_FIRSTLINE_DIRECTORY_KNOWN = "DBDIR = %1$s";
-	private final String CONFIG_SECONDLINE_FILENAME_KNOWN = "FILENAME = %1$s";
-	private final String CONFIG_SEPARATOR = System.getProperty("line.separator");
-	private final String DIALOG_TITLE = "SAVE DATABASE"; 
-	private final int PARAM_FOR_DIR = 8;	//include space
-	private final int PARAM_FOR_NAME = 11; //include space
 	private String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
-	private String PARAM_DB_DEFAULT_FILENAME = "DODOdatabase";
-	private File configFile = new File(PARAM_CONFIG_DEFAULT_FILENAME);
 	private FileChooser fileChooser = new FileChooser();
-	private ArrayList<String> listOfConfigs = new ArrayList<String>();
-	private File dbFile=null;
 	private Stage primaryStage;
 	private String strDBdir = "";
 	private String strDBname = "";
@@ -60,6 +56,9 @@ public class UIConfiguration extends Application
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
 		launch=true;
+
+		saveBeforeClose(primaryStage);
+		
 		System.out.println( "                                                                              "+ strDBdir);
 		gui.start(primaryStage);
 	}
@@ -68,9 +67,25 @@ public class UIConfiguration extends Application
 		return launch;
 	}
 
-
-	
-	
+	private void saveBeforeClose(Stage primaryStage) 
+	{
+		primaryStage.setOnHiding(new EventHandler<WindowEvent>() 
+		{
+            public void handle(WindowEvent event) 
+            {
+                Platform.runLater(new Runnable() 
+                {
+                    @Override
+                    public void run() 
+                    {
+	                    assert(logic.save()!=null); 
+	     	        	logic.save();
+	     	        	System.exit(0);
+                    }
+                });
+            }
+        });
+	}
 
 	/**
 	 * Accessor

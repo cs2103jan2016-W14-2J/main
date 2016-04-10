@@ -3,6 +3,7 @@ package GUI;
 import org.controlsfx.control.PopOver;
 
 import Logic.Logic;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -142,34 +143,44 @@ public class UIListener {
 	
     	root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
     		public void handle(KeyEvent ke) {
-    			System.out.println(ke);
-						if (ke.getCode().equals(KeyCode.ALT)) 
+    				if(ke.getCode()==KeyCode.ESCAPE)
+    				{
+    					Platform.runLater(new Runnable() 
+    	                {
+    	                    @Override
+    	                    public void run() 
+    	                    {
+    	                      assert(logic.save()!=null); 
+    	   		        	  logic.save();
+    	   	     	          System.exit(0);
+    	                    }
+    	                });
+		        	 
+    				}
+    				if (ke.getCode().equals(KeyCode.ALT)) 
+					{
+						int numberOfTabs = rightBox.getTotalTabs();
+						double rightBoxX = rightBox.getRoot().getLayoutX();
+						double rightBoxY = rightBox.getRoot().getLayoutY();
+						
+						pane.setPrefSize(root.getWidth(), root.getHeight());	
+						pane.getChildren().removeAll(listLbl);
+						for(int x=0,y=25;x<numberOfTabs;x++,y+=220)
 						{
-							int numberOfTabs = rightBox.getTotalTabs();
-							double rightBoxX = rightBox.getRoot().getLayoutX();
-							double rightBoxY = rightBox.getRoot().getLayoutY();
-							
-							pane.setPrefSize(root.getWidth(), root.getHeight());	
-							pane.getChildren().removeAll(listLbl);
-							for(int x=0,y=25;x<numberOfTabs;x++,y+=220)
-							{
-								//listLbl.get(x).setPrefSize(150, 100);
-								listLbl.get(x).setFont(Font.font("Cambria", 30));
-								listLbl.get(x).setLayoutX(rightBoxX+y);
-								listLbl.get(x).setLayoutY(rightBoxY);
-	
-								pane.getChildren().add(listLbl.get(x));
-							}
+							//listLbl.get(x).setPrefSize(150, 100);
+							listLbl.get(x).setFont(Font.font("Cambria", 30));
+							listLbl.get(x).setLayoutX(rightBoxX+y);
+							listLbl.get(x).setLayoutY(rightBoxY);
 
-							transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
-							rightBox.getTabPane().requestFocus();
+							pane.getChildren().add(listLbl.get(x));
 						}
-						
-						
+
+						transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
+						rightBox.getTabPane().requestFocus();
+					}	
 						if (keyComb1.match(ke)) 
 						{
 							rightBox.getTabPane().getSelectionModel().select(0);
-
 						}
 						if (keyComb2.match(ke)) 
 						{
@@ -199,15 +210,7 @@ public class UIListener {
 						{
 							rightBox.getTabPane().getSelectionModel().select(7);
 						}
-						/*if(ke.getCode().equals(KeyCode.SHIFT))
-						{
-							rightBox.getTabPane().getTabs().get(1).getContent(;
-						}*/
-					     if(ke.getCode()==KeyCode.ESCAPE)
-					     {
-					    	 logic.save();
-					    	 primaryStage.close();
-					     }
+					     
 					         
 					        
 						ke.consume();
@@ -218,11 +221,11 @@ public class UIListener {
 					if (ke.getCode().equals(KeyCode.ALT)) 
 					{
 						pane.getChildren().removeAll(listLbl);
-
 						transparentPo.hide();
 					}
 				}
 				});
+				
 /*				primaryStage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
 
 				    @Override

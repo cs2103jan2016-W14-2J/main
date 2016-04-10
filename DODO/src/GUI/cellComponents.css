@@ -29,3 +29,40 @@
     -fx-font-size: 25px;
     -fx-font-weight:900;
 }
+
+#Overdue
+{
+	-fx-alignment: CENTER;
+	-fx-background-color: #4C688B;
+	-fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    -fx-font-weight:900;
+}
+#Ongoing
+{
+	-fx-alignment: CENTER;
+	 -fx-background-color: #41837E;
+	-fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    -fx-font-weight:900;
+}
+#Floating
+{	  
+	-fx-alignment: CENTER;
+	-fx-background-color: #50608F;
+	-fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    -fx-font-weight:900;
+}
+#Completed
+{	  
+	-fx-alignment: CENTER;
+	-fx-background-color: #615192;
+	-fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    -fx-font-weight:900;
+}

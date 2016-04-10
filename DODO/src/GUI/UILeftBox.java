@@ -84,6 +84,14 @@ public class UILeftBox {
 		usc.cssLeftBoxComponents(lblLogo,leftBox, chart, titledPane, lblCategory, listView);
 		leftBox.getChildren().addAll(lblLogo,chart, lblCategory, scroll);
 	}
+	public void updateLeftBox() {
+		updateChart();
+		updateTag();
+	}
+
+	public VBox getRoot() {
+		return leftBox;
+	}
 
 	private void updateTagScroll() 
 	{
@@ -99,21 +107,8 @@ public class UILeftBox {
 	        });		
 	        
 	}
-
-	public void updateLeftBox() {
-		updateChart();
-		updateTag();
-	}
-
-	public VBox getRoot() {
-		return leftBox;
-	}
-
-
 	public void updateTag() 
 	{
-		//System.out.println("127 + ##############################################################################################"+logic.getCategories().size());
-		
 		flowpaneCategory.getChildren().clear();
 		flowpaneCategory.getChildren().removeAll();
 		if(logic.getCategories()!=null)
@@ -122,8 +117,7 @@ public class UILeftBox {
 			{
 				Label lbl = new Label(logic.getCategories().get(x).getName());
 				makeTag.assignUserData(lbl);
-				//HBox root = makeTag.getTag(tagMap.get(x));
-				usc.cssTag(lbl);
+          				usc.cssTag(lbl);
 				if(!flowpaneCategory.getChildren().contains(lbl))
 				{
 					flowpaneCategory.getChildren().add(lbl);			
@@ -142,35 +136,56 @@ public class UILeftBox {
 		completedData.setPieValue(intCompletedTasks);
 		overdueData.setPieValue(intOverdueTasks);
 
-		if (intOverdueTasks == 0) {
+		if (intOverdueTasks == 0) 
+		{
 			listData.remove(overdueData);
-		} else {
-			if (!listData.contains(overdueData)) {
+		} 
+		else 
+		{
+			if (!listData.contains(overdueData)) 
+			{
 				listData.add(overdueData);
 			}
 		}
-		if (intCompletedTasks == 0) {
+		if (intCompletedTasks == 0) 
+		{
 			listData.remove(completedData);
-		} else {
-			if (!listData.contains(completedData)) {
+		} 
+		else 
+		{
+			if (!listData.contains(completedData)) 
+			{
 				listData.add(completedData);
 			}
 		}
-		if (intFloatingTasks == 0) {
+		if (intFloatingTasks == 0) 
+		{
 			listData.remove(floatingData);
-		} else {
-			if (!listData.contains(floatingData)) {
+		} else
+		{
+			if (!listData.contains(floatingData))
+			{
 				listData.add(floatingData);
 			}
 		}
-		if (intOngoingTasks == 0) {
+		if (intOngoingTasks == 0) 
+		{
 			listData.remove(ongoingData);
-		} else {
-			if (!listData.contains(ongoingData)) {
+		} 
+		else 
+		{
+			
+			if (!listData.contains(ongoingData)) 
+			{
 				listData.add(ongoingData);
 			}
 		}
-
+		
+		
+		usc.cssChart(chart);
+		
+		
+		
 	}
 
 }

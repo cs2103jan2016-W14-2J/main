@@ -135,6 +135,46 @@ public class UICssScaling
 	{
 		
 	}
+	public void cssAllTitle(Label lblTitle)
+	{
+		lblTitle.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
+
+		
+	}
+
+	public void cssChart(PieChart chart)
+	{
+		for(int x=0;x<chart.getData().size();x++)
+		{
+			System.out.println(chart.getData().get(x).nameProperty().get());
+			if(chart.getData().get(x).nameProperty().get().equals("Floating Tasks"))
+			{
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #4C688B");
+			}
+			else if(chart.getData().get(x).nameProperty().get().equals("On-going Tasks"))
+			{
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #41837E");
+
+			}
+			else if(chart.getData().get(x).nameProperty().get().equals("Completed Tasks"))
+			{
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #50608F");
+
+			}
+			else if(chart.getData().get(x).nameProperty().get().equals("Overdue Tasks"))
+			{
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #615192");
+
+			}
+		}
+		//chart.getStylesheets().add(this.getClass().getResource("chart.css").toExternalForm());
+
+	}
+	public void setCssAndScalingForCell(HBox hbLblTitle, Label lblTitle) {
+		hbLblTitle.setPrefSize(1000,50);
+		lblTitle.setPrefSize(1500,50);
+		lblTitle.setMaxSize(1500, 50);		
+	}
 
 
 

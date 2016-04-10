@@ -11,6 +11,7 @@ import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 import Command.*;
 import Logger.LoggerFile;
+import Task.*;
 
 public class EditParser {
 	
@@ -44,6 +45,7 @@ public class EditParser {
 	
 	private Date date;
 	private DateTimeParser dt;
+	private AddParser ap;
 	
 	public EditParser() {
 		
@@ -51,6 +53,7 @@ public class EditParser {
 		dt = new DateTimeParser();
 		date = new Date();
 		logger = LoggerFile.getLogger();
+		ap = new AddParser();
 	
 	}
 	
@@ -65,6 +68,8 @@ public class EditParser {
 	 */
 	
 	protected CommandUtils executeEditParser(CommandUtils commandUtil, String userInput) {
+		
+		commandUtil = ap.executeAddParser(commandUtil, userInput);
 		
 		String[] editElements = userInput.replaceAll(PUNCTUATION_REMOVER, STRING_EMPTY).split(STRING_SPLITTER);
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
@@ -195,7 +200,11 @@ public class EditParser {
 	 * 
 	 */
 	private CommandUtils parseEditDeadLined(CommandUtils commandUtil, String userInput) {
-	
+		
+		AddParser ap = new AddParser();
+		commandUtil = ap.executeAddParser(commandUtil, userInput);
+
+		/*
 		String temp = "";
 		INDEX_OF_LAST_ON = userInput.lastIndexOf(KEYWORD_ON);
 		INDEX_OF_LAST_AT = userInput.lastIndexOf(KEYWORD_AT);
@@ -275,7 +284,7 @@ public class EditParser {
 		if (dates.size() != NUM_NO_DATE_ELEMENT) {
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 		}
-		
+		*/
 		return commandUtil;
 	}
 
@@ -329,36 +338,15 @@ public class EditParser {
 	 */
 	private CommandUtils determineEditType(CommandUtils commandUtil, String userInput) {
 		
-		if (hasTaskName(userInput) && !userInput.trim().startsWith(STRING_HASH_TAG)) {
-			/*
-			 * @Description: edits the content of the task name. 
-			 * Example: edit 1 buy sweet
-			 */
-			if (!hasDeadLined(userInput) && !hasStartTime(userInput) && !hasEndTime(userInput)) {
-				commandUtil.setEditType(EDIT_TYPE.TASK_NAME);
-			}
-			/*
-			 * @ Description: edits the end time of an event
-			 *  Example: edit 1 revise CS2103t from today to 24.07.2016
-			 */
-			else if (!hasDeadLined(userInput) && hasStartTime(userInput) && hasEndTime(userInput)) {
-				commandUtil.setEditType(EDIT_TYPE.EVENT_TIME);
-			}
-			/*
-			 * @Description: edits the starting time of an event
-			 * Example: edit 1 buy sweet by tuesday
-			 */
-			else if (hasDeadLined(userInput) && !hasStartTime(userInput) && !hasEndTime(userInput)) {
-				commandUtil.setEditType(EDIT_TYPE.DEADLINED);
-			}
+		if (commandUtil.getType() == TASK_TYPE.FLOATING && !userInput.trim().startsWith(STRING_HASH_TAG)) {
+			commandUtil.setEditType(EDIT_TYPE.TASK_NAME);
 		}
 		/*
 		 * @Description: edits the deadline of task 
 		 * Example: edit 1 by tomorrow
 		 */
-		else if (hasDeadLined(userInput) && !hasEndTime(userInput) && !hasStartTime(userInput)
+		else if (commandUtil.getType() == TASK_TYPE.DEADLINED && !hasEndTime(userInput) && !hasStartTime(userInput)
 				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
-		
 			commandUtil.setEditType(EDIT_TYPE.DEADLINED);
 		}
 		/*
@@ -367,7 +355,6 @@ public class EditParser {
 		 */
 		else if (!hasDeadLined(userInput) && hasEndTime(userInput) && !hasStartTime(userInput)
 				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
-			
 			commandUtil.setEditType(EDIT_TYPE.END_TIME);
 		}
 		/*
@@ -383,8 +370,7 @@ public class EditParser {
 		 * @ Description: edits the start and end time of an event
 		 *  Example: edit 1 from 24.07.2016 to 28.07.2016
 		 */
-		else if (!hasDeadLined(userInput) && hasStartTime(userInput) && hasEndTime(userInput)
-				&& !userInput.trim().startsWith(STRING_HASH_TAG)) {
+		else if (commandUtil.getType() == TASK_TYPE.EVENT && !userInput.trim().startsWith(STRING_HASH_TAG)) {
 			commandUtil.setEditType(EDIT_TYPE.EVENT_TIME);
 		}
 		/*
@@ -392,12 +378,11 @@ public class EditParser {
 		 *  Example: edit 1 #soc to #nus
 		 */
 		else if (userInput.trim().startsWith(STRING_HASH_TAG)) {
-			
 			commandUtil.setEditType(EDIT_TYPE.TAG);
 		}
 		else {
 			commandUtil.setEditType(EDIT_TYPE.INVALID);
-		}
+		} 
 		return commandUtil;
 	}
 

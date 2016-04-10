@@ -551,13 +551,12 @@ public class DateTimeParser {
 	}
 	
 	private String processNumericalDate(ArrayList<String> taskItems) {
-		String temp = toStringTaskElements(taskItems);
 		String[] str;
-		List<Date> dates = new PrettyTimeParser().parse(temp);
-		if (dates.size() != 0) {
-			for (int i = 0; i < taskItems.size(); i++) {
+		
+		for (int i = 0; i < taskItems.size(); i++) {
+			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
+			if (dates.size() != 0) {
 				str = taskItems.get(i).split("[./-]");
-				
 				if (!taskItems.get(i).contains("#") && !taskItems.get(i).toLowerCase().contains("am") 
 					&& !taskItems.get(i).toLowerCase().contains("pm")) {
 					if (str.length == 2 && Integer.parseInt(str[0]) < 32 && Integer.parseInt(str[1]) < 13) {

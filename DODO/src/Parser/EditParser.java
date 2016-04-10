@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
@@ -30,6 +31,21 @@ public class EditParser {
 	private static final String STRING_SPACING = " ";
 	private static final int NUM_NO_DATE_ELEMENT = 0;
 	private static final int NUM_FIRST_ELEMENT = 0;
+
+	// Logging messages for processing methods.
+	private static final String LOGGER_MESSAGE_PROCESS_EDIT_PARSER = "EditParser class: Entering EditParser class.";
+	private static final String LOGGER_MESSAGE_EXIT_EDIT_PARSER = "EditParser class: Exiting EditParser class.";
+	private static final String LOGGER_MESSAGE_PROCESS_EDIT_TYPE = "EditParser class: Analysing edit type.";
+	private static final String LOGGER_MESSAGE_PROCESS_TASK_NAME_TYPE = "EditParser class: Processing edit task name type.";
+	private static final String LOGGER_MESSAGE_PROCESS_EVENT_TIME = "EditParser class: Processing edit event type.";
+	private static final String LOGGER_MESSAGE_PROCESS_START_TIME = "EditParser class: Processing edit start time.";
+	private static final String LOGGER_MESSAGE_PROCESS_DEADLINED = "EditParser class: Processing edit deadline.";
+	private static final String LOGGER_MESSAGE_PROCESS_END_TIME = "EditParser class: Processing edit end time.";
+	private static final String LOGGER_MESSAGE_PROCESS_TAG_TYPE = "EditParser class: Processing edit tag type.";
+	private static final String LOGGER_MESSAGE_PROCESS_INVALID = "EditParser class: Invalid edit type.";
+	private static final String LOGGER_MESSAGE_INDEX_OUT_OF_BOUND = "WARNING! Method may throw index out of bound.";
+	private static final String LOGGER_MESSAGE_PROCESS_EDIT_TAG_METHOD = "EditParser class: Processing editTag method.";
+	private static final String LOGGER_MESSAGE_PROCESS_EXTRACT_TASK_ID = "EditParser class: Extracting task id.";
 	
 	private String newTaskName = "";
 	private int INDEX_OF_LAST_TO = -1;
@@ -65,6 +81,9 @@ public class EditParser {
 	
 	protected CommandUtils executeEditParser(CommandUtils commandUtil, String userInput) {
 		
+		assert (userInput != null);
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EDIT_PARSER);
+		
 		String[] editElements = userInput.replaceAll(PUNCTUATION_REMOVER, STRING_EMPTY).split(STRING_SPLITTER);
 		editTaskElements = new ArrayList<String>(Arrays.asList(editElements));
 		newTaskName = dt.checkForAbbreviation(editTaskElements);
@@ -77,6 +96,7 @@ public class EditParser {
 		commandUtil = determineEditType(commandUtil, userInput);
 		editType = commandUtil.getEditType();
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXIT_EDIT_PARSER);
 		return processEditType(commandUtil, userInput);
 	}
 
@@ -91,27 +111,36 @@ public class EditParser {
 	 */
 	private CommandUtils processEditType(CommandUtils commandUtil, String userInput) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EDIT_TYPE);
+		
 		switch(editType) {
 		
 		case TASK_NAME:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_TASK_NAME_TYPE);
 			return parseEditTaskName(commandUtil, userInput);
 			
 		case EVENT_TIME:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EVENT_TIME);
 			return parseEditEventTime(commandUtil, userInput);
 			
 		case START_TIME:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_START_TIME);
 			return parseEditStartTime(commandUtil, userInput);
 			
 		case DEADLINED:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_DEADLINED);
 			return parseEditDeadLined(commandUtil, userInput);
 			
 		case END_TIME:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_END_TIME);
 			return parseEditEndTime(commandUtil, userInput);
 			
 		case TAG:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_TAG_TYPE);
 			return parserEditTag(commandUtil, userInput);
 			
 		case INVALID:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_INVALID);
 			break;
 		}
 		return commandUtil;
@@ -131,10 +160,14 @@ public class EditParser {
 		String[] str = userInput.trim().split(STRING_SPLITTER);
 		assert (str.length <= 3 && str.length > 0);
 		
-		if (str[0].startsWith(STRING_HASH_TAG) && str[2].startsWith(STRING_HASH_TAG)) {
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EDIT_TAG_METHOD);
+		logger.log(Level.WARNING, LOGGER_MESSAGE_INDEX_OUT_OF_BOUND);
+		
+		if (str[NUM_FIRST_ELEMENT].startsWith(STRING_HASH_TAG) && str[2].startsWith(STRING_HASH_TAG)) {
+			
 			commandUtil.setOldTag(str[NUM_FIRST_ELEMENT].substring(1, str[NUM_FIRST_ELEMENT].length()));
 			newTag.add(str[2].substring(1, str[NUM_FIRST_ELEMENT].length()));
-			commandUtil.setTaskTag(newTag);
+			commandUtil.setTaskTag(newTag);	
 		}
 		else {
 			commandUtil.setEditType(EDIT_TYPE.INVALID);
@@ -195,7 +228,6 @@ public class EditParser {
 	 * 
 	 */
 	private CommandUtils parseEditDeadLined(CommandUtils commandUtil, String userInput) {
-		System.out.println("parseEditDeadlined : " + userInput);
 		AddParser ap = new AddParser();
 		commandUtil = ap.executeAddParser(commandUtil, userInput);
 		return commandUtil;
@@ -359,6 +391,7 @@ public class EditParser {
 	 */
 	private String extractTaskID(CommandUtils commandUtil, ArrayList<String> editTaskElements) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EXTRACT_TASK_ID);
 		String temp = "";
 		
 		if (editTaskElements.size() < 2) {

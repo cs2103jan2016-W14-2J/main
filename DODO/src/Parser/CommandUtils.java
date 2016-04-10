@@ -25,7 +25,6 @@ public class CommandUtils {
 	private String taskName;
 	private String searchByTask;
 	private String searchByTag;
-	private String newDirectory;
 	private int taskID;
 	private boolean isImportant;
 	
@@ -38,6 +37,7 @@ public class CommandUtils {
 	private DELETE_TYPE deleteType;
 	
 	public CommandUtils () {
+		
 		indexOfFlagAndMark = new ArrayList<Integer>();
 		tags = new ArrayList<String>();
 		tagToDelete = new ArrayList<String> ();
@@ -51,7 +51,6 @@ public class CommandUtils {
 		taskName = "";
 		searchByTask = "";
 		searchByTag = "";
-		newDirectory = "";
 		taskID = -1;
 		isImportant = false;
 		
@@ -64,7 +63,7 @@ public class CommandUtils {
 		deleteType = DELETE_TYPE.INVALID;
 		
 	}
-	//******************************************* Mutators *****************************************//
+	//****************************************Common Mutators *****************************************//
 	protected void setCommandType(COMMAND_TYPE command) {
 		this.command = command;
 	}
@@ -93,21 +92,68 @@ public class CommandUtils {
 	}
 	//***********************************Accessors for AddParser************************************//
 	
+	/*
+	 * Returns the start time of a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code Date} 
+	 * 			
+	 * 
+	 */
 	public Date getStartTime() {
 		return this.startTime;
 	}
 	
+	/*
+	 * Returns the end time of a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code Date} 
+	 * 			
+	 * 
+	 */
 	public Date getEndTime() {
 		return this.endTime;
 	}
 	
+	/*
+	 * Returns the name without the start & end time of a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code String} 
+	 * 			
+	 * 
+	 */
 	public String getName() {
 		return this.taskName;
 	}
 	
+	/*
+	 * Returns the type of a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code enum} 
+	 * 			
+	 * 
+	 */
+	
 	public TASK_TYPE getType() {
 		return this.taskType;
 	}
+	
+	/*
+	 * Returns the type of a command.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code enum} 
+	 * 			
+	 * 
+	 */
 	
 	public COMMAND_TYPE getCommandType() {
 		return this.command;
@@ -117,19 +163,45 @@ public class CommandUtils {
 		this.isImportant = isImportant;
 	}
 	
+	/*
+	 * Returns the importance of a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code boolean} 
+	 * 			
+	 * 
+	 */
+	
 	public boolean getImportance() {
 		return this.isImportant;
 	}
 
+	/*
+	 * Returns the list of tags assigned to a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code List<E>} 
+	 * 			
+	 * 
+	 */
+	
 	public ArrayList<String> getTag() {
 		return this.tags;
 	}
 	
+		//********************************** Mutators and Accessors for DeleteParser ********************************//
 	
-/*	public TASK_TYPE getTaskType() {
-		return this.taskType;
-	}
-*/	//*********************************** Accessors for DeleteParser ********************************//
+	/*
+	 * Returns the type of deletion.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code enum} 
+	 * 			
+	 * 
+	 */
 	
 	public DELETE_TYPE getDeleteType() {
 		return this.deleteType;
@@ -143,6 +215,15 @@ public class CommandUtils {
 		this.tagToDelete = tagToDelete;
 	}
 	
+	/*
+	 * Returns the list of tags to delete.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code List<E>} 
+	 * 			
+	 * 
+	 */
 	public ArrayList<String> getTagToDelete() {
 		return this.tagToDelete;
 	}
@@ -151,12 +232,31 @@ public class CommandUtils {
 		this.indexToDelete = indexToDelete;
 	}
 	
+	/*
+	 * Returns the list of indexes to delete.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code List<E>} 
+	 * 			
+	 * 
+	 */
+	
 	public ArrayList<Integer> getIndexToDelete() {
 		return this.indexToDelete;
 	}
 	
-	//***********************************Accessors for EditParser************************************//
+	//********************************** Mutators and Accessors for EditParser************************************//
 	
+	/*
+	 * Returns the index of a task.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code int} 
+	 * 			
+	 * 
+	 */
 	public int getTaskID() {
 		return this.taskID;
 	}
@@ -165,31 +265,72 @@ public class CommandUtils {
 		this.editType = editType;
 	}
 	
+	/*
+	 * Returns the type of edits.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code enum} 
+	 * 			
+	 * 
+	 */
 	public EDIT_TYPE getEditType() {
 		return this.editType;
 	}
+	
 	protected void setOldTag(String oldTag) {
 		this.oldTag = oldTag;
 	}
+	
+	/*
+	 * Returns the tag to be replaced.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code String} 
+	 * 			
+	 * 
+	 */
 	public String getOldTag() {
 		return this.oldTag;
 	}
 	
-	//**************************** Accessors for Flag/Unflag/CompleteParser ***********************//
+	//**************************** Mutators and Accessors for Flag/Unflag/CompleteParser ***********************//
+	
 	protected void setFlagCompleteType(FLAGANDCOMPLETE_TYPE flagAndCompleteType) {
 		this.flagAndCompleteType = flagAndCompleteType;
 	}
+	
 	protected void setTaskToFlagAndMark(ArrayList<Integer> indexOfFlagAndMark) {
 		this.indexOfFlagAndMark = indexOfFlagAndMark;
 	}
+	
+	/*
+	 * Returns the type of flagging / completion.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code enum} 
+	 * 			
+	 * 
+	 */
 	public FLAGANDCOMPLETE_TYPE getFlagAndCompleteType() {
 		return this.flagAndCompleteType;
 	}
 		
+	/*
+	 * Returns the list of indexes to flag/ complete.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code List<E>} 
+	 * 			
+	 * 
+	 */
 	public ArrayList<Integer> getTaskToFlagAndMark() {
 		return this.indexOfFlagAndMark;
 	}
-	//********************************************* SearchParser ************************************//
+	//***************************** Mutators and Accessors for SearchParser ************************************//
 
 	protected void setSearchType (SEARCH_TYPE searchType) {
 		this.searchType = searchType;
@@ -198,9 +339,20 @@ public class CommandUtils {
 	protected void setSearchByDate (Date searchByDate) {
 		this.searchByDate = searchByDate;
 	}
+	
 	protected void setSearchByTag(String searchByTag) {
 		this.searchByTag = searchByTag;
 	}
+	
+	/*
+	 * Returns the type of search made.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code enum} 
+	 * 			
+	 * 
+	 */
 	public SEARCH_TYPE getSearchType() {
 		return this.searchType;
 	}
@@ -209,32 +361,67 @@ public class CommandUtils {
 		this.searchByTask = searchByTask;
 	}
 	
+	/*
+	 * Returns the string to be searched.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code String} 
+	 * 			
+	 * 
+	 */
+	
 	public String getSearchByTask() {
 		return this.searchByTask.trim();
 	}
+	
+	/*
+	 * Returns the tag to search.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code String} 
+	 * 			
+	 * 
+	 */
 	
 	public String getSearchByTag() {
 		return this.searchByTag.trim();
 	}
 	
+	/*
+	 * Returns the date to search.
+	 * 
+	 * @param {}
+	 * 
+	 * @return {@code Date} 
+	 * 			
+	 * 
+	 */
 	public Date getSearchByDate() {
 		return this.searchByDate;
 	}
-	//********************************************* SortParser ************************************//
+	
+	//******************************** Mutators and Accessors for SortParser ************************************//
 	protected void setSortAttributes(SORT_TYPE sortType) {
 		this.sortType = sortType;	
 	}
 
+	/*
+	 *  Returns the type of sort.
+	 * 
+	 * @param {}
+	 * 
+	 * @return sort Type
+	 * 			
+	 * 
+	 */
 	public SORT_TYPE getSortType() {
 		return this.sortType;
 	}
 	
 	protected void setSortType(SORT_TYPE sortType) {
 		this.sortType = sortType;
-	}
-	//************************************** ChangeDirectory Parser *********************************//
-	public String getNewDirectory() {
-		return this.newDirectory;
 	}
 	
 }

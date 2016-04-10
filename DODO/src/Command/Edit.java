@@ -32,14 +32,7 @@ public class Edit extends Command {
 		EDIT_TYPE edit_type = cu.getEditType();
 		int index = cu.getTaskID();
 		ArrayList<Task> tasks = this.retrieve(this.UIStatus);
-		
-/*		if (this.UIStatus==UI_TAB.ALL) {
-			int sizeOverdue = this.overdueTasks.size();
-			if ()
-			int sizeOngoing = this.ongoingTasks.size();
-			int sizeFloating = this.floatingTasks.size();
-			int sizeCompleted = this.completedTasks.size();
-		}*/
+		System.out.println("=====EDIT===== edit_type: " + edit_type);
 		try {
 			switch (edit_type) {
 			case TASK_NAME:

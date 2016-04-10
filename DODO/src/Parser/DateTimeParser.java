@@ -28,43 +28,67 @@ public class DateTimeParser {
 	private String confirmTaskName = "";
 	private String possibleDate = "";
 	
-	private final String KEYWORD_AM = "am";
-	private final String KEYWORD_PM = "pm";
-	private final String KEYWORD_HRS = "hrs";
-	private final String KEYWORD_HR = "hr";
-	private final String KEYWORD_THE_DAY_AFTER_TOMORROW = " the day after tomorrow";
-	private final String KEYWORD_DAY_AFTER_TOMORROW = " day after tomorrow";
-	private final String KEYWORD_TOMORROW_1 = "tomorrow";
-	private final String KEYWORD_TOMORROW_2 = "tomorrow ";
-	private final String KEYWORD_YESTERDAY_SHORTFORM = "ytd";
-	private final String KEYWORD_YESTERDAY = "yesterday";
-	private final String KEYWORD_TODAY = "today";
-	private final String KEYWORD_COMING = "coming";
-	private final String KEYWORD_THIS_COMING = " this coming";
-	private final String KEYWORD_AT_1 = "at";
-	private final String KEYWORD_AT_2 = "@";
-	private final String KEYWORD_THE = " the ";
-	private final String KEYWORD_DAYS = "days";
-	private final String KEYWORD_NEXT = " next ";
-	private final String KEYWORD_NEXT_1 = "next";
-	private final String KEYWORD_NEXT_WEEK = " next week";
-	private final String KEYWORD_ST = "st";
-	private final String KEYWORD_ND = "nd";
-	private final String KEYWORD_RD = "rd";
-	private final String KEYWORD_TH = "th";
+	private final static String KEYWORD_AM = "am";
+	private final static String KEYWORD_PM = "pm";
+	private final static String KEYWORD_HRS = "hrs";
+	private final static String KEYWORD_HR = "hr";
+	private final static String KEYWORD_THE_DAY_AFTER_TOMORROW = " the day after tomorrow";
+	private final static String KEYWORD_DAY_AFTER_TOMORROW = " day after tomorrow";
+	private final static String KEYWORD_TOMORROW_1 = "tomorrow";
+	private final static String KEYWORD_TOMORROW_2 = "tomorrow ";
+	private final static String KEYWORD_YESTERDAY_SHORTFORM = "ytd";
+	private final static String KEYWORD_YESTERDAY = "yesterday";
+	private final static String KEYWORD_TODAY = "today";
+	private final static String KEYWORD_COMING = "coming";
+	private final static String KEYWORD_THIS_COMING = " this coming";
+	private final static String KEYWORD_AT_1 = "at";
+	private final static String KEYWORD_AT_2 = "@";
+	private final static String KEYWORD_HASH_TAG = "#";
+	private final static String KEYWORD_THE = " the ";
+	private final static String KEYWORD_DAYS = "days";
+	private final static String KEYWORD_NEXT_1 = "next";
+	private final static String KEYWORD_NEXT_WEEK = " next week";
+	private final static String KEYWORD_NEXT_WEEK_2 = "next week";
 	
-	private final String DEFAULT_TIME_6PM = "18:00:00";
-	private final String DEFAULT_TIME_1159PM = "23:59:59";
-	private final String DATE_FORMAT_1 = "dd/MM/yyyy";
-	private final String DATE_FORMAT_2 = "yyyy/MM/dd";
-	private final String DATE_FORMAT_3 = "dd.MM.yyyy";
-	private final String DATE_FORMAT_4 ="dd-MM-yyyy";
-	private final String DATE_FORMAT_WITH_TIME = "dd/MM/yyyy HH:mm:ss";
-	private final String TIME_WITHOUT_DATE_FORMAT = "HH:mm";
-	private final String STRING_SPLITTER = "\\s+";
+	private final static String STRING_EMPTY = "";
+	private final static String STRING_SPACING = " ";
+	private final static String STRING_SLASH = "/";
+	private final static String STRING_HOLIDAY_VALENTINES_DAY = "valentine's day";
+	private final static String STRING_HOLIDAY_CHRISTMAS = "christmas";
+	private final static String STRING_HOLIDAY_NEW_YEAR = "new year's";
+	private final static String STRING_HOLIDAY_NEW_YEAR_EVE = "new year's eve";
+	private final static String STRING_HOLIDAY_HALLOWEEN = "halloween";
+	private final static String STRING_HOLIDAY_MOTHERS_DAY = "mother's day";
+	private final static String STRING_HOLIDAY_FATHERS_DAY = "father's day";
 	
+
+	private final static String DEFAULT_TIME_6PM = "18:00:00";
+	private final static String DEFAULT_TIME_1159PM = "23:59:59";
+	private final static String DEFAULT_TIME_2400HRS = "2400hrs";
+	private final static String DEFAULT_TIME_0000HRS = "0000hrs";
+	private final static String DEFAULT_TIME_000000 = "00:00:00";
+	private final static String DATE_FORMAT_1 = "dd/MM/yyyy";
+	private final static String DATE_FORMAT_2 = "yyyy/MM/dd";
+	private final static String DATE_FORMAT_3 = "dd.MM.yyyy";
+	private final static String DATE_FORMAT_4 ="dd-MM-yyyy";
+	private final static String DATE_FORMAT_WITH_TIME = "dd/MM/yyyy HH:mm:ss";
+	private final static String TIME_WITHOUT_DATE_FORMAT = "HH:mm";
+	private final static String STRING_SPLITTER = "\\s+";
+	private final static String PUNCTUATION_REMOVER = "[.-/]";
+	
+	private final static int NUM_MAX_DAYS_PER_MONTH = 31;
+	private final static int NUM_MAX_MONTH_PER_YEAR = 12;
+	
+	private Date newDate;
+	private SimpleDateFormat sf;
+	private SimpleDateFormat sdf;
+	private DateFormat df;
 	
 	public DateTimeParser () {
+
+		sf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
+		sdf = new SimpleDateFormat(TIME_WITHOUT_DATE_FORMAT);
+		df = new SimpleDateFormat(DATE_FORMAT_1);
 		
 		todayTypes = new ArrayList<>(Arrays.asList("tdy"));
 		tomorrowTypes = new ArrayList<>(Arrays.asList("tmr", "tml", "tmrw", "2moro"));
@@ -79,285 +103,406 @@ public class DateTimeParser {
 												   "oct", "october", "nov", "november", "dec", "december"));
 		
 		preposition = new ArrayList<>(Arrays.asList("on", "at", "by", "before", "in", "from" , "to"));
+	
 	}
 	
+	/*
+	 * This method extracts the word "the day after tomorrow" and "day after
+	 * "tomorrow" from the user input. 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "day after tomorrow" removed.  
+	 * 
+	 */
 	protected String removeTheDayAfterTomorrow(String userInput) {
-		System.out.println("removeTheDayAfterTomorrow : " + userInput);
+	
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		
 		if (userInput.contains(KEYWORD_THE_DAY_AFTER_TOMORROW) && dates.size() != 0) {
-			userInput = userInput.replace(KEYWORD_THE_DAY_AFTER_TOMORROW, "");
+			userInput = userInput.replace(KEYWORD_THE_DAY_AFTER_TOMORROW, STRING_EMPTY);
 			possibleDate = KEYWORD_THE_DAY_AFTER_TOMORROW.trim();
 		}
 		else if (userInput.contains(KEYWORD_DAY_AFTER_TOMORROW) && dates.size() != 0) {
-			userInput = userInput.replace(KEYWORD_DAY_AFTER_TOMORROW, "");
+			userInput = userInput.replace(KEYWORD_DAY_AFTER_TOMORROW, STRING_EMPTY);
 			possibleDate = KEYWORD_THE_DAY_AFTER_TOMORROW.trim();
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts the word "tomorrow" 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "tomorrow" removed.  
+	 * 
+	 */
 	protected String removeTomorrow(String userInput) {
+		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		
 		if ((userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2))
 			&& dates.size() != 0) {
-			userInput = userInput.replace(KEYWORD_TOMORROW_1, "");
+			
+			userInput = userInput.replace(KEYWORD_TOMORROW_1, STRING_EMPTY);
 			setDateElements(KEYWORD_TOMORROW_1);
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts the word "yesterday" 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "yesterday" removed.  
+	 * 
+	 */
 	protected String removeYesterday(String userInput) {
+		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		
 		if (userInput.contains(KEYWORD_YESTERDAY) && dates.size() != 0) {
-			userInput = userInput.replace(KEYWORD_YESTERDAY, "");
+		
+			userInput = userInput.replace(KEYWORD_YESTERDAY, STRING_EMPTY);
 			possibleDate = KEYWORD_YESTERDAY;
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts the word "today" 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "today" removed.  
+	 * 
+	 */
 	protected String removeToday(String userInput) {
+		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
+		
 		if (userInput.contains(KEYWORD_TODAY) && dates.size() != 0) {
-			userInput = userInput.replace(KEYWORD_TODAY, "");
+		
+			userInput = userInput.replace(KEYWORD_TODAY, STRING_EMPTY);
 			possibleDate = KEYWORD_TODAY;
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts the word "this coming weekday" 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "this coming weekday" removed.  
+	 * 
+	 */
 	protected String removeThisComingWeekday(String userInput) {
+		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
 		if (userInput.toLowerCase().contains(KEYWORD_THIS_COMING)) {
 			int index = taskItems.lastIndexOf(KEYWORD_COMING);
+		
 			taskItems.remove(index + 1);
 			taskItems.remove(index);
 			taskItems.remove(index - 1);
+			
 			userInput = toStringTaskElements(taskItems);
-			possibleDate = taskItems.get(index - 1) + " " + taskItems.get(index) + " " + taskItems.get(index - 1);
+			possibleDate = taskItems.get(index - 1) + STRING_SPACING + taskItems.get(index) +
+						   STRING_SPACING+ taskItems.get(index - 1);
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts the word "next few days" 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "next few days" removed.  
+	 * 
+	 */
 	protected String removeNextFewDays(String userInput) {
 
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
+		
 		int indexOfNext = taskItems.lastIndexOf(KEYWORD_NEXT_1);
 		int indexOfDays = taskItems.lastIndexOf(KEYWORD_DAYS);
 
 		if (indexOfNext != 0 && (indexOfDays - indexOfNext) == 2  
-			&& !userInput.contains(KEYWORD_NEXT_WEEK)) {
-			possibleDate = taskItems.get(indexOfNext) + " " + taskItems.get(indexOfNext + 1) 
-							+ " " + taskItems.get(indexOfDays);
+			&& !userInput.contains(KEYWORD_NEXT_WEEK_2)) {
+		
+			possibleDate = taskItems.get(indexOfNext) + STRING_SPACING + taskItems.get(indexOfNext + 1) + 
+						   STRING_SPACING + taskItems.get(indexOfDays);
+			
 			taskItems.remove(indexOfDays);
 			taskItems.remove(indexOfNext + 1);
 			taskItems.remove(indexOfNext);
+			
 			if (taskItems.get(indexOfNext - 1).contains(KEYWORD_THE)) {
-				possibleDate = "the " + possibleDate;
 				taskItems.remove(indexOfNext - 1);
 			}
 			userInput = toStringTaskElements(taskItems);
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts the numerical date (11/11, 11/11/16 etc)
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with numerical date removed.  
+	 * 
+	 */
 	protected String removeNumericalDate(String userInput) {
+		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
+		
 		for (int i = 0; i < taskItems.size(); i++) {
+		
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
+			
 			if (dates.size() != 0) {
-				String[] temp = taskItems.get(i).split("[.-/]");
-				System.out.println("removeDate : " + taskItems.get(i));
+			
+				String[] temp = taskItems.get(i).split(PUNCTUATION_REMOVER);
+				
 				if (temp.length >= 2) {
+				
 					possibleDate = taskItems.get(i);
 					taskItems.remove(i);
 				}
 			}
 		}
+		
 		userInput = toStringTaskElements(taskItems);
 		return userInput;
 		
 	}
+	
+	/*
+	 * This method extracts the words "next week" 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with "next week" removed.  
+	 * 
+	 */
+	
 	protected String removeNextWeek(String userInput) {
 	
-		if (userInput.contains(KEYWORD_NEXT_WEEK)) {
-			userInput = userInput.replace(KEYWORD_NEXT_WEEK, "");
+		if (userInput.contains(KEYWORD_NEXT_WEEK) || userInput.contains(KEYWORD_NEXT_WEEK_2) ) {
+			userInput = userInput.replace(KEYWORD_NEXT_WEEK_2, STRING_EMPTY);
 		}
+		
 		return userInput.trim();
 	}
 	
+	/*
+	 * This method extracts weekday from the user input.
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with weekday element removed.  
+	 * 
+	 */
+	
 	protected String removeWeekday(String userInput) {
+		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		String[] temp = userInput.split(STRING_SPLITTER);
 		String newInput = "";
+		
 		if (dates.size() != 0) {
 			for (int i = 0; i < temp.length; i++) {
-				if (dayTypes.contains(temp[i].toLowerCase())) {
-				}
-				else {
-					newInput += temp[i] + " ";
+				if (!dayTypes.contains(temp[i].toLowerCase())) {
+					newInput += temp[i] + STRING_SPACING;
 				}
 			}
 			userInput = newInput.trim();
 		}
+		
 		return userInput;
 	}
 	
+	/*
+	 * This method extracts the next weekday elements (next thursday etc..) 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with the next weekday element removed.  
+	 * 
+	 */
 	protected String removeNextWeekday(String userInput) {
+		
 		String[] temp = userInput.split(STRING_SPLITTER);
 		String newTaskName = "";
 		int positionOfWeekday = 0;
 
 		for (int i = 0; i < temp.length; i++) {
-			if (temp[i].contains(KEYWORD_NEXT)) {
+			
+			if (temp[i].contains(KEYWORD_NEXT_1)) {
+			
 				positionOfWeekday = i + 1;
 				List<Date> dates = new PrettyTimeParser().parse(temp[positionOfWeekday]);
+				
 				if (dates.size() != 0) {
-					possibleDate += temp[i] + " ";
-					temp[i] = "";
-					possibleDate += temp[positionOfWeekday] + " ";
-					temp[positionOfWeekday] = "";
+				
+					possibleDate += temp[i] + STRING_SPACING;
+					temp[i] = STRING_EMPTY;
+					
+					possibleDate += temp[positionOfWeekday] + STRING_SPACING;
+					temp[positionOfWeekday] = STRING_EMPTY;
 					i++;
 				}
 			}
-			newTaskName += temp[i] + " ";
+			newTaskName += temp[i] + STRING_SPACING;
 		}
+		
 		return newTaskName.trim();
 	}
 	
+	/*
+	 * This method extracts the time element
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with the time element removed.  
+	 * 
+	 */
 	protected String removeTime (String userInput) {
+		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
+		
 		for (int i = 0; i < taskItems.size(); i++) {
+		
 			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
 	
 			if ((taskItems.get(i).toLowerCase().contains(KEYWORD_AM) || taskItems.get(i).toLowerCase().contains(KEYWORD_PM) 
 				|| taskItems.get(i).toLowerCase().contains(KEYWORD_HR) || taskItems.get(i).toLowerCase().contains(KEYWORD_HRS) ) 
 				&& dates.size() != 0) {
-				possibleDate += taskItems.get(i) + " ";
+			
+				possibleDate += taskItems.get(i) + STRING_SPACING;
 				taskItems.remove(i);
 			}
 		}
+		
 		userInput = toStringTaskElements(taskItems);
 		return userInput;
 	}
 	
+	/*
+	 * This method extracts the holiday element 
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with the holiday element removed.  
+	 * 
+	 */
 	private String removeHoliday(String userTask) {
+		
+		String[] temp = userTask.split(STRING_SPLITTER);
 		boolean containsPreposition = false;
-		String[] temp = userTask.split(STRING_SPLITTER);	
-		for (int i = 0; i < temp.length; i++) {
-			if (preposition.contains(temp[i])) {
-				containsPreposition = true;
-			}
+		containsPreposition = containsPreposition(temp);
+		
+		if (userTask.toLowerCase().contains(STRING_HOLIDAY_VALENTINES_DAY) && containsPreposition == true) {
+			userTask = userTask.toLowerCase().replace(STRING_HOLIDAY_VALENTINES_DAY, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_VALENTINES_DAY + STRING_SPACING;
+		}
+		else if (userTask.toLowerCase().contains(STRING_HOLIDAY_CHRISTMAS) && containsPreposition == true) {
+			userTask = userTask.toLowerCase().replace(STRING_HOLIDAY_CHRISTMAS, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_CHRISTMAS + STRING_SPACING;
+		}
+		else if (userTask.toLowerCase().contains(STRING_HOLIDAY_NEW_YEAR) && containsPreposition == true) {
+			userTask = userTask.toLowerCase().replace(STRING_HOLIDAY_NEW_YEAR, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_NEW_YEAR + STRING_SPACING;
+		}
+		else if (userTask.toLowerCase().contains(STRING_HOLIDAY_NEW_YEAR_EVE) && containsPreposition == true) {
+			userTask = userTask.toLowerCase().replace(STRING_HOLIDAY_NEW_YEAR_EVE, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_NEW_YEAR_EVE + STRING_SPACING;
+		}
+		else if (userTask.toLowerCase().contains(STRING_HOLIDAY_HALLOWEEN) && containsPreposition == true) {
+			userTask = userTask.toLowerCase().replace(STRING_HOLIDAY_HALLOWEEN, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_HALLOWEEN + STRING_SPACING;
+		}
+		else if (userTask.toLowerCase().contains(STRING_HOLIDAY_MOTHERS_DAY) && containsPreposition == true) {
+			userTask = userTask.replace(STRING_HOLIDAY_MOTHERS_DAY, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_MOTHERS_DAY + STRING_SPACING;
+		}
+		else if (userTask.toLowerCase().contains(STRING_HOLIDAY_FATHERS_DAY) && containsPreposition == true) {
+			userTask = userTask.toLowerCase().replace(STRING_HOLIDAY_FATHERS_DAY, STRING_EMPTY);
+			possibleDate = STRING_HOLIDAY_FATHERS_DAY + STRING_SPACING;
 		}
 		
-		if (userTask.contains("valentine's day") && containsPreposition == true) {
-			userTask = userTask.replace("valentine's day", "");
-			possibleDate = "valetine's day ";
-		}
-		else if (userTask.contains("christmas") && containsPreposition == true) {
-			userTask = userTask.replace("christmas", "");
-			possibleDate = "christmas ";
-		}
-		else if (userTask.contains("new year's") && containsPreposition == true) {
-			userTask = userTask.replace("new year's", "");
-			possibleDate = "new year's ";
-		}
-		else if (userTask.contains("new year's eve") && containsPreposition == true) {
-			userTask = userTask.replace("new year's eve", "");
-			possibleDate = "new year's eve ";
-		}
-		else if (userTask.contains("halloween") && containsPreposition == true) {
-			userTask = userTask.replace("halloween", "");
-			possibleDate = "halloween ";
-		}
-		else if (userTask.contains("mother's day") && containsPreposition == true) {
-			userTask = userTask.replace("mother's day", "");
-			possibleDate = "mother's day ";
-		}
-		else if (userTask.contains("father's day") && containsPreposition == true) {
-			userTask = userTask.replace("father's day", "");
-			possibleDate = "father's day ";
-		}
 		return userTask;
 	}
-	
+
+	/*
+	 * This method extracts the english date element (1st May 2016 etc)
+	 * 
+	 * @param userInput {@code String} 
+	 * 
+	 * @return {@code String} with the english date element removed.  
+	 * 
+	 */
 	protected String removeEnglishDate(String userInput) {
+
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		System.out.println("CONFIRMTASKNAME #32 : " + dates.size());
-		String[] temp = userInput.split(STRING_SPLITTER);
-		int positionOfMonth = 0;
-		int positionOfDay = 0;
-		int positionOfYear = 0;
-		String day = "";
-		String month = "";
-		String year = "";
-		boolean containsPreposition = false;
-		boolean containsMonth = false;
+		String[] str = userInput.split(STRING_SPLITTER);
+		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
-		for (int i = 0; i < temp.length; i++) {
-			if (monthTypes.contains(temp[i].toLowerCase())) {
-				positionOfMonth = i;
-				month = temp[positionOfMonth];
-				containsMonth = true;
-			}
-			else if (preposition.contains(temp[i])) {
-				containsPreposition = true;
+		for (int i = 0; i < taskItems.size(); i++) {
+			if (monthTypes.contains(taskItems.get(i).toLowerCase()) && dates.size() != 0) {
+				taskItems.remove(i);
 			}
 		}
-	
-		if (dates.size() == 0 || (dates.size() != 0 && containsPreposition == false || containsMonth == false)) {
-			System.out.println("CONFIRMTASKNAME : " + userInput);
-			//		confirmTaskName = userInput;
-			return userInput;
-		}
-		
-		if (positionOfMonth + 1 < temp.length) {
-			if (temp[positionOfMonth + 1].length() == 2 && Integer.parseInt(temp[positionOfMonth + 1]) < 20) {
-				positionOfYear = positionOfMonth + 1;
-				year = temp[positionOfYear];
-			}
-			else if (temp[positionOfMonth + 1].length() == 4 && Integer.parseInt(temp[positionOfMonth + 1]) < 2020) {
-				positionOfYear = positionOfMonth + 1;
-				year = temp[positionOfYear];
-			}
-		}
-		
-		if (positionOfMonth - 1 > 0) {
-			if (temp[positionOfMonth - 1].endsWith(KEYWORD_ST) && (temp[positionOfMonth - 1].startsWith("1")
-				|| temp[positionOfMonth - 1].startsWith("31"))) {
-				positionOfDay = positionOfMonth - 1;
-				day = temp[positionOfDay];
-			}
-			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_ND) && temp[positionOfMonth - 1].startsWith("2")) {
-				positionOfDay = positionOfMonth + 1;
-				day = temp[positionOfDay];
-			}
-			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_RD) && temp[positionOfMonth - 1].startsWith("3")) {
-				positionOfDay = positionOfMonth + 1;
-				day = temp[positionOfDay];
-			}
-			else if (temp[positionOfMonth - 1].endsWith(KEYWORD_TH)) {
-				possibleDate = temp[positionOfMonth - 1].replace(KEYWORD_TH, "");
-				if (Integer.parseInt(possibleDate) > 3 && Integer.parseInt(possibleDate) < 32) {
-					positionOfDay = positionOfMonth - 1;
-					day = temp[positionOfDay];
-				}
-			}
-			else if (Integer.parseInt(temp[positionOfMonth - 1]) > 0 && Integer.parseInt(temp[positionOfMonth - 1]) < 32) {
-				positionOfDay = positionOfMonth - 1;
-				day = temp[positionOfDay];
-			}
-		}
-		
-		possibleDate = day + " " + month + " " + year;
-		confirmTaskName = userInput.replace(possibleDate.trim(), "");
-		return confirmTaskName;
+
+		return toStringTaskElements(taskItems);
 	}
 
+	/*
+	 * This method checks if a string contains preposition
+	 * 
+	 * @param userInput {@code String[]} 
+	 * 
+	 * @return {@code boolean} 
+	 * 
+	 */
+	private boolean containsPreposition(String[] userInput) {
+		
+		for (int i = 0; i < userInput.length; i++) {
+			if (preposition.contains(userInput[i])) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
+	/*
+	 * This method converts short form of yesterday to proper word.
+	 * 
+	 * @param contentToAnalyse {@code ArrayList<String} 
+	 * 
+	 * @return {@code String} with short form of the word yesterday being
+	 * replaced. 
+	 * 
+	 */
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
+		
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if ((contentToAnalyse.get(i).toLowerCase()).contains(KEYWORD_YESTERDAY_SHORTFORM)) {
 				contentToAnalyse.set(i, KEYWORD_YESTERDAY);
@@ -366,6 +511,15 @@ public class DateTimeParser {
 		return toStringTaskElements(contentToAnalyse);
 	}
 	
+	/*
+	 * This method converts short form of today to proper word.
+	 * 
+	 * @param contentToAnalyse {@code ArrayList<String} 
+	 * 
+	 * @return {@code String} with short form of the word today being
+	 * replaced. 
+	 * 
+	 */
 	protected String processToday (ArrayList<String> contentToAnalyse) {
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if (todayTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
@@ -375,60 +529,152 @@ public class DateTimeParser {
 		return toStringTaskElements(contentToAnalyse);
 	}
 	
+	/*
+	 * This method converts short form of tomorrow to proper word.
+	 * 
+	 * @param contentToAnalyse {@code ArrayList<String} 
+	 * 
+	 * @return {@code String} with short form of the word tomorrow being
+	 * replaced. 
+	 * 
+	 */
 	protected String processTomorrow (ArrayList<String> contentToAnalyse) {
+		
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
-			System.out.println("Process Tomorrow : " + contentToAnalyse.get(i));
 			if (tomorrowTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
 				contentToAnalyse.set(i, KEYWORD_TOMORROW_1);
 			}
 		}
+		
 		return toStringTaskElements(contentToAnalyse);
 	}
 	
+	/*
+	 * This method converts short form of "At" to proper word.
+	 * 
+	 * @param contentToAnalyse {@code ArrayList<String} 
+	 * 
+	 * @return {@code String} with short form of the word "At" being
+	 * replaced. 
+	 * 
+	 */
 	protected String processAt (ArrayList<String> contentToAnalyse) {
+		
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
-			if (contentToAnalyse.get(i).contains(KEYWORD_AT_2)) {
+			if (contentToAnalyse.get(i).toLowerCase().contains(KEYWORD_AT_2)) {
 				contentToAnalyse.set(i, KEYWORD_AT_1);
 			}
 		}
+		
 		return toStringTaskElements(contentToAnalyse);
 	}
+	
 	/*
-	 * @param: an arraylist of task elements.
-	 * @description: concatenate the content of a task input together
-	 * @return: a string of task name.
+	 * This method converts numerical date dd/MM to dd/MM/yy
+	 * 
+	 * @param taskItems {@code ArrayList<String} 
+	 * 
+	 * @return {@code String} with numercial date converted to dd/MM/yy
+	 * 
+	 */
+	private String processNumericalDate(ArrayList<String> taskItems) {
+		
+		String[] str;
+		
+		for (int i = 0; i < taskItems.size(); i++) {
+			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
+			
+			if (dates.size() != 0) {
+				str = taskItems.get(i).split(PUNCTUATION_REMOVER);
+			
+				if (!taskItems.get(i).contains(KEYWORD_HASH_TAG) && !taskItems.get(i).toLowerCase().contains(KEYWORD_AM) 
+					&& !taskItems.get(i).toLowerCase().contains(KEYWORD_PM)) {
+				
+					if (str.length == 2 && Integer.parseInt(str[0]) <= NUM_MAX_DAYS_PER_MONTH 
+						&& Integer.parseInt(str[1]) <= NUM_MAX_MONTH_PER_YEAR) {
+					
+						int year = Calendar.getInstance().get(Calendar.YEAR);
+						String newDate = str[0] + STRING_SLASH + str[1] + STRING_SLASH + year;
+						taskItems.set(i, newDate);
+					}
+				}
+			}
+		}
+		
+		return toStringTaskElements(taskItems);
+	}
+	
+	/*
+	 * This method converts 2400HRS to 0000hrs on the following day.
+	 * 
+	 * @param taskItems {@code ArrayList<String} 
+	 * 
+	 * @return {@code String} 
+	 * 
+	 */
+	private String process2400hrs(ArrayList<String> taskItems) {
+		
+		for (int i = 0; i < taskItems.size(); i++) {
+			if (taskItems.get(i).contains(DEFAULT_TIME_2400HRS)) {
+				taskItems.set(i, DEFAULT_TIME_0000HRS);
+			}
+		}
+		
+		return toStringTaskElements(taskItems);
+	}
+	
+	/*
+	 * This method concatenates ArrayList<String> to String
+	 * 
+	 * @param taskNameArrayList {@code ArrayList<String} 
+	 * 
+	 * @return {@code String}
+	 * 
 	 */
 	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
+		
 		String name = "";
+		
 		for (int i = 0; i < taskNameArrayList.size(); i++) {
-			name += taskNameArrayList.get(i) + " "; 
+			name += taskNameArrayList.get(i) + STRING_SPACING; 
 		}
+		
 		return name.trim();
 	}
 	
+	/*
+	 * This method checks and sets default end time.
+	 * 
+	 * @param date {@code Date} and currentTime {@code Date} 
+	 * 
+	 * @return {@code Date}
+	 * 
+	 */
 	protected Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
-		Date newDate = date;		
-		SimpleDateFormat sf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
-		SimpleDateFormat sdf = new SimpleDateFormat(TIME_WITHOUT_DATE_FORMAT);
-		DateFormat df = new SimpleDateFormat(DATE_FORMAT_1);
+		
+		newDate = date;		
 		String dateWithoutTime = df.format(date);
 		String newDateWithTime= "";
-		String timeAt6pm = dateWithoutTime + " " + DEFAULT_TIME_6PM;
+		String timeAt6pm = dateWithoutTime + STRING_SPACING + DEFAULT_TIME_6PM;
 		Calendar cal = Calendar.getInstance();
 		
 		try {
+			
 			Date dateWithoutDate = sdf.parse(sdf.format(date));
 			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
 			Date defaultDeadLineForExecutive = sf.parse(timeAt6pm);
 
 			if (dateWithoutDate.equals(currentWithoutDate) && currentTime.before(defaultDeadLineForExecutive)) {
+				
 				newDate = defaultDeadLineForExecutive;
 			} 
 			else if (dateWithoutDate.equals(currentWithoutDate) && currentTime.after(defaultDeadLineForExecutive)) {
-				newDateWithTime = dateWithoutTime + " " + DEFAULT_TIME_1159PM;
+				
+				newDateWithTime = dateWithoutTime + STRING_SPACING + DEFAULT_TIME_1159PM;
 				newDate = sf.parse(newDateWithTime);
 			}
 			else if (date.before(currentTime)) {
+				
 				cal.setTime(date);
 				cal.add(Calendar.DATE, 1);
 				newDateWithTime = sf.format(cal.getTime()); 
@@ -438,26 +684,33 @@ public class DateTimeParser {
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
 		return newDate;
 	}
+	
+	
+	/*
+	 * This method checks and sets default start time.
+	 * 
+	 * @param date {@code Date} and currentTime {@code Date} 
+	 * 
+	 * @return {@code Date}
+	 * 
+	 */
+	
 	protected Date checkAndSetDefaultStartTime(Date date, Date currentTime) {
-		Date newDate = date;		
-		SimpleDateFormat sf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
-		SimpleDateFormat sdf = new SimpleDateFormat(TIME_WITHOUT_DATE_FORMAT);
-		DateFormat df = new SimpleDateFormat(DATE_FORMAT_1);
+		
+		newDate = date;		
 		String dateWithoutTime = df.format(date);
-		System.out.println("HELLO : " + dateWithoutTime);
 		String currentDateWithoutTime= df.format(currentTime);
-		String timeAt12am = dateWithoutTime + " " + "00:00:00";
-		Calendar cal = Calendar.getInstance();
+		String timeAt12am = dateWithoutTime + STRING_SPACING + DEFAULT_TIME_000000;
 		
 		try {
 			Date dateWithoutDate = sdf.parse(sdf.format(date));
 			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
 			Date defaultStartTime = sf.parse(timeAt12am);
-			System.out.println("DefaultstartTime : " + dateWithoutTime);
+			
 			if (dateWithoutDate.equals(currentWithoutDate) && dateWithoutTime.equals(currentDateWithoutTime)) {
-				System.out.println("DefaultstartTime : " + defaultStartTime);
 				newDate = currentTime;
 			} 
 			else if (!dateWithoutTime.equals(currentDateWithoutTime) && dateWithoutDate.equals(currentWithoutDate)) {
@@ -467,27 +720,41 @@ public class DateTimeParser {
 				newDate = date;
 				
 			}
-	/*		else if (date.before(currentTime)) {
-				cal.setTime(date);
-				cal.add(Calendar.DATE, 1);
-				newDateWithTime = sf.format(cal.getTime()); 
-				newDate = sf.parse(newDateWithTime);
-			}
-	*/	}
+		}
 		catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
 		return newDate;
 	}
 	
+	/*
+	 * This method checks if a string has date and time elements.
+	 * 
+	 * @param userTask {@code String} 
+	 * 
+	 * @return {@code boolean} true if consists date and time elements.
+	 * 
+	 */
 	protected boolean hasDateAndTimeElements(String userTask) {
+		
 		String temp = "";
 		temp = extractDate(userTask);
+		
 		return (temp.trim().equals(userTask.trim())) ? false : true;
 	}
 	
+	/*
+	 * This method extracts date and time element from a string
+	 * 
+	 * @param userTask {@code String}
+	 * 
+	 * @return {@code String} with date and time elements removed.
+	 * 
+	 */
 	protected String extractDate(String userTask) {
 		String temp = "";
+		
 		temp = removeHoliday(userTask);
 		temp = removeTheDayAfterTomorrow(temp);
 		temp = removeYesterday(temp);
@@ -501,17 +768,37 @@ public class DateTimeParser {
 		temp = removeTime(temp);
 		temp = removeNumericalDate(temp);
 		temp = removeEnglishDate(temp);
+		
 		return temp;
 	}
 	
-
+	/*
+	 * This method checks for date and time element of an event task.
+	 * 
+	 * @param taskName {@code String}, LAST_POSITION_OF_FROM {@code int} and
+	 * LAST_POSITION_OF_TO {@code int} 
+	 * 
+	 * @return {@code boolean}
+	 * 
+	 */
 	protected boolean checkForDateAndTime(String taskName, int LAST_POSITION_OF_FROM, int LAST_POSITION_OF_TO) {	
+		
 		String str = taskName.substring(LAST_POSITION_OF_FROM, taskName.length());
 		List<Date> dates = new PrettyTimeParser().parse(str);
+		
 		return (dates.size() != 0) ? true : false; 
 	}
 	
+	/*
+	 * This method converts dd/MM/yyyy to MM/dd/yyyy format for PrettyTime parsing.
+	 * 
+	 * @param taskItems {@code ArrayList<String>}
+	 * 
+	 * @return {@code String}
+	 * 
+	 */
 	protected String checkAndConvertDateElement(ArrayList<String> taskItems) {
+		
 		DateFormat destDf = new SimpleDateFormat(DATE_FORMAT_2);
 	
 		for (int i = 0; i < taskItems.size(); i++) {
@@ -521,7 +808,8 @@ public class DateTimeParser {
 				Date date = srcDf.parse(taskItems.get(i));
 				taskItems.set(i, destDf.format(date));
 			}
-			catch (ParseException e) {				
+			catch (ParseException e) {		
+				e.printStackTrace();
 			}
 			
 			try {
@@ -529,7 +817,8 @@ public class DateTimeParser {
 				Date date = srcDf.parse(taskItems.get(i));
 				taskItems.set(i, destDf.format(date));
 			}
-			catch (ParseException e) {				
+			catch (ParseException e) {		
+				e.printStackTrace();
 			}
 			
 			try {
@@ -537,13 +826,25 @@ public class DateTimeParser {
 				Date date = srcDf.parse(taskItems.get(i));
 				taskItems.set(i, destDf.format(date));
 			}
-			catch (ParseException e) {				
+			catch (ParseException e) {		
+				e.printStackTrace();
 			}
 		}
+		
 		return toStringTaskElements(taskItems);
 	}
 	
+	/*
+	 * This method checks and processes abbreviations of
+	 * 
+	 * @param taskName {@code String}, LAST_POSITION_OF_FROM {@code int} and
+	 * LAST_POSITION_OF_TO {@code int} 
+	 * 
+	 * @return {@code boolean}
+	 * 
+	 */
 	protected String checkForAbbreviation(ArrayList<String> taskItems) {
+		
 		String name = "";
 		name = processToday(taskItems);
 		name = processTomorrow(taskItems);
@@ -551,36 +852,8 @@ public class DateTimeParser {
 		name = processAt(taskItems);
 		name = process2400hrs(taskItems);
 		name = processNumericalDate(taskItems);
-		return name;
-	}
-	
-	private String processNumericalDate(ArrayList<String> taskItems) {
-		String[] str;
 		
-		for (int i = 0; i < taskItems.size(); i++) {
-			List<Date> dates = new PrettyTimeParser().parse(taskItems.get(i));
-			if (dates.size() != 0) {
-				str = taskItems.get(i).split("[./-]");
-				if (!taskItems.get(i).contains("#") && !taskItems.get(i).toLowerCase().contains("am") 
-					&& !taskItems.get(i).toLowerCase().contains("pm")) {
-					if (str.length == 2 && Integer.parseInt(str[0]) < 32 && Integer.parseInt(str[1]) < 13) {
-						int year = Calendar.getInstance().get(Calendar.YEAR);
-						String newDate = str[0] + "/" + str[1] + "/" + year;
-						taskItems.set(i, newDate);
-					}
-				}
-			}
-		}
-		return toStringTaskElements(taskItems);
-	}
-
-	private String process2400hrs(ArrayList<String> taskItems) {
-		for (int i = 0; i < taskItems.size(); i++) {
-			if (taskItems.get(i).contains("2400hrs")) {
-				taskItems.set(i, "0000hrs");
-			}
-		}
-		return toStringTaskElements(taskItems);
+		return name;
 	}
 	
 

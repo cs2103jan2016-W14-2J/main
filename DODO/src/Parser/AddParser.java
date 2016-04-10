@@ -497,7 +497,6 @@ public class AddParser {
 				contentToAnalyse += str.get(i) + STRING_SPACING;
 			}
 			else {
-				System.out.println("Test str size fail : " + str.get(i));
 				confirmTaskName += str.get(i) + STRING_SPACING;
 			}
 		}

@@ -19,15 +19,15 @@ public class AddParser {
 	private static Logger logger;
 	
 	// Prepositions
-	private final String KEYWORD_FROM = "from";
-	private final String KEYWORD_TO = "to";
-	private final String KEYWORD_ON = "on";
-	private final String KEYWORD_BY = " by ";
-	private final String KEYWORD_BY_1 = "by";
-	private final String KEYWORD_AT = "at";
-	private final String KEYWORD_BEFORE = "before";
-	private final String KEYWORD_IN = "in";
-	private final String KEYWORD_DUE = "due";
+	private static final String KEYWORD_FROM = "from";
+	private static final String KEYWORD_TO = "to";
+	private static final String KEYWORD_ON = "on";
+	private static final String KEYWORD_BY = " by ";
+	private static final String KEYWORD_BY_1 = "by";
+	private static final String KEYWORD_AT = "at";
+	private static final String KEYWORD_BEFORE = "before";
+	private static final String KEYWORD_IN = "in";
+	private static final String KEYWORD_DUE = "due";
 	
 	// Positions of prepositions in a string
 	private int LAST_POSITION_OF_FROM = -1;
@@ -39,10 +39,10 @@ public class AddParser {
 	private int LAST_POSITION_OF_IN = -1;
 	
 	// Constants
-	private String STRING_SPLITTER = "\\s+";
-	private String STRING_MIDNIGHT_TIME = "0000hrs";
-	private String STRING_SPACING = " ";
-	private String STRING_EMPTY = "";
+	private static final String STRING_SPLITTER = "\\s+";
+	private static final String STRING_MIDNIGHT_TIME = "0000hrs";
+	private static final String STRING_SPACING = " ";
+	private static final String STRING_EMPTY = "";
 	
 	private int currentPosition = 0;
 	private String contentOfPreposition = "";

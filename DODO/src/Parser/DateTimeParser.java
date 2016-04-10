@@ -1,4 +1,4 @@
-//@@author: Hao Jie
+//@@author: A0125552L
 package Parser;
 
 import java.text.DateFormat;
@@ -9,8 +9,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
+
+import Logger.LoggerFile;
 
 public class DateTimeParser {
 	
@@ -19,15 +23,23 @@ public class DateTimeParser {
 		TYPE_NEXT_FEW_DAYS, TYPE_DATE, TYPE_TIME, TYPE_NULL
 	};
 	
+	private static Logger logger;
+	
 	private List<String> todayTypes;
 	private List<String> tomorrowTypes;
 	private ArrayList <String> taskItems;
 	private ArrayList<String> dayTypes;
 	private ArrayList<String> monthTypes;
 	private ArrayList<String> preposition;
+	
 	private String confirmTaskName = "";
 	private String possibleDate = "";
+	private Date newDate;
+	private SimpleDateFormat sf;
+	private SimpleDateFormat sdf;
+	private DateFormat df;
 	
+	// String constants.
 	private final static String KEYWORD_AM = "am";
 	private final static String KEYWORD_PM = "pm";
 	private final static String KEYWORD_HRS = "hrs";
@@ -60,8 +72,10 @@ public class DateTimeParser {
 	private final static String STRING_HOLIDAY_HALLOWEEN = "halloween";
 	private final static String STRING_HOLIDAY_MOTHERS_DAY = "mother's day";
 	private final static String STRING_HOLIDAY_FATHERS_DAY = "father's day";
-	
+	private final static String STRING_SPLITTER = "\\s+";
+	private final static String PUNCTUATION_REMOVER = "[.-/]";
 
+	// Date constants
 	private final static String DEFAULT_TIME_6PM = "18:00:00";
 	private final static String DEFAULT_TIME_1159PM = "23:59:59";
 	private final static String DEFAULT_TIME_2400HRS = "2400hrs";
@@ -73,19 +87,36 @@ public class DateTimeParser {
 	private final static String DATE_FORMAT_4 ="dd-MM-yyyy";
 	private final static String DATE_FORMAT_WITH_TIME = "dd/MM/yyyy HH:mm:ss";
 	private final static String TIME_WITHOUT_DATE_FORMAT = "HH:mm";
-	private final static String STRING_SPLITTER = "\\s+";
-	private final static String PUNCTUATION_REMOVER = "[.-/]";
 	
 	private final static int NUM_MAX_DAYS_PER_MONTH = 31;
 	private final static int NUM_MAX_MONTH_PER_YEAR = 12;
-	
-	private Date newDate;
-	private SimpleDateFormat sf;
-	private SimpleDateFormat sdf;
-	private DateFormat df;
+
+	// Logging messages for processing DateAndTimeParser methods
+	private static final String LOGGER_MESSAGE_REMOVE_THE_DAY_AFTER_TOMORROW = "DateAndTimeParser class : Removing the day after tomorrow.";
+	private static final String LOGGER_MESSAGE_REMOVE_TOMORROW = "DateAndTimeParser class : Removing tomorrow.";
+	private static final String LOGGER_MESSAGE_REMOVE_YESTERDAY = "DateAndTimeParser class : Removing yesterday.";
+	private static final String LOGGER_MESSAGE_REMOVE_TODAY = "DateAndTimeParser class : Removing today.";
+	private static final String LOGGER_MESSAGE_REMOVE_THIS_COMING_WEEKDAY = "DateAndTimeParser class : Removing this coming weekday.";
+	private static final String LOGGER_MESSAGE_REMOVE_NEXT_FEW_DAYS = "DateAndTimeParser class : Removing next few days.";
+	private static final String NULL_POINTER_EXCEPTION = "DateAndTimeParser class : May receive null pointer exception.";
+	private static final String LOGGER_MESSAGE_REMOVE_NUMERICAL_DATE = "DateAndTimeParser class : Removing numerical date.";
+	private static final String LOGGER_MESSAGE_REMOVE_NEXT_WEEK = "DateAndTimeParser class : Removing next week.";
+	private static final String LOGGER_MESSAGE_REMOVE_WEEKDAY = "DateAndTimeParser class : Removing weekday.";
+	private static final String LOGGER_MESSAGE_REMOVE_NEXT_WEEKDAY = "DateAndTimeParser class : Removing next weekday.";
+	private static final String LOGGER_MESSAGE_REMOVE_TIME = "DateAndTimeParser class : Removing time.";
+	private static final String LOGGER_MESSAGE_REMOVE_HOLIDAY = "DateAndTimeParser class : Removing holiday.";
+	private static final String LOGGER_MESSAGE_SET_DEFAULT_END_TIME = "DateAndTimeParser class : Setting default end time.";
+	private static final String LOGGER_MESSAGE_SET_DEFAULT_START_TIME = "DateAndTimeParser class : Setting default start time.";
+	private static final String LOGGER_MESSAGE_PROCESS_EXTRACT_DATE = "DateAndTimeParser class : Extracting date.";
+	private static final String LOGGER_MESSAGE_PROCESS_CONVERT_DATE_ELEMENT = "DateAndTimeParser class : Converting date.";
+	private static final String LOGGER_MESSAGE_CHECK_ABBREVIATIONS = "DateAndTimeParser class : Checking for abbreviations.";
+
+
 	
 	public DateTimeParser () {
-
+		
+		logger = LoggerFile.getLogger();
+		
 		sf = new SimpleDateFormat(DATE_FORMAT_WITH_TIME);
 		sdf = new SimpleDateFormat(TIME_WITHOUT_DATE_FORMAT);
 		df = new SimpleDateFormat(DATE_FORMAT_1);
@@ -116,7 +147,9 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String removeTheDayAfterTomorrow(String userInput) {
-	
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_THE_DAY_AFTER_TOMORROW);
+		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		
 		if (userInput.contains(KEYWORD_THE_DAY_AFTER_TOMORROW) && dates.size() != 0) {
@@ -141,6 +174,8 @@ public class DateTimeParser {
 	 */
 	protected String removeTomorrow(String userInput) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_TOMORROW);
+		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		
 		if ((userInput.contains(KEYWORD_TOMORROW_1) || userInput.contains(KEYWORD_TOMORROW_2))
@@ -163,6 +198,7 @@ public class DateTimeParser {
 	 */
 	protected String removeYesterday(String userInput) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_YESTERDAY);
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		
 		if (userInput.contains(KEYWORD_YESTERDAY) && dates.size() != 0) {
@@ -184,6 +220,7 @@ public class DateTimeParser {
 	 */
 	protected String removeToday(String userInput) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_TODAY);
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		
 		if (userInput.contains(KEYWORD_TODAY) && dates.size() != 0) {
@@ -204,6 +241,8 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String removeThisComingWeekday(String userInput) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_THIS_COMING_WEEKDAY);
 		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
@@ -232,7 +271,9 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String removeNextFewDays(String userInput) {
-
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_NEXT_FEW_DAYS);
+		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
@@ -241,7 +282,9 @@ public class DateTimeParser {
 
 		if (indexOfNext != 0 && (indexOfDays - indexOfNext) == 2  
 			&& !userInput.contains(KEYWORD_NEXT_WEEK_2)) {
-		
+			
+			logger.log(Level.WARNING, NULL_POINTER_EXCEPTION);
+			
 			possibleDate = taskItems.get(indexOfNext) + STRING_SPACING + taskItems.get(indexOfNext + 1) + 
 						   STRING_SPACING + taskItems.get(indexOfDays);
 			
@@ -267,6 +310,8 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String removeNumericalDate(String userInput) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_NUMERICAL_DATE);
 		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
@@ -302,7 +347,9 @@ public class DateTimeParser {
 	 */
 	
 	protected String removeNextWeek(String userInput) {
-	
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_NEXT_WEEK);
+		
 		if (userInput.contains(KEYWORD_NEXT_WEEK) || userInput.contains(KEYWORD_NEXT_WEEK_2) ) {
 			userInput = userInput.replace(KEYWORD_NEXT_WEEK_2, STRING_EMPTY);
 		}
@@ -320,6 +367,8 @@ public class DateTimeParser {
 	 */
 	
 	protected String removeWeekday(String userInput) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_WEEKDAY);
 		
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
 		String[] temp = userInput.split(STRING_SPLITTER);
@@ -346,6 +395,8 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String removeNextWeekday(String userInput) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_NEXT_WEEKDAY);
 		
 		String[] temp = userInput.split(STRING_SPLITTER);
 		String newTaskName = "";
@@ -384,6 +435,8 @@ public class DateTimeParser {
 	 */
 	protected String removeTime (String userInput) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_TIME);
+		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
@@ -413,6 +466,8 @@ public class DateTimeParser {
 	 * 
 	 */
 	private String removeHoliday(String userTask) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_REMOVE_HOLIDAY);
 		
 		String[] temp = userTask.split(STRING_SPLITTER);
 		boolean containsPreposition = false;
@@ -502,7 +557,7 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String processYesterday (ArrayList<String> contentToAnalyse) {
-		
+
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if ((contentToAnalyse.get(i).toLowerCase()).contains(KEYWORD_YESTERDAY_SHORTFORM)) {
 				contentToAnalyse.set(i, KEYWORD_YESTERDAY);
@@ -521,6 +576,7 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String processToday (ArrayList<String> contentToAnalyse) {
+
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if (todayTypes.contains(contentToAnalyse.get(i).toLowerCase())) {
 				contentToAnalyse.set(i, KEYWORD_TODAY);
@@ -559,7 +615,7 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String processAt (ArrayList<String> contentToAnalyse) {
-		
+
 		for (int i = 0; i < contentToAnalyse.size(); i++) {
 			if (contentToAnalyse.get(i).toLowerCase().contains(KEYWORD_AT_2)) {
 				contentToAnalyse.set(i, KEYWORD_AT_1);
@@ -578,7 +634,7 @@ public class DateTimeParser {
 	 * 
 	 */
 	private String processNumericalDate(ArrayList<String> taskItems) {
-		
+
 		String[] str;
 		
 		for (int i = 0; i < taskItems.size(); i++) {
@@ -589,7 +645,7 @@ public class DateTimeParser {
 			
 				if (!taskItems.get(i).contains(KEYWORD_HASH_TAG) && !taskItems.get(i).toLowerCase().contains(KEYWORD_AM) 
 					&& !taskItems.get(i).toLowerCase().contains(KEYWORD_PM)) {
-				
+					
 					if (str.length == 2 && Integer.parseInt(str[0]) <= NUM_MAX_DAYS_PER_MONTH 
 						&& Integer.parseInt(str[1]) <= NUM_MAX_MONTH_PER_YEAR) {
 					
@@ -652,6 +708,8 @@ public class DateTimeParser {
 	 */
 	protected Date checkAndSetDefaultEndTime(Date date, Date currentTime) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_SET_DEFAULT_END_TIME);
+		
 		newDate = date;		
 		String dateWithoutTime = df.format(date);
 		String newDateWithTime= "";
@@ -699,6 +757,8 @@ public class DateTimeParser {
 	 */
 	
 	protected Date checkAndSetDefaultStartTime(Date date, Date currentTime) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_SET_DEFAULT_START_TIME);
 		
 		newDate = date;		
 		String dateWithoutTime = df.format(date);
@@ -753,6 +813,9 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String extractDate(String userTask) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EXTRACT_DATE);
+		
 		String temp = "";
 		
 		temp = removeHoliday(userTask);
@@ -799,6 +862,8 @@ public class DateTimeParser {
 	 */
 	protected String checkAndConvertDateElement(ArrayList<String> taskItems) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_CONVERT_DATE_ELEMENT);
+		
 		DateFormat destDf = new SimpleDateFormat(DATE_FORMAT_2);
 	
 		for (int i = 0; i < taskItems.size(); i++) {
@@ -844,6 +909,8 @@ public class DateTimeParser {
 	 * 
 	 */
 	protected String checkForAbbreviation(ArrayList<String> taskItems) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_ABBREVIATIONS);
 		
 		String name = "";
 		name = processToday(taskItems);

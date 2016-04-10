@@ -5,11 +5,18 @@ package Command;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Collections;
+
 import GUI.UI_TAB;
 import Parser.*;
 import Task.*;
 
 public class Complete extends Command {
+	private static final String MESSAGE_INVALID_COMPLETE = "Please enter a valid command.";
+	private static final String MESSAGE_SUCCESSFUL_COMPLETE = 
+			"Congratulation! Task(s) at \"%1$s\" is/are successfully completed. ";
+	private static final String MESSAGE_UNSUCCESSFUL_COMPLETE = 
+			"Task(s) at \"%1$s\" failed to complete due to its/their invalid index or already completed status. ";
 
 	public Complete(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
@@ -28,7 +35,7 @@ public class Complete extends Command {
 		case ALL:
 			return completeAll();
 		default:
-			return "Invalid command.";
+			return MESSAGE_INVALID_COMPLETE;
 		}
 	}
 
@@ -44,27 +51,42 @@ public class Complete extends Command {
 
 	private String complete(ArrayList<Integer> indexes) {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
-		String status = "";
-		int index = 0;
+		ArrayList<Integer> unsuccessfulComplete = new ArrayList<Integer>();
+		ArrayList<Integer> successfulComplete = new ArrayList<Integer>();
+		
+		int index;
 		for (int i=indexes.size()-1; i>=0; i--) {
+			index = indexes.get(i)-INDEX_ADJUSTMENT;
 			try {
-				index = indexes.get(i)-1;
 				Task task = tasks.get(index);
 				if (task.getStatus()==TASK_STATUS.COMPLETED) {
-					status += "Task " + (index + INDEX_ADJUSTMENT) + " has been completed before.\n";
+					unsuccessfulComplete.add(index + INDEX_ADJUSTMENT);
 				}
 				else {
-					task.setComplete();;
-					tasks.remove(index);
+					tasks.remove(task);
+					if (this.UIStatus==UI_TAB.ALL) {
+						this.deleteTaskFromOtherTab(task);
+					}
 					this.completedTasks.add(task);
-					status += "Congratulation! Task " + (index+INDEX_ADJUSTMENT) + " is completed.\n";
+					task.setComplete();
+					successfulComplete.add(index + INDEX_ADJUSTMENT);
 				}
 				this.lastModifiedIndex = index;
 			} catch (IndexOutOfBoundsException e) {
-				status += "Task " + (index+INDEX_ADJUSTMENT) + " is absent.\n";
+				unsuccessfulComplete.add(index + INDEX_ADJUSTMENT);
 			}
 		}
 		this.UIStatus = UI_TAB.COMPLETED;
-		return status;
+		Collections.sort(successfulComplete);
+		Collections.sort(unsuccessfulComplete);
+		
+		if (unsuccessfulComplete.size()==0) {
+			return String.format(MESSAGE_SUCCESSFUL_COMPLETE, successfulComplete);
+		}
+		if (successfulComplete.size()==0) {
+			return String.format(MESSAGE_UNSUCCESSFUL_COMPLETE, unsuccessfulComplete);
+		}
+		return String.format(MESSAGE_SUCCESSFUL_COMPLETE, successfulComplete) + "\n " + 
+				String.format(MESSAGE_UNSUCCESSFUL_COMPLETE, unsuccessfulComplete);
 	}
 }

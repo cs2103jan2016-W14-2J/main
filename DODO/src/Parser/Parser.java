@@ -341,7 +341,7 @@ public class Parser {
 			if (str[i].contains(SYMBOL_HASH_TAG) && !str[i].contains(SYMBOL_DASH) 
 				&& str[i].length() > 1) {
 				
-				tags.add(str[i].replace(SYMBOL_HASH_TAG, SYMBOL_EMPTY).trim());
+				tags.add(str[i].replaceFirst(SYMBOL_HASH_TAG, SYMBOL_EMPTY).trim());
 				str[i] = SYMBOL_EMPTY;
 			
 			}

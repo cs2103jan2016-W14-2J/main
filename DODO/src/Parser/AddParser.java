@@ -282,7 +282,6 @@ public class AddParser {
 		List<Date> dates = new PrettyTimeParser().parse(taskName);
 		
 		if (dates.size() == 0 && dt.getDateElements() == null) {
-			
 			commandUtil.setTaskName(taskName);
 		}
 		else {

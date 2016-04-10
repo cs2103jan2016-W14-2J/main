@@ -103,12 +103,8 @@ public class DateTimeParser {
 	
 	protected String removeYesterday(String userInput) {
 		List<Date> dates = new PrettyTimeParser().parse(userInput);
-		if (userInput.contains(KEYWORD_YESTERDAY) && dates.size() == 0) {
+		if (userInput.contains(KEYWORD_YESTERDAY) && dates.size() != 0) {
 			userInput = userInput.replace(KEYWORD_YESTERDAY, "");
-			possibleDate = KEYWORD_YESTERDAY;
-		}
-		else if (userInput.contains(KEYWORD_YESTERDAY_SHORTFORM)) {
-			userInput = userInput.replace(KEYWORD_YESTERDAY_SHORTFORM, "");
 			possibleDate = KEYWORD_YESTERDAY;
 		}
 		return userInput.trim();
@@ -214,7 +210,9 @@ public class DateTimeParser {
 				positionOfWeekday = i + 1;
 				List<Date> dates = new PrettyTimeParser().parse(temp[positionOfWeekday]);
 				if (dates.size() != 0) {
+					possibleDate += temp[i] + " ";
 					temp[i] = "";
+					possibleDate += temp[positionOfWeekday] + " ";
 					temp[positionOfWeekday] = "";
 					i++;
 				}
@@ -233,7 +231,7 @@ public class DateTimeParser {
 			if ((taskItems.get(i).toLowerCase().contains(KEYWORD_AM) || taskItems.get(i).toLowerCase().contains(KEYWORD_PM) 
 				|| taskItems.get(i).toLowerCase().contains(KEYWORD_HR) || taskItems.get(i).toLowerCase().contains(KEYWORD_HRS) ) 
 				&& dates.size() != 0) {
-				possibleDate = taskItems.get(i);
+				possibleDate += taskItems.get(i) + " ";
 				taskItems.remove(i);
 			}
 		}

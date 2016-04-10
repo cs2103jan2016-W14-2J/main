@@ -80,6 +80,7 @@ public class Parser {
 	 */
 	public CommandUtils executeCommand(CommandUtils commandUtil, String userInput) {
 		
+		
 		assert userInput.length() > 0;
 		logger.log(Level.INFO, LOGGER_MESSAGE_EXECUTE_COMMAND);
 		
@@ -236,6 +237,9 @@ public class Parser {
 
 		if (possibleCommandErrors.containsKey(commandType)) {
 			this.command = possibleCommandErrors.get(commandType);
+		}
+		else if (commandType.replaceAll(" ", "").length() == 0) {
+			this.command = COMMAND_TYPE.INVALID;
 		}
 		else {
 			this.command = COMMAND_TYPE.ADD;

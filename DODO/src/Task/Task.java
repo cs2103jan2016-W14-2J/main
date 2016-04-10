@@ -194,12 +194,14 @@ public class Task {
 				this.status = newStatus;
 				return true;
 			}
+			break;
 		case OVERDUE:
 			newStatus = this.checkOverdue(this.end);
 			if (newStatus==TASK_STATUS.ONGOING) {
 				this.status = newStatus;
 				return true;
 			}
+			break;
 		}
 		return false;
 	}

@@ -63,7 +63,7 @@ public class DateTimeParser {
 	private final String TIME_WITHOUT_DATE_FORMAT = "HH:mm";
 	private final String STRING_SPLITTER = "\\s+";
 	
-
+	
 	public DateTimeParser () {
 		todayTypes = new ArrayList<>(Arrays.asList("tdy"));
 		tomorrowTypes = new ArrayList<>(Arrays.asList("tmr", "tml", "tmrw", "2moro"));

@@ -5,13 +5,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 import org.ocpsoft.prettytime.shade.org.apache.commons.lang.time.DateUtils;
 
 import Task.*;
+import Logger.*;
 
 public class AddParser {
+	
+	private static Logger logger;
 	
 	// Prepositions
 	private final String KEYWORD_FROM = "from";
@@ -54,11 +59,38 @@ public class AddParser {
 	private ArrayList<String> inputElements;
 	private ArrayList<String> str;
 	
+	// Logging for processing task types.
+	private static final String LOGGER_MESSAGE_DEADLINE_TYPE = "Processing deadline task.";
+	private static final String LOGGER_MESSAGE_FLOATING_TYPE = "Processing floating task.";
+	private static final String LOGGER_MESSAGE_EVENT_TYPE = "Processing event task.";
+	
+	// Logging for processing methods.
+	private static final String LOGGER_MESSAGE_EXECUTE_ADD_PARSER = "AddParser Class: Processing executeAddParser method.";
+	private static final String LOGGER_MESSAGE_EXIT_CLASS = "AddParser Class: Exiting AddParser class.";
+	private static final String LOGGER_MESSAGE_DETERMINE_TASK_TYPE = "AddParser Class: Determining task type.";
+	private static final String LOGGER_MESSAGE_CHECK_IF_EVENT_TASK = "AddParser Class: Checking if input is event task.";
+	private static final String LOGGER_MESSAGE_CHECK_IF_FLOATING_TASK = "AddParser Class: Checking if input is floating task.";
+	private static final String LOGGER_MESSAGE_CHECK_IF_DEADLINE_TASK = "AddParser Class: Checking if input is deadline task.";
+	private static final String LOGGER_MESSAGE_PARSE_EVENT = "AddParser Class: Processing event task.";
+	private static final String LOGGER_MESSAGE_PARSE_DEADLINED = "AddParser Class: Processing deadline task.";
+	private static final String LOGGER_MESSAGE_PARSE_FLOATING = "AddParser Class: Processing floating task.";
+	private static final String LOGGER_MESSAGE_GET_KEYWORD_POSITION = "AddParser Class: Getting position of preposition.";
+	private static final String LOGGER_MESSAGE_CONVERT_ARRAYLIST_TO_LOWERCASE = "AddParser Class: Converting arraylist to lowercase.";
+	private static final String LOGGER_MESSAGE_SET_EVENT_TIME = "AddParser Class: Setting time elements for event task.";
+	private static final String LOGGER_MESSAGE_SET_DEADLINE = "AddParser Class: Setting time element for deadline task.";
+	private static final String LOGGER_MESSAGE_EXTRACT_DATE_FROM_TASK = "AddParser Class: Extracting date elements from task name";
+	private static final String LOGGER_MESSAGE_EXTRACT_PREPOSITION = "AddParser Class: Extracting preposition.";
+	private static final String LOGGER_MESSAGE_GET_TASK_NAME = "AddParser Class: Extracting task name.";
+	private static final String LOGGER_MESSAGE_FINAL_VERIFICATION = "AddParser Class: Checking if task name is really floating task.";
+	private static final String LOGGER_MESSAGE_EXTRACT_LAST_PREPOSITION = "AddParser Class: Extracting last string.";
+	private static final String LOGGER_MESSAGE_HAS_LAST_WORD_AS_PREPOSITION = "AddParser Class: Checking if last string is a preposition";
+	
 	public AddParser() {
 		
 		date = new Date();
 		dt = new DateTimeParser();
 		str = new ArrayList<String>();
+		logger = LoggerFile.getLogger();
 		preposition = new ArrayList<>(Arrays.asList("on", "at", "by", "before", "in"));
 	
 	}
@@ -77,6 +109,7 @@ public class AddParser {
 	protected CommandUtils executeAddParser(CommandUtils commandUtil, String userInput) {
 		
 		assert (userInput != null);
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXECUTE_ADD_PARSER);
 		
 		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
@@ -87,6 +120,7 @@ public class AddParser {
 		commandUtil = determineTaskType(commandUtil, taskItems, taskName);
 		taskType = commandUtil.getType();
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXIT_CLASS);
 		return analyseTaskType(commandUtil);
 	}
 
@@ -106,13 +140,16 @@ public class AddParser {
 		switch(taskType) {
 		
 			case DEADLINED:
+				logger.log(Level.INFO, LOGGER_MESSAGE_DEADLINE_TYPE);
 				commandUtil = parseDEADLINED(commandUtil, taskName);
 				return parseFloating(taskItems, commandUtil.getName(), commandUtil);
 			
 			case FLOATING:
+				logger.log(Level.INFO, LOGGER_MESSAGE_FLOATING_TYPE);
 				return parseFloating(taskItems, taskName, commandUtil);
 			
 			case EVENT:
+				logger.log(Level.INFO, LOGGER_MESSAGE_EVENT_TYPE);
 				commandUtil = parseEVENT(commandUtil, taskName);
 				return parseFloating(taskItems, commandUtil.getName(), commandUtil);
 			
@@ -134,6 +171,8 @@ public class AddParser {
 	 */
 	
 	public CommandUtils determineTaskType(CommandUtils commandUtil, ArrayList<String> taskItems, String taskName) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_DETERMINE_TASK_TYPE);
 		
 		if (checkIfDeadlinedTask(taskItems, taskName)) {
 			commandUtil.setTaskType(TASK_TYPE.DEADLINED);
@@ -159,6 +198,8 @@ public class AddParser {
 	 * 
 	 */
 	private boolean checkIfEventTask(String taskName) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IF_EVENT_TASK);
 		
 		LAST_POSITION_OF_FROM = taskName.toLowerCase().lastIndexOf(KEYWORD_FROM);
 		LAST_POSITION_OF_TO = taskName.toLowerCase().lastIndexOf(KEYWORD_TO);
@@ -188,6 +229,7 @@ public class AddParser {
 	 */
 	private boolean checkIfFloatingTask(ArrayList<String> taskItems, String taskName) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IF_FLOATING_TASK);
 		return (!checkIfEventTask(taskName) && !checkIfDeadlinedTask(taskItems, taskName)) ? true : false;
 	
 	}
@@ -203,6 +245,7 @@ public class AddParser {
 	
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String taskName) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IF_DEADLINE_TASK);
 		getKeywordPosition(taskName);
 		
 		return ((LAST_POSITION_OF_AT != -1 || LAST_POSITION_OF_ON != -1 || 
@@ -222,7 +265,9 @@ public class AddParser {
 	 */
 	
 	private CommandUtils parseEVENT(CommandUtils commandUtil, String taskName) {
-	
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PARSE_EVENT);
+		
 		// Add prepositions for determining an event task to ArrayList<String> preposition.
 		String[] elements = taskName.split(STRING_SPLITTER);
 		preposition.add(KEYWORD_FROM);
@@ -253,6 +298,8 @@ public class AddParser {
 	
 	private CommandUtils parseDEADLINED(CommandUtils commandUtil, String taskName) {
 
+		logger.log(Level.INFO, LOGGER_MESSAGE_PARSE_DEADLINED);
+		
 		String[] elements = taskName.split(STRING_SPLITTER);
 		inputElements = new ArrayList<String>(Arrays.asList(elements));
 		
@@ -277,6 +324,8 @@ public class AddParser {
 	 * 
 	 */
 	private CommandUtils parseFloating(ArrayList<String> taskItems, String taskName, CommandUtils commandUtil) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PARSE_FLOATING);
 		
 		hasTimeDateElement = dt.hasDateAndTimeElements(taskName);
 		List<Date> dates = new PrettyTimeParser().parse(taskName);
@@ -321,6 +370,7 @@ public class AddParser {
 	
 	private void getKeywordPosition(String taskName) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_GET_KEYWORD_POSITION);
 		ArrayList<String> temp = new ArrayList<String>(convertArrayListToLowerCase(taskName));
 		
 		LAST_POSITION_OF_AT = temp.lastIndexOf(KEYWORD_AT);
@@ -343,6 +393,7 @@ public class AddParser {
 	 */
 	private ArrayList<String> convertArrayListToLowerCase(String taskName) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_CONVERT_ARRAYLIST_TO_LOWERCASE);
 		String[] str = taskName.toLowerCase().split(STRING_SPLITTER);
 		ArrayList<String> temp = new ArrayList<String>(Arrays.asList(str));
 		
@@ -361,6 +412,8 @@ public class AddParser {
 	 */
 	
 	private CommandUtils setEventTime(CommandUtils commandUtil, String taskName, Date date) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_SET_EVENT_TIME);
 		
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_FROM, STRING_SPACING));
 		
@@ -398,7 +451,8 @@ public class AddParser {
 
 	private CommandUtils setDeadLine(CommandUtils commandUtil, String confirmTaskName, Date date) {
 		
-		System.out.println("setDeadLine : " + contentToAnalyse);
+		logger.log(Level.INFO, LOGGER_MESSAGE_SET_DEADLINE);
+		
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_BY, STRING_SPACING));
 		
 		// Example: Meeting with boss at 6.30pm
@@ -433,6 +487,8 @@ public class AddParser {
 	 */
 	private void extractDateFromTask() {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXTRACT_DATE_FROM_TASK);
+		
 		for (int i = 0; i < str.size(); i++) {
 			
 			List<Date> dates = new PrettyTimeParser().parse(str.get(i));
@@ -459,6 +515,8 @@ public class AddParser {
 	 */
 	private ArrayList<String> extractInputWithPreposition(int currentPosition, String contentOfPreposition,
 			ArrayList<String> str) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXTRACT_PREPOSITION);
 		
 		for (int i = 0; i < inputElements.size(); ) {
 			
@@ -497,6 +555,8 @@ public class AddParser {
 
 	private String getPossibleTaskName(int currentPosition, String confirmTaskName, ArrayList<String> inputElements) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_GET_TASK_NAME);
+		
 		for (int i = 0; i < inputElements.size(); i++) {
 			
 			if (!preposition.contains(inputElements.get(currentPosition))) {
@@ -521,7 +581,9 @@ public class AddParser {
 	 */
 	
 	private CommandUtils finalVerification(String userTask, CommandUtils commandUtil) {
-
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_FINAL_VERIFICATION);
+		
 		String temp = dt.extractDate(userTask);
 		commandUtil.setTaskName(extractLastPreposition(temp));
 		
@@ -546,6 +608,8 @@ public class AddParser {
 	 */
 
 	private String extractLastPreposition(String finalTaskName) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXTRACT_LAST_PREPOSITION);
 		
 		String[] str = finalTaskName.split(STRING_SPLITTER);
 		String newStr = STRING_EMPTY;
@@ -587,6 +651,8 @@ public class AddParser {
 	 */
 	
 	private boolean isLastWordPreposition (String[] str, int lastWordPosition) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_HAS_LAST_WORD_AS_PREPOSITION);
 		
 		return (str[lastWordPosition].toLowerCase().contains(KEYWORD_AT) || 
 				str[lastWordPosition].toLowerCase().contains(KEYWORD_BY) ||

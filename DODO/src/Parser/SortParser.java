@@ -23,15 +23,15 @@ public class SortParser {
 	private String[] stringSplit;
 	
 	// Logging messages for methods
-	private final String LOGGER_MESSAGE_DETERMINE_SORT_TYPE = "SortParser Class: Processing user input in determineSortType method.";
-	private final String LOGGER_MESSAGE_IS_REVERSE_ALPHABETICAL = "SortParser Class: Processing user input in isSortByReverseAlphabetical method.";
-	private final String LOGGER_MESSAGE_IS_ALPHABETICAL = "SortParser Class: Processing user input in isSortByAlphabetical method.";
-	private final String LOGGER_MESSAGE_IS_BY_DATE = "SortParser Class: Processing user input in isSortByDate method.";
-	private final String LOGGER_MESSAGE_REMOVE_BY = "SortParser Class: Processing user input in removeBy method.";
-	private final String LOGGER_MESSAGE_IS_SORT_DATE = "SortParser Class: Sort type is BY_DATE.";
-	private final String LOGGER_MESSAGE_IS_SORT_ASCENDING = "SortParser Class: Sort type is BY_ASCENDING.";
-	private final String LOGGER_MESSAGE_IS_SORT_DESCENDING = "SortParser Class: Sort type is BY_DESCENDING.";
-	private final String LOGGER_MESSAGE_IS_INVALID_SORT = "SortParser Class: Sort type is INVALID.";
+	private static final String LOGGER_MESSAGE_DETERMINE_SORT_TYPE = "SortParser Class: Processing user input in determineSortType method.";
+	private static final String LOGGER_MESSAGE_IS_REVERSE_ALPHABETICAL = "SortParser Class: Processing user input in isSortByReverseAlphabetical method.";
+	private static final String LOGGER_MESSAGE_IS_ALPHABETICAL = "SortParser Class: Processing user input in isSortByAlphabetical method.";
+	private static final String LOGGER_MESSAGE_IS_BY_DATE = "SortParser Class: Processing user input in isSortByDate method.";
+	private static final String LOGGER_MESSAGE_REMOVE_BY = "SortParser Class: Processing user input in removeBy method.";
+	private static final String LOGGER_MESSAGE_IS_SORT_DATE = "SortParser Class: Sort type is BY_DATE.";
+	private static final String LOGGER_MESSAGE_IS_SORT_ASCENDING = "SortParser Class: Sort type is BY_ASCENDING.";
+	private static final String LOGGER_MESSAGE_IS_SORT_DESCENDING = "SortParser Class: Sort type is BY_DESCENDING.";
+	private static final String LOGGER_MESSAGE_IS_INVALID_SORT = "SortParser Class: Sort type is INVALID.";
 	
 			
 	public SortParser() {

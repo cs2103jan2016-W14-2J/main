@@ -4,9 +4,12 @@ import org.controlsfx.control.PopOver;
 
 import Logic.Logic;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
@@ -32,11 +35,13 @@ public class UIListener {
 	private UILeftBox leftBox;
 	private HBox root;
 	private Logic logic;
-	
+	private UIPopUpFeedBack uiPopUpFeedBack;
+	private TextField mainTextField;
 	public UIListener()
 	{
-		
 	}
+	
+
 	public UIListener(HBox root,Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox, Logic logic)
 	{
 		this.logic = logic;
@@ -47,10 +52,9 @@ public class UIListener {
 	}
 	public void rightBoxListener(TextField mainTextField)
 	{
-
+		this.mainTextField = mainTextField;
 		mainTextField.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
 		{
-
 			@Override
 			public void handle(KeyEvent event) {
 				if (event.getCode().equals(KeyCode.UP))
@@ -61,10 +65,12 @@ public class UIListener {
 					prevCmd =  logic.getPreviousCommand();
 					mainTextField.setText(prevCmd);
 				}
+				
 			}
-			
 		});
 
+		
+		
 	}
 	public void chartListener(PieChart chart, UIRightBox rightBox)
 	{

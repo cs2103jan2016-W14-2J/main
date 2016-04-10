@@ -9,12 +9,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 //@@author A0125372L
-public class UIWelcomePage 
+public class UIMainPage 
 {
 	 private UICssScaling usc;
 	 private Pagination pagination;
 	 
-	 public UIWelcomePage()
+	 public UIMainPage()
 	 {
 		 usc = new UICssScaling();
 	 }
@@ -33,7 +33,7 @@ public class UIWelcomePage
 			 bp.setCenter(logoImgView);*/
 			 
 			 ImageView logoImgView1 = new ImageView();
-			 Image logoImg1 = new Image(UIWelcomePage.class.getResourceAsStream("PAGE2.png"));
+			 Image logoImg1 = new Image(UIMainPage.class.getResourceAsStream("PAGE2.png"));
 			 logoImgView1.setImage(logoImg1);
 			 bp.setCenter(logoImgView1);
 			 BorderPane.setAlignment(logoImgView1, Pos.CENTER);

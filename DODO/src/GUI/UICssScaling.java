@@ -149,21 +149,28 @@ public class UICssScaling
 			System.out.println(chart.getData().get(x).nameProperty().get());
 			if(chart.getData().get(x).nameProperty().get().equals("Floating Tasks"))
 			{
-				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #4C688B");
+				System.out.println("Floating Tasks");
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #f0c55d");
 			}
 			else if(chart.getData().get(x).nameProperty().get().equals("On-going Tasks"))
 			{
-				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #41837E");
+				System.out.println("On-going Tasks");
+
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #d47d9c");
 
 			}
 			else if(chart.getData().get(x).nameProperty().get().equals("Completed Tasks"))
 			{
-				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #50608F");
+				System.out.println("Completed Tasks");
+
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #568cb4");
 
 			}
 			else if(chart.getData().get(x).nameProperty().get().equals("Overdue Tasks"))
 			{
-				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #615192");
+				System.out.println("Overdue Tasks");
+
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #060f4d");
 
 			}
 		}

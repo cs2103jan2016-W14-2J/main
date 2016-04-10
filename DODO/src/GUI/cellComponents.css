@@ -30,10 +30,10 @@
     -fx-font-weight:900;
 }
 
-#Overdue
-{
+#Floating
+{	  
 	-fx-alignment: CENTER;
-	-fx-background-color: #4C688B;
+	-fx-background-color: #f0c55d;
 	-fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 25px;
@@ -42,16 +42,7 @@
 #Ongoing
 {
 	-fx-alignment: CENTER;
-	 -fx-background-color: #41837E;
-	-fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 25px;
-    -fx-font-weight:900;
-}
-#Floating
-{	  
-	-fx-alignment: CENTER;
-	-fx-background-color: #50608F;
+	 -fx-background-color: #d47d9c;
 	-fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 25px;
@@ -60,9 +51,21 @@
 #Completed
 {	  
 	-fx-alignment: CENTER;
-	-fx-background-color: #615192;
+	-fx-background-color: #568cb4;
 	-fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 25px;
     -fx-font-weight:900;
 }
+#Overdue
+{
+	-fx-alignment: CENTER;
+	-fx-background-color: #060f4d;
+	-fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    -fx-font-weight:900;
+}
+
+
+

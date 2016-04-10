@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Path;
 import javafx.stage.Window;
@@ -34,8 +35,8 @@ public class UIPopUpFeedBack {
 		popUpFeedBack.setAutoFix(true);
 		popUpFeedBack.setContentNode(vbPop);
 		popUpFeedBack.setArrowSize(0);
-    	
 	}
+
 	private Path findCaret(Parent root) 
 	{
 	    for (Node n : root.getChildrenUnmodifiable()) {
@@ -68,25 +69,47 @@ public class UIPopUpFeedBack {
 	    Point2D screenLoc = new Point2D(x, y);
 	    return screenLoc;
 	  }
-	public void createPopUpFeedBack(String strFeedBack, Scene scene)
+	
+	public void createListenFeedBack(VBox root,TextField mainTextField,String strFeedBack, Scene scene)
 	{
-		vbPop.getChildren().clear();
+		
+		
+		
+	}
+	public void createPopUpFeedBack(VBox root,TextField mainTextField,String strFeedBack, Scene scene)
+	{
 		feedBackLabel.setText(strFeedBack);
-		vbPop.getChildren().add(feedBackLabel);
+		if(vbPop.getChildren().size()==0)
+		{
+			vbPop.getChildren().add(feedBackLabel);
+		}
+		
 		vbPop.setPrefSize(1380, 70);
 		caret = findCaret(mainTextField);
         screenLoc = findScreenLocation(caret);
-        if(scene.getWidth()>1900 && scene.getHeight()>900)
+        if(scene.getWidth()>1500 && scene.getHeight()>900)
         {
-    		vbPop.setPrefSize(1400, 70);
+    		vbPop.setPrefSize(1500, 70);
+    		if(!root.getChildren().contains(feedBackLabel))
+    		{
+    			System.out.println("here");
+        		root.getChildren().set(1, feedBackLabel);
+        		root.getChildren().add(mainTextField);
 
-    		popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() -70);
-
+    		}
+    		//popUpFeedBack.show(mainTextField, screenLoc.getX(), screenLoc.getY());
         }
         else
         {
+        	if(root.getChildren().contains(feedBackLabel))
+        	{
+        		root.getChildren().remove(feedBackLabel);
+        	}
+        	
+        	popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() + 70);
+        	
 
-    		popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() + 70);
+        	
         }
 	}
 }

@@ -15,7 +15,6 @@ import Logic.Logic;
 import Task.Category;
 import Task.TASK_TYPE;
 import Task.Task;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,20 +33,15 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
-import javafx.util.Duration;
 
 //@@author A0125372L
 public class UIRightBox {
@@ -60,7 +54,7 @@ public class UIRightBox {
 	private final double titledPaneWidth = 1000; // centerBox titledPane size
 	private final double titledPaneHeight = 1450;
 	 
-	private final String welcomeTab = "Welcome"; 
+	private final String MainTab = "Main"; 
 	private final String allTab = "All Tasks";	
 	private final String onGoingTab = "Ongoing Tasks";
 	private final String completedTab = "Completed Tasks";
@@ -89,7 +83,7 @@ public class UIRightBox {
 	private UILeftBox leftBox;
 	private Logic logic;
 	
-	private UIWelcomePage uiWelcome;
+	private UIMainPage uiMain;
 	private UI_TAB currentTask;
 	private UIListener listen;
 	private	HBox mainControllerRoot; 
@@ -99,7 +93,7 @@ public class UIRightBox {
 	private PopOver popUpFeedBack = new PopOver();
 	private Scene scene;
 	
-	private Tab tabWelcome;
+	private Tab tabMain;
 	private Tab tabAll;
 	private Tab tabFloating;
 	private Tab tabOngoing;
@@ -108,13 +102,13 @@ public class UIRightBox {
 	private Tab tabSearch;
 
 	private StackPane spAllTask = new StackPane();
-	private StackPane vbOnGoingTask = new StackPane();
-	private StackPane vbCompletedTask = new StackPane();
-	private StackPane vbOverdueTask = new StackPane();
-	private StackPane vbFloatingTask = new StackPane();
-	private StackPane vbSearchTask = new StackPane();
+	private StackPane spOnGoingTask = new StackPane();
+	private StackPane spCompletedTask = new StackPane();
+	private StackPane spOverdueTask = new StackPane();
+	private StackPane spFloatingTask = new StackPane();
+	private StackPane spSearchTask = new StackPane();
 	
-	private HBox welcomeHB;
+	private HBox MainHB;
 	private VBox allVB;
 	private VBox floatingVB;
 	private VBox ongoingVB;
@@ -128,8 +122,13 @@ public class UIRightBox {
 	private int intAllCompletedHashCode=0;
 	private ArrayList<Integer> intIndexAllTabCell = new ArrayList<Integer>();
 	ArrayList<Integer> intHashCode = new ArrayList<Integer>();
+		
 	
-	private int intCellSwitching=0;
+	private static final String EMPTY_STRING = "";
+
+	
+	
+	
 	
 	public UIRightBox(Logic logic, HBox root, Scene scene)
 	{
@@ -141,7 +140,7 @@ public class UIRightBox {
 		logger = Logger.getLogger("MyLog"); 
 		tabMap = new boolean[6];
 		
-		tabWelcome = new Tab(welcomeTab);
+		tabMain = new Tab(MainTab);
 		tabAll = new Tab(allTab);
 		tabFloating = new Tab(floatingTab);
 		tabOngoing = new Tab(onGoingTab);
@@ -149,7 +148,7 @@ public class UIRightBox {
 		tabOverdue = new Tab(overDueTab);
 		tabSearch = new Tab(searchTab);
 		
-		welcomeHB = new HBox();
+		MainHB = new HBox();
 		allVB = new VBox();
 		floatingVB = new VBox();
 		ongoingVB = new VBox();
@@ -165,30 +164,28 @@ public class UIRightBox {
 		searchTasks = new ArrayList<Task>();
 
 		
-		uiWelcome = new UIWelcomePage();
+		uiMain = new UIMainPage();
 		tabPane = new TabPane();
 		mainTextField = new TextField();
-		listen = new UIListener();
 		uiPopUpFeedBack = new UIPopUpFeedBack(popUpFeedBack, mainTextField);
 		
+	
 	}
 	//add list -> add vbtab ->
 	void build(UILeftBox leftBox) 
 	{
 		this.leftBox = leftBox;
-		createGreetingTab();
-		testMethod();
+		createMainTab();
+		testMethod();		
 		
 		tabPane.setPrefSize(tabPaneHeight, tabPaneWidth);
-		//tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		rightBox.getChildren().add(tabPane);
-		
 		mainTextField.setPrefSize(textfieldHeight, textfieldWidth);
 		textFieldListener();
 		rightBox.getChildren().add(mainTextField);
 		leftBox.updateLeftBox();
 		ucs.setCssAndScalingForRightBox(tabPane,mainTextField);
-		
 		mainControllerRoot.setOnKeyReleased(new EventHandler<KeyEvent>() 
 		{
 			public void handle(KeyEvent ke) 
@@ -209,7 +206,7 @@ public class UIRightBox {
 				}
 				if (ke.getCode().equals(KeyCode.TAB)) 
 				{
-					if(getCurrentTab().equals(UI_TAB.WELCOME))
+					if(getCurrentTab().equals(UI_TAB.MAIN))
 					{
 						pagination.requestFocus();
 					    pagination.setStyle("-fx-border-color:black;");
@@ -220,23 +217,23 @@ public class UIRightBox {
 					}
 					if(getCurrentTab().equals(UI_TAB.FLOATING))
 					{
-						vbFloatingTask.getChildren().get(0).requestFocus();
+						spFloatingTask.getChildren().get(0).requestFocus();
 					}
 					if(getCurrentTab().equals(UI_TAB.ONGOING))
 					{
-						vbOnGoingTask.getChildren().get(0).requestFocus();
+						spOnGoingTask.getChildren().get(0).requestFocus();
 					}
 					if(getCurrentTab().equals(UI_TAB.COMPLETED))
 					{
-						vbCompletedTask.getChildren().get(0).requestFocus();
+						spCompletedTask.getChildren().get(0).requestFocus();
 					}
 					if(getCurrentTab().equals(UI_TAB.OVERDUE))
 					{
-						vbOverdueTask.getChildren().get(0).requestFocus();
+						spOverdueTask.getChildren().get(0).requestFocus();
 					}
 					if(getCurrentTab().equals(UI_TAB.SEARCH))
 					{
-						vbSearchTask.getChildren().get(0).requestFocus();
+						spSearchTask.getChildren().get(0).requestFocus();
 					}
 					//SET ALL THE SELECTION HERE
 				}
@@ -244,21 +241,23 @@ public class UIRightBox {
 		});
 		
 		allVB.getChildren().add(spAllTask);
-		floatingVB.getChildren().add(vbFloatingTask);
-		ongoingVB.getChildren().add(vbOnGoingTask);
-		completedVB.getChildren().add(vbCompletedTask);
-		overdueVB.getChildren().add(vbOverdueTask);
-		searchVB.getChildren().add(vbSearchTask);
+		floatingVB.getChildren().add(spFloatingTask);
+		ongoingVB.getChildren().add(spOnGoingTask);
+		completedVB.getChildren().add(spCompletedTask);
+		overdueVB.getChildren().add(spOverdueTask);
+		searchVB.getChildren().add(spSearchTask);
 		
-		 
 		chooseTab();
+	
+	
 	}
-	private void createGreetingTab() {
+	private void createMainTab() 
+	{
 		pagination = new Pagination(1, 0);
-		tabWelcome.setUserData(UI_TAB.WELCOME);
-		tabPane.getTabs().add(tabWelcome);
-		tabWelcome.setContent(welcomeHB);
-		uiWelcome.setRoot(welcomeHB,pagination);
+		tabMain.setUserData(UI_TAB.MAIN);
+		tabPane.getTabs().add(tabMain);
+		tabMain.setContent(MainHB);
+		uiMain.setRoot(MainHB,pagination);
 	}
 	private void chooseTab() 
 	{
@@ -268,7 +267,7 @@ public class UIRightBox {
 		}		
 		else
 		{
-			tabPane.getSelectionModel().select(tabWelcome);
+			tabPane.getSelectionModel().select(tabMain);
 		}
 	}
 	private ArrayList<Task> getAll()
@@ -380,27 +379,24 @@ public class UIRightBox {
 				tabPane.getTabs().add(tabFloating);
 			}
 			tabFloating.setContent(floatingVB);
-			addListToTitledPane(vbFloatingTask, FXCollections.observableArrayList(floatingTasks),UI_TAB.FLOATING);
+			addListToTitledPane(spFloatingTask, FXCollections.observableArrayList(floatingTasks),UI_TAB.FLOATING);
 			tabFloating.setUserData(UI_TAB.FLOATING);
 		}
 		else
 		{
 			tabPane.getTabs().remove(tabFloating);
 			tabFloating=null;
-
 		}
 		if(tabMap[2]==true)
 		{
-			
 			if(!tabPane.getTabs().contains(tabOngoing))
 			{
 				tabOngoing = new Tab(onGoingTab);
 				tabPane.getTabs().add(tabOngoing);
 			}
 			tabOngoing.setContent(ongoingVB);
-			addListToTitledPane(vbOnGoingTask, FXCollections.observableArrayList(ongoingTasks),UI_TAB.ONGOING);
+			addListToTitledPane(spOnGoingTask, FXCollections.observableArrayList(ongoingTasks),UI_TAB.ONGOING);
 			tabOngoing.setUserData(UI_TAB.ONGOING);
-
 		}
 		else
 		{
@@ -417,7 +413,7 @@ public class UIRightBox {
 				tabPane.getTabs().add(tabCompleted);
 			}
 			tabCompleted.setContent(completedVB);
-			addListToTitledPane(vbCompletedTask, FXCollections.observableArrayList(completedTasks),UI_TAB.COMPLETED);
+			addListToTitledPane(spCompletedTask, FXCollections.observableArrayList(completedTasks),UI_TAB.COMPLETED);
 			tabCompleted.setUserData(UI_TAB.COMPLETED);
 		}
 		else
@@ -435,7 +431,7 @@ public class UIRightBox {
 				tabPane.getTabs().add(tabOverdue);
 			}
 			tabOverdue.setContent(overdueVB);
-			addListToTitledPane(vbOverdueTask, FXCollections.observableArrayList(overdueTasks),UI_TAB.OVERDUE);
+			addListToTitledPane(spOverdueTask, FXCollections.observableArrayList(overdueTasks),UI_TAB.OVERDUE);
 			tabOverdue.setUserData(UI_TAB.OVERDUE);
 		}
 		else
@@ -454,7 +450,7 @@ public class UIRightBox {
 				tabPane.getTabs().add(tabSearch);
 			}
 			tabSearch.setContent(searchVB);
-			addListToTitledPane(vbSearchTask, FXCollections.observableArrayList(searchTasks),UI_TAB.SEARCH);
+			addListToTitledPane(spSearchTask, FXCollections.observableArrayList(searchTasks),UI_TAB.SEARCH);
 			tabSearch.setUserData(UI_TAB.SEARCH);
 		}
 		else
@@ -462,15 +458,7 @@ public class UIRightBox {
 			tabPane.getTabs().remove(tabSearch);
 			tabSearch=null;
 		}
-		if(tabPane.getTabs().size()>1)
-		{
-			tabPane.getTabs().remove(tabWelcome);
-			
-		}
-		else if(tabPane.getTabs().size()==0)
-		{
-			tabPane.getTabs().add(tabWelcome);
-		}
+		
 	}
 	private void updateTabMap() {
 		
@@ -629,20 +617,15 @@ public class UIRightBox {
 										        	setTextFieldAndEnter("unflag "+ currentIndex);
 										        //	System.out.println("unflag ");
 										        }
-										        
 										    }
 										});
-										
 										setTooltip(lsg.getToolTip());
 										setGraphic(lsg.getCellRoot());
-									}
-									
-									
+									}	
 								}
 							}
 						};
 						// cell.setStyle("-fx-control-background: Transparent");
-					
 						return cell;
 					}
 				});
@@ -657,6 +640,7 @@ public class UIRightBox {
 				listViewLabel.setOnKeyPressed(new EventHandler<KeyEvent>() {
 					public void handle(KeyEvent ke) {
 						if (ke.getCode().equals(KeyCode.ENTER)) {
+							System.out.println("ENTER PRESS ON CELL");
 							createDisappearPane(listViewLabel);
 						}
 						if (ke.getCode().equals(KeyCode.ESCAPE)) 
@@ -686,28 +670,31 @@ public class UIRightBox {
 	}
 	private void createDisappearPane(ListView<Task> listViewLabel) 
 	{		
-		//listViewLabel.getSelectionModel().getSelectedIndex()
-		int x = intIndexAllTabCell.get(listViewLabel.getSelectionModel().getSelectedIndex());
-		if(listViewLabel.getSelectionModel().getSelectedItem().hashCode()==intAllOverdueHashCode|| 
-				listViewLabel.getSelectionModel().getSelectedItem().hashCode()==intAllOngoingHashCode||
-				listViewLabel.getSelectionModel().getSelectedItem().hashCode()==intAllFloatingHashCode||
-				listViewLabel.getSelectionModel().getSelectedItem().hashCode()==intAllCompletedHashCode)
+		int x;
+		int intCorrectIndex = 0;
+		String strTitle="";
+		VBox root = new VBox();
+		HBox hbTitle = new HBox();
+		ScrollPane sp = new ScrollPane();
+		VBox vbBody = new VBox();
+		hbTitle.styleProperty().set("-fx-border-color: black;");
+		vbBody.styleProperty().set("-fx-border-color: black;");
+		
+		if(getCurrentTab().equals(UI_TAB.ALL))
 		{
-			
+			x = intIndexAllTabCell.get(listViewLabel.getSelectionModel().getSelectedIndex());
+			if(x!=-1)
+			{
+				int showIndex = x+1;
+				strTitle = "Popup of Index " + showIndex;
+			}
 		}
 		else
 		{
-			System.out.println(x);
-			int index=x+1;
-			VBox root = new VBox();
-			HBox hbTitle = new HBox();
-			ScrollPane sp = new ScrollPane();
-			VBox vbBody = new VBox();
-			
-			hbTitle.styleProperty().set("-fx-border-color: black;");
-			vbBody.styleProperty().set("-fx-border-color: black;");
-			String strTitle = "Popup of Index " +index;
-			
+			x = listViewLabel.getSelectionModel().getSelectedIndex()+1;
+			intCorrectIndex= listViewLabel.getSelectionModel().getSelectedIndex();
+			strTitle = "Popup of Index " + x;
+		}
 			Label titleForPopUp = new Label(strTitle);
 			titleForPopUp.setFont(Font.font("Cambria", 25));
 			hbTitle.getChildren().add(titleForPopUp);
@@ -719,33 +706,37 @@ public class UIRightBox {
 			
 			if(getCurrentTab().equals(UI_TAB.ALL))
 			{
-				moreName = allTasks.get(x).getName();
+				moreName = logic.getAll().get(x).getName();
 			}
-			if(getCurrentTab().equals(UI_TAB.ONGOING))
+			else
 			{
-				moreName =ongoingTasks.get(x).getName();
-	
+				if(getCurrentTab().equals(UI_TAB.ONGOING))
+				{
+					moreName =ongoingTasks.get(intCorrectIndex).getName();
+		
+				}
+				if(getCurrentTab().equals(UI_TAB.FLOATING))
+				{
+					moreName =floatingTasks.get(intCorrectIndex).getName();
+		
+				}
+				if(getCurrentTab().equals(UI_TAB.COMPLETED))
+				{
+					moreName =completedTasks.get(intCorrectIndex).getName();
+		
+				}
+				if(getCurrentTab().equals(UI_TAB.OVERDUE))
+				{
+					moreName = overdueTasks.get(intCorrectIndex).getName();
+		
+				}
+				if(getCurrentTab().equals(UI_TAB.SEARCH))
+				{
+					moreName = searchTasks.get(intCorrectIndex).getName();
+		
+				}
 			}
-			if(getCurrentTab().equals(UI_TAB.FLOATING))
-			{
-				moreName =floatingTasks.get(x).getName();
-	
-			}
-			if(getCurrentTab().equals(UI_TAB.COMPLETED))
-			{
-				moreName =completedTasks.get(x).getName();
-	
-			}
-			if(getCurrentTab().equals(UI_TAB.OVERDUE))
-			{
-				moreName = overdueTasks.get(x).getName();
-	
-			}
-			if(getCurrentTab().equals(UI_TAB.SEARCH))
-			{
-				moreName = searchTasks.get(x).getName();
-	
-			}
+			
 		    Label lbl = new Label(moreName);
 		    lbl.setPrefWidth(465);
 		    lbl.setWrapText(true);
@@ -761,7 +752,7 @@ public class UIRightBox {
 			popUpCell.setY(listViewLabel.getHeight());
 		    popUpCell.setContentNode(root);
 		    popUpCell.show(listViewLabel);
-		}
+		
 	}
 	private void createLog()
 	{
@@ -794,9 +785,7 @@ public class UIRightBox {
 	        {		
 				if (ke.getCode().equals(KeyCode.UP))
 				{
-					
-					System.out.println("test");
-					
+										
 					String prevCmd ="";
 					prevCmd =  logic.getPreviousCommand();
 					mainTextField.setText(prevCmd);
@@ -807,67 +796,119 @@ public class UIRightBox {
 	            }	
 				
 	        }
+			
 	    });	
-	}
-	protected void runCommand()
-	{		
-		
-		strFeedBack = logic.run(mainTextField.getText());
-		
-		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
-		currentTask = logic.getStatus();
-		uiPopUpFeedBack.createPopUpFeedBack(strFeedBack,scene);
-		
-		mainTextField.requestFocus();
-	    
-		//uiMakeTag.tagMapping(logic.getCategories());
-		testMethod();
-		leftBox.updateTag();
+		PopOver popUpFeedBack = new PopOver();
+		Label lblHelp = new Label();
+		VBox vbRoot = new VBox();
+		vbRoot.getChildren().add(lblHelp);
+		popUpFeedBack.setContentNode(vbRoot);
 
 		
-	
+	}
+
+	protected void runCommand()
+	{		
+		strFeedBack = logic.run(mainTextField.getText());
+		System.out.println(logic.getStatus()+"...........................................................................................................................................................................................................................................................................................................................................................................................");
+		currentTask = logic.getStatus();
+		uiPopUpFeedBack.createPopUpFeedBack(rightBox,mainTextField,strFeedBack,scene);
+		//mainTextField.requestFocus();
+		testMethod();
+		leftBox.updateTag();
     	mainTextField.setText("");
+    	
     	if(currentTask == UI_TAB.ALL)
  		{
  			tabPane.getSelectionModel().select(tabAll);
+ 			
  		}
     	else if(currentTask == UI_TAB.COMPLETED)
 		{
 			tabPane.getSelectionModel().select(tabCompleted);
+			Platform.runLater(new Runnable() {
+
+			    @Override
+			    public void run() 
+			    {
+			    	((ListView)spCompletedTask.getChildren().get(0)).getSelectionModel().select(logic.getLastModifiedIndex());
+					((ListView)spCompletedTask.getChildren().get(0)).scrollTo(logic.getLastModifiedIndex());
+					((ListView)spCompletedTask.getChildren().get(0)).getFocusModel().focus(logic.getLastModifiedIndex());
+
+			    }
+			});
+			
 		}
 		else if(currentTask == UI_TAB.ONGOING)
 		{
 			tabPane.getSelectionModel().select(tabOngoing);
+			Platform.runLater(new Runnable() {
+
+			    @Override
+			    public void run() 
+			    {
+			    	((ListView)spOnGoingTask.getChildren().get(0)).getSelectionModel().select(logic.getLastModifiedIndex());
+					((ListView)spOnGoingTask.getChildren().get(0)).scrollTo(logic.getLastModifiedIndex());
+					((ListView)spOnGoingTask.getChildren().get(0)).getFocusModel().focus(logic.getLastModifiedIndex());
+
+			    }
+			});
 		}
 		else if(currentTask == UI_TAB.FLOATING)
 		{
 			tabPane.getSelectionModel().select(tabFloating);
+			Platform.runLater(new Runnable() {
+
+			    @Override
+			    public void run() 
+			    {
+			    	((ListView)spFloatingTask.getChildren().get(0)).getSelectionModel().select(logic.getLastModifiedIndex());
+					((ListView)spFloatingTask.getChildren().get(0)).scrollTo(logic.getLastModifiedIndex());
+					((ListView)spFloatingTask.getChildren().get(0)).getFocusModel().focus(logic.getLastModifiedIndex());
+
+			    }
+			});
 		}
 		else if(currentTask == UI_TAB.OVERDUE)
 		{
 			tabPane.getSelectionModel().select(tabOverdue);
+			Platform.runLater(new Runnable() {
+
+			    @Override
+			    public void run() 
+			    {
+			    	((ListView)spOverdueTask.getChildren().get(0)).getSelectionModel().select(logic.getLastModifiedIndex());
+					((ListView)spOverdueTask.getChildren().get(0)).scrollTo(logic.getLastModifiedIndex());
+					((ListView)spOverdueTask.getChildren().get(0)).getFocusModel().focus(logic.getLastModifiedIndex());
+
+			    }
+			});
 		}	  
 		else if(currentTask == UI_TAB.SEARCH)
 		{
 			tabPane.getSelectionModel().select(tabSearch);
+			Platform.runLater(new Runnable() {
+
+			    @Override
+			    public void run() 
+			    {
+			    	((ListView)spSearchTask.getChildren().get(0)).getSelectionModel().select(logic.getLastModifiedIndex());
+					((ListView)spSearchTask.getChildren().get(0)).scrollTo(logic.getLastModifiedIndex());
+					((ListView)spSearchTask.getChildren().get(0)).getFocusModel().focus(logic.getLastModifiedIndex());
+
+			    }
+			});
 		}	
 		else
-		{
+		{	
 			tabPane.getSelectionModel().select(null);
 		}
+
 		leftBox.updateLeftBox();
 		
-		if(tabPane.getTabs().size()>1)
-		{
-			tabPane.getTabs().remove(tabWelcome);
-			
-		}
-		else if(tabPane.getTabs().size()==0)
-		{
-			tabPane.getTabs().add(tabWelcome);
-		}
+		System.out.println(logic.getLastModifiedIndex());
 		
-		
+
 	}
 	public static UI_TAB getCurrentTab() 
 	{

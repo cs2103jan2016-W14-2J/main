@@ -25,7 +25,17 @@ public abstract class Command {
 	protected ArrayList<Task> results;
 	protected TreeMap<String, Category> categories;
 	protected int lastModifiedIndex;
-
+	
+	/**
+	 * This method constructs an instance of Command.
+	 * @param cu
+	 * @param floatingTasks
+	 * @param ongoingTasks
+	 * @param completedTasks
+	 * @param overdueTasks
+	 * @param results
+	 * @param categories
+	 */
 	public Command(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
 		this.UIStatus = UIRightBox.getCurrentTab();
@@ -37,7 +47,11 @@ public abstract class Command {
 		this.results = results;
 		this.categories = categories;
 	}
-
+	
+	/**
+	 * This method executes a user input and updates its memeory.
+	 * @return {@code String feedback}
+	 */
 	public abstract String execute();
 
 	/*******************************************ACCESSOR*********************************************/

@@ -12,6 +12,7 @@ import java.util.*;
 public class Logic {
 	private static final String MESSAGE_SUCCESSFUL_UNDO = "Undo successful.";
 	private static final String MESSAGE_SUCCESSFUL_REDO = "Redo successful.";
+	private static final String MESSAGE_SUCCESSFUL_SAVE = "Save successful.";
 	private static final String MESSAGE_UNSUCCESSFUL_UNDO = "Undo not successful. There is nothing to undo";
 	private static final String MESSAGE_UNSUCCESSFUL_REDO = "Redo not successful. There is nothing to redo";
 	private static final String MESSAGE_SWITCH_VIEW = "Successfully switch to %1$s.";
@@ -32,13 +33,28 @@ public class Logic {
 	private int lastModifiedIndex;
 
 	/*************************************PUBLIC METHODS******************************************/
+	/**
+	 * This method constructs an instance of Logic.
+	 * It implements Singleton Pattern so that only one instance of Logic is allowed to be constructed at all time.
+	 * It initializes appropriate attributes such as Storage, History and ArrayLists.
+	 * It must be called before using any other methods of Logic.
+	 * 
+	 * @return {@code Logic theOne}
+	 */
 	public static Logic getInstance() {
 		if (theOne==null) {
 			theOne = new Logic();
 		}
 		return theOne;
 	}
-
+	
+	/**
+	 * This method constructs an instance of Parser.
+	 * It processes the user input and update its attributes correspondingly.
+	 * 
+	 * @param  {@code String input}
+	 * @return {@code String feedback}
+	 */
 	public String run(String input) {
 		this.previous = input;
 		CommandUtils cu = new CommandUtils();
@@ -50,16 +66,27 @@ public class Logic {
 		}
 		return processCommand(cu);
 	}
-
+	
+	/**
+	 * This method saves all its memory, or its attributes to Storage.
+	 * 
+	 * @return {@code String feedback}
+	 */
 	public String save() {
 		storage.save(TASK_STATUS.ONGOING, ongoingTasks);
 		storage.save(TASK_STATUS.COMPLETED, completedTasks);
 		storage.save(TASK_STATUS.FLOATING, floatingTasks);
 		storage.save(TASK_STATUS.OVERDUE, overdueTasks);
 		storage.saveCategories(this.categories);
-		return "Saved successfully";
+		return MESSAGE_SUCCESSFUL_SAVE;
 	}
-
+	
+	/**
+	 * This method converts categories of type ArrayList of String,
+	 * to type of ArrayList of Category,
+	 * @param categoriesString
+	 * @return {@code ArrayList<Category> categories}
+	 */
 	public ArrayList<Category> mapCategories(ArrayList<String> categoriesString) {
 		ArrayList<Category> categories = new ArrayList<Category>();
 		for (String categoryString: categoriesString) {
@@ -70,7 +97,11 @@ public class Logic {
 		}
 		return categories;
 	}
-
+	
+	/**
+	 * This method updates all its memory with the latest System time.
+	 *
+	 */
 	public void update() {
 		this.updateList(this.floatingTasks);
 		this.updateList(this.ongoingTasks);
@@ -131,6 +162,7 @@ public class Logic {
 	private String processCommand(CommandUtils cu) {
 		String message = "";
 		COMMAND_TYPE command = cu.getCommandType();
+		System.out.println(command);
 
 		switch (command) {
 		case ADD:
@@ -202,6 +234,7 @@ public class Logic {
 		case CHANGE_DIRECTORY:
 			message = this.redirect();
 			break;
+		case INVALID:
 		default:
 			message = MESSAGE_INVALID_COMMAND;
 		}

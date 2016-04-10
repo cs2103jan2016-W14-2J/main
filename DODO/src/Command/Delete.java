@@ -71,8 +71,6 @@ public class Delete extends Command {
 		return String.format(MESSAGE_SUCCESSFUL_DELETE, indexes);
 	}
 	
-	
-	
 	private String deleteAllTasks() {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
 		ArrayList<Integer> indexes = new ArrayList<Integer>();
@@ -83,7 +81,6 @@ public class Delete extends Command {
 		this.UIStatus = UI_TAB.ALL;
 		return message;
 	}
-	
 	
 	private String deleteAllTags() {
 		for (Category category: new ArrayList<Category>(this.categories.values())) {
@@ -100,7 +97,6 @@ public class Delete extends Command {
 			boolean flag = this.deleteCategory(categoryStr);
 			if (flag) successfulDeletions.add(categoryStr);
 			else unsuccessfulDeletions.add(categoryStr);
-			System.out.println("====DELETE/TAG==== categoryStr: " + categoryStr + ", flag: " + flag);
 		}
 		
 		if (unsuccessfulDeletions.size()==0) {

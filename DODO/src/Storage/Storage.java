@@ -30,30 +30,32 @@ public class Storage {
 	private static Storage theOne;
 	private PrintWriter pw;
 	private BufferedReader br;
-	/*private String ongoingDirectory;
-	private String completedDirectory;
-	private String floatingDirectory;
-	private String overdueDirectory;
-	private String categoriesDirectory;*/
 	private File floating;
 	private File ongoing;
 	private File completed;
 	private File overdue;
 	private File categories;
 	private String folderDirectory;
-
+	
+	/**
+	 * This method constructs an instance of Storage.
+	 * It implements Singleton Pattern so that only one instance of Storage is allowed to be constructed at all time.
+	 * It initializes its memory, or its attributes. 
+	 * @return {@code Storage theOne}
+	 */
 	public static Storage getInstance() {
 		if (theOne==null) {
 			theOne = new Storage();
 		}
 		return theOne;
 	}
-
-	private Storage() {
-		this.folderDirectory = this.configDirectory();	
-		this.intialise(this.folderDirectory);
-	}
-
+	
+	/**
+	 * This method reads ArrayList<Task> attributes from a specific text file on disk storage.
+	 * It inputs a TASK_STATUS enum type and outputs the corresponding tasks list.
+	 * @param {@code TASK_STATUS task_status}
+	 * @return {@code ArrayList<Task> tasks}
+	 */
 	public ArrayList<Task> read(TASK_STATUS task_status) {
 		switch (task_status) {
 		case ONGOING:
@@ -68,7 +70,14 @@ public class Storage {
 			return null;
 		}
 	}
-
+	
+	/**
+	 * This method saves ArrayList<Task> attributes into a text file residing on disk storage.
+	 * 
+	 * @param {@code TASK_STATUS task_status}
+	 * @param {@code ArrayList<Task> tasks}
+	 * @return {@code String feedback}
+	 */
 	public String save(TASK_STATUS task_status, ArrayList<Task> tasks) {
 		switch (task_status) {
 		case ONGOING:
@@ -83,6 +92,12 @@ public class Storage {
 			return MESSAGE_INVALID_TASK_STATUS;
 		}
 	}
+	
+	/**
+	 * This method reads TreeMap<String, Category> categories from a specific text file on disk storage.
+	 * 
+	 * @return {@code TreeMap<String, Category> categories}
+	 */
 
 	public TreeMap<String, Category> readCategories() {
 		TreeMap<String, Category> categories = new TreeMap<String, Category>();
@@ -102,7 +117,12 @@ public class Storage {
 		}
 		return categories;
 	}
-
+	
+	/**
+	 * This method saves TreeMap<String, Cateogory> categories into a text file on disk storage.
+	 * @param categories
+	 * @return {@code String feedback}
+	 */
 	public String saveCategories(TreeMap<String, Category> categories)  {
 		this.categories.delete();
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(this.categories), "UTF-8")) {
@@ -119,7 +139,10 @@ public class Storage {
 		}
 		return String.format(MESSAGE_SUCCESSFUL_FILE_SAVE, this.categories);
 	}
-
+	
+	/**
+	 * This method redirects storage files to a new directory on the disk.
+	 */
 	public void redirect() {
 		this.floating.delete();
 		this.ongoing.delete();
@@ -133,6 +156,11 @@ public class Storage {
 		intialise(this.folderDirectory);
 	}
 	/******************************INTERNAL***********************************************/
+	private Storage() {
+		this.folderDirectory = this.configDirectory();	
+		this.intialise(this.folderDirectory);
+	}
+	
 	private void intialise(String directory) {
 		this.overdue = new File(directory + FILENAME_OVERDUE_TASKS);
 		this.ongoing = new File(directory  + FILENAME_ONGOING_TASKS);

@@ -457,8 +457,11 @@ public class DateTimeParser {
 				System.out.println("DefaultstartTime : " + defaultStartTime);
 				newDate = currentTime;
 			} 
-			else {
+			else if (!dateWithoutTime.equals(currentDateWithoutTime) && dateWithoutDate.equals(currentWithoutDate)) {
 				newDate = defaultStartTime;
+			}
+			else {
+				newDate = date;
 				
 			}
 	/*		else if (date.before(currentTime)) {

@@ -49,9 +49,6 @@ public class AddParser {
 	private Date date;
 	private DateTimeParser dt;
 	
-
-	
-	
 	private ArrayList<String> taskItems;
 	private ArrayList<String> preposition;
 	private ArrayList<String> inputElements;
@@ -66,11 +63,22 @@ public class AddParser {
 	
 	}
 	
-	protected CommandUtils executeAddParser(CommandUtils commandUtil, String userTask) {
+	/*
+	 * This method analyses the task type of an input and extract the
+	 * information of the input.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and userInput {@code String}
+	 * 
+	 * @return {@code CommandUtils} with attributes of the add command set to 
+	 * CommandUtils object.
+	 * 
+	 */
+	
+	protected CommandUtils executeAddParser(CommandUtils commandUtil, String userInput) {
 		
-		assert (userTask != null);
+		assert (userInput != null);
 		
-		String[] str = userTask.split(STRING_SPLITTER);
+		String[] str = userInput.split(STRING_SPLITTER);
 		taskItems = new ArrayList<String>(Arrays.asList(str));
 		
 		taskName = dt.checkForAbbreviation(taskItems);
@@ -78,6 +86,22 @@ public class AddParser {
 		
 		commandUtil = determineTaskType(commandUtil, taskItems, taskName);
 		taskType = commandUtil.getType();
+		
+		return analyseTaskType(commandUtil);
+	}
+
+	/*
+	 * This method extracts the information of the input according to its 
+	 * task type.
+	 * 
+	 * @param commandUtil {@code CommandUtils}
+	 * 
+	 * @return {@code CommandUtils} with attributes of the add command set to 
+	 * CommandUtils object.
+	 * 
+	 */
+	
+	private CommandUtils analyseTaskType(CommandUtils commandUtil) {
 		
 		switch(taskType) {
 		
@@ -95,10 +119,20 @@ public class AddParser {
 			default:
 				break;
 		}
+		
 		return commandUtil;
 	}
 
-
+	/*
+	 * This method analyses and determines the task type of a user input.
+	 * 
+	 * @param commandUtil {@code CommandUtils}, taskItems {@code ArrayList<String>}
+	 * 		  and taskName {@code String}
+	 * 
+	 * @return {@code CommandUtils} with the task type set to CommandUtils object.
+	 * 
+	 */
+	
 	public CommandUtils determineTaskType(CommandUtils commandUtil, ArrayList<String> taskItems, String taskName) {
 		
 		if (checkIfDeadlinedTask(taskItems, taskName)) {
@@ -115,17 +149,26 @@ public class AddParser {
 		}
 		return commandUtil;
 	}
-
+	
+	/*
+	 * This method analyses and verifies if a user input is an event task.
+	 * 
+	 * @param taskName {@code String}
+	 * 
+	 * @return {@code boolean} 
+	 * 
+	 */
 	private boolean checkIfEventTask(String taskName) {
 		
 		LAST_POSITION_OF_FROM = taskName.toLowerCase().lastIndexOf(KEYWORD_FROM);
 		LAST_POSITION_OF_TO = taskName.toLowerCase().lastIndexOf(KEYWORD_TO);
 
-		// add study from <startDate> to <endDate>
+		// Example: study from <startDate> to <endDate>
 		if (LAST_POSITION_OF_FROM < LAST_POSITION_OF_TO && LAST_POSITION_OF_FROM != -1) {
 			return (dt.checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, LAST_POSITION_OF_TO)) 
 					? true : false;
 		}
+		// Example: play DOTA from 7pm
 		else if (LAST_POSITION_OF_FROM > LAST_POSITION_OF_TO) {
 			return (dt.checkForDateAndTime(taskName, LAST_POSITION_OF_FROM, taskName.length())) 
 					? true : false;
@@ -135,11 +178,28 @@ public class AddParser {
 		}
 	}
 	
+	/*
+	 * This method analyses and verifies if a user input is a floating task.
+	 * 
+	 * @param taskItems {@code ArrayList<String>} and taskName {@code String}
+	 * 
+	 * @return {@code boolean} 
+	 * 
+	 */
 	private boolean checkIfFloatingTask(ArrayList<String> taskItems, String taskName) {
 		
 		return (!checkIfEventTask(taskName) && !checkIfDeadlinedTask(taskItems, taskName)) ? true : false;
 	
 	}
+	
+	/*
+	 * This method analyses and verifies if a user input is a deadlined task.
+	 * 
+	 * @param taskItems {@code ArrayList<String>} and taskName {@code String}
+	 * 
+	 * @return {@code boolean} 
+	 * 
+	 */
 	
 	private boolean checkIfDeadlinedTask(ArrayList<String> taskItems, String taskName) {
 		
@@ -150,6 +210,16 @@ public class AddParser {
 				 LAST_POSITION_OF_IN != -1) && (LAST_POSITION_OF_FROM == -1 && 
 				 LAST_POSITION_OF_TO == -1)) ? true : false;
 	}
+	
+	/*
+	 * This method extracts the start time, end time and task name from an
+	 * event task.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and taskName {@code String}
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
 	
 	private CommandUtils parseEVENT(CommandUtils commandUtil, String taskName) {
 	
@@ -164,28 +234,47 @@ public class AddParser {
 		// Separate task name from date elements.
 		confirmTaskName = getPossibleTaskName(currentPosition, confirmTaskName, inputElements);
 		confirmTaskName = dt.extractDate(confirmTaskName) + STRING_SPACING;
-		contentToAnalyse = dt.getDateElements() + " ";
+		contentToAnalyse = dt.getDateElements() + STRING_SPACING;
 		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
 		
 		extractDateFromTask();
 		return setEventTime(commandUtil, taskName, date);
 	}
 	
+	/*
+	 * This method extracts the end time and task name from a deadline
+	 * task.
+	 * 
+	 * @param commandUtil {@code CommandUtils} and taskName {@code String}
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
+	
 	private CommandUtils parseDEADLINED(CommandUtils commandUtil, String taskName) {
-		System.out.println("Test new deadline parsing");
 
 		String[] elements = taskName.split(STRING_SPLITTER);
 		inputElements = new ArrayList<String>(Arrays.asList(elements));
 		
 		confirmTaskName = getPossibleTaskName(currentPosition, confirmTaskName, inputElements);
 		confirmTaskName = dt.extractDate(confirmTaskName) + STRING_SPACING;
-		contentToAnalyse = dt.getDateElements() + " ";
+		contentToAnalyse = dt.getDateElements() + STRING_SPACING;
 		str = extractInputWithPreposition(currentPosition, contentOfPreposition, str);
 		
 		extractDateFromTask();
 		return setDeadLine(commandUtil, confirmTaskName, date);
 	}
 	
+	/*
+	 * This method verifies if the user input contains end time and extract
+	 * the task name.
+	 * 
+	 * @param taskItems {@code ArrayList<String>}, commandUtil {@code CommandUtils} 
+	 * 		  and taskName {@code String}
+	 * 
+	 * @return {@code CommandUtils} 
+	 * 
+	 */
 	private CommandUtils parseFloating(ArrayList<String> taskItems, String taskName, CommandUtils commandUtil) {
 		
 		hasTimeDateElement = dt.hasDateAndTimeElements(taskName);
@@ -195,13 +284,15 @@ public class AddParser {
 			
 			commandUtil.setTaskName(taskName);
 		}
-		else {		
+		else {
 			
+			// Example: Meet Hannah Tomorrow. (no preposition)
 			if (dates.size() == 1 && hasTimeDateElement == true) {		
 			
 				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(0), date));
 				commandUtil = finalVerification(taskName, commandUtil);	
 			}
+			// Example: 
 			else if (dates.size() > 1 && hasTimeDateElement == true) {
 				
 				commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(dates.get(1), date));

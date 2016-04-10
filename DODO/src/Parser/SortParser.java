@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Command.*;
+import Logger.*;
 
 public class SortParser {
 	
@@ -27,9 +28,14 @@ public class SortParser {
 	private final String LOGGER_MESSAGE_IS_ALPHABETICAL = "SortParser Class: Processing user input in isSortByAlphabetical method.";
 	private final String LOGGER_MESSAGE_IS_BY_DATE = "SortParser Class: Processing user input in isSortByDate method.";
 	private final String LOGGER_MESSAGE_REMOVE_BY = "SortParser Class: Processing user input in removeBy method.";
+	private final String LOGGER_MESSAGE_IS_SORT_DATE = "SortParser Class: Sort type is BY_DATE.";
+	private final String LOGGER_MESSAGE_IS_SORT_ASCENDING = "SortParser Class: Sort type is BY_ASCENDING.";
+	private final String LOGGER_MESSAGE_IS_SORT_DESCENDING = "SortParser Class: Sort type is BY_DESCENDING.";
+	private final String LOGGER_MESSAGE_IS_INVALID_SORT = "SortParser Class: Sort type is INVALID.";
+	
 			
 	public SortParser() {
-		logger = Logger.getLogger("SortParser");
+		logger = LoggerFile.getLogger();
 	}
 	
 	protected CommandUtils determineSortType(CommandUtils commandUtil, String userTask) {
@@ -40,15 +46,19 @@ public class SortParser {
 		userTask = removeBy(userTask.toLowerCase());
 		
 		if (isSortByDate(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_IS_SORT_DATE);
 			commandUtil.setSortType(SORT_TYPE.BY_DATE);
 		}
 		else if (isSortByAlphabetical(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_IS_SORT_ASCENDING);
 			commandUtil.setSortType(SORT_TYPE.BY_ASCENDING);
 		}
 		else if (isSortByReverseAlphabetical(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_IS_SORT_DESCENDING);
 			commandUtil.setSortType(SORT_TYPE.BY_DESCENDING);
 		}
 		else {
+			logger.log(Level.INFO, LOGGER_MESSAGE_IS_INVALID_SORT);
 			commandUtil.setSortType(SORT_TYPE.INVALID);
 		}
 		return commandUtil;

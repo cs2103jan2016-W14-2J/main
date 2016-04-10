@@ -393,7 +393,8 @@ public class AddParser {
 		return (str[lastWordPosition].toLowerCase().contains(KEYWORD_AT) || 
 				str[lastWordPosition].toLowerCase().contains(KEYWORD_BY) ||
 				str[lastWordPosition].toLowerCase().contains(KEYWORD_ON) ||
-				str[lastWordPosition].toLowerCase().contains(KEYWORD_DUE)) 
+				str[lastWordPosition].toLowerCase().contains(KEYWORD_DUE) ||
+				str[lastWordPosition].toLowerCase().contains(KEYWORD_TO)) 
 				? true : false;
 	}
 	

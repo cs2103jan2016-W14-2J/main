@@ -60,6 +60,7 @@ public class Parser {
 	private final String LOGGER_MESSAGE_GET_USER_INPUT = "Parser Class: Processing user input in getUserInput method.";
 	private final String LOGGER_MESSAGE_CHECK_IMPORTANCE = "Parser Class: Processing user input in checkTaskImportance method.";
 	private final String LOGGER_MESSAGE_EXTRACT_TAG = "Parser Class: Processing user input in extractTag method.";
+	private final String LOGGER_MESSAGE_EXIT_PARSER_CLASS = "Parser Class: Existing Parser Class.";
 	
 	public Parser() {
 		
@@ -154,6 +155,7 @@ public class Parser {
 				break;
 		}
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXIT_PARSER_CLASS);
 		return commandUtil;
 	}
 	

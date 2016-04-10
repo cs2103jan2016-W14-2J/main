@@ -443,7 +443,8 @@ public class DateTimeParser {
 		SimpleDateFormat sdf = new SimpleDateFormat(TIME_WITHOUT_DATE_FORMAT);
 		DateFormat df = new SimpleDateFormat(DATE_FORMAT_1);
 		String dateWithoutTime = df.format(date);
-		String newDateWithTime= "";
+		System.out.println("HELLO : " + dateWithoutTime);
+		String currentDateWithoutTime= df.format(currentTime);
 		String timeAt12am = dateWithoutTime + " " + "00:00:00";
 		Calendar cal = Calendar.getInstance();
 		
@@ -451,16 +452,16 @@ public class DateTimeParser {
 			Date dateWithoutDate = sdf.parse(sdf.format(date));
 			Date currentWithoutDate = sdf.parse(sdf.format(currentTime));
 			Date defaultStartTime = sf.parse(timeAt12am);
-			System.out.println("DefaultstartTime : " + defaultStartTime);
-			if (dateWithoutDate.equals(currentWithoutDate) && currentTime.before(date)) {
+			System.out.println("DefaultstartTime : " + dateWithoutTime);
+			if (dateWithoutDate.equals(currentWithoutDate) && dateWithoutTime.equals(currentDateWithoutTime)) {
 				System.out.println("DefaultstartTime : " + defaultStartTime);
-				newDate = defaultStartTime;
+				newDate = currentTime;
 			} 
-	/*		else if (dateWithoutDate.equals(currentWithoutDate) && currentTime.after(defaultStartTime)) {
-				newDateWithTime = dateWithoutTime + " " + DEFAULT_TIME_1159PM;
-				newDate = sf.parse(newDateWithTime);
+			else {
+				newDate = defaultStartTime;
+				
 			}
-			else if (date.before(currentTime)) {
+	/*		else if (date.before(currentTime)) {
 				cal.setTime(date);
 				cal.add(Calendar.DATE, 1);
 				newDateWithTime = sf.format(cal.getTime()); 

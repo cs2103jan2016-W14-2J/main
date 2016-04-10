@@ -1,31 +1,59 @@
-//@@author: Hao Jie
+//@@author: A0125552L
 package Parser;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import Command.*;
+import Logger.*;
 
 public class DeleteParser {
+	
+	private static Logger logger;
 	private DELETE_TYPE deleteType;
 	private ArrayList<String> tagToDelete; 
 	private ArrayList<Integer> indexToDelete;
 	
-	private String STRING_CHECKER_ALL = "all";
-	private String STRING_CHECKER_TO = "to";
-	private String STRING_CHECKER_HYPHEN = "-";
-	private String STRING_HASH_TAG = "#";
-	private String STRING_CHECKER_TAG = "tag";
-	private String STRING_CHECKER_CATEGORY = "category";
-	private String STRING_START_DATE = "start date";
-	private String STRING_END_DATE = "end date";
-	private String STRING_START_INDICATOR = "start";
-	private String STRING_END_INDICATOR = "end";
-	private String STRING_SPLITTER = "\\s+";
-	private String STRING_EMPTY = "";
-	private String PUNCTUATION_REMOVER = "[:.,]";
+	// Constants
+	private static final String STRING_CHECKER_ALL = "all";
+	private static final String STRING_CHECKER_TO = "to";
+	private static final String STRING_CHECKER_HYPHEN = "-";
+	private static final String STRING_HASH_TAG = "#";
+	private static final String STRING_CHECKER_TAG = "tag";
+	private static final String STRING_CHECKER_CATEGORY = "category";
+	private static final String STRING_START_DATE = "start date";
+	private static final String STRING_END_DATE = "end date";
+	private static final String STRING_START_INDICATOR = "start";
+	private static final String STRING_END_INDICATOR = "end";
+	private static final String STRING_SPLITTER = "\\s+";
+	private static final String STRING_EMPTY = "";
+	private static final String PUNCTUATION_REMOVER = "[:.,]";
+	private static final int FIRST_ELEMENT = 0;
+	private static final int SECOND_ELEMENT = 2;
+	private static final int NUM_ELEMENTS_IN_RANGE = 3;
+	
+	// Logging messages for methods and processes.
+	private static final String LOGGER_MESSAGE_EXECUTE_DELETE_PARSER = "Delete Parser: Processing executeDeleteParser method.";
+	private static final String LOGGER_MESSAGE_EXIT_DELETE_PARSER = "Delete Parser: Exiting executeDeleteParser method.";
+	private static final String LOGGER_MESSAGE_PROCESS_DELETE_TYPE = "Delete Parser: Analysing delete type.";
+	private static final String LOGGER_MESSAGE_DETERMINE_DELETE_TYPE = "Delete Parser: Processing delete type.";
+	private static final String LOGGER_MESSAGE_IS_TASK_INDEX = "Delete Parser: Analysing if deleting tags, date or indexes.";
+	private static final String LOGGER_MESSAGE_DELETE_ALL_INDEXES = "Delete Parser: Delete type is all indexes .";
+	private static final String LOGGER_MESSAGE_DELETE_ALL_TAGS = "Delete Parser: Delete type is all tags .";
+	private static final String LOGGER_MESSAGE_DELETE_SINGLE_INDEX = "Delete Parser: Delete type is singe index.";
+	private static final String LOGGER_MESSAGE_DELETE_SINGLE_TAG = "Delete Parser: Delete type is single tag.";
+	private static final String LOGGER_MESSAGE_DELETE_RANGE_INDEXES = "Delete Parser: Delete type is range indexes .";
+	private static final String LOGGER_MESSAGE_DELETE_MULTIPLE_INDEXES = "Delete Parser: Delete type is multiple indexes .";
+	private static final String LOGGER_MESSAGE_DELETE_MULTIPLE_TAGS = "Delete Parser: Delete type is multiple tags .";
+	private static final String LOGGER_MESSAGE_DELETE_START_DATE = "Delete Parser: Delete type is start date .";
+	private static final String LOGGER_MESSAGE_DELETE_END_DATE = "Delete Parser: Delete type is end date .";
+	private static final String LOGGER_MESSAGE_DELETE_IS_INVALID = "Delete Parser: Delete type is invalid .";
 	
 	public DeleteParser() {
 		this.tagToDelete = new ArrayList<String>();
 		this.indexToDelete = new ArrayList<Integer>();
+		logger = LoggerFile.getLogger();
 	}
 
 	/*
@@ -40,12 +68,16 @@ public class DeleteParser {
 	
 	protected CommandUtils executeDeleteParser(CommandUtils commandUtil, String userTask) {
 		
+		assert (userTask != null);
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXECUTE_DELETE_PARSER);
+		
 		boolean isInteger = false;
 		String[] str = userTask.replaceAll(PUNCTUATION_REMOVER, STRING_EMPTY).split(STRING_SPLITTER);
 		isInteger = isTaskIndex(str);
 		commandUtil = detemineDeleteType(commandUtil, userTask.toLowerCase(), isInteger);
 		deleteType = commandUtil.getDeleteType();
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXIT_DELETE_PARSER);
 		return processDeleteType(commandUtil, str);
 	}
 
@@ -60,6 +92,8 @@ public class DeleteParser {
 	 */
 	
 	private CommandUtils processDeleteType(CommandUtils commandUtil, String[] str) {
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_DELETE_TYPE);
 		
 		switch (deleteType) {
 		
@@ -99,35 +133,47 @@ public class DeleteParser {
 	 * 
 	 */
 	private CommandUtils detemineDeleteType(CommandUtils commandUtil, String userTask, boolean isInteger) {
-
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_DETERMINE_DELETE_TYPE);
+		
 		if (checkIfDeleteAll(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_ALL_INDEXES);
 			commandUtil.setDeleteType(DELETE_TYPE.ALL_INDEXES);
 		}
 		else if (checkIfDeleteAllTag(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_ALL_TAGS);
 			commandUtil.setDeleteType(DELETE_TYPE.ALL_TAGS);
 		}
 		else if (checkIfDeleteSingleIndex(userTask) && isInteger == true){
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_SINGLE_INDEX);
 			commandUtil.setDeleteType(DELETE_TYPE.SINGLE_INDEX);
 		}
 		else if (checkIfDeleteSingleTag(userTask) && isInteger == false) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_SINGLE_TAG);
 			commandUtil.setDeleteType(DELETE_TYPE.SINGLE_TAG);	
 		}
 		else if (checkIfDeleteRange(userTask) && isInteger == true) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_RANGE_INDEXES);
 			commandUtil.setDeleteType(DELETE_TYPE.RANGE_INDEXES);
 		}
 		else if (checkIfDeleteMultiple(userTask) && isInteger == true) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_MULTIPLE_INDEXES);
 			commandUtil.setDeleteType(DELETE_TYPE.MULTIPLE_INDEXES);
 		}
 		else if (checkIfDeleteMultiple(userTask) && isInteger == false) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_MULTIPLE_TAGS);
 			commandUtil.setDeleteType(DELETE_TYPE.MULTIPLE_TAGS);
 		}
 		else if(checkIfDeleteStartDate(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_START_DATE);
 			commandUtil.setDeleteType(DELETE_TYPE.START_DATE);
 		}
 		else if(checkIfDeleteEndDate(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_END_DATE);
 			commandUtil.setDeleteType(DELETE_TYPE.END_DATE);
 		}
 		else {
+			logger.log(Level.INFO, LOGGER_MESSAGE_DELETE_IS_INVALID);
 			commandUtil.setDeleteType(DELETE_TYPE.INVALID);
 		}
 		return commandUtil;
@@ -143,7 +189,9 @@ public class DeleteParser {
 	 * 
 	 */
 	private boolean isTaskIndex(String[] str) {
-		return (str[0].startsWith(STRING_HASH_TAG)) ? false : true;
+		
+		logger.log(Level.INFO, LOGGER_MESSAGE_IS_TASK_INDEX);
+		return (str[FIRST_ELEMENT].startsWith(STRING_HASH_TAG)) ? false : true;
 	}
 
 	/*
@@ -156,7 +204,8 @@ public class DeleteParser {
 	 * 
 	 */
 	private CommandUtils parseDeleteEndDate(CommandUtils commandUtil, String[] str) {
-		if (!str[0].contains(STRING_END_INDICATOR)) {
+		
+		if (!str[FIRST_ELEMENT].contains(STRING_END_INDICATOR)) {
 			indexToDelete.add(Integer.parseInt(str[0]));
 			commandUtil.setIndexToDelete(indexToDelete);
 		}
@@ -177,8 +226,9 @@ public class DeleteParser {
 	 */
 	
 	private CommandUtils parseDeleteStartDate(CommandUtils commandUtil, String[] str) {
-		if (!str[0].contains(STRING_START_INDICATOR)) {
-			indexToDelete.add(Integer.parseInt(str[0]));
+		
+		if (!str[FIRST_ELEMENT].contains(STRING_START_INDICATOR)) {
+			indexToDelete.add(Integer.parseInt(str[FIRST_ELEMENT]));
 			commandUtil.setIndexToDelete(indexToDelete);
 		}
 		else {
@@ -199,8 +249,8 @@ public class DeleteParser {
 	
 	private CommandUtils parseRangeDelete(CommandUtils commandUtil, String[] str) {
 		// Example: delete 1 to 5 / delete 1 - 5
-		if (str.length == 3) {
-			for (int i = Integer.parseInt(str[0]); i < Integer.parseInt(str[2]) + 1; i++) {
+		if (str.length == NUM_ELEMENTS_IN_RANGE) {
+			for (int i = Integer.parseInt(str[FIRST_ELEMENT]); i < Integer.parseInt(str[SECOND_ELEMENT]) + 1; i++) {
 				indexToDelete.add(i);
 			}
 		}
@@ -260,8 +310,8 @@ public class DeleteParser {
 	
 	private CommandUtils parseSingleDeleteTag(CommandUtils commandUtil, String[] str) {
 		// Example: delete #nus
-		if (!str[0].contains(STRING_CHECKER_HYPHEN)) {
-			tagToDelete.add(str[0].substring(1, str[0].length()));
+		if (!str[FIRST_ELEMENT].contains(STRING_CHECKER_HYPHEN)) {
+			tagToDelete.add(str[FIRST_ELEMENT].substring(1, str[FIRST_ELEMENT].length()));
 			commandUtil.setTagToDelete(tagToDelete);
 		}
 		return commandUtil;
@@ -277,7 +327,7 @@ public class DeleteParser {
 	 * 
 	 */
 	private CommandUtils parseSingleDeleteIndex(CommandUtils commandUtil, String[] str) {
-		indexToDelete.add(Integer.parseInt(str[0]));
+		indexToDelete.add(Integer.parseInt(str[FIRST_ELEMENT]));
 		commandUtil.setIndexToDelete(indexToDelete);
 		return commandUtil;
 	}
@@ -401,9 +451,10 @@ public class DeleteParser {
 	 * 
 	 */
 	private boolean checkIfDeleteSingleTag(String userTask) {
-		String[] temp = userTask.split(" ");
-		return (temp.length == 1 && temp[0].startsWith(STRING_HASH_TAG) 
-				&& !temp[0].contains(STRING_CHECKER_HYPHEN)) ? true : false;
+		String[] temp = userTask.split(STRING_SPLITTER);
+		return (temp.length == 1 && temp[FIRST_ELEMENT].startsWith(STRING_HASH_TAG) 
+				&& !temp[FIRST_ELEMENT].contains(STRING_CHECKER_HYPHEN)) ? true : false;
 	}
 
 }
+

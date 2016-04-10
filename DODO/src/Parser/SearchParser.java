@@ -3,6 +3,7 @@ package Parser;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Command.*;
@@ -22,6 +23,19 @@ public class SearchParser {
 	private static final String STRING_HASH_TAG = "#";
 	private static final String STRING_SPLITTER = "\\s+";
 	private static final String STRING_EMPTY = "";
+	
+	// Logging Message for processes
+	private static final String LOGGER_MESSAGE_PROCESS_SEARCH_COMMAND = "SearchParser Class: Processing Search Command.";
+	private static final String LOGGER_MESSAGE_EXIT_SEARCH_PARSER_CLASS = "SearchParser Class: Exiting SearchParser class." ;
+	private static final String LOGGER_MESSAGE_ANALYSING_SEARCH_TYPE = "SearchParser Class: Analysing search type.";
+	private static final String LOGGER_MESSAGE_PROCESS_SEARCH_DATE = "SearchParser Class: Processing search date.";
+	private static final String LOGGER_MESSAGE_PROCESS_SEARCH_TAG = "SearchParser Class: Processing search tag.";
+	private static final String LOGGER_MESSAGE_PROCESS_INVALID = "SearchParser Class: Process is invalid.";
+	private static final String LOGGER_MESSAGE_PROCESS_DETERMINE_SEARCH_TYPE = "SearchParser Class: Determining serch type.";
+	private static final String LOGGER_MESSAGE_PROCESS_IS_SEARCH_TASK = "SearchParser Class: Checking if search task type.";
+	private static final String LOGGER_MESSAGE_PROCESS_IS_SEARCH_DATE = "SearchParser Class: Checking if search date type.";
+	private static final String LOGGER_MESSAGE_PROCESS_IS_SEARCH_TAG = "SearchParser Class: Checking if search tag type.";
+	private static final String LOGGER_MESSAGE_PROCESS_REMOVE_BY = "SearchParser Class: Removing \"by\".";
 
 	public SearchParser() {
 		logger = LoggerFile.getLogger();
@@ -39,12 +53,13 @@ public class SearchParser {
 	protected CommandUtils executeSearchParser(CommandUtils commandUtil, String userTask) {
 	
 		assert (userTask != null);
-		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_SEARCH_COMMAND);
 		
 		userTask = removeBy(userTask);
 		commandUtil = determineSearchType(commandUtil, userTask);
 		searchType = commandUtil.getSearchType();
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_EXIT_SEARCH_PARSER_CLASS);
 		return analyseSearchType(commandUtil, userTask);
 	}
 	
@@ -60,18 +75,24 @@ public class SearchParser {
 
 	private CommandUtils analyseSearchType(CommandUtils commandUtil, String userTask) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_ANALYSING_SEARCH_TYPE);
+		
 		switch(searchType) {
 			
 		case BY_DATE:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_SEARCH_DATE);
 			return processByDate(commandUtil, userTask);
 		
 		case BY_TASK:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_SEARCH_DATE);
 			return processByTask(commandUtil, userTask);
 		
 		case BY_TAG:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_SEARCH_TAG);
 			return processByTag(commandUtil, userTask);
 		
 		default:
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_INVALID);
 			commandUtil.setSearchType(SEARCH_TYPE.INVALID);
 			break;
 		}
@@ -138,16 +159,22 @@ public class SearchParser {
 	 */
 	private CommandUtils determineSearchType(CommandUtils commandUtil, String userTask) {
 		
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_DETERMINE_SEARCH_TYPE);
+		
 		if (isSearchDate(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_IS_SEARCH_DATE);
 			commandUtil.setSearchType(SEARCH_TYPE.BY_DATE);
 		}
 		else if (isSearchTaskName(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_IS_SEARCH_TASK);
 			commandUtil.setSearchType(SEARCH_TYPE.BY_TASK);
 		}
 		else if (isSearchTag(userTask)) {
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_IS_SEARCH_TAG);
 			commandUtil.setSearchType(SEARCH_TYPE.BY_TAG);
 		}
 		else {
+			logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_INVALID);
 			commandUtil.setSearchType(SEARCH_TYPE.INVALID);
 		}
 		return commandUtil;
@@ -206,6 +233,7 @@ public class SearchParser {
 	private String removeBy(String userTask) {
 		
 		assert (userTask.length() > 0);
+		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_REMOVE_BY);
 		
 		String[] str = userTask.toLowerCase().split(STRING_SPLITTER);
 		

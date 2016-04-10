@@ -65,15 +65,19 @@ public class DateTimeParser {
 	
 	
 	public DateTimeParser () {
+		
 		todayTypes = new ArrayList<>(Arrays.asList("tdy"));
 		tomorrowTypes = new ArrayList<>(Arrays.asList("tmr", "tml", "tmrw", "2moro"));
+		
 		dayTypes = new ArrayList<>(Arrays.asList("mon", "monday", "tue", "tues", "tuesday", 
 												 "wed", "wednesday", "thur", "thurs", "thursday", 
 												 "fri", "friday", "sat", "saturday", "sun", "sunday"));
+		
 		monthTypes = new ArrayList<>(Arrays.asList("jan", "january", "feb", "february", "mar",
 												   "march", "apr","april", "may","may", "june","june", 
 												   "jul", "july", "aug", "august", "sept", "september", 
 												   "oct", "october", "nov", "november", "dec", "december"));
+		
 		preposition = new ArrayList<>(Arrays.asList("on", "at", "by", "before", "in", "from" , "to"));
 	}
 	

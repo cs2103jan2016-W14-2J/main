@@ -5,12 +5,18 @@ package Command;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import org.ocpsoft.prettytime.shade.edu.emory.mathcs.backport.java.util.Collections;
+
 import Parser.*;
 import Task.Category;
 import Task.Task;
 
 public class Flag extends Command {
 	private static final String MESSAGE_INVALID_FLAG = "Please enter a valid flag command.";
+	private static final String MESSAGE_SUCCESSFUL_FLAG = 
+			"Task(s) at \"%1$s\" is/are successfully flagged. ";
+	private static final String MESSAGE_UNSUCCESSFUL_FLAG = 
+			"Task(s) at \"%1$s\" failed to flag due to its/their invalid index or already flagged/unflagged status. ";
 	private boolean toFlag;
 
 	public Flag(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
@@ -47,45 +53,47 @@ public class Flag extends Command {
 
 	private String flag(ArrayList<Integer> indexes) {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
-		String status = "";
+		ArrayList<Integer> unsuccessfulFlag = new ArrayList<Integer>();
+		ArrayList<Integer> successfulFlag = new ArrayList<Integer>();
+		
 		int index = 0;
 		for (int i=indexes.size()-1; i>=0; i--) {
+			index = indexes.get(i)-1;
 			try {
-				index = indexes.get(i)-1;
 				Task task = tasks.get(index);
 				if (toFlag) {
 					if (task.getFlag()) {
-						status += "Task " + (index + INDEX_ADJUSTMENT) + " is already flagged.\n";
+						successfulFlag.add(index + INDEX_ADJUSTMENT);
 					}
 					else {
-						status += "Task " + (index + INDEX_ADJUSTMENT) + " is flagged.\n";
+						unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
 					}
 				}
 				else {
 					if (!task.getFlag()) {
-						status += "Task " + (index + INDEX_ADJUSTMENT) + " is already unflagged.\n";
+						unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
 					}
 					else {
-						status += "Task " + (index + INDEX_ADJUSTMENT) + " is unflagged.\n";
+						successfulFlag.add(index + INDEX_ADJUSTMENT);
 					}
 				}
 				task.setFlag(toFlag);
 				this.lastModifiedIndex = index;
 			} catch (IndexOutOfBoundsException e) {
-				status += "Task " + (index + INDEX_ADJUSTMENT) + " is absent.\n";
+				unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
 			}
 		}
-		return status;
+		
+		Collections.sort(successfulFlag);
+		Collections.sort(unsuccessfulFlag);
+		
+		if (unsuccessfulFlag.size()==0) {
+			return String.format(MESSAGE_SUCCESSFUL_FLAG, successfulFlag);
+		}
+		if (successfulFlag.size()==0) {
+			return String.format(MESSAGE_UNSUCCESSFUL_FLAG, unsuccessfulFlag);
+		}
+		return String.format(MESSAGE_SUCCESSFUL_FLAG, successfulFlag) + "\n " + 
+				String.format(MESSAGE_UNSUCCESSFUL_FLAG, unsuccessfulFlag);
 	}
-
-	/*private String flag(int index, ArrayList<Task> tasks) {
-		Task task = tasks.get(index);
-		if (task.getFlag()) {
-			return "Task " + index + " is already flagged.";
-		}
-		else {
-			task.setFlag(true);
-			return "Task " + index + " is flagged.";
-		}
-	}*/
 }

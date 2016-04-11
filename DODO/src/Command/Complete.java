@@ -12,7 +12,7 @@ import Parser.*;
 import Task.*;
 
 public class Complete extends Command {
-	private static final String MESSAGE_INVALID_COMPLETE = "Please enter a valid command.";
+	private static final String MESSAGE_INVALID_COMPLETE = "Please enter a valid complete command.";
 	private static final String MESSAGE_SUCCESSFUL_COMPLETE = 
 			"Congratulation! Task(s) at \"%1$s\" is/are successfully completed. ";
 	private static final String MESSAGE_UNSUCCESSFUL_COMPLETE = 

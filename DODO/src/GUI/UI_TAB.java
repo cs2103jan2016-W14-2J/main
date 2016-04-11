@@ -1,6 +1,6 @@
 package GUI;
 
-//@@author LUYANG
+//@@author A0130684H
 public enum UI_TAB {
 	MAIN, ALL, FLOATING, ONGOING, COMPLETED, OVERDUE, SEARCH, HELP;
 }

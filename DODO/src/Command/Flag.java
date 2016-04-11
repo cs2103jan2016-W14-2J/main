@@ -15,8 +15,12 @@ public class Flag extends Command {
 	private static final String MESSAGE_INVALID_FLAG = "Please enter a valid flag command.";
 	private static final String MESSAGE_SUCCESSFUL_FLAG = 
 			"Task(s) at \"%1$s\" is/are successfully flagged. ";
+	private static final String MESSAGE_SUCCESSFUL_UNFLAG =
+			"Task(s) at \"%1$s\" is/are successfully unflagged. ";
 	private static final String MESSAGE_UNSUCCESSFUL_FLAG = 
 			"Task(s) at \"%1$s\" failed to flag due to its/their invalid index or already flagged/unflagged status. ";
+	private static final String MESSAGE_UNSUCCESSFUL_UNFLAG = 
+			"Task(s) at \"%1$s\" failed to unflag due to its/their invalid index or already flagged/unflagged status. ";
 	private boolean toFlag;
 
 	public Flag(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
@@ -53,28 +57,31 @@ public class Flag extends Command {
 
 	private String flag(ArrayList<Integer> indexes) {
 		ArrayList<Task> tasks = retrieve(this.UIStatus);
-		ArrayList<Integer> unsuccessfulFlag = new ArrayList<Integer>();
+		ArrayList<Integer> successfulUnflag = new ArrayList<Integer>();
+		ArrayList<Integer> unsuccessfulUnflag = new ArrayList<Integer>();
 		ArrayList<Integer> successfulFlag = new ArrayList<Integer>();
-		
+		ArrayList<Integer> unsuccessfulFlag = new ArrayList<Integer>();
+
 		int index = 0;
 		for (int i=indexes.size()-1; i>=0; i--) {
 			index = indexes.get(i)-1;
 			try {
 				Task task = tasks.get(index);
 				if (toFlag) {
+					// user wants to flags
 					if (task.getFlag()) {
-						successfulFlag.add(index + INDEX_ADJUSTMENT);
+						unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
 					}
 					else {
-						unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
+						successfulFlag.add(index + INDEX_ADJUSTMENT);
 					}
 				}
 				else {
 					if (!task.getFlag()) {
-						unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
+						unsuccessfulUnflag.add(index + INDEX_ADJUSTMENT);
 					}
 					else {
-						successfulFlag.add(index + INDEX_ADJUSTMENT);
+						successfulUnflag.add(index + INDEX_ADJUSTMENT);
 					}
 				}
 				task.setFlag(toFlag);
@@ -83,17 +90,31 @@ public class Flag extends Command {
 				unsuccessfulFlag.add(index + INDEX_ADJUSTMENT);
 			}
 		}
-		
+
 		Collections.sort(successfulFlag);
 		Collections.sort(unsuccessfulFlag);
-		
-		if (unsuccessfulFlag.size()==0) {
-			return String.format(MESSAGE_SUCCESSFUL_FLAG, successfulFlag);
+		Collections.sort(successfulUnflag);
+		Collections.sort(unsuccessfulUnflag);
+
+		if (this.toFlag) {
+			if (unsuccessfulFlag.size()==0) {
+				return String.format(MESSAGE_SUCCESSFUL_FLAG, successfulFlag);
+			}
+			if (successfulFlag.size()==0) {
+				return String.format(MESSAGE_UNSUCCESSFUL_FLAG, unsuccessfulFlag);
+			}
+			return String.format(MESSAGE_SUCCESSFUL_FLAG, successfulFlag) + "\n " + 
+			String.format(MESSAGE_UNSUCCESSFUL_FLAG, unsuccessfulFlag);
 		}
-		if (successfulFlag.size()==0) {
-			return String.format(MESSAGE_UNSUCCESSFUL_FLAG, unsuccessfulFlag);
+		else {
+			if (unsuccessfulUnflag.size()==0) {
+				return String.format(MESSAGE_SUCCESSFUL_UNFLAG, successfulUnflag);
+			}
+			if (successfulUnflag.size()==0) {
+				return String.format(MESSAGE_UNSUCCESSFUL_UNFLAG, unsuccessfulUnflag);
+			}
+			return String.format(MESSAGE_SUCCESSFUL_UNFLAG, successfulUnflag) + "\n " + 
+			String.format(MESSAGE_UNSUCCESSFUL_UNFLAG, unsuccessfulUnflag);
 		}
-		return String.format(MESSAGE_SUCCESSFUL_FLAG, successfulFlag) + "\n " + 
-				String.format(MESSAGE_UNSUCCESSFUL_FLAG, unsuccessfulFlag);
 	}
 }

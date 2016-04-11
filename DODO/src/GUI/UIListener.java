@@ -40,8 +40,6 @@ public class UIListener {
 	public UIListener()
 	{
 	}
-	
-
 	public UIListener(HBox root,Stage primaryStage, UIRightBox rightBox, UILeftBox leftBox, Logic logic)
 	{
 		this.logic = logic;

@@ -85,13 +85,12 @@ public class UIMainController {
 
 		Calendar now = Calendar.getInstance();	
 		
-	/*	timer.schedule( new TimerTask() {
+		timer.schedule( new TimerTask() {
 		    public void run() {
 		    	Platform.runLater(new Runnable() {
                     @Override
                     public void run() 
                     {
-                    	Calendar cal = Calendar.getInstance();
                 		logic.update();
                 		rightBox.testMethod();
                 		try {
@@ -100,24 +99,10 @@ public class UIMainController {
                 			e.printStackTrace();
                 		}
 
-                    	for(int x=0;x<logic.getOngoingTasks().size();x++)
-                    	{
-                				if(logic.getOngoingTasks().get(x).getEnd().after(cal.getTime()))
-                				{
-                					final Popup popup = new Popup(); popup.setX(300); popup.setY(200);
-                				    popup.getContent().addAll(new Circle(25, 25, 50, Color.AQUAMARINE));
-                					System.out.println("this has not expired " + x);
-                				}
-                				else
-                				{
-                					System.out.println("this has expired " + x);
-                				}
-                    	}
-                        
                     }
                 });
 		    }
-		 }, 0, 60*500);*/
+		 }, 0, 60*200);
 		
 	  
 		

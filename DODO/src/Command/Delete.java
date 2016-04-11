@@ -138,8 +138,9 @@ public class Delete extends Command {
 			Task task = tasks.get(index - INDEX_ADJUSTMENT);
 			task.setEnd(null);
 			this.floatingTasks.add(task);
-			if (this.UIStatus!=UI_TAB.SEARCH) {
-				tasks.remove(index- INDEX_ADJUSTMENT);
+			tasks.remove(index - INDEX_ADJUSTMENT);
+			if (this.UIStatus == UI_TAB.SEARCH || this.UIStatus == UI_TAB.ALL) {
+				this.deleteTaskFromOtherTab(task);
 			}
 		}
 		this.UIStatus = UI_TAB.FLOATING;

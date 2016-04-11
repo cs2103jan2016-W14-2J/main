@@ -1,4 +1,4 @@
-package Command;
+package Logic;
 
 /* @@author: A0130684H */
 

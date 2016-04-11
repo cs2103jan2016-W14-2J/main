@@ -161,13 +161,14 @@ public class EditParser {
 		String[] str = userInput.trim().split(STRING_SPLITTER);
 		assert (str.length <= 3 && str.length > 0);
 		
+		System.out.println("parseEditTag : " + userInput);
 		logger.log(Level.INFO, LOGGER_MESSAGE_PROCESS_EDIT_TAG_METHOD);
 		logger.log(Level.WARNING, LOGGER_MESSAGE_INDEX_OUT_OF_BOUND);
 		
 		if (str[NUM_FIRST_ELEMENT].startsWith(STRING_HASH_TAG) && str[2].startsWith(STRING_HASH_TAG)) {
 			
 			commandUtil.setOldTag(str[NUM_FIRST_ELEMENT].substring(1, str[NUM_FIRST_ELEMENT].length()));
-			newTag.add(str[2].substring(1, str[NUM_FIRST_ELEMENT].length()));
+			newTag.add(str[2].substring(1, str[2].length()));
 			commandUtil.setTaskTag(newTag);	
 		}
 		else {

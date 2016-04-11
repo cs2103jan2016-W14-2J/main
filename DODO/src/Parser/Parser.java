@@ -211,7 +211,7 @@ public class Parser {
 		
 		logger.log(Level.INFO, LOGGER_MESSAGE_CHECK_IF_VALID_INPUT);
 
-		if (userInput.replaceAll(" ", "").length() == 0) {
+		if (userInput.replaceAll(SYMBOL_SPACING, SYMBOL_EMPTY).length() == 0) {
 			commandUtil.setCommandType(COMMAND_TYPE.INVALID);
 		}
 		
@@ -238,7 +238,7 @@ public class Parser {
 		if (possibleCommandErrors.containsKey(commandType) ) {
 			this.command = possibleCommandErrors.get(commandType);
 		}
-		else if (userInput.replaceAll(" ", "").length() == 0) {
+		else if (userInput.replaceAll(SYMBOL_SPACING, SYMBOL_EMPTY).length() == 0) {
 			this.command = COMMAND_TYPE.INVALID;
 		}
 		else {

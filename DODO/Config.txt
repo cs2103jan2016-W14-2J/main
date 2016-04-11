@@ -1,2 +1,0 @@
-DBDIR = /Users/HaoJie/Dropbox/DODOdatabase.txt
-FILENAME = DODOdatabase.txt

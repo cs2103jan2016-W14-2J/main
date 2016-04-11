@@ -536,7 +536,7 @@ public class DateTimeParser {
 	 * @return {@code boolean} 
 	 * 
 	 */
-	private boolean containsPreposition(String[] userInput) {
+	protected boolean containsPreposition(String[] userInput) {
 		
 		for (int i = 0; i < userInput.length; i++) {
 			if (preposition.contains(userInput[i])) {
@@ -633,7 +633,7 @@ public class DateTimeParser {
 	 * @return {@code String} with numercial date converted to dd/MM/yy
 	 * 
 	 */
-	private String processNumericalDate(ArrayList<String> taskItems) {
+	protected String processNumericalDate(ArrayList<String> taskItems) {
 
 		String[] str;
 		
@@ -668,7 +668,7 @@ public class DateTimeParser {
 	 * @return {@code String} 
 	 * 
 	 */
-	private String process2400hrs(ArrayList<String> taskItems) {
+	protected String process2400hrs(ArrayList<String> taskItems) {
 		
 		for (int i = 0; i < taskItems.size(); i++) {
 			if (taskItems.get(i).contains(DEFAULT_TIME_2400HRS)) {
@@ -687,7 +687,7 @@ public class DateTimeParser {
 	 * @return {@code String}
 	 * 
 	 */
-	private String toStringTaskElements(ArrayList<String> taskNameArrayList) {
+	protected String toStringTaskElements(ArrayList<String> taskNameArrayList) {
 		
 		String name = "";
 		
@@ -927,9 +927,11 @@ public class DateTimeParser {
 	protected String getConfirmTaskName() {
 		return this.confirmTaskName;
 	}
+	
 	private void setDateElements(String possibleDate) {
 		this.possibleDate = possibleDate;
 	}
+	
 	protected String getDateElements() {
 		return this.possibleDate;
 	}

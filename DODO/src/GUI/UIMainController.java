@@ -85,24 +85,6 @@ public class UIMainController {
 
 		Calendar now = Calendar.getInstance();	
 		
-		timer.schedule( new TimerTask() {
-		    public void run() {
-		    	Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() 
-                    {
-                		logic.update();
-                		rightBox.testMethod();
-                		try {
-                			Thread.sleep(1000);
-                		} catch (Exception e) {
-                			e.printStackTrace();
-                		}
-
-                    }
-                });
-		    }
-		 }, 0, 60*200);
 		
 	  
 		

@@ -13,6 +13,7 @@ public class Delete extends Command {
 	private static final String MESSAGE_SUCCESSFUL_DELETE = "Task(s) at \"%1$s\" is/are successfully deleted. ";
 	private static final String MESSAGE_SUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are successfully deleted. ";
 	private static final String MESSAGE_UNSUCCESSFUL_DELETE_TAG = "Tag(s) \"%1$s\" are not successfully deleted. ";
+	private static final String MESSAGE_DELETE_ALL = "All tasks and tags are deleted.";
 	
 	public Delete(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
@@ -72,12 +73,24 @@ public class Delete extends Command {
 	}
 	
 	private String deleteAllTasks() {
-		ArrayList<Task> tasks = retrieve(this.UIStatus);
-		ArrayList<Integer> indexes = new ArrayList<Integer>();
-		for (int i=1; i<=tasks.size(); i++) {
-			indexes.add(i);
+		String message;
+		if (this.UIStatus!=UI_TAB.ALL) {
+			ArrayList<Task> tasks = retrieve(this.UIStatus);
+			ArrayList<Integer> indexes = new ArrayList<Integer>();
+			for (int i=1; i<=tasks.size(); i++) {
+				indexes.add(i);
+			}
+			message = deleteTask(indexes);
 		}
-		String message = deleteTask(indexes);
+		else {
+			this.floatingTasks.clear();
+			this.ongoingTasks.clear();
+			this.completedTasks.clear();
+			this.overdueTasks.clear();
+			this.results.clear();
+			this.categories.clear();
+			message = MESSAGE_DELETE_ALL;
+		}
 		this.UIStatus = UI_TAB.ALL;
 		return message;
 	}

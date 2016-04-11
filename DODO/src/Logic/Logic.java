@@ -1,7 +1,6 @@
 package Logic;
 
 import Command.*;
-import GUI.UIRightBox;
 import GUI.UI_TAB;
 import Parser.*;
 import Storage.*;
@@ -219,6 +218,7 @@ public class Logic {
 			}
 			break;
 		case SEARCH:
+			this.results.clear();
 			Search search = new Search(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(search);
@@ -227,10 +227,6 @@ public class Logic {
 			Sort sort = new Sort(cu, this.floatingTasks, this.ongoingTasks, 
 					this.completedTasks, this.overdueTasks, this.results, this.categories);
 			message = execute(sort);
-			break;
-		case HELP:
-			this.status = UI_TAB.HELP;
-			message = String.format(MESSAGE_SWITCH_VIEW, this.status);
 			break;
 		case CHANGE_DIRECTORY:
 			message = this.redirect();

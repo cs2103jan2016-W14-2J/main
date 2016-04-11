@@ -418,7 +418,7 @@ public class AddParser {
 		List<Date> confirmDate = new PrettyTimeParser().parse(contentToAnalyse.replace(KEYWORD_FROM, STRING_SPACING));
 		
 		if (confirmDate.size() == 2) {
-		
+			
 			commandUtil.setStartTime(dt.checkAndSetDefaultStartTime(confirmDate.get(0), date));
 			commandUtil.setEndTime(dt.checkAndSetDefaultEndTime(confirmDate.get(1), date));
 			commandUtil.setTaskName(confirmTaskName.trim());

@@ -1,6 +1,6 @@
 package Command;
 
-/* @@author: Lu Yang */
+/* @@author: A0130684H */
 
 public enum COMMAND_TYPE {
 	ADD, DELETE, EDIT, UNDO, REDO, SEARCH, COMPLETE, TAG, UNTAG, FLAG, UNFLAG, SORT, 

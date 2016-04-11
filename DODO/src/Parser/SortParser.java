@@ -11,16 +11,17 @@ import Logger.*;
 public class SortParser {
 	
 	private static Logger logger;
-	private String ALPHABETICAL_ORDER = "abc";
-	private String NUMERICAL_ORDER = "123";
-	private String REVERSE_ALPHABETICAL_ORDER = "cba";
-	private String REVERSE_NUMERICAL_ORDER = "321";
-	private String DATE_ORDER = "date";
-	private String PREPOSITION_BY = "by";
-	private int POSITION_OF_INPUT  = 0;
+	private static final String ALPHABETICAL_ORDER = "abc";
+	private static final String NUMERICAL_ORDER = "123";
+	private static final String REVERSE_ALPHABETICAL_ORDER = "cba";
+	private static final String REVERSE_NUMERICAL_ORDER = "321";
+	private static final String DATE_ORDER = "date";
+	private static final String PREPOSITION_BY = "by";
+	private static final int POSITION_OF_INPUT  = 0;
+	private static final String STRING_SPLITTER = "\\s+";
+	private static final String STRING_EMPTY = "";
 	
-	private String STRING_SPLITTER = "\\s+";
-	private String STRING_EMPTY = "";
+	// Variable
 	private String[] stringSplit;
 	
 	// Logging messages for methods

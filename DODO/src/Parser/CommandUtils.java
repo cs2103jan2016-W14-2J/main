@@ -1,3 +1,4 @@
+//@@author A0125552L
 package Parser;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import Command.SORT_TYPE;
 import Task.TASK_TYPE;
 
 public class CommandUtils {
+	
 	private ArrayList<Integer> indexOfFlagAndMark;
 	private ArrayList<String> tags;
 	private ArrayList<String> tagToDelete;
@@ -64,29 +66,65 @@ public class CommandUtils {
 		
 	}
 	//****************************************Common Mutators *****************************************//
+	/*
+	 * 
+	 * @param {COMMAND_TPE}			
+	 * 
+	 */
 	protected void setCommandType(COMMAND_TYPE command) {
 		this.command = command;
 	}
+	
+	/*
+	 * 
+	 * @param {Date}			
+	 * 
+	 */
 	protected void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
 	
+	/*
+	 * 
+	 * @param {Date}			
+	 * 
+	 */
 	protected void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
 
+	/*
+	 * 
+	 * @param {String}			
+	 * 
+	 */
 	protected void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
 	
+	/*
+	 * 
+	 * @param {TASK_TYPE}			
+	 * 
+	 */
 	protected void setTaskType(TASK_TYPE taskType) {
 		this.taskType = taskType;
 	}
 	
+	/*
+	 * 
+	 * @param {ArrayList<String>}			
+	 * 
+	 */
 	protected void setTaskTag(ArrayList<String> tags) {
 		this.tags = tags;
 	}
 	
+	/*
+	 * 
+	 * @param {String}			
+	 * 
+	 */
 	protected void setTaskID(String index) {
 		this.taskID = Integer.parseInt(index);
 	}
@@ -159,6 +197,11 @@ public class CommandUtils {
 		return this.command;
 	}
 	
+	/*
+	 * 
+	 * @param {boolean}			
+	 * 
+	 */
 	protected void setTaskImportance(boolean isImportant) {
 		this.isImportant = isImportant;
 	}
@@ -206,11 +249,20 @@ public class CommandUtils {
 	public DELETE_TYPE getDeleteType() {
 		return this.deleteType;
 	}
+	/*
+	 * 
+	 * @param {DELETE_TYPE}			
+	 * 
+	 */
 	
 	protected void setDeleteType(DELETE_TYPE deleteType) {
 		this.deleteType = deleteType;
 	}
-	
+	/*
+	 * 
+	 * @param {ArrayList<String>}			
+	 * 
+	 */
 	protected void setTagToDelete(ArrayList<String> tagToDelete) {
 		this.tagToDelete = tagToDelete;
 	}
@@ -227,6 +279,11 @@ public class CommandUtils {
 	public ArrayList<String> getTagToDelete() {
 		return this.tagToDelete;
 	}
+	/*
+	 * 
+	 * @param {ArrayList<String>}			
+	 * 
+	 */
 	
 	protected void setIndexToDelete(ArrayList<Integer> indexToDelete) {
 		this.indexToDelete = indexToDelete;
@@ -261,6 +318,11 @@ public class CommandUtils {
 		return this.taskID;
 	}
 	
+	/*
+	 * 
+	 * @param {EDIT_TYPE}			
+	 * 
+	 */
 	protected void setEditType(EDIT_TYPE editType) {
 		this.editType = editType;
 	}
@@ -277,7 +339,11 @@ public class CommandUtils {
 	public EDIT_TYPE getEditType() {
 		return this.editType;
 	}
-	
+	/*
+	 * 
+	 * @param {String}			
+	 * 
+	 */
 	protected void setOldTag(String oldTag) {
 		this.oldTag = oldTag;
 	}
@@ -297,10 +363,19 @@ public class CommandUtils {
 	
 	//**************************** Mutators and Accessors for Flag/Unflag/CompleteParser ***********************//
 	
+	/*
+	 * 
+	 * @param {FLAGANDCOMPLETE_TYPE}			
+	 * 
+	 */
 	protected void setFlagCompleteType(FLAGANDCOMPLETE_TYPE flagAndCompleteType) {
 		this.flagAndCompleteType = flagAndCompleteType;
 	}
-	
+	/*
+	 * 
+	 * @param {ArrayList<Integer>}			
+	 * 
+	 */
 	protected void setTaskToFlagAndMark(ArrayList<Integer> indexOfFlagAndMark) {
 		this.indexOfFlagAndMark = indexOfFlagAndMark;
 	}
@@ -331,15 +406,28 @@ public class CommandUtils {
 		return this.indexOfFlagAndMark;
 	}
 	//***************************** Mutators and Accessors for SearchParser ************************************//
-
+	/*
+	 * 
+	 * @param {SEARCH_TYPE}			
+	 * 
+	 */
 	protected void setSearchType (SEARCH_TYPE searchType) {
 		this.searchType = searchType;
 	}
-	
+	/*
+	 * 
+	 * @param {Date}			
+	 * 
+	 */
 	protected void setSearchByDate (Date searchByDate) {
 		this.searchByDate = searchByDate;
 	}
 	
+	/*
+	 * 
+	 * @param {String}			
+	 * 
+	 */
 	protected void setSearchByTag(String searchByTag) {
 		this.searchByTag = searchByTag;
 	}
@@ -403,9 +491,7 @@ public class CommandUtils {
 	}
 	
 	//******************************** Mutators and Accessors for SortParser ************************************//
-	protected void setSortAttributes(SORT_TYPE sortType) {
-		this.sortType = sortType;	
-	}
+	
 
 	/*
 	 *  Returns the type of sort.
@@ -419,7 +505,11 @@ public class CommandUtils {
 	public SORT_TYPE getSortType() {
 		return this.sortType;
 	}
-	
+	/*
+	 * 
+	 * @param {SORT_TYPE}			
+	 * 
+	 */
 	protected void setSortType(SORT_TYPE sortType) {
 		this.sortType = sortType;
 	}

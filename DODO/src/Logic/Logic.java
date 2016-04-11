@@ -103,9 +103,7 @@ public class Logic {
 	 *
 	 */
 	public void update() {
-		this.updateList(this.floatingTasks);
 		this.updateList(this.ongoingTasks);
-		this.updateList(this.completedTasks);
 		this.updateList(this.overdueTasks);
 	}
 	/***********************************ACCESSORS***********************************************/

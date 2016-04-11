@@ -121,7 +121,6 @@ public abstract class Command {
 			this.categories.put(categoryStr.toLowerCase(), category);
 		}
 		boolean flag = category.addTask(task);
-		System.out.println("[DEBUG Command/tagTask] category has " + flag + " been added to this task.");
 		return flag;
 	}
 
@@ -153,9 +152,6 @@ public abstract class Command {
 		ArrayList<Task> taggedTasks = category.getTasks();
 		for (Task task: taggedTasks) {
 			boolean indicator = task.deleteCategory(oldTag);
-			if (indicator==false) {
-				throw new Error("IMPOSSIBLE, this tag must have been added to this task previously.");
-			}
 			task.addCategory(newTag);
 		}
 		
@@ -170,9 +166,6 @@ public abstract class Command {
 		for (String categoryString: categoriesString) {
 			Category category = this.categories.get(categoryString.toLowerCase());
 			boolean flag = category.deleteTask(task);
-			if (flag==false) {
-				throw new Error("IMPOSSIBLE, this tag must have been added to this task previously.");
-			}
 			if (category.getTasks().size()==0) {
 				deleteCategory(categoryString);
 			}

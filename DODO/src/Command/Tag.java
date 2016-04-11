@@ -1,6 +1,6 @@
 package Command;
 
-/* @@author: Lu Yang */
+/* @@author: A0130684H */
 
 import java.util.*;
 
@@ -12,7 +12,7 @@ public class Tag extends Command {
 	private static final String MESSAGE_SUCCESSFUL_TAG = 
 			"Task(s) \"%1$s\" is/are successfully tagged by \"%2$s\". ";
 	private static final String MESSAGE_UNSUCCESSFUL_TAG = 
-			"Task(s) \"%1$s\" is/are not successfully tagged by \"%2$s\". ";
+			"Task(s) \"%1$s\" failed to be tagged by \"%2$s\", because it has been already tagged before. ";
 	
 	public Tag(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
@@ -52,17 +52,6 @@ public class Tag extends Command {
 				unsuccessfulTags.add(tag);
 			}
 		}
-		/*if (categories.containsKey(tag)) {
-				Category category = categories.get(tag);
-				category.addTask(task);
-				return "Task " + (index+INDEX_ADJUSTMENT) + " is tagged under a new Tag "  + "\"" + tag + "\"";
-			}
-			else {
-				TreeMap<String, Task> tasksInCategory = new TreeMap<String, Task>();
-				Category category = new Category(tag, tasksInCategory);
-				categories.put(tag, category);
-				return "Task " + (index+INDEX_ADJUSTMENT) + " is tagged under the existing Tag "  + "\"" + tag + "\"";
-			}*/
 		if (unsuccessfulTags.size()==0) {
 			return String.format(MESSAGE_SUCCESSFUL_TAG, task, successfulTags);
 		}

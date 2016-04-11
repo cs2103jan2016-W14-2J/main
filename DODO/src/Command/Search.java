@@ -1,6 +1,6 @@
 package Command;
 
-/* @@author: Lu Yang */
+/* @@author: A0130684H */
 
 import java.util.*;
 
@@ -14,8 +14,6 @@ public class Search extends Command {
 	private static final String MESSAGE_SUCCESSFUL_SEARCH_TAG = "Search tag \"%1$s\" is successful.";
 	private static final String MESSAGE_UNSUCCESSFUL_SEARCH_KEYWORD = "There is no task named \"%1$s\".";
 	
-	
-	
 	public Search(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
 		super(cu, floatingTasks, ongoingTasks, completedTasks, overdueTasks, results, categories);
@@ -27,16 +25,9 @@ public class Search extends Command {
 		case BY_TASK:
 			String keyword = cu.getSearchByTask();
 			return searchByKeyword(keyword);
-			/*Date searchDate = cu.getSearchByDate();
-			System.out.println("============SEARCH=========== dt: " + searchDate);
-			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case BY_TAG:
 			String searchTag = cu.getSearchByTag();
 			return searchByTag(searchTag);
-		case BY_DATE:
-			/*Date searchDate = cu.getSearchByDate();
-			System.out.println("============SEARCH=========== dt: " + searchDate);
-			return "[SEARCH] UNDER DEVELOPMENT";*/
 		case INVALID:
 		default:
 			return MESSAGE_INVALID_SEARCH;
@@ -44,28 +35,6 @@ public class Search extends Command {
 	}
 	
 	/**********************************INTERNAL METHODS***************************************/
-	
-	/*private String searchByDate(DateTime searchDate) {
-		ArrayList<Task> floatingResults = searchTasksByDate(floatingTasks, searchDate);
-		return null;
-	}*/
-	
-	/*private ArrayList<Task> searchTasksByDate(ArrayList<Task> tasks, DateTime searchDate) {
-		System.out.println(searchDate);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		ArrayList<Task> results = new ArrayList<Task>();
-		for (int i=0; i<tasks.size(); i++) {
-			Task task = tasks.get(i);
-			if (task.getStatus()==TASK_TYPE.DEADLINED) {
-				DateTime endDate = new DateTime(((DeadlinedTask) task).getEndDateTime());
-			}
-			else if (task instanceof Event) {
-				
-			}
-		}
-		return null;
-	}*/
-	
 	private String searchByTag(String searchTag) {
 		Category category = this.findCategory(searchTag);
 		if (category==null) {

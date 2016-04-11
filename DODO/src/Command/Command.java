@@ -1,6 +1,6 @@
 package Command;
 
-/* @@author: Lu Yang */
+/* @@author: A0130684H*/
 
 import java.util.*;
 import GUI.*;
@@ -88,31 +88,6 @@ public abstract class Command {
 		}
 	}
 
-	/*//protected void modify(UI_TAB status, ArrayList<Task> newList) {
-		switch (status) {
-		case ONGOING:
-			this.ongoingTasks = newList;
-			break;
-		case FLOATING:
-			this.floatingTasks = newList;
-			break;
-		case COMPLETED:
-			this.completedTasks = newList;
-			break;
-		case OVERDUE:
-			this.overdueTasks = newList;
-			break;
-		case SEARCH:
-			modifyOnSearch(newList);
-			break;
-		case ALL:
-			splitAllAndUpdate(newList);
-			break;
-		default:
-			break;
-		}
-	}*/
-
 	protected void deleteTaskFromOtherTab(Task taskToDelete) {
 		TASK_STATUS status = taskToDelete.getStatus();
 		switch (status) {
@@ -132,23 +107,6 @@ public abstract class Command {
 	}
 
 	/*************************************CATEGORY MANIPULATION********************************/
-	// IDLE
-	/*protected ArrayList<Category> retrieveCategories(ArrayList<String> tags, Task task) {
-		ArrayList<Category> categories = new ArrayList<Category>();
-		for (String tagStr: tags) {
-			Category category = this.categories.get(tagStr.toLowerCase());
-
-			if (category==null) {
-				//tagStr is not present in this.categories
-				category = new Category(tagStr);
-				this.categories.put(tagStr.toLowerCase(), category);
-			}
-			category.addTask(task);
-			categories.add(category);
-		}
-		return categories;
-	}*/
-
 	protected Category findCategory(String categoryString) {
 		Category category = this.categories.get(categoryString.toLowerCase());
 		return category;
@@ -223,15 +181,6 @@ public abstract class Command {
 	}
 
 	/*****************************************PRIVATE METHODS***************************************/
-	/*private ArrayList<Task> combine(ArrayList<Task> ongoingTasks, ArrayList<Task> completedTasks,
-			ArrayList<Task> floatingTasks, ArrayList<Task> overdueTasks) {
-		ArrayList<Task> combined = new ArrayList<Task>();
-		combined.addAll(floatingTasks);
-		combined.addAll(ongoingTasks);
-		combined.addAll(completedTasks);
-		combined.addAll(overdueTasks);
-		return combined;
-	}*/
 	
 	private ArrayList<Task> combine(ArrayList<Task> overdueTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> floatingTasks, ArrayList<Task> completedTasks) {
@@ -242,57 +191,4 @@ public abstract class Command {
 		all.addAll(completedTasks);
 		return all;
 	}
-
-	/*private void modifyOnSearch(ArrayList<Task> newList) {
-		for (Task task: this.results) {
-			if (!newList.contains(task)) {
-				// this task has  been deleted
-				TASK_STATUS taskStatus = task.getStatus();
-				this.results.remove(task);
-				switch (taskStatus) {
-				case ONGOING:
-					this.ongoingTasks.remove(task);
-					break;
-				case FLOATING:
-					this.floatingTasks.remove(task);
-					break;
-				case COMPLETED:
-					this.completedTasks.remove(task);
-					break;
-				case OVERDUE:
-					this.overdueTasks.remove(task);
-					break;
-				}
-			}
-		}
-	}
-
-	private void splitAllAndUpdate(ArrayList<Task> newList) {
-		this.floatingTasks.clear();
-		this.ongoingTasks.clear();
-		this.overdueTasks.clear();
-		this.completedTasks.clear();
-		for (Task task: newList) {
-			if (task.getStatus()==TASK_STATUS.FLOATING) {
-				this.floatingTasks.add(task);
-			}
-			else if (task.getStatus()==TASK_STATUS.ONGOING) {
-				this.ongoingTasks.add(task);
-			}
-			else if (task.getStatus()==TASK_STATUS.COMPLETED) {
-				this.completedTasks.add(task);
-			}
-			else if (task.getStatus()==TASK_STATUS.OVERDUE) {
-				this.overdueTasks.add(task);
-			}
-		}
-	}
-
-	private ArrayList<Task> copyList(ArrayList<Task> original) {
-		ArrayList<Task> newList = new ArrayList<Task>();
-		for (Task task: original) {
-			newList.add(task);
-		}
-		return newList;
-	}*/
 }

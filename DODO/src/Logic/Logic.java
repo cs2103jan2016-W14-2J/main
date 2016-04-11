@@ -6,7 +6,7 @@ import Parser.*;
 import Storage.*;
 import Task.*;
 import java.util.*;
-/* @@author: Lu Yang */
+/* @@author: A0130684H */
 
 public class Logic {
 	private static final String MESSAGE_SUCCESSFUL_UNDO = "Undo successful.";
@@ -63,7 +63,8 @@ public class Logic {
 		} catch (Exception e) {
 			return MESSAGE_INVALID_COMMAND;
 		}
-		return processCommand(cu);
+		String message = processCommand(cu);
+		return message;
 	}
 	
 	/**

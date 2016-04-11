@@ -3,7 +3,7 @@ package Task;
 import java.text.*;
 import java.util.*;
 
-/* @@author: Lu Yang */
+/* @@author: A0130684H */
 
 public class Task {
 	private static final SimpleDateFormat datetimeFormater = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -187,6 +187,7 @@ public class Task {
 	}
 	
 	public boolean update() {
+		System.out.println("=====TASK===== updating " + this.name);
 		switch (this.status) {
 		case ONGOING:
 			TASK_STATUS newStatus = this.checkOverdue(this.end);
@@ -210,6 +211,8 @@ public class Task {
 	/********************************************INTERNAL*************************************/
 	private TASK_STATUS checkOverdue(Date end) {
 		Date current = new Date();
+		System.out.println("=====TASK===== current: " + current);
+		System.out.println("=====TASK===== end: " + end);
 		if  (current.after(end)) {
 			return TASK_STATUS.OVERDUE;
 		}

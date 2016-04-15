@@ -108,7 +108,7 @@ public class UIMainController {
 		assignHelpSheetListener();
 		show();
 		new JFXPanel();
-		timer.schedule(new TimerTask() {
+		/*timer.schedule(new TimerTask() {
 			public void run() {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -117,13 +117,12 @@ public class UIMainController {
 							logic.update();
 							rightBox.buildList(UIFrom.THREAD);
 						} catch (Exception e) {
-							System.out.println("Some Error");
 						}
 
 					}
 				});
 			}
-		}, 0, 60 * 1);
+		}, 0, 60 * 1);*/
 	}
 
 	public void addLeftAndRightBox() {

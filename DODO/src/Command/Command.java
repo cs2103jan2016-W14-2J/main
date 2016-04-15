@@ -38,7 +38,7 @@ public abstract class Command {
 	 */
 	public Command(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		this.UIStatus = UI_TAB.ALL;
+		this.UIStatus = UIRightBox.getCurrentTab();
 		this.cu = cu;
 		this.floatingTasks = floatingTasks;
 		this.ongoingTasks = ongoingTasks;

@@ -6,6 +6,9 @@ import Parser.*;
 import Storage.*;
 import Task.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /* @@author: A0130684H */
 
 public class Logic {
@@ -18,6 +21,7 @@ public class Logic {
 	private static final String MESSAGE_INVALID_COMMAND = "Please enter a valid command.";
 	private static Logic theOne; //singleton
 	private Storage storage;
+	private static Logger logger = Logger.getLogger("Logic");
 
 	/*************************************MEMORY*************************************************/
 	private ArrayList<Task> ongoingTasks;
@@ -63,7 +67,13 @@ public class Logic {
 		} catch (Exception e) {
 			return MESSAGE_INVALID_COMMAND;
 		}
-		String message = processCommand(cu);
+		String message;
+		try {
+			message = processCommand(cu);
+		} catch (Exception e) {
+			logger.log(Level.WARNING, "processing error", ex);
+		}
+		
 		return message;
 	}
 	

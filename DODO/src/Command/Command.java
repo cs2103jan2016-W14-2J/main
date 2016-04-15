@@ -38,7 +38,7 @@ public abstract class Command {
 	 */
 	public Command(CommandUtils cu, ArrayList<Task> floatingTasks, ArrayList<Task> ongoingTasks,
 			ArrayList<Task> completedTasks, ArrayList<Task> overdueTasks, ArrayList<Task> results, TreeMap<String, Category> categories) {
-		this.UIStatus = UIRightBox.getCurrentTab();
+		this.UIStatus = UI_TAB.ALL;
 		this.cu = cu;
 		this.floatingTasks = floatingTasks;
 		this.ongoingTasks = ongoingTasks;
@@ -133,9 +133,7 @@ public abstract class Command {
 		ArrayList<Task> taggedTasks = category.getTasks();
 		for (Task task: taggedTasks) {
 			boolean indicator = task.deleteCategory(category.getName());
-			if (indicator==false) {
-				throw new Error("IMPOSSIBLE, this tag must have been added to this task previously.");
-			}
+			assert indicator = true;
 		}
 		this.categories.remove(categoryString.toLowerCase());
 		return true;
@@ -153,6 +151,7 @@ public abstract class Command {
 		for (Task task: taggedTasks) {
 			boolean indicator = task.deleteCategory(oldTag);
 			task.addCategory(newTag);
+			assert indicator = true;
 		}
 		
 		this.categories.remove(oldTag.toLowerCase());
@@ -167,8 +166,9 @@ public abstract class Command {
 			Category category = this.categories.get(categoryString.toLowerCase());
 			boolean flag = category.deleteTask(task);
 			if (category.getTasks().size()==0) {
-				deleteCategory(categoryString);
+				boolean indicator = deleteCategory(categoryString);
 			}
+			assert flag = true;
 		}
 		return true;
 	}

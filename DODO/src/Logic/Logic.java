@@ -71,7 +71,7 @@ public class Logic {
 		try {
 			message = processCommand(cu);
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "processing error", ex);
+			logger.log(Level.WARNING, "processing error", e);
 		}
 		
 		return message;

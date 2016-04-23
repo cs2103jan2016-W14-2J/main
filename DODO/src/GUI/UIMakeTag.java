@@ -32,27 +32,18 @@ public class UIMakeTag {
 	}
 	public void assignUserData(Label lbl)
 	{
-		
-		//lbl.setUserData(value);
 		numberOfUniqueTag = logic.getCategories().size();
-		
-			//if(lbl.getText().equals(logic.getCategories().get(x).getName()))
 		for(int y=0;y<26;y++)
 		{
-			
 			if(lbl.getText().subSequence(0, 1).equals(ascii.get(y)) || lbl.getText().subSequence(0, 1).equals(ascii1.get(y)))
-			{//+Integer.toString(x)
+			{
 				lbl.setId("color"+Integer.toString(y));
 				lbl.setUserData("color"+Integer.toString(y));
 				return;
 			}
-			
 		}	
 		lbl.setId("noncolor");
 		lbl.setUserData("noncolor");
-
-		
-	
 	}
 	public HBox getTag(String Content)
 	{
@@ -61,8 +52,6 @@ public class UIMakeTag {
 		root.getChildren().add(lbl);
 		return root;
 	}
-	
-	
 }
 
 

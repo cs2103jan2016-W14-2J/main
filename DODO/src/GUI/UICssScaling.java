@@ -1,6 +1,7 @@
 package GUI;
-
 import java.util.ArrayList;
+
+import org.controlsfx.control.PopOver;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,11 +9,15 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -23,6 +28,7 @@ public class UICssScaling
 	String cssTabPane;
 	String cssTagBack;
 	String cssTopBar;
+
 	public UICssScaling()
 	{
 		cssCellComponents = "cellComponents.css";
@@ -32,6 +38,8 @@ public class UICssScaling
 	}
 	public void setCssAndScalingForCell(HBox cellRoot,Label lblIndex, Label lblName, ArrayList<Label> ListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip)
 	{
+		chkFlag.translateYProperty().set(20);
+
 		cellRoot.setPrefSize(1000, 100);
 		lblName.setPrefSize(800, 500);
 		lblIndex.setMinSize(100, 55);
@@ -124,16 +132,16 @@ public class UICssScaling
 	}
 	public void setCssAndScalingForRightBox(TabPane tabPane, TextField mainTextField) 
 	{
+		tabPane.setPrefSize(1450, 1500);
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
+		mainTextField.setPrefSize(1233, 55);
+
 		mainTextField.setFont(Font.font("Cambria", 25));
 	}
 	public void cssTag(Label lblTagging)
 	{
 		lblTagging.getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
-	}
-	public void cssPrimaryStage(Stage primaryStage)
-	{
-		
 	}
 	public void cssAllTitle(Label lblTitle)
 	{
@@ -144,19 +152,21 @@ public class UICssScaling
 
 	public void cssChart(PieChart chart)
 	{
+		chart.setLegendVisible(false);
+
 		for(int x=0;x<chart.getData().size();x++)
 		{
 			System.out.println(chart.getData().get(x).nameProperty().get());
 			if(chart.getData().get(x).nameProperty().get().equals("Floating Tasks"))
 			{
 				System.out.println("Floating Tasks");
-				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #f0c55d");
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #f0c55d;");
 			}
 			else if(chart.getData().get(x).nameProperty().get().equals("On-going Tasks"))
 			{
 				System.out.println("On-going Tasks");
 
-				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #d47d9c");
+				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #d47d9c;");
 
 			}
 			else if(chart.getData().get(x).nameProperty().get().equals("Completed Tasks"))
@@ -181,6 +191,33 @@ public class UICssScaling
 		hbLblTitle.setPrefSize(1000,50);
 		lblTitle.setPrefSize(1500,50);
 		lblTitle.setMaxSize(1500, 50);		
+	}
+	public void cssExtraInfo(VBox vbBody,Label titleForPopUp, HBox hbTitle, VBox root, PopOver popUpCell, Label lbl, ScrollPane sp) {
+
+		sp.setPrefHeight(1000);
+		sp.setHbarPolicy(ScrollBarPolicy.NEVER);
+	    sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+	    
+		lbl.setPrefWidth(465);
+	    lbl.setWrapText(true);
+	    
+		hbTitle.styleProperty().set("-fx-border-color: black;");
+		hbTitle.setAlignment(Pos.CENTER);
+
+		vbBody.styleProperty().set("-fx-border-color: black;");
+		vbBody.getChildren().add(sp);
+		vbBody.setPrefHeight(1000);
+		
+		titleForPopUp.setFont(Font.font("Cambria", 25));
+		
+		popUpCell.arrowSizeProperty().set(0);
+		
+		root.setPrefSize(500, 500);
+		
+	}
+	public void cssStackPaneOfTab(StackPane spTask) 
+	{
+		spTask.setPrefSize(1450, 1000);		
 	}
 
 

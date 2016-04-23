@@ -1,7 +1,6 @@
 package GUI;
 
 import org.controlsfx.control.PopOver;
-
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -9,12 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Path;
 import javafx.stage.Window;
 //@@author A0125372L
-public class UIPopUpFeedBack {
+public class UIFeedBack {
 
 	
 	private Label feedBackLabel;
@@ -24,7 +22,7 @@ public class UIPopUpFeedBack {
 	private Path caret;
 	private Point2D screenLoc;
 	
-	public UIPopUpFeedBack(PopOver popUpFeedBack, TextField mainTextField)
+	public UIFeedBack(PopOver popUpFeedBack, TextField mainTextField)
 	{
 		this.popUpFeedBack = popUpFeedBack;
 		this.mainTextField = mainTextField;
@@ -69,13 +67,6 @@ public class UIPopUpFeedBack {
 	    Point2D screenLoc = new Point2D(x, y);
 	    return screenLoc;
 	  }
-	
-	public void createListenFeedBack(VBox root,TextField mainTextField,String strFeedBack, Scene scene)
-	{
-		
-		
-		
-	}
 	public void createPopUpFeedBack(VBox root,TextField mainTextField,String strFeedBack, Scene scene)
 	{
 		feedBackLabel.setText(strFeedBack);
@@ -105,11 +96,7 @@ public class UIPopUpFeedBack {
         	{
         		root.getChildren().remove(feedBackLabel);
         	}
-        	
         	popUpFeedBack.show(mainTextField, screenLoc.getX()-10, screenLoc.getY() + 70);
-        	
-
-        	
         }
 	}
 }

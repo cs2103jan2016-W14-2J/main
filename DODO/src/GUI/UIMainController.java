@@ -16,21 +16,29 @@ import org.controlsfx.control.PopOver;
 
 import Logic.Logic;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PopupControl;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -39,46 +47,57 @@ import javafx.stage.WindowEvent;
 //@@author A0125372L
 public class UIMainController {
 	
+	private static final double sceneWidth = 1800;  //1900
+	private static final double sceneHeight = 750;  //900
+	private Label lblF1 = new Label("Ctrl"+'\n'+ "A");
+	private Label lblF2 = new Label("Ctrl"+'\n'+ "S");
+	private Label lblF3 = new Label("Ctrl"+'\n'+ "D");
+	private Label lblF4 = new Label("Ctrl"+'\n'+ "F");
+	private Label lblF5 = new Label("Ctrl"+'\n'+ "G");
+	private Label lblF6 = new Label("Ctrl"+'\n'+ "H");
+	private Label lblF7 = new Label("Ctrl"+'\n'+ "J");
+	private Label lblF8 = new Label("Ctrl"+'\n'+ "K");
+	private KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.A,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb2 = new KeyCodeCombination(KeyCode.S,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb3 = new KeyCodeCombination(KeyCode.D,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb4 = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb5 = new KeyCodeCombination(KeyCode.G,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J,KeyCombination.CONTROL_DOWN);
+	private KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K,KeyCombination.CONTROL_DOWN);
+	private ObservableList<Label> listLbl =FXCollections.observableArrayList(lblF1,lblF2,lblF3,lblF4,lblF5,lblF6,lblF7,lblF8);
+	private PopOver transparentPo;
+	private Pane pane;
 	private HBox root;
 	private UILeftBox leftBox; 
 	private UIRightBox rightBox;
 	private Logic logic;
 	private Stage primaryStage;
-	private final double sceneWidth = 1800;  //1900
-	private final double sceneHeight = 750;  //900
 	private Scene scene;	
 	private String strDBdir = "";
 	private String strDBname = "";
-	private UIListener listen;
 	private Timer timer;
 	public UIMainController(Logic logic)
 	{
 		this.logic = logic;
-
 		root = new HBox();
 		scene = new Scene(root,sceneWidth,sceneHeight,Color.WHITE);
-		
 		leftBox = new UILeftBox(this.logic,this.root,scene);
 		rightBox = new UIRightBox(this.logic,this.root,scene);
-		
 		timer = new Timer();
-		
+		transparentPo = new PopOver();
+		pane = new Pane();
 		leftBox.build(rightBox);
 		rightBox.build(leftBox);
-		
-		
-		
 	}
-
 	public void start(Stage primaryStage) 
 	{		
 		primaryStage.sizeToScene();
 		setPrimaryStage(primaryStage);
 		addLeftAndRightBox();
-		listen = new UIListener(root,primaryStage,rightBox,leftBox,logic);
-		listen.assignHelpSheetListener();
+    	transparentPopOverSetting(transparentPo, pane);
+		assignHelpSheetListener();
 		show();
-
 		timer.schedule( new TimerTask() {
 		    public void run() {
 		    	Platform.runLater(new Runnable() {
@@ -86,38 +105,22 @@ public class UIMainController {
                     public void run() 
                     {
                 		logic.update();
-                		rightBox.testMethod();
-                		try {
-                			Thread.sleep(50);
-                		} catch (Exception e) {
-                			e.printStackTrace();
-                		}
-
+                		rightBox.buildList(From.THREAD);
+                		System.out.println("thread running");
+                		
                     }
                 });
 		    }
-		 }, 0, 60*700);
-		
-
-		
-
-		Calendar now = Calendar.getInstance();	
-		
-		
-	  
-		
+		 }, 0, 60*10);
 	}
 	public void addLeftAndRightBox() 
 	{
-		//root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 		root.getChildren().addAll(leftBox.getRoot(),rightBox.getRoot());
 	}
-
 	private void setPrimaryStage(Stage primaryStage)
 	{
 		this.primaryStage = primaryStage;
 	}
-
 	public Scene getScene()
 	{
 		return scene;
@@ -137,13 +140,101 @@ public class UIMainController {
                 }
             }
         });
-		
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
+	public void assignHelpSheetListener() 
+	{
+    	root.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() 
+    	{
+    		public void handle(KeyEvent ke) 
+    		{
+    			if(ke.getCode()==KeyCode.ESCAPE)
+				{
+					Platform.runLater(new Runnable() 
+	                {
+	                    @Override
+	                    public void run() 
+	                    {
+	                      assert(logic.save()!=null); 
+	   		        	  logic.save();
+	   	     	          System.exit(0);
+	                    }
+	                });
+				}
+				if (ke.getCode().equals(KeyCode.ALT)) 
+				{
+					int numberOfTabs = rightBox.getTotalTabs();
+					double rightBoxX = rightBox.getRoot().getLayoutX();
+					double rightBoxY = rightBox.getRoot().getLayoutY();
+					
+					pane.setPrefSize(root.getWidth(), root.getHeight());	
+					pane.getChildren().removeAll(listLbl);
+					for(int x=0,y=25;x<numberOfTabs;x++,y+=220)
+					{
+						//listLbl.get(x).setPrefSize(150, 100);
+						listLbl.get(x).setFont(Font.font("Cambria", 30));
+						listLbl.get(x).setLayoutX(rightBoxX+y);
+						listLbl.get(x).setLayoutY(rightBoxY);
 
-	
+						pane.getChildren().add(listLbl.get(x));
+					}
 
+					transparentPo.show(primaryStage,primaryStage.getX(),primaryStage.getY());
+					rightBox.getTabPane().requestFocus();
+				}	
+				if (keyComb1.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(0);
+				}
+				if (keyComb2.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(1);
+				}
+				if (keyComb3.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(2);							
+				}
+				if (keyComb4.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(3);
+				}
+				if (keyComb5.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(4);
+				}
+				if (keyComb6.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(5);
+				}
+				if (keyComb7.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(6);
+				}
+				if (keyComb8.match(ke)) 
+				{
+					rightBox.getTabPane().getSelectionModel().select(7);
+				}	
+				ke.consume();	
+			}
+    	});
+    	root.setOnKeyReleased(new EventHandler<KeyEvent>() 
+		{
+			public void handle(KeyEvent ke) {
+			if (ke.getCode().equals(KeyCode.ALT)) 
+			{
+				pane.getChildren().removeAll(listLbl);
+				transparentPo.hide();
+			}
+		}
+		});	
+	}
+	private void transparentPopOverSetting(PopOver transparentPo, Pane pane) {
+		transparentPo.arrowSizeProperty().set(0);
+    	transparentPo.detachableProperty().set(false);
+    	transparentPo.setContentNode(pane);
+		transparentPo.setOpacity(0.6);
+	}
 	public void setDBname(String strDBname) {
 		this.strDBname = strDBname;
 	}

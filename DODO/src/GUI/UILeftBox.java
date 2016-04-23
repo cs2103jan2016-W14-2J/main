@@ -1,19 +1,24 @@
 package GUI;
 
 import java.util.ArrayList;
-
 import Logic.Logic;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -35,7 +40,6 @@ public class UILeftBox {
 	private UICssScaling usc;
 	private Label lblCategory;
 	private ArrayList<String> tagMap;
-	private UIListener listen;
 	private PieChart.Data floatingData;
 	private PieChart.Data ongoingData;
 	private PieChart.Data completedData;
@@ -61,7 +65,6 @@ public class UILeftBox {
 		chart = new PieChart(listData);
 		lblCategory = new Label(CATEGORY_HEADER);
 		tagMap = new ArrayList<String>();
-		listen = new UIListener();
 		floatingData = new PieChart.Data("Floating Tasks", intFloatingTasks);
 		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
 		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
@@ -79,20 +82,20 @@ public class UILeftBox {
 		updateChart();
 		updateTagScroll();
 		updateTag();
-		listen.chartListener(chart, rightBox);
 		listData.addAll(floatingData, ongoingData, completedData, overdueData);
 		usc.cssLeftBoxComponents(lblLogo,leftBox, chart, titledPane, lblCategory, listView);
 		leftBox.getChildren().addAll(lblLogo,chart, lblCategory, scroll);
 	}
-	public void updateLeftBox() {
+	public void updateLeftBox() 
+	{
 		updateChart();
 		updateTag();
 	}
 
-	public VBox getRoot() {
+	public VBox getRoot() 
+	{
 		return leftBox;
 	}
-
 	private void updateTagScroll() 
 	{
 			scroll.setPrefSize(500, 500);
@@ -117,11 +120,18 @@ public class UILeftBox {
 			{
 				Label lbl = new Label(logic.getCategories().get(x).getName());
 				makeTag.assignUserData(lbl);
-          				usc.cssTag(lbl);
+          		usc.cssTag(lbl);
 				if(!flowpaneCategory.getChildren().contains(lbl))
 				{
 					flowpaneCategory.getChildren().add(lbl);			
 				}
+				lbl.setOnMousePressed(new EventHandler<MouseEvent>() {
+		            @Override
+		            public void handle(MouseEvent mouseEvent) {
+		            	rightBox.setTextFieldAndEnter("search #"+lbl.textProperty().getValue());
+		            }
+		        });
+				    
 			}
 		}
 	}
@@ -183,9 +193,7 @@ public class UILeftBox {
 		
 		
 		usc.cssChart(chart);
-		
-		
-		
 	}
+	
 
 }

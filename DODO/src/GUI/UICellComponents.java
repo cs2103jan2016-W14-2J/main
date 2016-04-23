@@ -17,9 +17,7 @@ public class UICellComponents
 	private UIRightBox rightBox;
 	private UICssScaling usc;
 	private Label lblIndex;
-	
 	private ArrayList<Label> lblListTag;
-	
 	private Label lblName;
 	private VBox vbStartAndEnd;
 	private Label lblStart=null;
@@ -39,25 +37,33 @@ public class UICellComponents
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
 		lblListTag = new ArrayList<Label>();
-		if(strTagging.size()!=0)
-		{
-			//lblListTag.add(new Label(strTagging));
-			for(int x=0;x<strTagging.size();x++)
-			{
-				System.out.println(strTagging.get(x).getName());
-				lblTagging = new Label(strTagging.get(x).getName());
-				makeTag.assignUserData(lblTagging);
-				lblListTag.add(lblTagging);
-			}
-		}
-		else
-		{
-			lblListTag.add(new Label(""));
-		}
+		checkForTag(strTagging);
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
 		hbIndexAndName = new HBox(lblIndex,lblName);
 		VBox vbNameAndTag = new VBox();
+		checkForStartEnd(startString, endString);
+		chkFlag = new CheckBox();
+		checkFlag(Flag);
+		toolTip = new Tooltip(strName);
+		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblName,lblListTag, vbStartAndEnd,chkFlag,toolTip);
+		vbNameAndTag.getChildren().add(hbIndexAndName);
+		FlowPane fp = new FlowPane();
+		fp.getChildren().addAll(lblListTag);
+		vbNameAndTag.getChildren().addAll(fp);
+		cellRoot.getChildren().addAll(chkFlag,vbNameAndTag,vbStartAndEnd);
+	}
+	private void checkFlag(boolean Flag) {
+		if(Flag)
+		{
+			chkFlag.setSelected(true);
+		}
+		else
+		{
+			chkFlag.setSelected(false);
+		}
+	}
+	private void checkForStartEnd(String startString, String endString) {
 		if(startString!=null && endString!=null)
 		{
 			lblStart = new Label(startString.toString());
@@ -69,39 +75,29 @@ public class UICellComponents
 			lblEnd = new Label(endString.toString());
 			vbStartAndEnd.getChildren().add(lblEnd);
 		}
-		chkFlag = new CheckBox();
-		chkFlag.translateYProperty().set(10);
-		if(Flag)
+	}
+	private void checkForTag(ArrayList<Category> strTagging) {
+		if(strTagging.size()!=0)
 		{
-			chkFlag.setSelected(true);
+			for(int x=0;x<strTagging.size();x++)
+			{
+				lblTagging = new Label(strTagging.get(x).getName());
+				makeTag.assignUserData(lblTagging);
+				lblListTag.add(lblTagging);
+			}
 		}
 		else
 		{
-			chkFlag.setSelected(false);
+			lblListTag.add(new Label(""));
 		}
-		toolTip = new Tooltip(strName);
-		usc.setCssAndScalingForCell(cellRoot,lblIndex,lblName,lblListTag, vbStartAndEnd,chkFlag,toolTip);
-		vbNameAndTag.getChildren().add(hbIndexAndName);
-		FlowPane fp = new FlowPane();
-		fp.getChildren().addAll(lblListTag);
-		vbNameAndTag.getChildren().addAll(fp);
-		cellRoot.getChildren().addAll(chkFlag,vbNameAndTag,vbStartAndEnd);
 	}
-	
-	
 	public UICellComponents(HBox hbLblTitle, Label lblTitle, String strTitle) 
 	{
 		lblTitle.setText(strTitle);	
 		hbLblTitle.setPrefSize(1000,50);
 		lblTitle.setPrefSize(1500,50);
 		lblTitle.setMaxSize(1500, 50);
-		//usc.setCssAndScalingForCell(hbLblTitle,lblTitle);
-
-		
-		
 	}
-
-
 	public Tooltip getToolTip()
 	{
 		return toolTip;
@@ -110,16 +106,7 @@ public class UICellComponents
 	{
 		return cellRoot;
 	}
-
-
 	public CheckBox getCheckFlag() {
 		return chkFlag;
 	}
-	
-
-	
-	//makeTag = new UIMakeTag();
-	//HBox rootTag = makeTag.getTag(strTag);
-	//rootTag.setPrefSize(100, 100);
-	
 }

@@ -35,38 +35,24 @@ import javafx.stage.WindowEvent;
 //@@author A0125372L
 public class UIConfiguration extends Application 
 {
-	private String PARAM_CONFIG_DEFAULT_FILENAME = "Config.txt";
-	private FileChooser fileChooser = new FileChooser();
 	private Stage primaryStage;
 	private String strDBdir = "";
 	private String strDBname = "";
 	private Logic logic;
-	private boolean launch=false;
 	private UIMainController gui;
-	
 	@Override
 	public void start(Stage primaryStage) throws IOException 
 	{
 		Image applicationIcon = new Image(getClass().getResourceAsStream("logo.png"));
 		primaryStage.getIcons().add(applicationIcon);
-		
         this.primaryStage = primaryStage;
         logic = Logic.getInstance();
 		gui = new UIMainController(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
-		launch=true;
-
 		saveBeforeClose(primaryStage);
-		
-		System.out.println( "                                                                              "+ strDBdir);
 		gui.start(primaryStage);
 	}
-	public boolean getLaunch()
-	{
-		return launch;
-	}
-
 	private void saveBeforeClose(Stage primaryStage) 
 	{
 		primaryStage.setOnHiding(new EventHandler<WindowEvent>() 
@@ -112,7 +98,6 @@ public class UIConfiguration extends Application
           }else{
               return selectedDirectory;
           }		
-		
 	}
 	
 }

@@ -1,7 +1,7 @@
 package GUI;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Pagination;
+import javafx.scene.control.Pagination; 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;

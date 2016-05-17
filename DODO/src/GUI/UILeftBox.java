@@ -69,7 +69,7 @@ public class UILeftBox {
 		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
 		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
 		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
-		
+
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
 		flowpaneCategory.setPrefSize(500, 500);
@@ -83,58 +83,57 @@ public class UILeftBox {
 		updateTagScroll();
 		updateTag();
 		listData.addAll(floatingData, ongoingData, completedData, overdueData);
-		usc.cssLeftBoxComponents(lblLogo,leftBox, chart, titledPane, lblCategory, listView);
-		leftBox.getChildren().addAll(lblLogo,chart, lblCategory, scroll);
+		usc.cssLeftBoxComponents(lblLogo, leftBox, chart, titledPane, lblCategory, listView);
+		leftBox.getChildren().addAll(lblLogo, chart, lblCategory, scroll);
 	}
-	public void updateLeftBox() 
-	{
+
+	public void updateLeftBox() {
 		updateChart();
 		updateTag();
 	}
 
-	public VBox getRoot() 
-	{
+	public VBox getRoot() {
 		return leftBox;
 	}
-	private void updateTagScroll() 
-	{
-			scroll.setPrefSize(500, 500);
-	        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);    // Vertical scroll bar
-	        scroll.setContent(flowpaneCategory);
-	        scroll.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
-	            @Override
-	            public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
-	            	flowpaneCategory.setPrefWidth(bounds.getWidth());
-	            	flowpaneCategory.setPrefHeight(bounds.getHeight());
-	            }
-	        });		
-	        
+
+	private void updateTagScroll() {
+		scroll.setPrefSize(500, 500);
+		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Vertical
+																	// scroll
+																	// bar
+		scroll.setContent(flowpaneCategory);
+		scroll.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
+			@Override
+			public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
+				flowpaneCategory.setPrefWidth(bounds.getWidth());
+				flowpaneCategory.setPrefHeight(bounds.getHeight());
+			}
+		});
+
 	}
-	public void updateTag() 
-	{
+
+	public void updateTag() {
 		flowpaneCategory.getChildren().clear();
 		flowpaneCategory.getChildren().removeAll();
-		if(logic.getCategories()!=null)
-		{
-			for (int x = 0; x < logic.getCategories().size(); x++)
-			{
+		if (logic.getCategories() != null) {
+			for (int x = 0; x < logic.getCategories().size(); x++) {
 				Label lbl = new Label(logic.getCategories().get(x).getName());
 				makeTag.assignUserData(lbl);
-          		usc.cssTag(lbl);
-				if(!flowpaneCategory.getChildren().contains(lbl))
-				{
-					flowpaneCategory.getChildren().add(lbl);			
+				usc.cssTag(lbl);
+				if (!flowpaneCategory.getChildren().contains(lbl)) {
+					flowpaneCategory.getChildren().add(lbl);
 				}
 				lbl.setOnMousePressed(new EventHandler<MouseEvent>() {
-		            @Override
-		            public void handle(MouseEvent mouseEvent) {
-		            	rightBox.setTextFieldAndEnter("search #"+lbl.textProperty().getValue());
-		            }
-		        });
-				    
+					@Override
+					public void handle(MouseEvent mouseEvent) {
+						rightBox.setTextFieldAndEnter("search #" + lbl.textProperty().getValue());
+					}
+				});
+
 			}
 		}
 	}
+
 	public void updateChart() {
 		intOverdueTasks = rightBox.getOverdueTasksSize();
 		intCompletedTasks = rightBox.getCompletedTasksSize();
@@ -146,54 +145,37 @@ public class UILeftBox {
 		completedData.setPieValue(intCompletedTasks);
 		overdueData.setPieValue(intOverdueTasks);
 
-		if (intOverdueTasks == 0) 
-		{
+		if (intOverdueTasks == 0) {
 			listData.remove(overdueData);
-		} 
-		else 
-		{
-			if (!listData.contains(overdueData)) 
-			{
+		} else {
+			if (!listData.contains(overdueData)) {
 				listData.add(overdueData);
 			}
 		}
-		if (intCompletedTasks == 0) 
-		{
+		if (intCompletedTasks == 0) {
 			listData.remove(completedData);
-		} 
-		else 
-		{
-			if (!listData.contains(completedData)) 
-			{
+		} else {
+			if (!listData.contains(completedData)) {
 				listData.add(completedData);
 			}
 		}
-		if (intFloatingTasks == 0) 
-		{
+		if (intFloatingTasks == 0) {
 			listData.remove(floatingData);
-		} else
-		{
-			if (!listData.contains(floatingData))
-			{
+		} else {
+			if (!listData.contains(floatingData)) {
 				listData.add(floatingData);
 			}
 		}
-		if (intOngoingTasks == 0) 
-		{
+		if (intOngoingTasks == 0) {
 			listData.remove(ongoingData);
-		} 
-		else 
-		{
-			
-			if (!listData.contains(ongoingData)) 
-			{
+		} else {
+
+			if (!listData.contains(ongoingData)) {
 				listData.add(ongoingData);
 			}
 		}
-		
-		
+
 		usc.cssChart(chart);
 	}
-	
 
 }

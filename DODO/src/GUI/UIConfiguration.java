@@ -33,71 +33,65 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 //@@author A0125372L
-public class UIConfiguration extends Application 
-{
+public class UIConfiguration extends Application {
 	private Stage primaryStage;
 	private String strDBdir = "";
 	private String strDBname = "";
 	private Logic logic;
 	private UIMainController gui;
+
 	@Override
-	public void start(Stage primaryStage) throws IOException 
-	{
+	public void start(Stage primaryStage) throws IOException {
 		Image applicationIcon = new Image(getClass().getResourceAsStream("logo.png"));
 		primaryStage.getIcons().add(applicationIcon);
-        this.primaryStage = primaryStage;
-        logic = Logic.getInstance();
+		this.primaryStage = primaryStage;
+		logic = Logic.getInstance();
 		gui = new UIMainController(logic);
 		gui.setDBdir(strDBdir);
 		gui.setDBname(strDBname);
 		saveBeforeClose(primaryStage);
 		gui.start(primaryStage);
 	}
-	private void saveBeforeClose(Stage primaryStage) 
-	{
-		primaryStage.setOnHiding(new EventHandler<WindowEvent>() 
-		{
-            public void handle(WindowEvent event) 
-            {
-                Platform.runLater(new Runnable() 
-                {
-                    @Override
-                    public void run() 
-                    {
-	                    assert(logic.save()!=null); 
-	     	        	logic.save();
-	     	        	System.exit(0);
-                    }
-                });
-            }
-        });
+
+	private void saveBeforeClose(Stage primaryStage) {
+		primaryStage.setOnHiding(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent event) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						assert (logic.save() != null);
+						logic.save();
+						System.exit(0);
+					}
+				});
+			}
+		});
 	}
 
 	/**
 	 * Accessor
-	 */	
-	public String getDbDir()
-	{
+	 */
+	public String getDbDir() {
 		return strDBdir;
 	}
-	public String strDbName()
-	{
+
+	public String strDbName() {
 		return strDBname;
 	}
+
 	public static void main(String[] args) {
 		launch(args);
 	}
 
-	public static File openDialogBox()
-	{
-		  DirectoryChooser directoryChooser = new DirectoryChooser();
-          File selectedDirectory = directoryChooser.showDialog(new Stage());
-           
-          if(selectedDirectory == null){
-              return null;
-          }else{
-              return selectedDirectory;
-          }		
+	public static File openDialogBox() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		File selectedDirectory = directoryChooser.showDialog(new Stage());
+
+		if (selectedDirectory == null) {
+			return null;
+		} else {
+			return selectedDirectory;
+		}
 	}
-	
+
 }

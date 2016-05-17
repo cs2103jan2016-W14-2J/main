@@ -305,6 +305,7 @@ public class UIRightBox {
 		return allTask;
 	}
 	private ArrayList<Task> oldOverdueList = new ArrayList<Task>();
+	private Stage owner = new Stage();
 
 	public boolean buildList(UIFrom from) {
 
@@ -320,14 +321,32 @@ public class UIRightBox {
 			}
 			else
 			{
+		        StackPane root = new StackPane();
+		        Label content = new Label();
 				Platform.runLater(() ->
 				{
-		            Stage owner = new Stage();
-		            StackPane root = new StackPane();
-		            Label content = new Label();
 		            int noNewTaskExpired = Math.abs(oldOverdueList.size()-logic.getOverdueTasks().size());
-		            content.setText("You have " + noNewTaskExpired + " task(s) expired.");
-		          
+		            ArrayList<Task> taskThatExpired = new ArrayList<Task>();
+		            for(int x=0;x<logic.getOverdueTasks().size();x++)
+		            {
+		            	boolean gate = true;
+		            	for(int y=0;y<oldOverdueList.size();y++)
+		            	{
+		            		if(logic.getOverdueTasks().get(x).equals(oldOverdueList.get(y)))
+		            		{
+		            			gate=false;
+		            		}
+		            	}
+		            	if(gate==true)
+		            	{
+		            		taskThatExpired.add(logic.getOverdueTasks().get(x));
+
+		            	}
+		            }
+		            
+		            
+		            content.setText("You have " + noNewTaskExpired + " task(s) expired." + "\t" + "The latest expired task is : "+taskThatExpired);
+		            
 		            System.out.println(oldOverdueList);
 		            System.out.println(logic.getOverdueTasks());
 		            

@@ -36,17 +36,17 @@ public class UIUtility {
 	private ArrayList<String> ascii = new ArrayList<String>(26);
 	private ArrayList<String> ascii1 = new ArrayList<String>(26);
 	private int numberOfUniqueTag;
-	private Logic logic;
 	
-	public UIUtility(Logic logic) {
+	public UIUtility(int numberOfUniqueTag, ArrayList<Category> uniqueListCategory) {
 		cssCellComponents = "cellComponents.css";
 		cssTabPane = "tabPane.css";
 		cssTagBack = "tagBack.css";
 		cssTopBar = "topBarColor.css";
-		this.logic = logic;
 		
-		numberOfUniqueTag = logic.getCategories().size();
-		uniqueListCategory = logic.getCategories();
+/*		numberOfUniqueTag = logic.getCategories().size();
+		uniqueListCategory = logic.getCategories();*/
+		this.numberOfUniqueTag = numberOfUniqueTag;
+		this.uniqueListCategory = uniqueListCategory;
 		for (char c = 'A'; c <= 'Z'; c++) {
 			ascii.add(String.valueOf(c));
 		}
@@ -67,9 +67,6 @@ public class UIUtility {
 		for (int x = 0; x < ListTag.size(); x++) {
 			ListTag.get(x).getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
 			ListTag.get(x).setFont(Font.font("Cambria", 25));
-			// lblListTag.get(x).setId("CellTag");
-			// lblListTag.get(x).styleProperty().set("-fx-border-color:
-			// black;");
 			ListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
 		}
 
@@ -91,8 +88,6 @@ public class UIUtility {
 			vbStartAndEnd.getChildren().get(0).setId("CellStart");
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets()
 					.add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			// ((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font
-			// ("Cambria", 25));
 		} else if (vbStartAndEnd.getChildren().size() == 2) {
 			vbStartAndEnd.getChildren().get(0).setId("CellStart");
 			vbStartAndEnd.getChildren().get(1).setId("CellEnd");
@@ -100,10 +95,6 @@ public class UIUtility {
 					.add(this.getClass().getResource(cssCellComponents).toExternalForm());
 			((Label) vbStartAndEnd.getChildren().get(1)).getStylesheets()
 					.add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			// ((Label) vbStartAndEnd.getChildren().get(0)).setFont(Font.font
-			// ("Cambria", 25));
-			// ((Label) vbStartAndEnd.getChildren().get(1)).setFont(Font.font
-			// ("Cambria", 25));
 		}
 		chkFlag.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		AlignmentCheck(cellRoot, lblName, lblIndex, vbStartAndEnd, chkFlag, toolTip);
@@ -193,8 +184,6 @@ public class UIUtility {
 
 			}
 		}
-		// chart.getStylesheets().add(this.getClass().getResource("chart.css").toExternalForm());
-
 	}
 
 	public void setCssAndScalingForCell(HBox hbLblTitle, Label lblTitle) {
@@ -231,8 +220,8 @@ public class UIUtility {
 	public void cssStackPaneOfTab(StackPane spTask) {
 		spTask.setPrefSize(1450, 1000);
 	}
-	public void assignUserData(Label lbl) {
-		numberOfUniqueTag = logic.getCategories().size();
+	public void assignUserData(Label lbl,int numberOfUniqueTag) {
+		this.numberOfUniqueTag = numberOfUniqueTag;
 		for (int y = 0; y < 26; y++) {
 			if (lbl.getText().subSequence(0, 1).equals(ascii.get(y))
 					|| lbl.getText().subSequence(0, 1).equals(ascii1.get(y))) {

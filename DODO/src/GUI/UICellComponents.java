@@ -30,11 +30,11 @@ public class UICellComponents {
 	public UICellComponents(Logic logic, String strIndex, ArrayList<Category> strTagging, String strName,
 			String startString, String endString, boolean Flag) {
 		//this.rightBox = rightBox;
-		utility = new UIUtility(logic);
+		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
 		lblListTag = new ArrayList<Label>();
-		checkForTag(strTagging);
+		checkForTag(strTagging,logic.getCategories().size());
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
 		hbIndexAndName = new HBox(lblIndex, lblName);
@@ -70,11 +70,12 @@ public class UICellComponents {
 		}
 	}
 
-	private void checkForTag(ArrayList<Category> strTagging) {
+	private void checkForTag(ArrayList<Category> strTagging, int categoriesSize) {
 		if (strTagging.size() != 0) {
 			for (int x = 0; x < strTagging.size(); x++) {
 				lblTagging = new Label(strTagging.get(x).getName());
-				utility.assignUserData(lblTagging);
+				//logic.getCategories().size()
+				utility.assignUserData(lblTagging,categoriesSize);
 				lblListTag.add(lblTagging);
 			}
 		} else {

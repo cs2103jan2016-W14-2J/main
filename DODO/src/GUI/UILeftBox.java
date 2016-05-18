@@ -70,7 +70,7 @@ public class UILeftBox {
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
 		flowpaneCategory.setPrefSize(500, 500);
-		utility = new UIUtility(logic);
+		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
 
 	}
 
@@ -114,7 +114,7 @@ public class UILeftBox {
 		if (logic.getCategories() != null) {
 			for (int x = 0; x < logic.getCategories().size(); x++) {
 				Label lbl = new Label(logic.getCategories().get(x).getName());
-				utility.assignUserData(lbl);
+				utility.assignUserData(lbl,logic.getCategories().size());
 				utility.cssTag(lbl);
 				if (!flowpaneCategory.getChildren().contains(lbl)) {
 					flowpaneCategory.getChildren().add(lbl);

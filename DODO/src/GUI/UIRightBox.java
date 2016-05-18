@@ -21,7 +21,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -43,10 +47,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import javafx.util.Callback;
 
 //@@author A0125372L
@@ -88,7 +94,6 @@ public class UIRightBox {
 	private UI_TAB uiTab;
 	private HBox mainControllerRoot;
 	private Pagination pagination;
-	private UIFeedBack UIFeedBack;
 	private PopOver popUpFeedBack = new PopOver();
 	private Scene scene;
 
@@ -129,12 +134,16 @@ public class UIRightBox {
 
 	private Stage owner = new Stage();
 
+	private VBox vbPop;
+	private Path caret;
+	private Point2D screenLoc;
+	
 	public UIRightBox(Logic logic, HBox root, Scene scene) {
 		mainControllerRoot = root;
 		rightBox = new VBox();
 		this.scene = scene;
 		this.logic = logic;
-		utility = new UIUtility(logic);
+		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
 		logger = Logger.getLogger("MyLog");
 		tabMap = new boolean[6];
 
@@ -163,7 +172,6 @@ public class UIRightBox {
 
 		tabPane = new TabPane();
 		mainTextField = new TextField();
-		UIFeedBack = new UIFeedBack(popUpFeedBack, mainTextField);
 		mainPageBorderPane = new BorderPane();
 		createLog();
 		utility.setCssAndScalingForRightBox(tabPane, mainTextField);
@@ -874,7 +882,7 @@ public class UIRightBox {
 	}
 
 	private void createPopupFeedback() {
-		UIFeedBack.createPopUpFeedBack(rightBox, mainTextField, strFeedBack, scene);
+		createPopUpFeedBack(rightBox, mainTextField, strFeedBack, scene);
 	}
 
 	private void emptyTextField() {
@@ -970,4 +978,77 @@ public class UIRightBox {
 		return mainTextField.getText().toString();
 	}
 
+
+	private Path findCaret(Parent root) {
+		for (Node n : root.getChildrenUnmodifiable()) {
+			if (n instanceof Path) {
+				return (Path) n;
+			} else if (n instanceof Parent) {
+				Path p = findCaret((Parent) n);
+				if (p != null) {
+					return p;
+				}
+			}
+		}
+		return null;
+	}
+
+	private Point2D findScreenLocation(Node node) {
+		
+		double x = 0;
+		double y = 0;
+		for (Node n = node; n != null; n = n.getParent()) {
+			Bounds parentBounds = n.getBoundsInParent();
+			x += parentBounds.getMinX();
+			y += parentBounds.getMinY();
+		}
+		Scene scene = node.getScene();
+		x += scene.getX();
+		y += scene.getY();
+		Window window = scene.getWindow();
+		x += window.getX();
+		y += window.getY();
+		Point2D screenLoc = new Point2D(x, y);
+		return screenLoc;
+	}
+
+	public void createPopUpFeedBack(VBox root, TextField mainTextField, String strFeedBack, Scene scene) {
+		feedBackLabel = new Label();
+		vbPop = new VBox();
+		feedBackLabel.setId("lblFeedBack");
+		popUpFeedBack.consumeAutoHidingEventsProperty().set(false);
+		popUpFeedBack.setAutoFix(true);
+		popUpFeedBack.setContentNode(vbPop);
+		popUpFeedBack.setArrowSize(0);
+		feedBackLabel.setText(strFeedBack);
+		if (vbPop.getChildren().size() == 0) {
+			vbPop.getChildren().add(feedBackLabel);
+		}
+
+		vbPop.setPrefSize(1380, 70);
+		caret = findCaret(mainTextField);
+		screenLoc = findScreenLocation(caret);
+		if (scene.getWidth() > 1500 && scene.getHeight() > 900) {
+			readjustmentFeedback(root, mainTextField);
+		} else {
+			if (root.getChildren().contains(feedBackLabel)) {
+				root.getChildren().remove(feedBackLabel);
+			}
+			defaultFeedback(mainTextField);
+		}
+	}
+
+	private void defaultFeedback(TextField mainTextField) {
+		popUpFeedBack.show(mainTextField, screenLoc.getX() - 10, screenLoc.getY() + 70);
+	}
+
+	private void readjustmentFeedback(VBox root, TextField mainTextField) {
+		vbPop.setPrefSize(1500, 70);
+		if (!root.getChildren().contains(feedBackLabel)) {
+			System.out.println("here");
+			root.getChildren().set(1, feedBackLabel);
+			root.getChildren().add(mainTextField);
+
+		}
+	}
 }

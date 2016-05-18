@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.controlsfx.control.PopOver;
 
+import Logic.Logic;
+import Task.Category;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
@@ -24,17 +26,33 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 //@@author A0125372L
-public class UICssScaling {
-	String cssCellComponents;
-	String cssTabPane;
-	String cssTagBack;
-	String cssTopBar;
-
-	public UICssScaling() {
+public class UIUtility {
+	private String cssCellComponents;
+	private String cssTabPane;
+	private String cssTagBack;
+	private String cssTopBar;
+	private ArrayList<Integer> tagColorIndex;
+	private ArrayList<Category> uniqueListCategory;
+	private ArrayList<String> ascii = new ArrayList<String>(26);
+	private ArrayList<String> ascii1 = new ArrayList<String>(26);
+	private int numberOfUniqueTag;
+	private Logic logic;
+	
+	public UIUtility(Logic logic) {
 		cssCellComponents = "cellComponents.css";
 		cssTabPane = "tabPane.css";
 		cssTagBack = "tagBack.css";
 		cssTopBar = "topBarColor.css";
+		this.logic = logic;
+		
+		numberOfUniqueTag = logic.getCategories().size();
+		uniqueListCategory = logic.getCategories();
+		for (char c = 'A'; c <= 'Z'; c++) {
+			ascii.add(String.valueOf(c));
+		}
+		for (char c = 'a'; c <= 'z'; c++) {
+			ascii1.add(String.valueOf(c));
+		}
 	}
 
 	public void setCssAndScalingForCell(HBox cellRoot, Label lblIndex, Label lblName, ArrayList<Label> ListTag,
@@ -213,5 +231,24 @@ public class UICssScaling {
 	public void cssStackPaneOfTab(StackPane spTask) {
 		spTask.setPrefSize(1450, 1000);
 	}
+	public void assignUserData(Label lbl) {
+		numberOfUniqueTag = logic.getCategories().size();
+		for (int y = 0; y < 26; y++) {
+			if (lbl.getText().subSequence(0, 1).equals(ascii.get(y))
+					|| lbl.getText().subSequence(0, 1).equals(ascii1.get(y))) {
+				lbl.setId("color" + Integer.toString(y));
+				lbl.setUserData("color" + Integer.toString(y));
+				return;
+			}
+		}
+		lbl.setId("noncolor");
+		lbl.setUserData("noncolor");
+	}
 
+	public HBox getTag(String Content) {
+		HBox root = new HBox();
+		Label lbl = new Label(Content);
+		root.getChildren().add(lbl);
+		return root;
+	}
 }

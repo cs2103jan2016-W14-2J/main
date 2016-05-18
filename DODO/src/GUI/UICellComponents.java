@@ -13,8 +13,8 @@ import javafx.scene.layout.VBox;
 
 //@@author A0125372L
 public class UICellComponents {
-	private UIRightBox rightBox;
-	private UICssScaling usc;
+	//private UIRightBox rightBox;
+	private UIUtility utility;
 	private Label lblIndex;
 	private ArrayList<Label> lblListTag;
 	private Label lblName;
@@ -24,15 +24,13 @@ public class UICellComponents {
 	private CheckBox chkFlag;
 	private Tooltip toolTip;
 	private HBox cellRoot;
-	private UIMakeTag makeTag;
 	private HBox hbIndexAndName;
 	private Label lblTagging;
 
 	public UICellComponents(Logic logic, String strIndex, ArrayList<Category> strTagging, String strName,
 			String startString, String endString, boolean Flag) {
-		this.rightBox = rightBox;
-		makeTag = new UIMakeTag(logic);
-		usc = new UICssScaling();
+		//this.rightBox = rightBox;
+		utility = new UIUtility(logic);
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
 		lblListTag = new ArrayList<Label>();
@@ -45,7 +43,7 @@ public class UICellComponents {
 		chkFlag = new CheckBox();
 		checkFlag(Flag);
 		toolTip = new Tooltip(strName);
-		usc.setCssAndScalingForCell(cellRoot, lblIndex, lblName, lblListTag, vbStartAndEnd, chkFlag, toolTip);
+		utility.setCssAndScalingForCell(cellRoot, lblIndex, lblName, lblListTag, vbStartAndEnd, chkFlag, toolTip);
 		vbNameAndTag.getChildren().add(hbIndexAndName);
 		FlowPane fp = new FlowPane();
 		fp.getChildren().addAll(lblListTag);
@@ -76,7 +74,7 @@ public class UICellComponents {
 		if (strTagging.size() != 0) {
 			for (int x = 0; x < strTagging.size(); x++) {
 				lblTagging = new Label(strTagging.get(x).getName());
-				makeTag.assignUserData(lblTagging);
+				utility.assignUserData(lblTagging);
 				lblListTag.add(lblTagging);
 			}
 		} else {

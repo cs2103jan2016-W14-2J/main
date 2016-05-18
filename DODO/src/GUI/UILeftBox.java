@@ -37,7 +37,7 @@ public class UILeftBox {
 	private TitledPane titledPane;
 	private ObservableList<PieChart.Data> listData;
 	private PieChart chart;
-	private UICssScaling usc;
+	private UIUtility utility;
 	private Label lblCategory;
 	private ArrayList<String> tagMap;
 	private PieChart.Data floatingData;
@@ -49,14 +49,12 @@ public class UILeftBox {
 	private int intCompletedTasks = 0;
 	private int intFloatingTasks = 0;
 	private int intOngoingTasks = 0;
-	private UIMakeTag makeTag;
 	private Label lblLogo;
 	final ScrollPane scroll = new ScrollPane();
 
 	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
 		this.logic = logic;
-		usc = new UICssScaling();
 		listView = new ListView<>();
 		list = FXCollections.observableArrayList();
 		listData = FXCollections.observableArrayList();
@@ -72,7 +70,8 @@ public class UILeftBox {
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
 		flowpaneCategory.setPrefSize(500, 500);
-		makeTag = new UIMakeTag(logic);
+		utility = new UIUtility(logic);
+
 	}
 
 	public void build(UIRightBox rightBox) {
@@ -81,7 +80,7 @@ public class UILeftBox {
 		updateTagScroll();
 		updateTag();
 		listData.addAll(floatingData, ongoingData, completedData, overdueData);
-		usc.cssLeftBoxComponents(lblLogo, leftBox, chart, titledPane, lblCategory, listView);
+		utility.cssLeftBoxComponents(lblLogo, leftBox, chart, titledPane, lblCategory, listView);
 		leftBox.getChildren().addAll(lblLogo, chart, lblCategory, scroll);
 	}
 
@@ -115,8 +114,8 @@ public class UILeftBox {
 		if (logic.getCategories() != null) {
 			for (int x = 0; x < logic.getCategories().size(); x++) {
 				Label lbl = new Label(logic.getCategories().get(x).getName());
-				makeTag.assignUserData(lbl);
-				usc.cssTag(lbl);
+				utility.assignUserData(lbl);
+				utility.cssTag(lbl);
 				if (!flowpaneCategory.getChildren().contains(lbl)) {
 					flowpaneCategory.getChildren().add(lbl);
 				}
@@ -138,7 +137,7 @@ public class UILeftBox {
 	public void updateChart() {
 		updatePieValue();
 		detectPie();
-		usc.cssChart(chart);
+		utility.cssChart(chart);
 	}
 
 	private void detectPie() {

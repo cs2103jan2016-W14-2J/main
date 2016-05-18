@@ -32,9 +32,13 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -76,12 +80,11 @@ public class UIRightBox {
 	private String strFeedBack;
 	private Label feedBackLabel;
 
-	private UICssScaling ucs;
+	private UIUtility utility;
 	private VBox rightBox;
 	private UILeftBox leftBox;
 	private Logic logic;
 
-	private UIMainPage uiMain;
 	private UI_TAB uiTab;
 	private HBox mainControllerRoot;
 	private Pagination pagination;
@@ -122,6 +125,7 @@ public class UIRightBox {
 	private ArrayList<Task> oldOverdueList = new ArrayList<Task>();
 	private ArrayList<Task> taskThatExpiredList = new ArrayList<Task>();
 	private int numNewTaskExpired;
+	private BorderPane mainPageBorderPane;
 
 	private Stage owner = new Stage();
 
@@ -130,7 +134,7 @@ public class UIRightBox {
 		rightBox = new VBox();
 		this.scene = scene;
 		this.logic = logic;
-		ucs = new UICssScaling();
+		utility = new UIUtility(logic);
 		logger = Logger.getLogger("MyLog");
 		tabMap = new boolean[6];
 
@@ -157,12 +161,12 @@ public class UIRightBox {
 		overdueTasks = new ArrayList<Task>();
 		searchTasks = new ArrayList<Task>();
 
-		uiMain = new UIMainPage();
 		tabPane = new TabPane();
 		mainTextField = new TextField();
 		UIFeedBack = new UIFeedBack(popUpFeedBack, mainTextField);
+		mainPageBorderPane = new BorderPane();
 		createLog();
-		ucs.setCssAndScalingForRightBox(tabPane, mainTextField);
+		utility.setCssAndScalingForRightBox(tabPane, mainTextField);
 
 	}
 	void build(UILeftBox leftBox) {
@@ -187,7 +191,7 @@ public class UIRightBox {
 					mainTextField.setText(prevCmd);
 				}
 				if (ke.getCode().equals(KeyCode.ENTER)) {
-					runCommand();
+					runCommand(userInputCommand());
 				}
 
 			}
@@ -256,7 +260,45 @@ public class UIRightBox {
 		tabMain.setUserData(UI_TAB.MAIN);
 		tabPane.getTabs().add(tabMain);
 		tabMain.setContent(MainHB);
-		uiMain.setRoot(MainHB, pagination);
+		setMainPageRoot(MainHB, pagination);
+	}
+	public VBox createPage(int pageIndex) {
+		VBox box = new VBox();
+		if (pageIndex == 0)
+		{
+			ImageView logoImgView = new ImageView(); 
+			Image logoImg = new Image(UIRightBox.class.getResourceAsStream("logo.png"));
+    		logoImgView.setImage(logoImg); 
+    		mainPageBorderPane.setCenter(logoImgView);
+			BorderPane.setAlignment(logoImgView, Pos.CENTER);
+			box.getChildren().add(mainPageBorderPane);
+		}
+		if (pageIndex == 1) 
+		{
+			mainPageBorderPane.setPrefSize(400, 5000);
+			ImageView logoImgView1 = new ImageView();
+			Image logoImg1 = new Image(UIRightBox.class.getResourceAsStream("PAGE2.png"));
+			logoImgView1.setImage(logoImg1);
+			mainPageBorderPane.setCenter(logoImgView1);
+			BorderPane.setAlignment(logoImgView1, Pos.CENTER);
+			box.getChildren().add(mainPageBorderPane);
+		}
+		return box;
+	}
+
+	public void setMainPageRoot(HBox root, Pagination pagination) {
+
+		pagination.setPageFactory((Integer pageIndex) -> createPage(pageIndex));
+		AnchorPane anchor = new AnchorPane();
+		AnchorPane.setTopAnchor(pagination, 10.0);
+		AnchorPane.setRightAnchor(pagination, 10.0);
+		AnchorPane.setBottomAnchor(pagination, 10.0);
+		AnchorPane.setLeftAnchor(pagination, 10.0);
+		anchor.setPrefSize(5000, 1000);
+		anchor.getChildren().addAll(pagination);
+		// usc.cssWelcomePage(root,welcomeLabel);
+		root.getChildren().addAll(anchor);
+
 	}
 
 	private void chooseTab() {
@@ -371,6 +413,7 @@ public class UIRightBox {
 		            scene.setFill(Color.TRANSPARENT);
 		            owner.setScene(scene);
 		            owner.show();
+
 		        });
 			}
 		}
@@ -379,7 +422,13 @@ public class UIRightBox {
 		updateAllTasks();
 		updateTabMap();
 		generateTabs();
+		updateLeftChart();
+
+
 		return true;
+	}
+	private void updateLeftChart() {
+		leftBox.updateChart();
 	}
 	private boolean chkChangeOfTask() {
 		return floatingTasks.equals(logic.getFloatingTasks()) && ongoingTasks.equals(logic.getOngoingTasks())&& completedTasks.equals(logic.getCompletedTasks())&& overdueTasks.equals(logic.getOverdueTasks());
@@ -561,7 +610,7 @@ public class UIRightBox {
 										}
 										lsg = new UICellComponents(hbLblTitle, lblTitle, strTitle);
 
-										ucs.cssAllTitle(lblTitle);
+										utility.cssAllTitle(lblTitle);
 										setGraphic(hbLblTitle);
 									} else {
 										ArrayList<Category> strTagging = logic.mapCategories(item.getCategories());
@@ -699,7 +748,7 @@ public class UIRightBox {
 		}
 		Label lbl = new Label(moreName);
 		sp.setContent(lbl);
-		ucs.cssExtraInfo(vbBody, titleForPopUp, hbTitle, root, popUpCell, lbl, sp);
+		utility.cssExtraInfo(vbBody, titleForPopUp, hbTitle, root, popUpCell, lbl, sp);
 		root.getChildren().addAll(hbTitle, vbBody);
 		popUpCell.setY(listView.getHeight());
 		popUpCell.setContentNode(root);
@@ -729,15 +778,14 @@ public class UIRightBox {
 		logger.info("test1");
 	}
 
-	private void runCommand() {
-		inputLogic();
+	private void runCommand(String input) {
+		inputLogic(input);
 		updateTabStatus();
 		createPopupFeedback();
 		buildList(UIFrom.COMMAND);
 		updateLeftboxTag();
 		emptyTextField();
 		selectTabAndCell();
-		leftBox.updateLeftBox();
 	}
 
 	public void selectTabAndCell() {
@@ -817,8 +865,8 @@ public class UIRightBox {
 		}
 	}
 
-	private void inputLogic() {
-		strFeedBack = logic.run(mainTextField.getText());
+	private void inputLogic(String input) {
+		strFeedBack = logic.run(input);
 	}
 
 	private void updateTabStatus() {
@@ -834,7 +882,8 @@ public class UIRightBox {
 	}
 
 	private void updateLeftboxTag() {
-		leftBox.updateTag();
+		leftBox.updateLeftBox();
+
 	}
 
 	public static UI_TAB getCurrentTab() {
@@ -913,7 +962,12 @@ public class UIRightBox {
 	public void setTextFieldAndEnter(String str) {
 		mainTextField.textProperty().set(str);
 		mainTextField.setText(str);
-		runCommand();
+		runCommand(userInputCommand());
+	}
+	public String userInputCommand()
+	{
+		System.out.println(mainTextField.getText().toString());
+		return mainTextField.getText().toString();
 	}
 
 }

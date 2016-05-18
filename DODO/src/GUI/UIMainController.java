@@ -125,7 +125,7 @@ public class UIMainController {
 					}
 				});
 			}
-		}, 0, 60 * 20);
+		}, 0, 60 * 1);
 	}
 
 	public void addLeftAndRightBox() {

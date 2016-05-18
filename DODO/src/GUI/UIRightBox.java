@@ -116,8 +116,14 @@ public class UIRightBox {
 	private int intAllOngoingHashCode = 0;
 	private int intAllFloatingHashCode = 0;
 	private int intAllCompletedHashCode = 0;
+	
 	private ArrayList<Integer> intIndexAllTabCell = new ArrayList<Integer>();
-	ArrayList<Integer> intHashCode = new ArrayList<Integer>();
+	private ArrayList<Integer> intHashCode = new ArrayList<Integer>();
+	private ArrayList<Task> oldOverdueList = new ArrayList<Task>();
+	private ArrayList<Task> taskThatExpiredList = new ArrayList<Task>();
+	private int numNewTaskExpired;
+
+	private Stage owner = new Stage();
 
 	public UIRightBox(Logic logic, HBox root, Scene scene) {
 		mainControllerRoot = root;
@@ -159,8 +165,6 @@ public class UIRightBox {
 		ucs.setCssAndScalingForRightBox(tabPane, mainTextField);
 
 	}
-
-	// add list -> add vbtab ->
 	void build(UILeftBox leftBox) {
 		this.leftBox = leftBox;
 		createMainTab();
@@ -264,25 +268,13 @@ public class UIRightBox {
 	}
 
 	private ArrayList<Task> getAll() {
-		intIndexAllTabCell.clear();
-		intHashCode.clear();
-		ArrayList<Task> allTask = new ArrayList<Task>();
-		Task stubTask1 = new Task();
-		intAllOverdueHashCode = stubTask1.hashCode();
-		allTask.add(stubTask1); // add title for overdueTasks
-		allTask.addAll(overdueTasks);
-		Task stubTask2 = new Task();
-		intAllOngoingHashCode = stubTask2.hashCode();
-		allTask.add(stubTask2);// add title for ongoingTasks
-		allTask.addAll(ongoingTasks);
-		Task stubTask3 = new Task();
-		intAllFloatingHashCode = stubTask3.hashCode();
-		allTask.add(stubTask3);// add title for floatingTasks
-		allTask.addAll(floatingTasks);
-		Task stubTask4 = new Task();
-		intAllCompletedHashCode = stubTask4.hashCode();
-		allTask.add(stubTask4);// add title for completedTasks
-		allTask.addAll(completedTasks);
+		clearCellIndicationList();
+		ArrayList<Task> allTask = addTitleStub();
+		addTitleStubToIndicationList(allTask);
+		return allTask;
+	}
+
+	private void addTitleStubToIndicationList(ArrayList<Task> allTask) {
 		for (int x = 0, y = 0; x < allTask.size(); x++, y++) {
 			int currentHashCode = allTask.get(x).hashCode();
 			if (intAllOverdueHashCode == currentHashCode) {
@@ -302,18 +294,39 @@ public class UIRightBox {
 				intHashCode.add(currentHashCode);
 			}
 		}
+	}
+
+	private ArrayList<Task> addTitleStub() {
+		ArrayList<Task> allTask = new ArrayList<Task>();
+		Task stubTask1 = new Task();
+		intAllOverdueHashCode = stubTask1.hashCode();
+		allTask.add(stubTask1); // add title for overdueTasks
+		allTask.addAll(overdueTasks);
+		Task stubTask2 = new Task();
+		intAllOngoingHashCode = stubTask2.hashCode();
+		allTask.add(stubTask2);// add title for ongoingTasks
+		allTask.addAll(ongoingTasks);
+		Task stubTask3 = new Task();
+		intAllFloatingHashCode = stubTask3.hashCode();
+		allTask.add(stubTask3);// add title for floatingTasks
+		allTask.addAll(floatingTasks);
+		Task stubTask4 = new Task();
+		intAllCompletedHashCode = stubTask4.hashCode();
+		allTask.add(stubTask4);// add title for completedTasks
+		allTask.addAll(completedTasks);
 		return allTask;
 	}
-	private ArrayList<Task> oldOverdueList = new ArrayList<Task>();
-	private Stage owner = new Stage();
+
+	private void clearCellIndicationList() {
+		intIndexAllTabCell.clear();
+		intHashCode.clear();
+	}
 
 	public boolean buildList(UIFrom from) {
 
 		
 		if (from.equals(UIFrom.THREAD)) {
-			if (floatingTasks.equals(logic.getFloatingTasks()) && ongoingTasks.equals(logic.getOngoingTasks())
-					&& completedTasks.equals(logic.getCompletedTasks())
-					&& overdueTasks.equals(logic.getOverdueTasks())) {
+			if (chkChangeOfTask()) {
 				System.out.println("thread block");
 				oldOverdueList.clear();
 				oldOverdueList.addAll(overdueTasks);
@@ -325,8 +338,8 @@ public class UIRightBox {
 		        Label content = new Label();
 				Platform.runLater(() ->
 				{
-		            int noNewTaskExpired = Math.abs(oldOverdueList.size()-logic.getOverdueTasks().size());
-		            ArrayList<Task> taskThatExpired = new ArrayList<Task>();
+					
+					numNewTaskExpired = Math.abs(oldOverdueList.size()-logic.getOverdueTasks().size());
 		            for(int x=0;x<logic.getOverdueTasks().size();x++)
 		            {
 		            	boolean gate = true;
@@ -339,13 +352,13 @@ public class UIRightBox {
 		            	}
 		            	if(gate==true)
 		            	{
-		            		taskThatExpired.add(logic.getOverdueTasks().get(x));
+		            		taskThatExpiredList.add(logic.getOverdueTasks().get(x));
 
 		            	}
 		            }
 		            
 		            
-		            content.setText("You have " + noNewTaskExpired + " task(s) expired." + "\t" + "The latest expired task is : "+taskThatExpired);
+		            content.setText("You have " + numNewTaskExpired + " task(s) expired." + "\t" + "The latest expired task is : "+taskThatExpiredList);
 		            
 		            System.out.println(oldOverdueList);
 		            System.out.println(logic.getOverdueTasks());
@@ -367,6 +380,9 @@ public class UIRightBox {
 		updateTabMap();
 		generateTabs();
 		return true;
+	}
+	private boolean chkChangeOfTask() {
+		return floatingTasks.equals(logic.getFloatingTasks()) && ongoingTasks.equals(logic.getOngoingTasks())&& completedTasks.equals(logic.getCompletedTasks())&& overdueTasks.equals(logic.getOverdueTasks());
 	}
 
 	private void generateTabs() {

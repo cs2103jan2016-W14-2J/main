@@ -76,20 +76,26 @@ public class UIFeedBack {
 		caret = findCaret(mainTextField);
 		screenLoc = findScreenLocation(caret);
 		if (scene.getWidth() > 1500 && scene.getHeight() > 900) {
-			vbPop.setPrefSize(1500, 70);
-			if (!root.getChildren().contains(feedBackLabel)) {
-				System.out.println("here");
-				root.getChildren().set(1, feedBackLabel);
-				root.getChildren().add(mainTextField);
-
-			}
-			// popUpFeedBack.show(mainTextField, screenLoc.getX(),
-			// screenLoc.getY());
+			readjustmentFeedback(root, mainTextField);
 		} else {
 			if (root.getChildren().contains(feedBackLabel)) {
 				root.getChildren().remove(feedBackLabel);
 			}
-			popUpFeedBack.show(mainTextField, screenLoc.getX() - 10, screenLoc.getY() + 70);
+			defaultFeedback(mainTextField);
+		}
+	}
+
+	private void defaultFeedback(TextField mainTextField) {
+		popUpFeedBack.show(mainTextField, screenLoc.getX() - 10, screenLoc.getY() + 70);
+	}
+
+	private void readjustmentFeedback(VBox root, TextField mainTextField) {
+		vbPop.setPrefSize(1500, 70);
+		if (!root.getChildren().contains(feedBackLabel)) {
+			System.out.println("here");
+			root.getChildren().set(1, feedBackLabel);
+			root.getChildren().add(mainTextField);
+
 		}
 	}
 }

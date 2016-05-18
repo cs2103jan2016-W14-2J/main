@@ -69,11 +69,9 @@ public class UILeftBox {
 		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
 		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
 		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
-
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(20);
 		flowpaneCategory.setPrefSize(500, 500);
-
 		makeTag = new UIMakeTag(logic);
 	}
 
@@ -113,8 +111,7 @@ public class UILeftBox {
 	}
 
 	public void updateTag() {
-		flowpaneCategory.getChildren().clear();
-		flowpaneCategory.getChildren().removeAll();
+		clearFlowPane();
 		if (logic.getCategories() != null) {
 			for (int x = 0; x < logic.getCategories().size(); x++) {
 				Label lbl = new Label(logic.getCategories().get(x).getName());
@@ -134,17 +131,17 @@ public class UILeftBox {
 		}
 	}
 
+	private void clearFlowPane() {
+		flowpaneCategory.getChildren().clear();
+	}
+
 	public void updateChart() {
-		intOverdueTasks = rightBox.getOverdueTasksSize();
-		intCompletedTasks = rightBox.getCompletedTasksSize();
-		intFloatingTasks = rightBox.getFloatingTasksSize();
-		intOngoingTasks = rightBox.getOngoingSize();
+		updatePieValue();
+		detectPie();
+		usc.cssChart(chart);
+	}
 
-		floatingData.setPieValue(intFloatingTasks);
-		ongoingData.setPieValue(intOngoingTasks);
-		completedData.setPieValue(intCompletedTasks);
-		overdueData.setPieValue(intOverdueTasks);
-
+	private void detectPie() {
 		if (intOverdueTasks == 0) {
 			listData.remove(overdueData);
 		} else {
@@ -174,8 +171,18 @@ public class UILeftBox {
 				listData.add(ongoingData);
 			}
 		}
+	}
 
-		usc.cssChart(chart);
+	private void updatePieValue() {
+		intOverdueTasks = rightBox.getOverdueTasksSize();
+		intCompletedTasks = rightBox.getCompletedTasksSize();
+		intFloatingTasks = rightBox.getFloatingTasksSize();
+		intOngoingTasks = rightBox.getOngoingSize();
+
+		floatingData.setPieValue(intFloatingTasks);
+		ongoingData.setPieValue(intOngoingTasks);
+		completedData.setPieValue(intCompletedTasks);
+		overdueData.setPieValue(intOverdueTasks);
 	}
 
 }

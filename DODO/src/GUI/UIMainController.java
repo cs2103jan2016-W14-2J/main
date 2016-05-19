@@ -1,4 +1,4 @@
- package GUI;
+package GUI;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,7 +72,8 @@ public class UIMainController {
 	private static final KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN);
 	private static final KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J, KeyCombination.CONTROL_DOWN);
 	private static final KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K, KeyCombination.CONTROL_DOWN);
-	private static final ObservableList<Label> listLbl = FXCollections.observableArrayList(lblF1, lblF2, lblF3, lblF4, lblF5, lblF6, lblF7, lblF8);
+	private static final ObservableList<Label> listLbl = FXCollections.observableArrayList(lblF1, lblF2, lblF3, lblF4,
+			lblF5, lblF6, lblF7, lblF8);
 	private PopOver transparentPo;
 	private Pane pane;
 	private HBox root;
@@ -84,7 +85,7 @@ public class UIMainController {
 	private String strDBdir = "";
 	private String strDBname = "";
 	private Timer timer;
-	private static final String NAME_PAGE_2  = "PAGE2.png";
+	private static final String NAME_PAGE_2 = "PAGE2.png";
 
 	public UIMainController(Logic logic) {
 		this.logic = logic;
@@ -107,22 +108,15 @@ public class UIMainController {
 		assignHelpSheetListener();
 		show();
 		new JFXPanel();
-		timer.schedule(new TimerTask() 
-		{
-			public void run() 
-			{
-				Platform.runLater(new Runnable() 
-				{
+		timer.schedule(new TimerTask() {
+			public void run() {
+				Platform.runLater(new Runnable() {
 					@Override
-					public void run() 
-					{
-						try 
-						{
+					public void run() {
+						try {
 							logic.update();
-							rightBox.buildList(UIFrom.THREAD);				       
-						} 
-						catch (Exception e) 
-						{
+							rightBox.buildList(UIFrom.THREAD);
+						} catch (Exception e) {
 							System.out.println("Some Error");
 						}
 

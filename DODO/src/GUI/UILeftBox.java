@@ -26,7 +26,6 @@ import javafx.scene.layout.VBox;
 //@@author A0125372L
 public class UILeftBox {
 
-
 	private VBox leftBox;
 	private UIRightBox rightBox;
 	private Logic logic;
@@ -48,18 +47,18 @@ public class UILeftBox {
 	private int intOngoingTasks = 0;
 	private Label lblLogo;
 	final ScrollPane scroll = new ScrollPane();
-	private static final int WIDTH_SCROLL  = 500;
+	private static final int WIDTH_SCROLL = 500;
 	private static final int HEIGHT_SCROLL = 500;
-	private static final int WIDTH_FLOWPANE  = 500;
+	private static final int WIDTH_FLOWPANE = 500;
 	private static final int HEIGHT_FLOWPANE = 500;
 	private static final int GAP_FLOWPANE = 10;
-	private static final String NAME_FLOATING  = "Floating Tasks";
+	private static final String NAME_FLOATING = "Floating Tasks";
 	private static final String NAME_ONGOING = "On-going Tasks";
-	private static final String NAME_COMPLETED  = "Completed Tasks";
+	private static final String NAME_COMPLETED = "Completed Tasks";
 	private static final String NAME_OVERDUE = "Overdue Tasks";
 	private static final String CATEGORY_HEADER = "Categories";
 	private static final String LOGO_HEADER = "DODO";
-	
+
 	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
 		this.logic = logic;
@@ -77,7 +76,7 @@ public class UILeftBox {
 		flowpaneCategory = new FlowPane();
 		flowpaneCategory.setHgap(GAP_FLOWPANE);
 		flowpaneCategory.setPrefSize(WIDTH_FLOWPANE, HEIGHT_FLOWPANE);
-		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
+		utility = new UIUtility(logic.getCategories().size(), logic.getCategories());
 
 	}
 
@@ -119,7 +118,7 @@ public class UILeftBox {
 		if (logic.getCategories() != null) {
 			for (int x = 0; x < logic.getCategories().size(); x++) {
 				Label lbl = new Label(logic.getCategories().get(x).getName());
-				utility.assignUserData(lbl,logic.getCategories().size());
+				utility.assignUserData(lbl, logic.getCategories().size());
 				utility.cssTag(lbl);
 				if (!flowpaneCategory.getChildren().contains(lbl)) {
 					flowpaneCategory.getChildren().add(lbl);
@@ -146,54 +145,37 @@ public class UILeftBox {
 	}
 
 	private void detectPie() {
-		if (intOverdueTasks == 0) 
-		{
+		if (intOverdueTasks == 0) {
 			listData.remove(overdueData);
-		}
-		else 
-		{
-			if (!listData.contains(overdueData))
-			{
+		} else {
+			if (!listData.contains(overdueData)) {
 				listData.add(overdueData);
 			}
 		}
-		if (intCompletedTasks == 0) 
-		{
+		if (intCompletedTasks == 0) {
 			listData.remove(completedData);
-		} 
-		else 
-		{
-			if (!listData.contains(completedData))
-			{
+		} else {
+			if (!listData.contains(completedData)) {
 				listData.add(completedData);
 			}
 		}
-		if (intFloatingTasks == 0)
-		{
+		if (intFloatingTasks == 0) {
 			listData.remove(floatingData);
-		} 
-		else 
-		{
-			if (!listData.contains(floatingData))
-			{
+		} else {
+			if (!listData.contains(floatingData)) {
 				listData.add(floatingData);
 			}
 		}
-		if (intOngoingTasks == 0)
-		{
+		if (intOngoingTasks == 0) {
 			listData.remove(ongoingData);
-		}
-		else 
-		{
-			if (!listData.contains(ongoingData))
-			{
+		} else {
+			if (!listData.contains(ongoingData)) {
 				listData.add(ongoingData);
 			}
 		}
 	}
 
-	private void updatePieValue()
-	{
+	private void updatePieValue() {
 		intOverdueTasks = rightBox.getOverdueTasksSize();
 		intCompletedTasks = rightBox.getCompletedTasksSize();
 		intFloatingTasks = rightBox.getFloatingTasksSize();

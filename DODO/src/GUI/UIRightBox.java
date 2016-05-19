@@ -124,7 +124,7 @@ public class UIRightBox {
 	private int intAllOngoingHashCode = 0;
 	private int intAllFloatingHashCode = 0;
 	private int intAllCompletedHashCode = 0;
-	
+
 	private ArrayList<Integer> intIndexAllTabCell = new ArrayList<Integer>();
 	private ArrayList<Integer> intHashCode = new ArrayList<Integer>();
 	private ArrayList<Task> oldOverdueList = new ArrayList<Task>();
@@ -137,33 +137,32 @@ public class UIRightBox {
 	private VBox vbPop;
 	private Path caret;
 	private Point2D screenLoc;
-	
-	private static final int NUMBER_OF_ACTIVE_TABS = 6;	
-	private static final int NUMBER_CHILDREN_ZERO = 0;	
+
+	private static final int NUMBER_OF_ACTIVE_TABS = 6;
+	private static final int NUMBER_CHILDREN_ZERO = 0;
 	private static final double HEIGHT_VBPOP = 70;
 	private static final double WIDTH_VBPOP = 1380;
-	private static final double NUMBER_AP_ALIGNMENT =10.0;	
-	private static final double NUMBER_AP_HEIGHT =1000;	
-	private static final double NUMBER_AP_WIDTH =5000;	
-	private static final int NUMBER_OF_PAGE =2;	
-	private static final int EMPTY_SIZE =0;	
-	private static final String NAME_LOGO  = "logo.png";
-	private static final String NAME_PAGE_2  = "PAGE2.png";
-	private static final int NUMBER_STUB_ALL =-1;	
-	private static final double HEIGHT_READJUSTMENT_VBPOP =70;	
-	private static final double WIDTH_READJUSTMENT_VBPOP =1500;	
+	private static final double NUMBER_AP_ALIGNMENT = 10.0;
+	private static final double NUMBER_AP_HEIGHT = 1000;
+	private static final double NUMBER_AP_WIDTH = 5000;
+	private static final int NUMBER_OF_PAGE = 2;
+	private static final int EMPTY_SIZE = 0;
+	private static final String NAME_LOGO = "logo.png";
+	private static final String NAME_PAGE_2 = "PAGE2.png";
+	private static final int NUMBER_STUB_ALL = -1;
+	private static final double HEIGHT_READJUSTMENT_VBPOP = 70;
+	private static final double WIDTH_READJUSTMENT_VBPOP = 1500;
 	private static final double X_SCREEN_LOCATION = 10;
 	private static final double Y_SCREEN_LOCATION = 70;
-	private static final double WIDTH_SCENE =1500;	
-	private static final double HEIGHT_SCENE =900;	
-
+	private static final double WIDTH_SCENE = 1500;
+	private static final double HEIGHT_SCENE = 900;
 
 	public UIRightBox(Logic logic, HBox root, Scene scene) {
 		mainControllerRoot = root;
 		rightBox = new VBox();
 		this.scene = scene;
 		this.logic = logic;
-		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
+		utility = new UIUtility(logic.getCategories().size(), logic.getCategories());
 		logger = Logger.getLogger("MyLog");
 		tabMap = new boolean[NUMBER_OF_ACTIVE_TABS];
 
@@ -197,6 +196,7 @@ public class UIRightBox {
 		utility.setCssAndScalingForRightBox(tabPane, mainTextField);
 
 	}
+
 	void build(UILeftBox leftBox) {
 		this.leftBox = leftBox;
 		createMainTab();
@@ -293,20 +293,17 @@ public class UIRightBox {
 		setMainPageRoot(mainHB, pagination);
 	}
 
-
 	public VBox createPage(int pageIndex) {
 		VBox box = new VBox();
-		if (pageIndex == 0)
-		{
-			ImageView logoImgView = new ImageView(); 
+		if (pageIndex == 0) {
+			ImageView logoImgView = new ImageView();
 			Image logoImg = new Image(UIRightBox.class.getResourceAsStream(NAME_LOGO));
-    		logoImgView.setImage(logoImg); 
-    		mainPageBorderPane.setCenter(logoImgView);
+			logoImgView.setImage(logoImg);
+			mainPageBorderPane.setCenter(logoImgView);
 			BorderPane.setAlignment(logoImgView, Pos.CENTER);
 			box.getChildren().add(mainPageBorderPane);
 		}
-		if (pageIndex == 1) 
-		{
+		if (pageIndex == 1) {
 			mainPageBorderPane.setPrefSize(400, 5000);
 			ImageView logoImgView1 = new ImageView();
 			Image logoImg1 = new Image(UIRightBox.class.getResourceAsStream(NAME_PAGE_2));
@@ -318,15 +315,13 @@ public class UIRightBox {
 		return box;
 	}
 
-	
-	
 	public void setMainPageRoot(HBox root, Pagination pagination) {
 
 		pagination.setPageFactory((Integer pageIndex) -> createPage(pageIndex));
 		AnchorPane anchor = new AnchorPane();
 		AnchorPane.setTopAnchor(pagination, NUMBER_AP_ALIGNMENT);
 		AnchorPane.setRightAnchor(pagination, NUMBER_AP_ALIGNMENT);
-		AnchorPane.setBottomAnchor(pagination,NUMBER_AP_ALIGNMENT);
+		AnchorPane.setBottomAnchor(pagination, NUMBER_AP_ALIGNMENT);
 		AnchorPane.setLeftAnchor(pagination, NUMBER_AP_ALIGNMENT);
 		anchor.setPrefSize(NUMBER_AP_WIDTH, NUMBER_AP_HEIGHT);
 		anchor.getChildren().addAll(pagination);
@@ -349,7 +344,6 @@ public class UIRightBox {
 		addTitleStubToIndicationList(allTask);
 		return allTask;
 	}
-
 
 	private void addTitleStubToIndicationList(ArrayList<Task> allTask) {
 		for (int x = 0, y = 0; x < allTask.size(); x++, y++) {
@@ -401,47 +395,38 @@ public class UIRightBox {
 
 	public boolean buildList(UIFrom from) {
 
-		
-		if (from.equals(UIFrom.THREAD))
-		{
-			if (chkChangeOfTask())
-			{
+		if (from.equals(UIFrom.THREAD)) {
+			if (chkChangeOfTask()) {
 				oldOverdueList.clear();
 				oldOverdueList.addAll(overdueTasks);
 				return true;
-			}
-			else
-			{
-		        StackPane root = new StackPane();
-		        Label content = new Label();
-				Platform.runLater(() ->
-				{
-					numNewTaskExpired = Math.abs(oldOverdueList.size()-logic.getOverdueTasks().size());
-		            for(int x=0;x<logic.getOverdueTasks().size();x++)
-		            {
-		            	boolean gate = true;
-		            	for(int y=0;y<oldOverdueList.size();y++)
-		            	{
-		            		if(logic.getOverdueTasks().get(x).equals(oldOverdueList.get(y)))
-		            		{
-		            			gate=false;
-		            		}
-		            	}
-		            	if(gate==true)
-		            	{
-		            		taskThatExpiredList.add(logic.getOverdueTasks().get(x));
+			} else {
+				StackPane root = new StackPane();
+				Label content = new Label();
+				Platform.runLater(() -> {
+					numNewTaskExpired = Math.abs(oldOverdueList.size() - logic.getOverdueTasks().size());
+					for (int x = 0; x < logic.getOverdueTasks().size(); x++) {
+						boolean gate = true;
+						for (int y = 0; y < oldOverdueList.size(); y++) {
+							if (logic.getOverdueTasks().get(x).equals(oldOverdueList.get(y))) {
+								gate = false;
+							}
+						}
+						if (gate == true) {
+							taskThatExpiredList.add(logic.getOverdueTasks().get(x));
 
-		            	}
-		            }
-		            content.setText("You have " + numNewTaskExpired + " task(s) expired." + "\t" + "The latest expired task is : "+taskThatExpiredList);
-		            root.setPrefSize(500, 500);
-		            root.setStyle("-fx-background-color: TRANSPARENT");
-		            root.getChildren().add(content);
-		            Scene scene = new Scene(root, 500, 500);
-		            scene.setFill(Color.TRANSPARENT);
-		            owner.setScene(scene);
-		            owner.show();
-		        });
+						}
+					}
+					content.setText("You have " + numNewTaskExpired + " task(s) expired." + "\t"
+							+ "The latest expired task is : " + taskThatExpiredList);
+					root.setPrefSize(500, 500);
+					root.setStyle("-fx-background-color: TRANSPARENT");
+					root.getChildren().add(content);
+					Scene scene = new Scene(root, 500, 500);
+					scene.setFill(Color.TRANSPARENT);
+					owner.setScene(scene);
+					owner.show();
+				});
 			}
 		}
 		clearAllTasks();
@@ -451,11 +436,14 @@ public class UIRightBox {
 		updateLeftChart();
 		return true;
 	}
+
 	private void updateLeftChart() {
 		leftBox.updateChart();
 	}
+
 	private boolean chkChangeOfTask() {
-		return floatingTasks.equals(logic.getFloatingTasks()) && ongoingTasks.equals(logic.getOngoingTasks())&& completedTasks.equals(logic.getCompletedTasks())&& overdueTasks.equals(logic.getOverdueTasks());
+		return floatingTasks.equals(logic.getFloatingTasks()) && ongoingTasks.equals(logic.getOngoingTasks())
+				&& completedTasks.equals(logic.getCompletedTasks()) && overdueTasks.equals(logic.getOverdueTasks());
 	}
 
 	private void generateTabs() {
@@ -819,7 +807,8 @@ public class UIRightBox {
 				public void run() {
 					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getSelectionModel()
 							.select(logic.getLastModifiedIndex());
-					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO)).scrollTo(logic.getLastModifiedIndex());
+					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO))
+							.scrollTo(logic.getLastModifiedIndex());
 					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel()
 							.focus(logic.getLastModifiedIndex());
 				}
@@ -832,7 +821,8 @@ public class UIRightBox {
 				public void run() {
 					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getSelectionModel()
 							.select(logic.getLastModifiedIndex());
-					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO)).scrollTo(logic.getLastModifiedIndex());
+					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO))
+							.scrollTo(logic.getLastModifiedIndex());
 					((ListView) spCompletedTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel()
 							.focus(logic.getLastModifiedIndex());
 				}
@@ -845,8 +835,10 @@ public class UIRightBox {
 				public void run() {
 					((ListView) spOnGoingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getSelectionModel()
 							.select(logic.getLastModifiedIndex());
-					((ListView) spOnGoingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).scrollTo(logic.getLastModifiedIndex());
-					((ListView) spOnGoingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel().focus(logic.getLastModifiedIndex());
+					((ListView) spOnGoingTask.getChildren().get(NUMBER_CHILDREN_ZERO))
+							.scrollTo(logic.getLastModifiedIndex());
+					((ListView) spOnGoingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel()
+							.focus(logic.getLastModifiedIndex());
 				}
 			});
 		} else if (uiTab == UI_TAB.FLOATING) {
@@ -856,7 +848,8 @@ public class UIRightBox {
 				public void run() {
 					((ListView) spFloatingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getSelectionModel()
 							.select(logic.getLastModifiedIndex());
-					((ListView) spFloatingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).scrollTo(logic.getLastModifiedIndex());
+					((ListView) spFloatingTask.getChildren().get(NUMBER_CHILDREN_ZERO))
+							.scrollTo(logic.getLastModifiedIndex());
 					((ListView) spFloatingTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel()
 							.focus(logic.getLastModifiedIndex());
 				}
@@ -868,8 +861,10 @@ public class UIRightBox {
 				public void run() {
 					((ListView) spOverdueTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getSelectionModel()
 							.select(logic.getLastModifiedIndex());
-					((ListView) spOverdueTask.getChildren().get(NUMBER_CHILDREN_ZERO)).scrollTo(logic.getLastModifiedIndex());
-					((ListView) spOverdueTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel().focus(logic.getLastModifiedIndex());
+					((ListView) spOverdueTask.getChildren().get(NUMBER_CHILDREN_ZERO))
+							.scrollTo(logic.getLastModifiedIndex());
+					((ListView) spOverdueTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel()
+							.focus(logic.getLastModifiedIndex());
 				}
 			});
 		} else if (uiTab == UI_TAB.SEARCH) {
@@ -879,8 +874,10 @@ public class UIRightBox {
 				public void run() {
 					((ListView) spSearchTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getSelectionModel()
 							.select(logic.getLastModifiedIndex());
-					((ListView) spSearchTask.getChildren().get(NUMBER_CHILDREN_ZERO)).scrollTo(logic.getLastModifiedIndex());
-					((ListView) spSearchTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel().focus(logic.getLastModifiedIndex());
+					((ListView) spSearchTask.getChildren().get(NUMBER_CHILDREN_ZERO))
+							.scrollTo(logic.getLastModifiedIndex());
+					((ListView) spSearchTask.getChildren().get(NUMBER_CHILDREN_ZERO)).getFocusModel()
+							.focus(logic.getLastModifiedIndex());
 				}
 			});
 		} else {
@@ -896,6 +893,7 @@ public class UIRightBox {
 	private void updateTabStatus() {
 		uiTab = logic.getStatus();
 	}
+
 	private void createPopupFeedback() {
 		createPopUpFeedBack(rightBox, mainTextField, strFeedBack, scene);
 	}
@@ -908,10 +906,11 @@ public class UIRightBox {
 		leftBox.updateLeftBox();
 
 	}
-	public static UI_TAB getCurrentTab()
-	{
+
+	public static UI_TAB getCurrentTab() {
 		return (UI_TAB) tabPane.getSelectionModel().getSelectedItem().getUserData();
 	}
+
 	public TextField getMainTextField() {
 		return mainTextField;
 	}
@@ -986,12 +985,11 @@ public class UIRightBox {
 		mainTextField.setText(str);
 		runCommand(userInputCommand());
 	}
-	public String userInputCommand()
-	{
+
+	public String userInputCommand() {
 		System.out.println(mainTextField.getText().toString());
 		return mainTextField.getText().toString();
 	}
-
 
 	private Path findCaret(Parent root) {
 		for (Node n : root.getChildrenUnmodifiable()) {
@@ -1008,7 +1006,7 @@ public class UIRightBox {
 	}
 
 	private Point2D findScreenLocation(Node node) {
-		
+
 		double x = 0;
 		double y = 0;
 		for (Node n = node; n != null; n = n.getParent()) {
@@ -1036,10 +1034,9 @@ public class UIRightBox {
 			vbPop.getChildren().add(feedBackLabel);
 		}
 
-		vbPop.setPrefSize(WIDTH_VBPOP,HEIGHT_VBPOP);
+		vbPop.setPrefSize(WIDTH_VBPOP, HEIGHT_VBPOP);
 		caret = findCaret(mainTextField);
 		screenLoc = findScreenLocation(caret);
-		
 
 		if (scene.getWidth() > WIDTH_SCENE && scene.getHeight() > HEIGHT_SCENE) {
 			readjustmentFeedback(root, mainTextField);
@@ -1050,6 +1047,7 @@ public class UIRightBox {
 			defaultFeedback(mainTextField);
 		}
 	}
+
 	private void popUpFeedbackSetting() {
 		popUpFeedBack.consumeAutoHidingEventsProperty().set(false);
 		popUpFeedBack.setAutoFix(true);
@@ -1060,8 +1058,6 @@ public class UIRightBox {
 	private void defaultFeedback(TextField mainTextField) {
 		popUpFeedBack.show(mainTextField, screenLoc.getX() - X_SCREEN_LOCATION, screenLoc.getY() + Y_SCREEN_LOCATION);
 	}
-
-
 
 	private void readjustmentFeedback(VBox root, TextField mainTextField) {
 		vbPop.setPrefSize(WIDTH_READJUSTMENT_VBPOP, HEIGHT_READJUSTMENT_VBPOP);

@@ -39,7 +39,8 @@ public class UIConfiguration extends Application {
 	private String strDBname = "";
 	private Logic logic;
 	private UIMainController gui;
-	private static final String NAME_LOGO  = "logo.png";
+	private static final String NAME_LOGO = "logo.png";
+
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		Image applicationIcon = new Image(getClass().getResourceAsStream(NAME_LOGO));
@@ -67,6 +68,7 @@ public class UIConfiguration extends Application {
 			}
 		});
 	}
+
 	/**
 	 * Accessor
 	 */

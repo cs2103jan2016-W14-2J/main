@@ -25,17 +25,18 @@ public class UICellComponents {
 	private HBox cellRoot;
 	private HBox hbIndexAndName;
 	private Label lblTagging;
-	private static final int WIDTH_HBOX  = 1000;
-	private static final int HEIGHT_HBOX  = 50;
-	private static final int WIDTH_LABEL  = 1500;
+	private static final int WIDTH_HBOX = 1000;
+	private static final int HEIGHT_HBOX = 50;
+	private static final int WIDTH_LABEL = 1500;
 	private static final int HEIGHT_LABEL = 50;
 
-	public UICellComponents(Logic logic, String strIndex, ArrayList<Category> strTagging, String strName, String startString, String endString, boolean Flag) {
-		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
+	public UICellComponents(Logic logic, String strIndex, ArrayList<Category> strTagging, String strName,
+			String startString, String endString, boolean Flag) {
+		utility = new UIUtility(logic.getCategories().size(), logic.getCategories());
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
 		lblListTag = new ArrayList<Label>();
-		checkForTag(strTagging,logic.getCategories().size());
+		checkForTag(strTagging, logic.getCategories().size());
 		lblName = new Label(strName);
 		vbStartAndEnd = new VBox();
 		hbIndexAndName = new HBox(lblIndex, lblName);
@@ -75,8 +76,8 @@ public class UICellComponents {
 		if (strTagging.size() != 0) {
 			for (int x = 0; x < strTagging.size(); x++) {
 				lblTagging = new Label(strTagging.get(x).getName());
-				//logic.getCategories().size()
-				utility.assignUserData(lblTagging,categoriesSize);
+				// logic.getCategories().size()
+				utility.assignUserData(lblTagging, categoriesSize);
 				lblListTag.add(lblTagging);
 			}
 		} else {

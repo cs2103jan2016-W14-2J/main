@@ -26,15 +26,12 @@ import javafx.scene.layout.VBox;
 //@@author A0125372L
 public class UILeftBox {
 
-	private final String CATEGORY_HEADER = "Categories";
-	private final String CHART_HEADER = "Task";
-	private final String LOGO_HEADER = "DODO";
+
 	private VBox leftBox;
 	private UIRightBox rightBox;
 	private Logic logic;
 	private ListView<String> listView;
 	private ObservableList<String> list;
-	private TitledPane titledPane;
 	private ObservableList<PieChart.Data> listData;
 	private PieChart chart;
 	private UIUtility utility;
@@ -51,25 +48,35 @@ public class UILeftBox {
 	private int intOngoingTasks = 0;
 	private Label lblLogo;
 	final ScrollPane scroll = new ScrollPane();
-
+	private static final int WIDTH_SCROLL  = 500;
+	private static final int HEIGHT_SCROLL = 500;
+	private static final int WIDTH_FLOWPANE  = 500;
+	private static final int HEIGHT_FLOWPANE = 500;
+	private static final int GAP_FLOWPANE = 10;
+	private static final String NAME_FLOATING  = "Floating Tasks";
+	private static final String NAME_ONGOING = "On-going Tasks";
+	private static final String NAME_COMPLETED  = "Completed Tasks";
+	private static final String NAME_OVERDUE = "Overdue Tasks";
+	private static final String CATEGORY_HEADER = "Categories";
+	private static final String LOGO_HEADER = "DODO";
+	
 	public UILeftBox(Logic logic, HBox root, Scene scene) {
 		leftBox = new VBox();
 		this.logic = logic;
 		listView = new ListView<>();
 		list = FXCollections.observableArrayList();
 		listData = FXCollections.observableArrayList();
-		titledPane = new TitledPane();
 		lblLogo = new Label(LOGO_HEADER);
 		chart = new PieChart(listData);
 		lblCategory = new Label(CATEGORY_HEADER);
 		tagMap = new ArrayList<String>();
-		floatingData = new PieChart.Data("Floating Tasks", intFloatingTasks);
-		ongoingData = new PieChart.Data("On-going Tasks", intOngoingTasks);
-		completedData = new PieChart.Data("Completed Tasks", intCompletedTasks);
-		overdueData = new PieChart.Data("Overdue Tasks", intOverdueTasks);
+		floatingData = new PieChart.Data(NAME_FLOATING, intFloatingTasks);
+		ongoingData = new PieChart.Data(NAME_ONGOING, intOngoingTasks);
+		completedData = new PieChart.Data(NAME_COMPLETED, intCompletedTasks);
+		overdueData = new PieChart.Data(NAME_OVERDUE, intOverdueTasks);
 		flowpaneCategory = new FlowPane();
-		flowpaneCategory.setHgap(20);
-		flowpaneCategory.setPrefSize(500, 500);
+		flowpaneCategory.setHgap(GAP_FLOWPANE);
+		flowpaneCategory.setPrefSize(WIDTH_FLOWPANE, HEIGHT_FLOWPANE);
 		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
 
 	}
@@ -80,7 +87,7 @@ public class UILeftBox {
 		updateTagScroll();
 		updateTag();
 		listData.addAll(floatingData, ongoingData, completedData, overdueData);
-		utility.cssLeftBoxComponents(lblLogo, leftBox, chart, titledPane, lblCategory, listView);
+		utility.cssLeftBoxComponents(lblLogo, leftBox, chart, lblCategory, listView);
 		leftBox.getChildren().addAll(lblLogo, chart, lblCategory, scroll);
 	}
 
@@ -94,10 +101,8 @@ public class UILeftBox {
 	}
 
 	private void updateTagScroll() {
-		scroll.setPrefSize(500, 500);
-		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Vertical
-																	// scroll
-																	// bar
+		scroll.setPrefSize(WIDTH_SCROLL, HEIGHT_SCROLL);
+		scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scroll.setContent(flowpaneCategory);
 		scroll.viewportBoundsProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
@@ -141,43 +146,58 @@ public class UILeftBox {
 	}
 
 	private void detectPie() {
-		if (intOverdueTasks == 0) {
+		if (intOverdueTasks == 0) 
+		{
 			listData.remove(overdueData);
-		} else {
-			if (!listData.contains(overdueData)) {
+		}
+		else 
+		{
+			if (!listData.contains(overdueData))
+			{
 				listData.add(overdueData);
 			}
 		}
-		if (intCompletedTasks == 0) {
+		if (intCompletedTasks == 0) 
+		{
 			listData.remove(completedData);
-		} else {
-			if (!listData.contains(completedData)) {
+		} 
+		else 
+		{
+			if (!listData.contains(completedData))
+			{
 				listData.add(completedData);
 			}
 		}
-		if (intFloatingTasks == 0) {
+		if (intFloatingTasks == 0)
+		{
 			listData.remove(floatingData);
-		} else {
-			if (!listData.contains(floatingData)) {
+		} 
+		else 
+		{
+			if (!listData.contains(floatingData))
+			{
 				listData.add(floatingData);
 			}
 		}
-		if (intOngoingTasks == 0) {
+		if (intOngoingTasks == 0)
+		{
 			listData.remove(ongoingData);
-		} else {
-
-			if (!listData.contains(ongoingData)) {
+		}
+		else 
+		{
+			if (!listData.contains(ongoingData))
+			{
 				listData.add(ongoingData);
 			}
 		}
 	}
 
-	private void updatePieValue() {
+	private void updatePieValue()
+	{
 		intOverdueTasks = rightBox.getOverdueTasksSize();
 		intCompletedTasks = rightBox.getCompletedTasksSize();
 		intFloatingTasks = rightBox.getFloatingTasksSize();
 		intOngoingTasks = rightBox.getOngoingSize();
-
 		floatingData.setPieValue(intFloatingTasks);
 		ongoingData.setPieValue(intOngoingTasks);
 		completedData.setPieValue(intCompletedTasks);

@@ -36,6 +36,45 @@ public class UIUtility {
 	private ArrayList<String> ascii = new ArrayList<String>(26);
 	private ArrayList<String> ascii1 = new ArrayList<String>(26);
 	private int numberOfUniqueTag;
+	private static final double NUMBER_FONT_SIZE_25 =25;	
+	private static final double NUMBER_FONT_SIZE_100 =100;	
+	
+	private static final double Y_FLAG_TRANSLATION =20;	
+	
+	private static final double WIDTH_CELLROOT =1000;	
+	private static final double HEIGHT_CELLROOT =100;	
+	
+	private static final double WIDTH_LABELNAME =800;	
+	private static final double HEIGHT_LABELNAME  =500;
+	
+	private static final double WIDTH_LABELINDEX =100;	
+	private static final double HEIGHT_LABELINDEX =55;
+
+	private static final double WIDTH_VBTIME =400;	
+	private static final double HEIGHT_VBTIME =500;
+	
+	private static final double WIDTH_FLAG =70;	
+	private static final double HEIGHT_FLAG =50;
+	
+	private static final String FONT_NAME = "Cambria";
+	private static final String BLACK_NAME = "-fx-border-color: black;";
+	
+	private static final double WIDTH_LBL_LOGO =1000;	
+	private static final double WIDTH_LEFTBOX =500;
+	
+	private static final double HEIGHT_LEFTBOX =1800;
+	
+	private static final double WIDTH_CHART =500;
+	private static final double HEIGHT_CHART =500;
+	
+	private static final double WIDTH_LISTVIEW =500;
+	private static final double HEIGHT_LISTVIEW =888;
+
+	private static final double WIDTH_LBLCATEGORY =500;
+	private static final double HEIGHT_LBLCATEGORY =50;
+	
+	private static final double WIDTH_ROOT =500;
+	private static final double HEIGHT_ROOT =500;
 	
 	public UIUtility(int numberOfUniqueTag, ArrayList<Category> uniqueListCategory) {
 		cssCellComponents = "cellComponents.css";
@@ -55,23 +94,23 @@ public class UIUtility {
 		}
 	}
 
-	public void setCssAndScalingForCell(HBox cellRoot, Label lblIndex, Label lblName, ArrayList<Label> ListTag,
-			VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip) {
-		chkFlag.translateYProperty().set(20);
-		cellRoot.setPrefSize(1000, 100);
-		lblName.setPrefSize(800, 500);
-		lblIndex.setMinSize(100, 55);
-		vbStartAndEnd.setPrefSize(400, 500);
-		chkFlag.setPrefSize(70, 50);
+	public void setCssAndScalingForCell(HBox cellRoot, Label lblIndex, Label lblName, ArrayList<Label> ListTag, VBox vbStartAndEnd, CheckBox chkFlag, Tooltip toolTip) {
+		chkFlag.translateYProperty().set(Y_FLAG_TRANSLATION);
+		cellRoot.setPrefSize(WIDTH_CELLROOT, HEIGHT_CELLROOT);
+		lblName.setPrefSize(WIDTH_LABELNAME, HEIGHT_LABELNAME);
+		lblIndex.setMinSize(WIDTH_LABELINDEX, HEIGHT_LABELINDEX);
+		vbStartAndEnd.setPrefSize(WIDTH_VBTIME, HEIGHT_VBTIME);
+		chkFlag.setPrefSize(WIDTH_FLAG, HEIGHT_FLAG);
 
-		for (int x = 0; x < ListTag.size(); x++) {
+		for (int x = 0; x < ListTag.size(); x++) 
+		{
 			ListTag.get(x).getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
-			ListTag.get(x).setFont(Font.font("Cambria", 25));
+			ListTag.get(x).setFont(Font.font("Cambria", NUMBER_FONT_SIZE_25));
 			ListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
 		}
 
-		lblIndex.setFont(Font.font("Cambria", 25));
-		lblName.setFont(Font.font("Cambria", 25));
+		lblIndex.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
+		lblName.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
 		lblName.setAlignment(Pos.CENTER_LEFT);
 		vbStartAndEnd.setAlignment(Pos.CENTER);
 		chkFlag.setAlignment(Pos.CENTER);
@@ -84,17 +123,18 @@ public class UIUtility {
 		lblName.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		lblIndex.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 
-		if (vbStartAndEnd.getChildren().size() == 1) {
+		if (vbStartAndEnd.getChildren().size() == 1) 
+		{
 			vbStartAndEnd.getChildren().get(0).setId("CellStart");
-			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets()
-					.add(this.getClass().getResource(cssCellComponents).toExternalForm());
-		} else if (vbStartAndEnd.getChildren().size() == 2) {
+			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
+			
+		}
+		else if (vbStartAndEnd.getChildren().size() == 2) 
+		{
 			vbStartAndEnd.getChildren().get(0).setId("CellStart");
 			vbStartAndEnd.getChildren().get(1).setId("CellEnd");
-			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets()
-					.add(this.getClass().getResource(cssCellComponents).toExternalForm());
-			((Label) vbStartAndEnd.getChildren().get(1)).getStylesheets()
-					.add(this.getClass().getResource(cssCellComponents).toExternalForm());
+			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
+			((Label) vbStartAndEnd.getChildren().get(1)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		}
 		chkFlag.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		AlignmentCheck(cellRoot, lblName, lblIndex, vbStartAndEnd, chkFlag, toolTip);
@@ -102,29 +142,29 @@ public class UIUtility {
 
 	private void AlignmentCheck(HBox cellRoot, Label lblName, Label lblIndex, VBox vbStartAndEnd, CheckBox chkFlag,
 			Tooltip toolTip) {
-		cellRoot.styleProperty().set("-fx-border-color: black;");
+		cellRoot.styleProperty().set(BLACK_NAME);
 		/*
-		 * lblIndex.styleProperty().set("-fx-border-color: black;");
-		 * lblName.styleProperty().set("-fx-border-color: black;");
-		 * vbStartAndEnd.styleProperty().set("-fx-border-color: black;");
-		 * chkFlag.styleProperty().set("-fx-border-color: black;");
-		 * toolTip.styleProperty().set("-fx-border-color: black;");
+		 * lblIndex.styleProperty().set(BLACK_NAME);
+		 * lblName.styleProperty().set(BLACK_NAME);
+		 * vbStartAndEnd.styleProperty().set(BLACK_NAME);
+		 * chkFlag.styleProperty().set(BLACK_NAME);
+		 * toolTip.styleProperty().set(BLACK_NAME);
 		 */
 	}
+	
 
-	public void cssLeftBoxComponents(Label lblLogo, VBox leftBox, PieChart chart, TitledPane titledPane,
-			Label lblCategory, ListView<String> listView) {
+	
+	public void cssLeftBoxComponents(Label lblLogo, VBox leftBox, PieChart chart, Label lblCategory, ListView<String> listView) {
 		lblLogo.setUserData("TopBar");
-		lblLogo.setPrefWidth(1000);
+		lblLogo.setPrefWidth(WIDTH_LBL_LOGO);
 		lblLogo.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
 
-		leftBox.setPrefSize(500, 1800);
-		titledPane.setPrefSize(500, 888);
-		chart.setPrefSize(500, 500);
-		listView.setPrefSize(500, 888);
-		lblCategory.setPrefSize(500, 50);
+		leftBox.setPrefSize(WIDTH_LEFTBOX, HEIGHT_LEFTBOX);
+		chart.setPrefSize(WIDTH_CHART, HEIGHT_CHART);
+		listView.setPrefSize(WIDTH_LISTVIEW, HEIGHT_LISTVIEW);
+		lblCategory.setPrefSize(WIDTH_LBLCATEGORY, HEIGHT_LBLCATEGORY);
 
-		lblCategory.setFont(Font.font("Cambria", 25));
+		lblCategory.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
 
 		lblCategory.setAlignment(Pos.CENTER);
 		lblCategory.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
@@ -133,15 +173,15 @@ public class UIUtility {
 	}
 
 	private void AlignmentCheck(Label lblCategory, VBox leftBox, Label lblLogo) {
-		lblLogo.styleProperty().set("-fx-border-color: black;");
-		lblCategory.styleProperty().set("-fx-border-color: black;");
-		leftBox.styleProperty().set("-fx-border-color: black;");
+		lblLogo.styleProperty().set(BLACK_NAME);
+		lblCategory.styleProperty().set(BLACK_NAME);
+		leftBox.styleProperty().set(BLACK_NAME);
 	}
 
 	public void cssWelcomePage(HBox root, Label welcomeLabel) {
-		root.styleProperty().set("-fx-border-color: black;");
+		root.styleProperty().set(BLACK_NAME);
 		root.setPrefSize(500, 500);
-		welcomeLabel.setFont(Font.font("Cambria", 100));
+		welcomeLabel.setFont(Font.font("Cambria", NUMBER_FONT_SIZE_100));
 		welcomeLabel.setTranslateX(455);
 		welcomeLabel.setPrefSize(500, 500);
 	}
@@ -151,37 +191,39 @@ public class UIUtility {
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
 		mainTextField.setPrefSize(1233, 55);
-
-		mainTextField.setFont(Font.font("Cambria", 25));
+		mainTextField.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
 	}
 
-	public void cssTag(Label lblTagging) {
+	public void cssTag(Label lblTagging) 
+	{
 		lblTagging.getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
 	}
 
-	public void cssAllTitle(Label lblTitle) {
+	public void cssAllTitle(Label lblTitle) 
+	{
 		lblTitle.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
-
 	}
 
 	public void cssChart(PieChart chart) {
 		chart.setLegendVisible(false);
-
-		for (int x = 0; x < chart.getData().size(); x++) {
+		for (int x = 0; x < chart.getData().size(); x++)
+		{
 			System.out.println(chart.getData().get(x).nameProperty().get());
-			if (chart.getData().get(x).nameProperty().get().equals("Floating Tasks")) {
-				System.out.println("Floating Tasks");
+			if (chart.getData().get(x).nameProperty().get().equals("Floating Tasks")) 
+			{
 				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #f0c55d;");
-			} else if (chart.getData().get(x).nameProperty().get().equals("On-going Tasks")) {
-				System.out.println("On-going Tasks");
+			}
+			else if (chart.getData().get(x).nameProperty().get().equals("On-going Tasks")) 
+			{
 				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #d47d9c;");
-			} else if (chart.getData().get(x).nameProperty().get().equals("Completed Tasks")) {
-				System.out.println("Completed Tasks");
+			} 
+			else if (chart.getData().get(x).nameProperty().get().equals("Completed Tasks")) 
+			{
 				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #568cb4");
-			} else if (chart.getData().get(x).nameProperty().get().equals("Overdue Tasks")) {
-				System.out.println("Overdue Tasks");
+			} 
+			else if (chart.getData().get(x).nameProperty().get().equals("Overdue Tasks")) 
+			{
 				chart.getData().get(x).getNode().setStyle(" -fx-pie-color: #060f4d");
-
 			}
 		}
 	}
@@ -202,18 +244,18 @@ public class UIUtility {
 		lbl.setPrefWidth(465);
 		lbl.setWrapText(true);
 
-		hbTitle.styleProperty().set("-fx-border-color: black;");
+		hbTitle.styleProperty().set(BLACK_NAME);
 		hbTitle.setAlignment(Pos.CENTER);
 
-		vbBody.styleProperty().set("-fx-border-color: black;");
+		vbBody.styleProperty().set(BLACK_NAME);
 		vbBody.getChildren().add(sp);
 		vbBody.setPrefHeight(1000);
 
-		titleForPopUp.setFont(Font.font("Cambria", 25));
+		titleForPopUp.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
 
 		popUpCell.arrowSizeProperty().set(0);
 
-		root.setPrefSize(500, 500);
+		root.setPrefSize(WIDTH_ROOT,HEIGHT_ROOT);
 
 	}
 

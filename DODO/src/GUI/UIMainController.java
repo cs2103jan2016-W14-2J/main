@@ -52,24 +52,23 @@ public class UIMainController {
 
 	private static final double sceneWidth = 1800; // 1900
 	private static final double sceneHeight = 750; // 900
-	private Label lblF1 = new Label("Ctrl" + '\n' + "A");
-	private Label lblF2 = new Label("Ctrl" + '\n' + "S");
-	private Label lblF3 = new Label("Ctrl" + '\n' + "D");
-	private Label lblF4 = new Label("Ctrl" + '\n' + "F");
-	private Label lblF5 = new Label("Ctrl" + '\n' + "G");
-	private Label lblF6 = new Label("Ctrl" + '\n' + "H");
-	private Label lblF7 = new Label("Ctrl" + '\n' + "J");
-	private Label lblF8 = new Label("Ctrl" + '\n' + "K");
-	private KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb2 = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb3 = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb4 = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb5 = new KeyCodeCombination(KeyCode.G, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J, KeyCombination.CONTROL_DOWN);
-	private KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K, KeyCombination.CONTROL_DOWN);
-	private ObservableList<Label> listLbl = FXCollections.observableArrayList(lblF1, lblF2, lblF3, lblF4, lblF5, lblF6,
-			lblF7, lblF8);
+	private static final Label lblF1 = new Label("Ctrl" + '\n' + "A");
+	private static final Label lblF2 = new Label("Ctrl" + '\n' + "S");
+	private static final Label lblF3 = new Label("Ctrl" + '\n' + "D");
+	private static final Label lblF4 = new Label("Ctrl" + '\n' + "F");
+	private static final Label lblF5 = new Label("Ctrl" + '\n' + "G");
+	private static final Label lblF6 = new Label("Ctrl" + '\n' + "H");
+	private static final Label lblF7 = new Label("Ctrl" + '\n' + "J");
+	private static final Label lblF8 = new Label("Ctrl" + '\n' + "K");
+	private static final KeyCombination keyComb1 = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb2 = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb3 = new KeyCodeCombination(KeyCode.D, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb4 = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb5 = new KeyCodeCombination(KeyCode.G, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb6 = new KeyCodeCombination(KeyCode.H, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb7 = new KeyCodeCombination(KeyCode.J, KeyCombination.CONTROL_DOWN);
+	private static final KeyCombination keyComb8 = new KeyCodeCombination(KeyCode.K, KeyCombination.CONTROL_DOWN);
+	private static final ObservableList<Label> listLbl = FXCollections.observableArrayList(lblF1, lblF2, lblF3, lblF4, lblF5, lblF6, lblF7, lblF8);
 	private PopOver transparentPo;
 	private Pane pane;
 	private HBox root;

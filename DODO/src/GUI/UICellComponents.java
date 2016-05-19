@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 
 //@@author A0125372L
 public class UICellComponents {
-	//private UIRightBox rightBox;
 	private UIUtility utility;
 	private Label lblIndex;
 	private ArrayList<Label> lblListTag;
@@ -26,10 +25,12 @@ public class UICellComponents {
 	private HBox cellRoot;
 	private HBox hbIndexAndName;
 	private Label lblTagging;
+	private static final int WIDTH_HBOX  = 1000;
+	private static final int HEIGHT_HBOX  = 50;
+	private static final int WIDTH_LABEL  = 1500;
+	private static final int HEIGHT_LABEL = 50;
 
-	public UICellComponents(Logic logic, String strIndex, ArrayList<Category> strTagging, String strName,
-			String startString, String endString, boolean Flag) {
-		//this.rightBox = rightBox;
+	public UICellComponents(Logic logic, String strIndex, ArrayList<Category> strTagging, String strName, String startString, String endString, boolean Flag) {
 		utility = new UIUtility(logic.getCategories().size(),logic.getCategories());
 		cellRoot = new HBox();
 		lblIndex = new Label(strIndex);
@@ -45,9 +46,9 @@ public class UICellComponents {
 		toolTip = new Tooltip(strName);
 		utility.setCssAndScalingForCell(cellRoot, lblIndex, lblName, lblListTag, vbStartAndEnd, chkFlag, toolTip);
 		vbNameAndTag.getChildren().add(hbIndexAndName);
-		FlowPane fp = new FlowPane();
-		fp.getChildren().addAll(lblListTag);
-		vbNameAndTag.getChildren().addAll(fp);
+		FlowPane flowPane = new FlowPane();
+		flowPane.getChildren().addAll(lblListTag);
+		vbNameAndTag.getChildren().addAll(flowPane);
 		cellRoot.getChildren().addAll(chkFlag, vbNameAndTag, vbStartAndEnd);
 	}
 
@@ -85,9 +86,9 @@ public class UICellComponents {
 
 	public UICellComponents(HBox hbLblTitle, Label lblTitle, String strTitle) {
 		lblTitle.setText(strTitle);
-		hbLblTitle.setPrefSize(1000, 50);
-		lblTitle.setPrefSize(1500, 50);
-		lblTitle.setMaxSize(1500, 50);
+		hbLblTitle.setPrefSize(WIDTH_HBOX, HEIGHT_HBOX);
+		lblTitle.setPrefSize(WIDTH_LABEL, HEIGHT_LABEL);
+		lblTitle.setMaxSize(WIDTH_LABEL, HEIGHT_LABEL);
 	}
 
 	public Tooltip getToolTip() {

@@ -22,16 +22,20 @@ import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PopupControl;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -80,6 +84,7 @@ public class UIMainController {
 	private String strDBdir = "";
 	private String strDBname = "";
 	private Timer timer;
+	private static final String NAME_PAGE_2  = "PAGE2.png";
 
 	public UIMainController(Logic logic) {
 		this.logic = logic;
@@ -210,6 +215,14 @@ public class UIMainController {
 					rightBox.getTabPane().getSelectionModel().select(7);
 				}
 				ke.consume();
+				BorderPane mainPageBorderPane = new BorderPane();
+				ImageView logoImgView1 = new ImageView();
+				Image logoImg1 = new Image(UIRightBox.class.getResourceAsStream(NAME_PAGE_2));
+				logoImgView1.setImage(logoImg1);
+				mainPageBorderPane.translateXProperty().set(500);
+				mainPageBorderPane.translateYProperty().set(250);
+				mainPageBorderPane.getChildren().add(logoImgView1);
+				pane.getChildren().add(mainPageBorderPane);
 			}
 		});
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -226,7 +239,7 @@ public class UIMainController {
 		transparentPo.arrowSizeProperty().set(0);
 		transparentPo.detachableProperty().set(false);
 		transparentPo.setContentNode(pane);
-		transparentPo.setOpacity(0.6);
+		transparentPo.setOpacity(0.85);
 	}
 
 	public void setDBname(String strDBname) {

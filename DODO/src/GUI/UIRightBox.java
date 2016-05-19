@@ -157,7 +157,7 @@ public class UIRightBox {
 	private static final double WIDTH_SCENE =1500;	
 	private static final double HEIGHT_SCENE =900;	
 
-	
+
 	public UIRightBox(Logic logic, HBox root, Scene scene) {
 		mainControllerRoot = root;
 		rightBox = new VBox();
@@ -890,6 +890,7 @@ public class UIRightBox {
 
 	private void inputLogic(String input) {
 		strFeedBack = logic.run(input);
+		logic.update();
 	}
 
 	private void updateTabStatus() {

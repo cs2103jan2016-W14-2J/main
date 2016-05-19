@@ -76,11 +76,48 @@ public class UIUtility {
 	private static final double WIDTH_ROOT =500;
 	private static final double HEIGHT_ROOT =500;
 	
+	private static final String CSS_CELLCOMPONENTS = "cellComponents.css";
+	private static final String CSS_TABPANE = "tabPane.css";
+	private static final String CSS_TAGBACK = "tagBack.css";
+	private static final String CSS_TOPBARCOLOR = "topBarColor.css";
+	
+	private static final String ID_CELLROOT = "CellRoot";
+	private static final String ID_CELLINDEX = "CellIndex ";
+	private static final String ID_CELLNAME = "CellName";
+	private static final String ID_CELLFLAG = "CellFlag";
+	
+	private static final double INSERT_LISTTAG = 10;
+	private static final String ID_CELLSTART = "CellStart";
+	private static final String ID_CELLEND = "CellEnd";
+	private static final String ID_TOPBAR = "TopBar";
+
+	private static final double WIDTH_WELCOME_PAGE = 500;
+	private static final double HEIGHT_WELCOME_PAGE = 500;
+	private static final double X_TRANSLATE_WELCOME_PAGE= 455;
+
+	private static final double WIDTH_STACKPANE =1450;
+	private static final double HEIGHT_STACKPANE =1000;
+	
+	private static final double WIDTH_HB_TITLE =1000;
+	private static final double HEIGHT_HB_TITLE =50;
+	
+	private static final double WIDTH_LBL_TITLE =1500;
+	private static final double HEIGHT_LBL_TITLE =50;
+	
+	private static final String NAME_COLOR ="color";
+	private static final String NAME_NONCOLOR ="noncolor";
+	
+	private static final double WIDTH_TABPANE =1450;
+	private static final double HEIGHT_TABPANE =1500;
+	
+	private static final double WIDTH_TEXTFIELD =1233;
+	private static final double HEIGHT_TEXTFIELD =55;
+	
 	public UIUtility(int numberOfUniqueTag, ArrayList<Category> uniqueListCategory) {
-		cssCellComponents = "cellComponents.css";
-		cssTabPane = "tabPane.css";
-		cssTagBack = "tagBack.css";
-		cssTopBar = "topBarColor.css";
+		cssCellComponents = CSS_CELLCOMPONENTS;
+		cssTabPane = CSS_TABPANE;
+		cssTagBack = CSS_TAGBACK;
+		cssTopBar = CSS_TOPBARCOLOR;
 		
 /*		numberOfUniqueTag = logic.getCategories().size();
 		uniqueListCategory = logic.getCategories();*/
@@ -105,8 +142,8 @@ public class UIUtility {
 		for (int x = 0; x < ListTag.size(); x++) 
 		{
 			ListTag.get(x).getStylesheets().add(this.getClass().getResource(cssTagBack).toExternalForm());
-			ListTag.get(x).setFont(Font.font("Cambria", NUMBER_FONT_SIZE_25));
-			ListTag.get(x).setPadding(new Insets(10, 10, 10, 10));
+			ListTag.get(x).setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
+			ListTag.get(x).setPadding(new Insets(INSERT_LISTTAG, INSERT_LISTTAG, INSERT_LISTTAG, INSERT_LISTTAG));
 		}
 
 		lblIndex.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
@@ -115,24 +152,24 @@ public class UIUtility {
 		vbStartAndEnd.setAlignment(Pos.CENTER);
 		chkFlag.setAlignment(Pos.CENTER);
 
-		cellRoot.setId("CellRoot");
-		lblIndex.setId("CellIndex");
-		lblName.setId("CellName");
-		chkFlag.setId("CellFlag");
+		cellRoot.setId(ID_CELLROOT);
+		lblIndex.setId(ID_CELLINDEX);
+		lblName.setId(ID_CELLNAME);
+		chkFlag.setId(ID_CELLFLAG);
 
 		lblName.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		lblIndex.getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 
 		if (vbStartAndEnd.getChildren().size() == 1) 
 		{
-			vbStartAndEnd.getChildren().get(0).setId("CellStart");
+			vbStartAndEnd.getChildren().get(0).setId(ID_CELLSTART);
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 			
 		}
 		else if (vbStartAndEnd.getChildren().size() == 2) 
 		{
-			vbStartAndEnd.getChildren().get(0).setId("CellStart");
-			vbStartAndEnd.getChildren().get(1).setId("CellEnd");
+			vbStartAndEnd.getChildren().get(0).setId(ID_CELLSTART);
+			vbStartAndEnd.getChildren().get(1).setId(ID_CELLEND);
 			((Label) vbStartAndEnd.getChildren().get(0)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 			((Label) vbStartAndEnd.getChildren().get(1)).getStylesheets().add(this.getClass().getResource(cssCellComponents).toExternalForm());
 		}
@@ -155,17 +192,14 @@ public class UIUtility {
 
 	
 	public void cssLeftBoxComponents(Label lblLogo, VBox leftBox, PieChart chart, Label lblCategory, ListView<String> listView) {
-		lblLogo.setUserData("TopBar");
+		lblLogo.setUserData(ID_TOPBAR);
 		lblLogo.setPrefWidth(WIDTH_LBL_LOGO);
 		lblLogo.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
-
 		leftBox.setPrefSize(WIDTH_LEFTBOX, HEIGHT_LEFTBOX);
 		chart.setPrefSize(WIDTH_CHART, HEIGHT_CHART);
 		listView.setPrefSize(WIDTH_LISTVIEW, HEIGHT_LISTVIEW);
 		lblCategory.setPrefSize(WIDTH_LBLCATEGORY, HEIGHT_LBLCATEGORY);
-
 		lblCategory.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
-
 		lblCategory.setAlignment(Pos.CENTER);
 		lblCategory.getStylesheets().add(this.getClass().getResource(cssTopBar).toExternalForm());
 		AlignmentCheck(lblCategory, leftBox, lblLogo);
@@ -180,17 +214,17 @@ public class UIUtility {
 
 	public void cssWelcomePage(HBox root, Label welcomeLabel) {
 		root.styleProperty().set(BLACK_NAME);
-		root.setPrefSize(500, 500);
-		welcomeLabel.setFont(Font.font("Cambria", NUMBER_FONT_SIZE_100));
-		welcomeLabel.setTranslateX(455);
-		welcomeLabel.setPrefSize(500, 500);
+		root.setPrefSize(WIDTH_WELCOME_PAGE, HEIGHT_WELCOME_PAGE);
+		welcomeLabel.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_100));
+		welcomeLabel.setTranslateX(X_TRANSLATE_WELCOME_PAGE);
+		welcomeLabel.setPrefSize(WIDTH_WELCOME_PAGE, HEIGHT_WELCOME_PAGE);
 	}
 
 	public void setCssAndScalingForRightBox(TabPane tabPane, TextField mainTextField) {
-		tabPane.setPrefSize(1450, 1500);
+		tabPane.setPrefSize(WIDTH_TABPANE, HEIGHT_TABPANE);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		tabPane.getStylesheets().add(this.getClass().getResource(cssTabPane).toExternalForm());
-		mainTextField.setPrefSize(1233, 55);
+		mainTextField.setPrefSize(WIDTH_TEXTFIELD, HEIGHT_TEXTFIELD);
 		mainTextField.setFont(Font.font(FONT_NAME, NUMBER_FONT_SIZE_25));
 	}
 
@@ -228,10 +262,12 @@ public class UIUtility {
 		}
 	}
 
+
+	
 	public void setCssAndScalingForCell(HBox hbLblTitle, Label lblTitle) {
-		hbLblTitle.setPrefSize(1000, 50);
-		lblTitle.setPrefSize(1500, 50);
-		lblTitle.setMaxSize(1500, 50);
+		hbLblTitle.setPrefSize(WIDTH_HB_TITLE, HEIGHT_HB_TITLE);
+		lblTitle.setPrefSize(WIDTH_LBL_TITLE, HEIGHT_LBL_TITLE);
+		lblTitle.setMaxSize(WIDTH_LBL_TITLE, HEIGHT_LBL_TITLE);
 	}
 
 	public void cssExtraInfo(VBox vbBody, Label titleForPopUp, HBox hbTitle, VBox root, PopOver popUpCell, Label lbl,
@@ -260,20 +296,21 @@ public class UIUtility {
 	}
 
 	public void cssStackPaneOfTab(StackPane spTask) {
-		spTask.setPrefSize(1450, 1000);
+		spTask.setPrefSize(WIDTH_STACKPANE, HEIGHT_STACKPANE);
 	}
+
+	
 	public void assignUserData(Label lbl,int numberOfUniqueTag) {
 		this.numberOfUniqueTag = numberOfUniqueTag;
 		for (int y = 0; y < 26; y++) {
-			if (lbl.getText().subSequence(0, 1).equals(ascii.get(y))
-					|| lbl.getText().subSequence(0, 1).equals(ascii1.get(y))) {
-				lbl.setId("color" + Integer.toString(y));
-				lbl.setUserData("color" + Integer.toString(y));
+			if (lbl.getText().subSequence(0, 1).equals(ascii.get(y))|| lbl.getText().subSequence(0, 1).equals(ascii1.get(y))) {
+				lbl.setId(NAME_COLOR + Integer.toString(y));
+				lbl.setUserData(NAME_COLOR + Integer.toString(y));
 				return;
 			}
 		}
-		lbl.setId("noncolor");
-		lbl.setUserData("noncolor");
+		lbl.setId(NAME_NONCOLOR);
+		lbl.setUserData(NAME_NONCOLOR);
 	}
 
 	public HBox getTag(String Content) {
